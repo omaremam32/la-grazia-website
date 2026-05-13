@@ -3175,6 +3175,125 @@ export default function App() {
             letter-spacing: 0.08em !important;
           }
         }
+
+
+        /* Mobile product modal fix: make the full product popup scrollable and polished */
+        @media (max-width: 700px) {
+          .modalBackdrop {
+            display: flex !important;
+            align-items: flex-start !important;
+            justify-content: center !important;
+            overflow-y: auto !important;
+            -webkit-overflow-scrolling: touch !important;
+            padding: 78px 10px 130px !important;
+          }
+
+          .modal {
+            width: min(100%, calc(100vw - 20px)) !important;
+            max-height: none !important;
+            min-height: 0 !important;
+            display: flex !important;
+            flex-direction: column !important;
+            overflow: visible !important;
+            border-radius: 30px !important;
+            box-shadow: 0 28px 70px rgba(36, 26, 20, 0.38) !important;
+            margin: 0 auto !important;
+          }
+
+          .modalImage {
+            width: 100% !important;
+            min-height: 0 !important;
+            height: 42vh !important;
+            max-height: 360px !important;
+            border-radius: 30px 30px 0 0 !important;
+            flex: 0 0 auto !important;
+          }
+
+          .modalImage img {
+            width: 100% !important;
+            height: 100% !important;
+            object-fit: cover !important;
+            object-position: top center !important;
+          }
+
+          .modalInfo {
+            max-height: none !important;
+            overflow: visible !important;
+            padding: 20px 18px 28px !important;
+            background: #fff9f0 !important;
+            border-radius: 0 0 30px 30px !important;
+          }
+
+          .modalInfo .eyebrow {
+            font-size: 9px !important;
+            letter-spacing: 0.22em !important;
+            margin-bottom: 8px !important;
+          }
+
+          .modalInfo h3 {
+            font-size: 26px !important;
+            line-height: 1.06 !important;
+            margin-bottom: 8px !important;
+          }
+
+          .modalInfo p {
+            font-size: 13px !important;
+            line-height: 1.45 !important;
+            margin: 7px 0 !important;
+          }
+
+          .buttonList,
+          .completeLook {
+            gap: 8px !important;
+            margin: 8px 0 14px !important;
+          }
+
+          .sizeBtn,
+          .colorBtn,
+          .qtyBtn {
+            padding: 8px 12px !important;
+            font-size: 10px !important;
+          }
+
+          .qtyBox {
+            margin: 8px 0 16px !important;
+          }
+
+          .completeLook span {
+            padding: 9px 13px !important;
+            font-size: 12px !important;
+          }
+
+          .modalInfo .secondaryBtn,
+          .modalInfo .primaryBtn,
+          .modalInfo .notifyBtn {
+            width: 100% !important;
+            min-height: 52px !important;
+            margin-top: 10px !important;
+            display: flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+            border-radius: 999px !important;
+          }
+
+          .modalInfo .notifyBtn {
+            margin-bottom: 14px !important;
+            border-style: dashed !important;
+          }
+
+          .closeBtn {
+            position: fixed !important;
+            top: max(16px, env(safe-area-inset-top)) !important;
+            right: 16px !important;
+            width: 54px !important;
+            height: 54px !important;
+            z-index: 120 !important;
+            background: #fff9f0 !important;
+            color: #2c1f18 !important;
+            box-shadow: 0 12px 30px rgba(36, 26, 20, 0.28) !important;
+          }
+        }
+
 `}</style>
 
       <div className="scrollProgress" style={{ width: `${scrollProgress}%` }} />
