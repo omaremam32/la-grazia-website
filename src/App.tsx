@@ -2842,26 +2842,75 @@ export default function App() {
           }
 
           .productGrid {
-            grid-template-columns: 1fr;
-            gap: 24px;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 10px;
           }
 
-          .productCard { border-radius: 26px; }
+          .productCard {
+            border-radius: 18px;
+            box-shadow: 0 10px 22px rgba(51, 38, 30, 0.08);
+          }
 
-          .productImage { height: 540px; }
+          .productCard:hover {
+            transform: translateY(-3px);
+          }
+
+          .productImage {
+            height: clamp(185px, 48vw, 260px);
+          }
+
+          .stockTag {
+            left: 8px;
+            bottom: 8px;
+            padding: 6px 8px;
+            font-size: 7px;
+            letter-spacing: 0.08em;
+          }
+
+          .heartBtn {
+            right: 8px;
+            top: 8px;
+            width: 28px;
+            height: 28px;
+            font-size: 13px;
+          }
 
           .productInfo {
-            padding: 22px 20px 24px;
+            padding: 12px 10px 14px;
             display: block;
           }
 
-          .productInfo h4 { font-size: 24px; }
+          .category {
+            margin-bottom: 5px;
+            font-size: 7px;
+            letter-spacing: 0.13em;
+            line-height: 1.35;
+          }
+
+          .productInfo h4 {
+            font-size: clamp(14px, 3.7vw, 18px);
+            line-height: 1.05;
+            max-width: 100%;
+          }
+
+          .price {
+            margin-top: 7px;
+            font-size: 11px;
+            line-height: 1.35;
+          }
 
           .cardActions {
             display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 10px;
-            margin-top: 18px;
+            grid-template-columns: 1fr;
+            gap: 6px;
+            margin-top: 10px;
+          }
+
+          .viewBtn,
+          .addBtn {
+            padding: 8px 7px;
+            font-size: 8px;
+            letter-spacing: 0.10em;
           }
 
           .viewBtn,
@@ -3041,7 +3090,92 @@ export default function App() {
           .brandMark h1 { font-size: 18px; }
           .navActions { gap: 4px; }
         }
-      `}</style>
+      
+
+        @media (max-width: 700px) {
+          .productGrid,
+          .bestSellerGrid,
+          .wishlistGrid {
+            grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+            gap: 10px !important;
+          }
+
+          .products,
+          .wishlistSection {
+            padding-left: 10px !important;
+            padding-right: 10px !important;
+          }
+
+          .productCard {
+            border-radius: 16px !important;
+            min-width: 0 !important;
+          }
+
+          .productImage {
+            height: 165px !important;
+            border-radius: 16px 16px 0 0 !important;
+          }
+
+          .productTag {
+            display: none !important;
+          }
+
+          .stockTag {
+            left: 7px !important;
+            bottom: 7px !important;
+            padding: 6px 8px !important;
+            font-size: 7px !important;
+            letter-spacing: 0.08em !important;
+          }
+
+          .heartBtn {
+            right: 7px !important;
+            top: 7px !important;
+            width: 28px !important;
+            height: 28px !important;
+            font-size: 14px !important;
+          }
+
+          .productInfo {
+            padding: 12px 9px 14px !important;
+            display: block !important;
+          }
+
+          .category {
+            font-size: 7px !important;
+            letter-spacing: 0.16em !important;
+            margin-bottom: 6px !important;
+            line-height: 1.4 !important;
+          }
+
+          .productInfo h4 {
+            font-size: 15px !important;
+            line-height: 1.05 !important;
+            margin: 0 !important;
+          }
+
+          .price {
+            font-size: 11px !important;
+            line-height: 1.35 !important;
+            margin-top: 7px !important;
+          }
+
+          .cardActions {
+            margin-top: 10px !important;
+            display: flex !important;
+            flex-direction: row !important;
+            gap: 5px !important;
+          }
+
+          .viewBtn,
+          .addBtn {
+            flex: 1 !important;
+            padding: 7px 4px !important;
+            font-size: 7px !important;
+            letter-spacing: 0.08em !important;
+          }
+        }
+`}</style>
 
       <div className="scrollProgress" style={{ width: `${scrollProgress}%` }} />
 
