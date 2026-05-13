@@ -1005,6 +1005,18 @@ export default function App() {
           gap: 24px;
         }
 
+        .navLeft {
+          display: flex;
+          align-items: center;
+          gap: 18px;
+          min-width: 0;
+          justify-self: start;
+        }
+
+        .menuTrigger {
+          flex: 0 0 auto;
+        }
+
         .navLinks {
           display: flex;
           gap: 30px;
@@ -2722,7 +2734,9 @@ export default function App() {
             gap: 10px;
           }
 
+          .navLeft { gap: 0; }
           .navLinks { display: none; }
+          .brandMark { justify-self: center; }
 
           .brandMark h1 {
             font-size: 21px;
@@ -3433,11 +3447,17 @@ export default function App() {
 
         <header className="nav">
           <div className="navInner">
-            <nav className="navLinks">
-              <a href="#best">{t.navBest}</a>
-              <a href="#collection">{t.navCollection}</a>
-              <a href="#story">{t.navAbout}</a>
-            </nav>
+            <div className="navLeft">
+              <button className="iconBtn menuTrigger" onClick={() => setMenuOpen(true)} aria-label="Menu">
+                <MenuIcon />
+              </button>
+
+              <nav className="navLinks">
+                <a href="#best">{t.navBest}</a>
+                <a href="#collection">{t.navCollection}</a>
+                <a href="#story">{t.navAbout}</a>
+              </nav>
+            </div>
 
             <a href="#top" className="brandMark">
               <h1>LA GRAZIA</h1>
@@ -3466,9 +3486,6 @@ export default function App() {
                 {darkMode ? t.light : t.dark}
               </button>
 
-              <button className="iconBtn" onClick={() => setMenuOpen(true)} aria-label="Menu">
-                <MenuIcon />
-              </button>
             </div>
           </div>
         </header>
