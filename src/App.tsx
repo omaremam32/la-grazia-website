@@ -978,6 +978,10 @@ export default function App() {
           letter-spacing: 0.22em;
           text-transform: uppercase;
           animation: topBarDrop 0.75s ease both;
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          line-height: 1.2;
         }
 
         .nav {
@@ -2698,6 +2702,16 @@ export default function App() {
           to { opacity: 1; backdrop-filter: blur(20px); }
         }
 
+
+        @media (max-width: 390px) {
+          .topBar {
+            font-size: 6.8px;
+            letter-spacing: 0.055em;
+            padding-left: 6px;
+            padding-right: 6px;
+          }
+        }
+
         @media (min-width: 1500px) {
           .productGrid { grid-template-columns: repeat(4, minmax(0, 1fr)); }
           .searchResultsGrid { grid-template-columns: repeat(4, minmax(0, 1fr)); }
@@ -2723,9 +2737,12 @@ export default function App() {
           body { padding-bottom: 84px; }
 
           .topBar {
-            padding: 9px 12px;
-            font-size: 9px;
-            letter-spacing: 0.12em;
+            padding: 8px 8px;
+            font-size: clamp(7px, 2.15vw, 9px);
+            letter-spacing: 0.08em;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
           }
 
           .navInner {
@@ -3453,7 +3470,6 @@ export default function App() {
               </button>
 
               <nav className="navLinks">
-                <a href="#best">{t.navBest}</a>
                 <a href="#collection">{t.navCollection}</a>
                 <a href="#story">{t.navAbout}</a>
               </nav>
