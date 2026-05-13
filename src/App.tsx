@@ -3325,6 +3325,105 @@ export default function App() {
           }
         }
 
+
+
+        @media (min-width: 901px) {
+          body,
+          #root,
+          .page {
+            width: 100% !important;
+            max-width: none !important;
+            margin: 0 !important;
+          }
+
+          .topBar,
+          .nav,
+          .section,
+          .hero,
+          .trustBar,
+          .footerInner,
+          .searchOverlayContent {
+            width: 100% !important;
+            max-width: none !important;
+          }
+
+          .navInner {
+            width: 100% !important;
+            max-width: none !important;
+            padding-left: clamp(34px, 5vw, 92px) !important;
+            padding-right: clamp(34px, 5vw, 92px) !important;
+          }
+
+          .hero {
+            width: 100% !important;
+            max-width: none !important;
+            min-height: calc(100vh - 82px) !important;
+            padding-left: clamp(34px, 5vw, 92px) !important;
+            padding-right: clamp(34px, 5vw, 92px) !important;
+            grid-template-columns: minmax(430px, 0.86fr) minmax(560px, 1.14fr) !important;
+            gap: clamp(38px, 4.4vw, 78px) !important;
+          }
+
+          .heroCopy,
+          .heroVisual {
+            min-height: calc(100vh - 190px) !important;
+          }
+
+          .heroCopy {
+            padding: clamp(54px, 5.2vw, 96px) !important;
+          }
+
+          .heroVisual img {
+            object-fit: cover !important;
+            object-position: top center !important;
+          }
+
+          .section,
+          .trustBar {
+            padding-left: clamp(34px, 5vw, 92px) !important;
+            padding-right: clamp(34px, 5vw, 92px) !important;
+          }
+
+          .productGrid,
+          .bestSellerGrid,
+          .wishlistGrid {
+            grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
+            gap: clamp(26px, 2.4vw, 42px) !important;
+          }
+
+          .productImage {
+            height: clamp(440px, 32vw, 620px) !important;
+          }
+
+          .productInfo {
+            min-height: 240px !important;
+            padding: 30px 26px 34px !important;
+          }
+
+          .collectionGrid,
+          .reviewGrid,
+          .journalGrid,
+          .policyGrid,
+          .faqGrid,
+          .occasionGrid {
+            width: 100% !important;
+          }
+        }
+
+        @media (min-width: 1400px) {
+          .hero {
+            grid-template-columns: minmax(520px, 0.9fr) minmax(680px, 1.1fr) !important;
+          }
+
+          .brandMark h1 {
+            font-size: 40px !important;
+          }
+
+          .heroCopy h2 {
+            font-size: clamp(78px, 6.2vw, 112px) !important;
+          }
+        }
+
 `}</style>
 
       <div className="scrollProgress" style={{ width: `${scrollProgress}%` }} />
