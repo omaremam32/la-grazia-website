@@ -1404,8 +1404,10 @@ export default function App() {
 
         .productGrid {
           display: grid;
-          grid-template-columns: repeat(4, 1fr);
-          gap: 34px 30px;
+          grid-template-columns: repeat(4, minmax(0, 1fr));
+          gap: clamp(22px, 2vw, 34px);
+          width: 100%;
+          align-items: stretch;
         }
 
         .productCard {
@@ -1415,6 +1417,9 @@ export default function App() {
           overflow: hidden;
           box-shadow: 0 14px 34px rgba(51, 38, 30, 0.07);
           transition: transform 0.35s ease, box-shadow 0.35s ease, border-color 0.35s ease;
+          display: flex;
+          flex-direction: column;
+          min-width: 0;
         }
 
         .darkMode .productCard,
@@ -1436,7 +1441,7 @@ export default function App() {
         }
 
         .productImage {
-          height: clamp(390px, 35vw, 640px);
+          height: clamp(500px, 34vw, 660px);
           background: #e8d6bd;
           overflow: hidden;
           position: relative;
@@ -1494,11 +1499,12 @@ export default function App() {
         }
 
         .productInfo {
-          padding: 26px 22px 28px;
-          display: flex;
+          padding: 28px 24px 30px;
+          display: grid;
+          grid-template-columns: minmax(0, 1fr) auto;
           align-items: center;
-          justify-content: space-between;
           gap: 18px;
+          flex: 1;
         }
 
         .category {
@@ -1513,15 +1519,17 @@ export default function App() {
         .productInfo h4 {
           margin: 0;
           font-family: Georgia, "Times New Roman", serif;
-          font-size: 22px;
-          line-height: 1.15;
+          font-size: clamp(24px, 1.55vw, 34px);
+          line-height: 1.08;
           font-weight: 500;
+          max-width: 95%;
         }
 
         .price {
-          margin: 10px 0 0;
+          margin: 12px 0 0;
           color: #765f4d;
           line-height: 1.55;
+          font-size: clamp(15px, 1vw, 18px);
         }
 
         .cardActions {
@@ -2679,13 +2687,19 @@ export default function App() {
         }
 
         @media (min-width: 1500px) {
-          .productGrid { grid-template-columns: repeat(5, 1fr); }
-          .searchResultsGrid { grid-template-columns: repeat(5, 1fr); }
+          .productGrid { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+          .searchResultsGrid { grid-template-columns: repeat(4, minmax(0, 1fr)); }
           .brandMark h1 { font-size: 38px; }
         }
 
+
+        @media (max-width: 1280px) and (min-width: 1101px) {
+          .productGrid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+          .productImage { height: clamp(470px, 42vw, 620px); }
+        }
+
         @media (max-width: 1100px) {
-          .productGrid { grid-template-columns: repeat(2, 1fr); }
+          .productGrid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
           .styleFinder, .storyGrid, .newsletterBox, .giftCardBox { grid-template-columns: 1fr; }
           .fitNotes { grid-template-columns: 1fr; }
           .emailForm { min-width: 0; }
