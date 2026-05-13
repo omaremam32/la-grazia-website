@@ -704,13 +704,39 @@ export default function App() {
   }
 
   function addToCart(product: Product, size = "M", color = product.colors[0], qty = 1) {
-    setCart((current) => [...current, { product, size, color, quantity: qty }]);
+    setCart((current) => {
+      const existingIndex = current.findIndex(
+        (item) => item.product.name === product.name && item.size === size && item.color === color
+      );
+
+      if (existingIndex !== -1) {
+        return current.map((item, index) =>
+          index === existingIndex ? { ...item, quantity: item.quantity + qty } : item
+        );
+      }
+
+      return [...current, { product, size, color, quantity: qty }];
+    });
+
     setCartOpen(true);
     setToast(t.toastAdded);
   }
 
   function removeFromCart(indexToRemove: number) {
     setCart((current) => current.filter((_, index) => index !== indexToRemove));
+  }
+
+  function updateCartQuantity(indexToUpdate: number, newQuantity: number) {
+    if (newQuantity < 1) {
+      removeFromCart(indexToUpdate);
+      return;
+    }
+
+    setCart((current) =>
+      current.map((item, index) =>
+        index === indexToUpdate ? { ...item, quantity: newQuantity } : item
+      )
+    );
   }
 
   function toggleWishlist(product: Product) {
@@ -2292,6 +2318,55 @@ export default function App() {
           font-size: 13px;
         }
 
+        .cartQtyControls {
+          display: flex;
+          align-items: center;
+          gap: 10px;
+          margin: 9px 0 7px;
+        }
+
+        .cartQtyControls button {
+          width: 30px;
+          height: 30px;
+          border-radius: 999px;
+          border: 1px solid rgba(176, 138, 69, 0.45);
+          background: #fff9f0;
+          color: #2c1f18;
+          font-size: 16px;
+          line-height: 1;
+          display: inline-grid;
+          place-items: center;
+          transition: 0.22s ease;
+        }
+
+        .cartQtyControls button:hover {
+          background: #2c1f18;
+          color: #fff9f0;
+          transform: translateY(-1px);
+        }
+
+        .cartQtyControls span {
+          min-width: 58px;
+          text-align: center;
+          color: #6a5545;
+          font-size: 13px;
+        }
+
+        .darkMode .cartQtyControls button {
+          background: rgba(255, 249, 240, 0.10);
+          color: #fff9f0;
+          border-color: rgba(215, 180, 111, 0.55);
+        }
+
+        .darkMode .cartQtyControls button:hover {
+          background: #d7b46f;
+          color: #211713;
+        }
+
+        .darkMode .cartQtyControls span {
+          color: #e9dcc8;
+        }
+
         .checkoutBtn {
           width: 100%;
           margin-top: 0;
@@ -3109,7 +3184,11 @@ export default function App() {
 
               <button className="iconBtn" onClick={() => setCartOpen(true)} aria-label="Bag">
                 <BagIcon />
-                {cart.length > 0 && <span className="cartBubble">{cart.length}</span>}
+                {cart.length > 0 && (
+                  <span className="cartBubble">
+                    {cart.reduce((total, item) => total + item.quantity, 0)}
+                  </span>
+                )}
               </button>
 
               <button className="pillBtn" onClick={() => setLanguage(isArabic ? "EN" : "AR")}>
@@ -3431,7 +3510,23 @@ export default function App() {
                     <p>{item.product.price}</p>
                     <p>Size: {item.size}</p>
                     <p>Color: {item.color}</p>
-                    <p>Qty: {item.quantity}</p>
+                    <div className="cartQtyControls">
+                      <button
+                        type="button"
+                        aria-label="Decrease quantity"
+                        onClick={() => updateCartQuantity(index, item.quantity - 1)}
+                      >
+                        −
+                      </button>
+                      <span>Qty: {item.quantity}</span>
+                      <button
+                        type="button"
+                        aria-label="Increase quantity"
+                        onClick={() => updateCartQuantity(index, item.quantity + 1)}
+                      >
+                        +
+                      </button>
+                    </div>
                     <button className="cartRemove" onClick={() => removeFromCart(index)}>
                       {t.remove}
                     </button>
