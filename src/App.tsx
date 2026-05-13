@@ -211,10 +211,10 @@ const moodOptions = [
 const text = {
   EN: {
     topBar: "Free Cairo delivery for orders above EGP 3,000",
+    womenOnly: "Women-Only Fashion",
     navBest: "Best Sellers",
     navCollection: "Collection",
     navAbout: "About",
-    womenOnly: "Women-Only Fashion",
     heroEyebrow: "Elegance in every day",
     heroTitle: "The Roma Drop is here.",
     heroDescription:
@@ -240,8 +240,6 @@ const text = {
     priceLow: "Price: Low to High",
     priceHigh: "Premium First",
     noResults: "No pieces matched your search. Try another word or clear the filter.",
-    recentlyViewed: "Recently Viewed",
-    recentlyText: "Pieces you opened recently, saved here to make shopping smoother.",
     styleFinder: "Style Finder",
     styleTitle: "Find Your Grazia Piece",
     viewSuggested: "View Suggested Piece",
@@ -263,11 +261,8 @@ const text = {
     jacketsText: "Structured fit. Size up if you plan to layer over shirts or knitwear.",
     giftEyebrow: "A Gift of Elegance",
     giftTitle: "La Grazia Gift Card",
-    giftText:
-      "Perfect for birthdays, graduations, and special occasions. Let her choose her own Italian-inspired piece.",
+    giftText: "Perfect for birthdays, graduations, and special occasions. Let her choose her own Italian-inspired piece.",
     reserveGift: "Reserve Gift Card",
-    giftCard: "Gift Card",
-    giftFor: "For timeless women",
     brandStory: "Brand Story",
     storyTitle: "Made for women who dress softly, confidently, and timelessly.",
     storyText:
@@ -298,6 +293,10 @@ const text = {
     emptyBag: "Your bag is empty. Add your favorite pieces first.",
     remove: "Remove",
     sendOrder: "Send Order on WhatsApp",
+    payNow: "Pay Now",
+    openingPaymob: "Opening Paymob...",
+    paymentError: "Payment could not start. Please try again.",
+    paymentServerError: "Payment server is not ready locally. Test Pay Now after pushing to Vercel, or run Vercel dev.",
     only: "Only",
     left: "left",
     view: "View",
@@ -324,10 +323,10 @@ const text = {
   },
   AR: {
     topBar: "توصيل مجاني داخل القاهرة للطلبات فوق ٣٠٠٠ جنيه",
+    womenOnly: "أزياء نسائية فقط",
     navBest: "الأكثر مبيعاً",
     navCollection: "المجموعة",
     navAbout: "عن البراند",
-    womenOnly: "أزياء نسائية فقط",
     heroEyebrow: "أناقة في كل يوم",
     heroTitle: "مجموعة روما وصلت.",
     heroDescription:
@@ -353,8 +352,6 @@ const text = {
     priceLow: "السعر من الأقل للأعلى",
     priceHigh: "الفاخر أولاً",
     noResults: "لا توجد قطع مطابقة. جربي كلمة أخرى أو امسحي الفلتر.",
-    recentlyViewed: "شوهد مؤخراً",
-    recentlyText: "القطع التي فتحتيها مؤخراً لتسهيل التسوق عليك.",
     styleFinder: "اختاري ستايلك",
     styleTitle: "اكتشفي قطعة لا غراتسيا المناسبة لك",
     viewSuggested: "شاهدي القطعة المقترحة",
@@ -376,11 +373,8 @@ const text = {
     jacketsText: "القصّة structured. اختاري مقاس أكبر لو هتلبسي تحتها قميص أو knitwear.",
     giftEyebrow: "هدية من الأناقة",
     giftTitle: "كارت هدية لا غراتسيا",
-    giftText:
-      "مناسب لأعياد الميلاد، التخرج، والمناسبات الخاصة. اتركي لها حرية اختيار القطعة الإيطالية المناسبة لها.",
+    giftText: "مناسب لأعياد الميلاد، التخرج، والمناسبات الخاصة. اتركي لها حرية اختيار القطعة الإيطالية المناسبة لها.",
     reserveGift: "احجزي كارت الهدية",
-    giftCard: "Gift Card",
-    giftFor: "For timeless women",
     brandStory: "قصة البراند",
     storyTitle: "مصممة للمرأة التي تحب الأناقة الهادئة والثقة والستايل الخالد.",
     storyText:
@@ -411,6 +405,10 @@ const text = {
     emptyBag: "الشنطة فارغة. أضيفي القطعة المفضلة أولاً.",
     remove: "إزالة",
     sendOrder: "إرسال الطلب عبر واتساب",
+    payNow: "ادفعي الآن",
+    openingPaymob: "جاري فتح Paymob...",
+    paymentError: "تعذر بدء الدفع. حاولي مرة أخرى.",
+    paymentServerError: "الدفع لن يعمل محلياً إلا بعد النشر على Vercel أو تشغيل Vercel dev.",
     only: "متبقي",
     left: "فقط",
     view: "عرض",
@@ -554,6 +552,7 @@ export default function App() {
 
   const [cart, setCart] = useState<CartItem[]>([]);
   const [cartOpen, setCartOpen] = useState(false);
+  const [paymentLoading, setPaymentLoading] = useState(false);
 
   const [wishlist, setWishlist] = useState<string[]>([]);
   const [menuOpen, setMenuOpen] = useState(false);
@@ -570,7 +569,6 @@ export default function App() {
   const [newsletterEmail, setNewsletterEmail] = useState("");
   const [newsletterStatus, setNewsletterStatus] = useState("");
 
-  const [recentlyViewed, setRecentlyViewed] = useState<string[]>([]);
   const [toast, setToast] = useState("");
   const [scrollProgress, setScrollProgress] = useState(0);
   const [loading, setLoading] = useState(true);
@@ -613,10 +611,6 @@ export default function App() {
   }, [searchTerm, activeFilter, sortOption]);
 
   const wishlistProducts = products.filter((product) => wishlist.includes(product.name));
-
-  const recentlyViewedProducts = recentlyViewed
-    .map((name) => products.find((product) => product.name === name))
-    .filter(Boolean) as Product[];
 
   const moodResult = moodOptions.find((option) => option.mood === selectedMood) || moodOptions[0];
   const moodProduct = products.find((product) => product.name === moodResult.result) || products[0];
@@ -679,7 +673,7 @@ export default function App() {
     elements.forEach((element) => observer.observe(element));
 
     return () => observer.disconnect();
-  }, [language, searchTerm, activeFilter, sortOption, recentlyViewed.length, wishlist.length]);
+  }, [language, searchTerm, activeFilter, sortOption, wishlist.length]);
 
   useEffect(() => {
     if (!toast) return;
@@ -707,11 +701,6 @@ export default function App() {
     setSelectedSize("M");
     setSelectedColor(product.colors[0]);
     setQuantity(1);
-
-    setRecentlyViewed((current) => {
-      const withoutDuplicate = current.filter((name) => name !== product.name);
-      return [product.name, ...withoutDuplicate].slice(0, 4);
-    });
   }
 
   function addToCart(product: Product, size = "M", color = product.colors[0], qty = 1) {
@@ -751,6 +740,79 @@ export default function App() {
 
     window.location.href = `mailto:${BRAND_EMAIL}?subject=${subject}&body=${body}`;
     setNewsletterStatus(t.emailDone);
+  }
+
+  async function handlePayNow() {
+    if (cart.length === 0) {
+      setToast(t.emptyBag);
+      return;
+    }
+
+    try {
+      setPaymentLoading(true);
+
+      const paymentItems = cart.map((item) => ({
+        name: item.product.name,
+        price: item.product.minPrice,
+        quantity: item.quantity,
+        description: `${item.product.name} - Size: ${item.size} - Color: ${item.color}`,
+      }));
+
+      const response = await fetch("/api/create-paymob-payment", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          items: paymentItems,
+          customer: {
+            firstName: "La",
+            lastName: "Grazia Customer",
+            email: BRAND_EMAIL,
+            phone: `+${WHATSAPP_NUMBER}`,
+            city: "Cairo",
+            street: "Cairo",
+            building: "1",
+            floor: "1",
+            apartment: "1",
+          },
+        }),
+      });
+
+      let data: { checkoutUrl?: string; url?: string; error?: string } = {};
+
+      try {
+        data = await response.json();
+      } catch {
+        data = {};
+      }
+
+      const checkoutUrl = data.checkoutUrl || data.url;
+
+      if (!response.ok || !checkoutUrl) {
+        console.error(data);
+
+        if (window.location.hostname === "localhost") {
+          setToast(t.paymentServerError || t.paymentError);
+        } else {
+          setToast(t.paymentError);
+        }
+
+        return;
+      }
+
+      window.location.href = checkoutUrl;
+    } catch (error) {
+      console.error(error);
+
+      if (window.location.hostname === "localhost") {
+        setToast(t.paymentServerError || t.paymentError);
+      } else {
+        setToast(t.paymentError);
+      }
+    } finally {
+      setPaymentLoading(false);
+    }
   }
 
   function openSearch() {
@@ -869,8 +931,7 @@ export default function App() {
         .darkMode .modalInfo p,
         .darkMode .cartItem p,
         .darkMode .emptyState,
-        .darkMode .fitNote p,
-        .darkMode .recentCard p {
+        .darkMode .fitNote p {
           color: #eadcc8;
         }
 
@@ -1159,21 +1220,6 @@ export default function App() {
           overflow: hidden;
         }
 
-        .primaryBtn::before,
-        .secondaryBtn::before {
-          content: "";
-          position: absolute;
-          inset: 0;
-          background: linear-gradient(120deg, transparent, rgba(255,255,255,0.32), transparent);
-          transform: translateX(-120%);
-          transition: transform 0.65s ease;
-        }
-
-        .primaryBtn:hover::before,
-        .secondaryBtn:hover::before {
-          transform: translateX(120%);
-        }
-
         .primaryBtn {
           background: #2c1f18;
           color: #f7f1e8;
@@ -1305,10 +1351,6 @@ export default function App() {
           border-color: rgba(215, 180, 111, 0.32);
         }
 
-        .darkMode .trustItem p {
-          color: #eadcc8;
-        }
-
         .darkMode .trustIcon {
           background: #d7b46f;
           color: #211713;
@@ -1355,7 +1397,6 @@ export default function App() {
         .darkMode .newsletterBox,
         .darkMode .cartDrawer,
         .darkMode .modal,
-        .darkMode .recentPanel,
         .darkMode .giftCardBox {
           background: #2c1f18;
           border-color: rgba(215, 180, 111, 0.32);
@@ -1402,10 +1443,7 @@ export default function App() {
           letter-spacing: 0.13em;
           text-transform: uppercase;
           backdrop-filter: blur(6px);
-          transition: transform 0.3s ease;
         }
-
-        .productCard:hover .stockTag { transform: translateY(-3px); }
 
         .heartBtn {
           position: absolute;
@@ -1509,12 +1547,9 @@ export default function App() {
           border-radius: 999px;
           padding: 16px 20px;
           outline: none;
-          transition: box-shadow 0.25s ease, border-color 0.25s ease, transform 0.25s ease;
         }
 
-        .selectWrap {
-          position: relative;
-        }
+        .selectWrap { position: relative; }
 
         .selectWrap::before {
           content: "CURATED";
@@ -1528,11 +1563,6 @@ export default function App() {
           pointer-events: none;
         }
 
-        .page.arabic .selectWrap::before {
-          left: auto;
-          right: 18px;
-        }
-
         .selectWrap::after {
           content: "⌄";
           position: absolute;
@@ -1544,17 +1574,11 @@ export default function App() {
           font-size: 18px;
         }
 
-        .page.arabic .selectWrap::after {
-          right: auto;
-          left: 18px;
-        }
-
         .sortSelect {
           width: 100%;
           appearance: none;
           border: 1px solid rgba(176, 138, 69, 0.48);
-          background:
-            linear-gradient(135deg, rgba(255,249,240,0.96), rgba(239,227,210,0.86));
+          background: linear-gradient(135deg, rgba(255,249,240,0.96), rgba(239,227,210,0.86));
           color: #241a14;
           border-radius: 999px;
           padding: 22px 48px 11px 18px;
@@ -1562,18 +1586,6 @@ export default function App() {
           font-size: 13px;
           letter-spacing: 0.06em;
           box-shadow: 0 12px 28px rgba(36, 26, 20, 0.07);
-          transition: box-shadow 0.25s ease, border-color 0.25s ease, transform 0.25s ease;
-        }
-
-        .page.arabic .sortSelect {
-          padding: 22px 18px 11px 48px;
-        }
-
-        .searchBox:focus,
-        .sortSelect:focus {
-          border-color: #b08a45;
-          box-shadow: 0 0 0 4px rgba(176, 138, 69, 0.12), 0 14px 30px rgba(36, 26, 20, 0.08);
-          transform: translateY(-1px);
         }
 
         .darkMode .searchBox,
@@ -1582,10 +1594,6 @@ export default function App() {
           background: #211713;
           color: #fff9f0;
           border-color: rgba(215, 180, 111, 0.48);
-        }
-
-        .darkMode .sortSelect {
-          background: linear-gradient(135deg, #211713, #2c1f18);
         }
 
         .filterRow {
@@ -1609,14 +1617,6 @@ export default function App() {
           letter-spacing: 0.12em;
           text-transform: uppercase;
           transition: transform 0.25s ease, background 0.25s ease, color 0.25s ease;
-        }
-
-        .filterBtn:hover,
-        .moodBtn:hover,
-        .sizeBtn:hover,
-        .colorBtn:hover,
-        .qtyBtn:hover {
-          transform: translateY(-2px);
         }
 
         .filterBtn.active,
@@ -1648,64 +1648,6 @@ export default function App() {
           text-align: center;
           color: #6a5545;
           line-height: 1.7;
-        }
-
-        .darkMode .emptyState {
-          background: #2c1f18;
-          color: #eadcc8;
-        }
-
-        .recentPanel {
-          background: #fff9f0;
-          border: 1px solid rgba(176, 138, 69, 0.22);
-          border-radius: 34px;
-          padding: 34px;
-          box-shadow: 0 14px 34px rgba(51, 38, 30, 0.06);
-        }
-
-        .recentGrid {
-          display: grid;
-          grid-template-columns: repeat(4, 1fr);
-          gap: 18px;
-          margin-top: 24px;
-        }
-
-        .recentCard {
-          border: 0;
-          background: transparent;
-          padding: 0;
-          text-align: left;
-          color: inherit;
-          transition: transform 0.3s ease;
-        }
-
-        .page.arabic .recentCard {
-          text-align: right;
-        }
-
-        .recentCard:hover {
-          transform: translateY(-5px);
-        }
-
-        .recentCard img {
-          width: 100%;
-          height: 260px;
-          object-fit: cover;
-          object-position: top center;
-          border-radius: 22px;
-          display: block;
-        }
-
-        .recentCard h4 {
-          margin: 12px 0 4px;
-          font-family: Georgia, "Times New Roman", serif;
-          font-size: 20px;
-          font-weight: 500;
-        }
-
-        .recentCard p {
-          margin: 0;
-          color: #765f4d;
         }
 
         .cleanPanel {
@@ -1746,12 +1688,6 @@ export default function App() {
           border-radius: 28px;
           overflow: hidden;
           border: 1px solid rgba(176, 138, 69, 0.16);
-          transition: transform 0.35s ease, box-shadow 0.35s ease;
-        }
-
-        .moodCard:hover {
-          transform: translateY(-6px);
-          box-shadow: 0 22px 45px rgba(36, 26, 20, 0.14);
         }
 
         .darkMode .moodCard {
@@ -1765,11 +1701,6 @@ export default function App() {
           object-fit: cover;
           object-position: top center;
           display: block;
-          transition: transform 0.75s ease;
-        }
-
-        .moodCard:hover img {
-          transform: scale(1.06);
         }
 
         .moodCardContent { padding: 26px; }
@@ -1807,15 +1738,11 @@ export default function App() {
           font-weight: 500;
         }
 
-        .page.arabic .sizeTable th { text-align: right; }
-
         .sizeTable td {
           padding: 18px 16px;
           border-bottom: 1px solid rgba(176, 138, 69, 0.16);
           color: #5f4c3e;
         }
-
-        .darkMode .sizeTable td { color: #eadcc8; }
 
         .fitNotes {
           display: grid;
@@ -1851,31 +1778,17 @@ export default function App() {
           position: relative;
         }
 
-        .giftCardInfo,
-        .luxGiftCard {
-          position: relative;
-          z-index: 1;
-        }
-
         .luxGiftCard {
           aspect-ratio: 1.58 / 1;
           border-radius: 30px;
           padding: 30px;
-          background:
-            linear-gradient(135deg, rgba(44,31,24,1), rgba(90,70,54,1)),
-            radial-gradient(circle at top left, rgba(215,180,111,0.35), transparent 40%);
+          background: linear-gradient(135deg, rgba(44,31,24,1), rgba(90,70,54,1));
           border: 1px solid rgba(215, 180, 111, 0.55);
           color: #fff9f0;
           display: flex;
           flex-direction: column;
           justify-content: space-between;
           box-shadow: 0 24px 60px rgba(36, 26, 20, 0.26);
-          transition: transform 0.55s ease, box-shadow 0.55s ease;
-        }
-
-        .luxGiftCard:hover {
-          transform: rotateX(4deg) rotateY(-6deg) translateY(-6px);
-          box-shadow: 0 34px 80px rgba(36, 26, 20, 0.34);
         }
 
         .luxGiftCard p {
@@ -1916,11 +1829,6 @@ export default function App() {
           object-fit: cover;
           object-position: top center;
           display: block;
-          transition: transform 0.9s ease;
-        }
-
-        .storyImage:hover img {
-          transform: scale(1.05);
         }
 
         .storyPoints {
@@ -2235,20 +2143,6 @@ export default function App() {
           padding: 54px clamp(28px, 4vw, 72px) 90px;
         }
 
-        .searchOverlayHead {
-          display: flex;
-          align-items: end;
-          justify-content: space-between;
-          gap: 24px;
-          margin-bottom: 24px;
-        }
-
-        .searchHint {
-          margin: 0;
-          color: #6a5545;
-          line-height: 1.7;
-        }
-
         .searchResultsGrid {
           display: grid;
           grid-template-columns: repeat(4, 1fr);
@@ -2280,9 +2174,7 @@ export default function App() {
           display: block;
         }
 
-        .searchResultCard div {
-          padding: 20px;
-        }
+        .searchResultCard div { padding: 20px; }
 
         .searchResultCard span {
           display: block;
@@ -2362,9 +2254,7 @@ export default function App() {
           color: #b08a45;
         }
 
-        .cartHeader button {
-          font-size: 30px;
-        }
+        .cartHeader button { font-size: 30px; }
 
         .cartItems {
           overflow-y: auto;
@@ -2403,7 +2293,8 @@ export default function App() {
         }
 
         .checkoutBtn {
-          margin-top: auto;
+          width: 100%;
+          margin-top: 0;
           text-align: center;
           border-radius: 999px;
           padding: 15px 20px;
@@ -2412,6 +2303,31 @@ export default function App() {
           letter-spacing: 0.14em;
           text-transform: uppercase;
           font-size: 12px;
+          border: 1px solid #2c1f18;
+          display: block;
+        }
+
+        .checkoutBtn:disabled {
+          opacity: 0.65;
+          cursor: not-allowed;
+        }
+
+        .payNowBtn {
+          margin-top: auto;
+          background: linear-gradient(135deg, #2c1f18, #5a4636);
+          border-color: rgba(215, 180, 111, 0.50);
+          box-shadow: 0 12px 28px rgba(36, 26, 20, 0.18);
+        }
+
+        .whatsappCheckout {
+          margin-top: 10px;
+          background: transparent !important;
+          color: #2c1f18 !important;
+          border: 1px solid rgba(176, 138, 69, 0.45);
+        }
+
+        .darkMode .whatsappCheckout {
+          color: #fff9f0 !important;
         }
 
         .modalBackdrop {
@@ -2556,9 +2472,7 @@ export default function App() {
           z-index: 200;
           display: grid;
           place-items: center;
-          background:
-            radial-gradient(circle at center, rgba(176, 138, 69, 0.18), transparent 42%),
-            #2c1f18;
+          background: radial-gradient(circle at center, rgba(176, 138, 69, 0.18), transparent 42%), #2c1f18;
           color: #f7f1e8;
           animation: loaderOut 0.95s ease 3.25s forwards;
           overflow: hidden;
@@ -2569,27 +2483,6 @@ export default function App() {
           width: min(680px, 88vw);
           position: relative;
           z-index: 2;
-        }
-
-        .loaderOrnament {
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          gap: 20px;
-          color: #d7b46f;
-          margin-bottom: 26px;
-          opacity: 0;
-          animation: fadeUp 1s ease 0.55s forwards;
-        }
-
-        .loaderOrnament span {
-          width: 100px;
-          height: 1px;
-          background: linear-gradient(90deg, transparent, #d7b46f);
-        }
-
-        .loaderOrnament span:last-child {
-          background: linear-gradient(90deg, #d7b46f, transparent);
         }
 
         .loader h1 {
@@ -2619,19 +2512,6 @@ export default function App() {
           animation: loaderLine 2.65s ease 0.8s forwards;
         }
 
-        .loaderGlow {
-          position: absolute;
-          left: 50%;
-          top: 50%;
-          width: 240px;
-          height: 240px;
-          transform: translate(-50%, -50%);
-          border-radius: 50%;
-          background: rgba(215, 180, 111, 0.08);
-          filter: blur(12px);
-          animation: loaderGlow 2.6s ease-in-out infinite alternate;
-        }
-
         @keyframes loaderLogo {
           from { opacity: 0; letter-spacing: 0.05em; transform: translateY(18px) scale(0.98); }
           to { opacity: 1; letter-spacing: 0.18em; transform: translateY(0) scale(1); }
@@ -2641,11 +2521,6 @@ export default function App() {
           from { width: 0; opacity: 0; }
           20% { opacity: 1; }
           to { width: min(420px, 76vw); opacity: 1; }
-        }
-
-        @keyframes loaderGlow {
-          from { transform: translate(-50%, -50%) scale(0.9); opacity: 0.45; }
-          to { transform: translate(-50%, -50%) scale(1.18); opacity: 0.9; }
         }
 
         @keyframes loaderOut {
@@ -2729,17 +2604,9 @@ export default function App() {
         }
 
         @media (min-width: 1500px) {
-          .productGrid {
-            grid-template-columns: repeat(5, 1fr);
-          }
-
-          .searchResultsGrid {
-            grid-template-columns: repeat(5, 1fr);
-          }
-
-          .brandMark h1 {
-            font-size: 38px;
-          }
+          .productGrid { grid-template-columns: repeat(5, 1fr); }
+          .searchResultsGrid { grid-template-columns: repeat(5, 1fr); }
+          .brandMark h1 { font-size: 38px; }
         }
 
         @media (max-width: 1100px) {
@@ -2748,14 +2615,11 @@ export default function App() {
           .fitNotes { grid-template-columns: 1fr; }
           .emailForm { min-width: 0; }
           .trustBar { grid-template-columns: repeat(2, 1fr); }
-          .recentGrid { grid-template-columns: repeat(2, 1fr); }
           .searchResultsGrid { grid-template-columns: repeat(2, 1fr); }
         }
 
         @media (max-width: 900px) {
-          body {
-            padding-bottom: 84px;
-          }
+          body { padding-bottom: 84px; }
 
           .topBar {
             padding: 9px 12px;
@@ -2769,9 +2633,7 @@ export default function App() {
             gap: 10px;
           }
 
-          .navLinks {
-            display: none;
-          }
+          .navLinks { display: none; }
 
           .brandMark h1 {
             font-size: 21px;
@@ -2794,9 +2656,7 @@ export default function App() {
             min-height: 36px;
           }
 
-          .navActions {
-            gap: 6px;
-          }
+          .navActions { gap: 6px; }
 
           .hero {
             min-height: auto;
@@ -2817,9 +2677,7 @@ export default function App() {
             bottom: -34px;
           }
 
-          .heroCopy h2 {
-            font-size: clamp(38px, 12vw, 54px);
-          }
+          .heroCopy h2 { font-size: clamp(38px, 12vw, 54px); }
 
           .heroCopy p.description {
             font-size: 15px;
@@ -2852,9 +2710,7 @@ export default function App() {
             padding: 18px;
           }
 
-          .heroCard strong {
-            font-size: 22px;
-          }
+          .heroCard strong { font-size: 22px; }
 
           .trustBar {
             grid-template-columns: 1fr 1fr;
@@ -2889,9 +2745,7 @@ export default function App() {
             margin-bottom: 24px;
           }
 
-          .sectionTitle {
-            font-size: clamp(32px, 10vw, 46px);
-          }
+          .sectionTitle { font-size: clamp(32px, 10vw, 46px); }
 
           .sectionIntro {
             font-size: 14px;
@@ -2903,22 +2757,16 @@ export default function App() {
             gap: 24px;
           }
 
-          .productCard {
-            border-radius: 26px;
-          }
+          .productCard { border-radius: 26px; }
 
-          .productImage {
-            height: 540px;
-          }
+          .productImage { height: 540px; }
 
           .productInfo {
             padding: 22px 20px 24px;
             display: block;
           }
 
-          .productInfo h4 {
-            font-size: 24px;
-          }
+          .productInfo h4 { font-size: 24px; }
 
           .cardActions {
             display: grid;
@@ -2938,9 +2786,7 @@ export default function App() {
             gap: 12px;
           }
 
-          .searchBox {
-            padding: 15px 18px;
-          }
+          .searchBox { padding: 15px 18px; }
 
           .filterRow {
             overflow-x: auto;
@@ -2948,11 +2794,8 @@ export default function App() {
             padding-bottom: 8px;
           }
 
-          .filterBtn {
-            white-space: nowrap;
-          }
+          .filterBtn { white-space: nowrap; }
 
-          .recentPanel,
           .cleanPanel,
           .giftCardBox,
           .newsletterBox {
@@ -2960,41 +2803,21 @@ export default function App() {
             padding: 28px 22px;
           }
 
-          .recentGrid {
-            grid-template-columns: 1fr;
-          }
+          .styleFinder { grid-template-columns: 1fr; }
 
-          .recentCard img {
-            height: 480px;
-          }
+          .moodCard img { height: 500px; }
 
-          .styleFinder {
-            grid-template-columns: 1fr;
-          }
+          .sizeTable { min-width: 720px; }
 
-          .moodCard img {
-            height: 500px;
-          }
-
-          .sizeTable {
-            min-width: 720px;
-          }
-
-          .storyGrid {
-            grid-template-columns: 1fr;
-          }
+          .storyGrid { grid-template-columns: 1fr; }
 
           .storyImage {
             min-height: 500px;
           }
 
-          .storyPoints {
-            grid-template-columns: 1fr;
-          }
+          .storyPoints { grid-template-columns: 1fr; }
 
-          .newsletterBox {
-            grid-template-columns: 1fr;
-          }
+          .newsletterBox { grid-template-columns: 1fr; }
 
           .emailForm {
             flex-direction: column;
@@ -3017,9 +2840,7 @@ export default function App() {
           }
 
           .floatingWhatsApp,
-          .backTop {
-            display: none;
-          }
+          .backTop { display: none; }
 
           .searchOverlayTop {
             min-height: 88px;
@@ -3027,9 +2848,7 @@ export default function App() {
             gap: 12px;
           }
 
-          .searchOverlayTop input {
-            font-size: 21px;
-          }
+          .searchOverlayTop input { font-size: 21px; }
 
           .searchCloseBtn {
             width: 42px;
@@ -3041,22 +2860,9 @@ export default function App() {
             padding: 32px 16px 110px;
           }
 
-          .searchOverlayHead {
-            display: block;
-          }
+          .searchResultsGrid { grid-template-columns: 1fr; }
 
-          .searchHint {
-            margin-top: 12px;
-            font-size: 14px;
-          }
-
-          .searchResultsGrid {
-            grid-template-columns: 1fr;
-          }
-
-          .searchResultCard img {
-            height: 440px;
-          }
+          .searchResultCard img { height: 440px; }
 
           .menuPanel {
             width: 100%;
@@ -3096,9 +2902,7 @@ export default function App() {
             padding: 24px;
           }
 
-          .modalInfo h3 {
-            font-size: 28px;
-          }
+          .modalInfo h3 { font-size: 28px; }
 
           .closeBtn {
             right: 18px;
@@ -3139,48 +2943,14 @@ export default function App() {
         }
 
         @media (max-width: 430px) {
-          .productImage {
-            height: 470px;
-          }
-
-          .heroVisual {
-            min-height: 460px;
-          }
-
+          .productImage { height: 470px; }
+          .heroVisual { min-height: 460px; }
           .moodCard img,
-          .recentCard img,
-          .storyImage {
-            height: 420px;
-            min-height: 420px;
-          }
-
-          .searchResultCard img {
-            height: 380px;
-          }
-
-          .modalImage {
-            min-height: 430px;
-            height: 52vh;
-          }
-
-          .brandMark h1 {
-            font-size: 18px;
-          }
-
-          .navActions {
-            gap: 4px;
-          }
-        }
-
-        @media (prefers-reduced-motion: reduce) {
-          *,
-          *::before,
-          *::after {
-            animation-duration: 0.001ms !important;
-            animation-iteration-count: 1 !important;
-            transition-duration: 0.001ms !important;
-            scroll-behavior: auto !important;
-          }
+          .storyImage { height: 420px; min-height: 420px; }
+          .searchResultCard img { height: 380px; }
+          .modalImage { min-height: 430px; height: 52vh; }
+          .brandMark h1 { font-size: 18px; }
+          .navActions { gap: 4px; }
         }
       `}</style>
 
@@ -3188,13 +2958,7 @@ export default function App() {
 
       {loading && (
         <div className="loader">
-          <div className="loaderGlow" />
           <div className="loaderInner">
-            <div className="loaderOrnament">
-              <span />
-              <b>◆</b>
-              <span />
-            </div>
             <h1>LA GRAZIA</h1>
             <p>{t.loadingLine}</p>
             <div className="loaderLine" />
@@ -3223,16 +2987,11 @@ export default function App() {
           </div>
 
           <div className="searchOverlayContent">
-            <div className="searchOverlayHead">
+            <div className="sectionHead">
               <div>
                 <p className="eyebrow">{t.searchResults}</p>
                 <h2 className="sectionTitle">{searchTerm ? searchTerm : t.wardrobeTitle}</h2>
               </div>
-              <p className="searchHint">
-                {isArabic
-                  ? "اكتبي اسم القطعة، النوع، المناسبة، أو اختاري من الاختيارات السريعة."
-                  : "Search by piece name, category, occasion, or choose one of the quick filters."}
-              </p>
             </div>
 
             <div className="searchQuickLinks">
@@ -3470,26 +3229,6 @@ export default function App() {
             )}
           </section>
 
-          {recentlyViewedProducts.length > 0 && (
-            <section className="section reveal">
-              <div className="recentPanel">
-                <p className="eyebrow">{t.recentlyViewed}</p>
-                <h2 className="sectionTitle">{t.recentlyViewed}</h2>
-                <p className="sectionIntro">{t.recentlyText}</p>
-
-                <div className="recentGrid">
-                  {recentlyViewedProducts.map((product) => (
-                    <button className="recentCard" key={product.name} onClick={() => openProduct(product)}>
-                      <img src={product.image} alt={product.name} />
-                      <h4>{product.name}</h4>
-                      <p>{product.price}</p>
-                    </button>
-                  ))}
-                </div>
-              </div>
-            </section>
-          )}
-
           <section className="section reveal" id="style">
             <div className="cleanPanel styleFinder">
               <div>
@@ -3577,7 +3316,7 @@ export default function App() {
 
           <section className="section reveal" id="gift-card">
             <div className="giftCardBox">
-              <div className="giftCardInfo">
+              <div>
                 <p className="eyebrow">{t.giftEyebrow}</p>
                 <h2 className="panelTitle">{t.giftTitle}</h2>
                 <p className="panelText">{t.giftText}</p>
@@ -3589,9 +3328,9 @@ export default function App() {
               </div>
 
               <div className="luxGiftCard">
-                <p>{t.giftCard}</p>
+                <p>Gift Card</p>
                 <h3>LA GRAZIA</h3>
-                <p>{t.giftFor}</p>
+                <p>For timeless women</p>
               </div>
             </div>
           </section>
@@ -3702,7 +3441,11 @@ export default function App() {
             </div>
           )}
 
-          <a className="checkoutBtn" href={createWhatsAppLink(cartMessage)} target="_blank" rel="noreferrer">
+          <button className="checkoutBtn payNowBtn" onClick={handlePayNow} disabled={paymentLoading || cart.length === 0}>
+            {paymentLoading ? t.openingPaymob : t.payNow}
+          </button>
+
+          <a className="checkoutBtn whatsappCheckout" href={createWhatsAppLink(cartMessage)} target="_blank" rel="noreferrer">
             {t.sendOrder}
           </a>
         </div>
