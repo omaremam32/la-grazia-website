@@ -22,6 +22,12 @@ type CartItem = {
   quantity: number;
 };
 
+type AccountUser = {
+  name: string;
+  email: string;
+  phone: string;
+};
+
 const WHATSAPP_NUMBER = "201101900086";
 const BRAND_EMAIL = "omaromohamed2003@gmail.com";
 
@@ -285,6 +291,23 @@ const text = {
     menuSearch: "What are you looking for?",
     fullCollection: "Full Collection",
     privateList: "Private List",
+    signIn: "Sign In",
+    signUp: "Sign Up",
+    myAccount: "My Account",
+    signInTitle: "La Grazia Account",
+    signUpTitle: "Create Your Account",
+    signInText: "Sign in to save your details, speed up checkout, and receive private drop access.",
+    signUpText: "Create a La Grazia account to save your details, track your bag faster, and receive private drop access.",
+    fullName: "Full name",
+    phoneNumber: "Phone number",
+    signInEmail: "Email address",
+    continueSignIn: "Continue",
+    createAccount: "Create Account",
+    noAccount: "New here? Create an account",
+    haveAccount: "Already have an account? Sign in",
+    signedInWelcome: "Welcome to La Grazia",
+    accountCreated: "Your La Grazia account has been created",
+    signOut: "Sign Out",
     whatsappStyling: "WhatsApp Styling Help",
     savedLooks: "Saved Pieces",
     savedEmpty: "Tap the heart on any piece to save it here.",
@@ -397,6 +420,23 @@ const text = {
     menuSearch: "بتدوري على إيه؟",
     fullCollection: "المجموعة الكاملة",
     privateList: "القائمة الخاصة",
+    signIn: "تسجيل الدخول",
+    signUp: "إنشاء حساب",
+    myAccount: "حسابي",
+    signInTitle: "حساب لا غراتسيا",
+    signUpTitle: "إنشاء حساب جديد",
+    signInText: "سجلي بياناتك لتسهيل الطلب، حفظ التفاصيل، والحصول على وصول خاص للـ drops الجديدة.",
+    signUpText: "أنشئي حساب لا غراتسيا لحفظ بياناتك، تسهيل الطلب، والحصول على وصول خاص للـ drops الجديدة.",
+    fullName: "الاسم الكامل",
+    phoneNumber: "رقم الهاتف",
+    signInEmail: "البريد الإلكتروني",
+    continueSignIn: "متابعة",
+    createAccount: "إنشاء الحساب",
+    noAccount: "جديدة هنا؟ أنشئي حساب",
+    haveAccount: "لديك حساب بالفعل؟ سجلي الدخول",
+    signedInWelcome: "أهلاً بكِ في لا غراتسيا",
+    accountCreated: "تم إنشاء حساب لا غراتسيا",
+    signOut: "تسجيل الخروج",
     whatsappStyling: "مساعدة تنسيق عبر واتساب",
     savedLooks: "القطع المحفوظة",
     savedEmpty: "اضغطي على القلب في أي قطعة لحفظها هنا.",
@@ -556,7 +596,12 @@ export default function App() {
 
   const [wishlist, setWishlist] = useState<string[]>([]);
   const [menuOpen, setMenuOpen] = useState(false);
+  const [collectionMenuOpen, setCollectionMenuOpen] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
+  const [signInOpen, setSignInOpen] = useState(false);
+  const [authMode, setAuthMode] = useState<"signIn" | "signUp">("signIn");
+  const [accountUser, setAccountUser] = useState<AccountUser | null>(null);
+  const [accountForm, setAccountForm] = useState({ name: "", email: "", phone: "" });
 
   const [searchTerm, setSearchTerm] = useState("");
   const [activeFilter, setActiveFilter] = useState("All");
@@ -621,6 +666,7 @@ export default function App() {
     setActiveFilter("All");
     setSearchTerm("");
     setMenuOpen(false);
+    setCollectionMenuOpen(false);
 
     window.setTimeout(() => {
       document.getElementById("collection")?.scrollIntoView({ behavior: "smooth" });
@@ -876,6 +922,28 @@ export default function App() {
     } finally {
       setPaymentLoading(false);
     }
+  }
+
+  function handleSignInSubmit(event: React.FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+
+    const cleanAccount: AccountUser = {
+      name: accountForm.name.trim() || "La Grazia Client",
+      email: accountForm.email.trim() || "guest@lagrazia.eg",
+      phone: accountForm.phone.trim(),
+    };
+
+    setAccountUser(cleanAccount);
+    window.localStorage.setItem("laGraziaAccount", JSON.stringify(cleanAccount));
+    setSignInOpen(false);
+    setToast(authMode === "signUp" ? t.accountCreated : t.signedInWelcome);
+  }
+
+  function handleSignOut() {
+    setAccountUser(null);
+    setAccountForm({ name: "", email: "", phone: "" });
+    window.localStorage.removeItem("laGraziaAccount");
+    setAuthMode("signIn");
   }
 
   function openSearch() {
@@ -1158,6 +1226,48 @@ export default function App() {
           color: #2c1f18;
           transform: translateY(-2px);
           box-shadow: 0 10px 24px rgba(36, 26, 20, 0.12);
+        }
+
+
+        .signInBtn {
+          position: relative;
+          overflow: hidden;
+          border-color: rgba(176, 138, 69, 0.55) !important;
+          background: linear-gradient(135deg, rgba(255, 249, 240, 0.92), rgba(232, 214, 189, 0.72)) !important;
+          box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.34), 0 10px 26px rgba(176, 138, 69, 0.10);
+          white-space: nowrap;
+        }
+
+        .signInBtn::before {
+          content: "";
+          position: absolute;
+          inset: 0;
+          background: linear-gradient(120deg, transparent, rgba(198, 161, 91, 0.28), transparent);
+          transform: translateX(-120%);
+          transition: transform 0.7s ease;
+        }
+
+        .signInBtn:hover::before { transform: translateX(120%); }
+
+        .darkMode .signInBtn {
+          background: linear-gradient(135deg, rgba(215, 180, 111, 0.20), rgba(255, 249, 240, 0.08)) !important;
+          color: #fff9f0;
+        }
+
+        .accountShortName {
+          display: inline-flex;
+          align-items: center;
+          gap: 7px;
+          position: relative;
+          z-index: 1;
+        }
+
+        .accountDot {
+          width: 7px;
+          height: 7px;
+          border-radius: 50%;
+          background: #b08a45;
+          box-shadow: 0 0 0 4px rgba(176, 138, 69, 0.16);
         }
 
         .cartBubble {
@@ -2170,12 +2280,13 @@ export default function App() {
         .menuCollectionBlock {
           border-top: 1px solid rgba(198, 161, 91, 0.22);
           border-bottom: 1px solid rgba(198, 161, 91, 0.22);
-          padding: 18px 0 20px;
+          padding: 18px 0;
           display: grid;
-          gap: 14px;
+          gap: 0;
         }
 
         .menuCollectionMain {
+          width: 100%;
           color: #f7f1e8;
           background: transparent;
           border: 0;
@@ -2185,6 +2296,66 @@ export default function App() {
           font-weight: 400;
           font-size: 25px;
           letter-spacing: 0.06em;
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          gap: 18px;
+        }
+
+        .menuCollectionMain:hover { color: #d6b66f; }
+
+        .menuArrow {
+          width: 34px;
+          height: 34px;
+          border-radius: 50%;
+          display: grid;
+          place-items: center;
+          border: 1px solid rgba(198, 161, 91, 0.36);
+          color: #d6b66f;
+          font-family: Inter, Arial, sans-serif;
+          font-size: 17px;
+          line-height: 1;
+          transition: transform 0.28s ease, background 0.28s ease, color 0.28s ease;
+          flex: 0 0 auto;
+        }
+
+        .menuArrow.open {
+          transform: rotate(180deg);
+          background: #d6b66f;
+          color: #211713;
+        }
+
+        .menuCollectionDropdown {
+          display: grid;
+          grid-template-rows: 0fr;
+          opacity: 0;
+          overflow: hidden;
+          transition: grid-template-rows 0.35s ease, opacity 0.28s ease, margin-top 0.28s ease;
+        }
+
+        .menuCollectionDropdown.open {
+          grid-template-rows: 1fr;
+          opacity: 1;
+          margin-top: 16px;
+        }
+
+        .menuCollectionDropdownInner {
+          min-height: 0;
+          display: grid;
+          gap: 10px;
+        }
+
+        .menuCollectionAll {
+          border: 1px solid rgba(198, 161, 91, 0.42) !important;
+          border-radius: 999px !important;
+          background: rgba(214, 182, 111, 0.18) !important;
+          color: #f7f1e8 !important;
+          padding: 13px 16px !important;
+          font-size: 11px !important;
+          letter-spacing: 0.16em !important;
+          text-transform: uppercase !important;
+          font-family: Inter, Arial, sans-serif !important;
+          text-align: center !important;
         }
 
         .menuCollectionGrid {
@@ -2205,15 +2376,18 @@ export default function App() {
           font-family: Inter, Arial, sans-serif;
         }
 
-        .menuCollectionGrid button:hover {
-          background: #d6b66f;
-          color: #211713;
+        .menuCollectionGrid button:hover,
+        .menuCollectionAll:hover {
+          background: #d6b66f !important;
+          color: #211713 !important;
           transform: translateY(-2px);
         }
 
         .page.arabic .menuCollectionMain {
           text-align: right;
         }
+
+        .page.arabic .menuCollectionMain { flex-direction: row-reverse; }
 
         .menuWishlist {
           margin-top: 34px;
@@ -2674,6 +2848,234 @@ export default function App() {
           box-shadow: 0 12px 28px rgba(36, 26, 20, 0.18);
         }
 
+
+        .signInBackdrop {
+          position: fixed;
+          inset: 0;
+          z-index: 95;
+          background: rgba(36, 26, 20, 0.58);
+          backdrop-filter: blur(12px);
+          display: grid;
+          place-items: center;
+          padding: 22px;
+          animation: fadeIn 0.28s ease both;
+        }
+
+        .signInPanel {
+          width: min(460px, 100%);
+          border-radius: 34px;
+          background: linear-gradient(145deg, #fff9f0, #efe3d2);
+          border: 1px solid rgba(176, 138, 69, 0.42);
+          box-shadow: 0 28px 90px rgba(36, 26, 20, 0.34);
+          padding: 30px;
+          position: relative;
+          overflow: hidden;
+          animation: modalRise 0.42s cubic-bezier(0.22, 1, 0.36, 1) both;
+        }
+
+        .signInPanel::before {
+          content: "LA GRAZIA";
+          position: absolute;
+          right: -18px;
+          bottom: -18px;
+          font-family: Georgia, "Times New Roman", serif;
+          font-size: 60px;
+          letter-spacing: 0.12em;
+          color: rgba(176, 138, 69, 0.08);
+          pointer-events: none;
+        }
+
+        .darkMode .signInPanel {
+          background: linear-gradient(145deg, #2c1f18, #211713);
+          color: #fff9f0;
+          border-color: rgba(215, 180, 111, 0.42);
+        }
+
+        .signInClose {
+          position: absolute;
+          right: 18px;
+          top: 18px;
+          width: 38px;
+          height: 38px;
+          border-radius: 50%;
+          border: 1px solid rgba(176, 138, 69, 0.34);
+          background: rgba(255, 249, 240, 0.68);
+          color: #2c1f18;
+          font-size: 22px;
+          z-index: 2;
+        }
+
+        .darkMode .signInClose {
+          background: rgba(255, 249, 240, 0.08);
+          color: #fff9f0;
+          border-color: rgba(215, 180, 111, 0.42);
+        }
+
+        .signInPanel h3 {
+          margin: 8px 0 12px;
+          font-family: Georgia, "Times New Roman", serif;
+          font-size: 36px;
+          font-weight: 500;
+          line-height: 1;
+          position: relative;
+          z-index: 1;
+        }
+
+        .signInPanel p {
+          margin: 0 0 20px;
+          color: #6a5545;
+          line-height: 1.75;
+          position: relative;
+          z-index: 1;
+        }
+
+        .darkMode .signInPanel p { color: #e9dcc8; }
+
+        .signInTabs {
+          position: relative;
+          z-index: 1;
+          display: grid;
+          grid-template-columns: 1fr 1fr;
+          gap: 8px;
+          padding: 6px;
+          border-radius: 999px;
+          background: rgba(176, 138, 69, 0.12);
+          border: 1px solid rgba(176, 138, 69, 0.28);
+          margin: 0 0 18px;
+        }
+
+        .signInTab {
+          border: 0;
+          border-radius: 999px;
+          padding: 12px 14px;
+          background: transparent;
+          color: #6a5545;
+          letter-spacing: 0.14em;
+          text-transform: uppercase;
+          font-size: 10px;
+          transition: 0.22s ease;
+        }
+
+        .signInTab.active {
+          background: #2c1f18;
+          color: #fff9f0;
+          box-shadow: 0 10px 22px rgba(36, 26, 20, 0.16);
+        }
+
+        .darkMode .signInTabs {
+          background: rgba(255, 249, 240, 0.08);
+          border-color: rgba(215, 180, 111, 0.35);
+        }
+
+        .darkMode .signInTab { color: #e9dcc8; }
+
+        .darkMode .signInTab.active {
+          background: #d7b46f;
+          color: #211713;
+        }
+
+        .authSwitchBtn {
+          border: 0 !important;
+          background: transparent !important;
+          color: #b08a45 !important;
+          padding: 6px 8px !important;
+          font-size: 11px !important;
+          letter-spacing: 0.08em !important;
+          text-transform: none !important;
+          text-decoration: underline;
+          text-underline-offset: 4px;
+        }
+
+        .darkMode .authSwitchBtn { color: #d7b46f !important; }
+
+        .signInForm {
+          display: grid;
+          gap: 12px;
+          position: relative;
+          z-index: 1;
+        }
+
+        .signInForm input {
+          width: 100%;
+          border-radius: 999px;
+          border: 1px solid rgba(176, 138, 69, 0.38);
+          background: rgba(255, 249, 240, 0.82);
+          color: #2c1f18;
+          padding: 15px 18px;
+          outline: none;
+          font-size: 14px;
+        }
+
+        .signInForm input:focus {
+          border-color: #b08a45;
+          box-shadow: 0 0 0 4px rgba(176, 138, 69, 0.12);
+        }
+
+        .darkMode .signInForm input {
+          background: rgba(255, 249, 240, 0.08);
+          color: #fff9f0;
+          border-color: rgba(215, 180, 111, 0.42);
+        }
+
+        .accountSavedBox {
+          border-radius: 24px;
+          border: 1px solid rgba(176, 138, 69, 0.32);
+          background: rgba(255, 249, 240, 0.55);
+          padding: 18px;
+          margin: 18px 0;
+          position: relative;
+          z-index: 1;
+        }
+
+        .darkMode .accountSavedBox { background: rgba(255, 249, 240, 0.08); }
+
+        .accountSavedBox strong {
+          display: block;
+          font-family: Georgia, "Times New Roman", serif;
+          font-size: 24px;
+          font-weight: 500;
+          margin-bottom: 6px;
+        }
+
+        .accountSavedBox span {
+          display: block;
+          color: #7a6250;
+          font-size: 13px;
+          line-height: 1.6;
+        }
+
+        .darkMode .accountSavedBox span { color: #e9dcc8; }
+
+        .accountActions {
+          display: grid;
+          grid-template-columns: 1fr 1fr;
+          gap: 10px;
+          position: relative;
+          z-index: 1;
+        }
+
+        .accountActions button,
+        .signInForm button {
+          border-radius: 999px;
+          padding: 14px 18px;
+          border: 1px solid rgba(176, 138, 69, 0.45);
+          letter-spacing: 0.14em;
+          text-transform: uppercase;
+          font-size: 11px;
+        }
+
+        .signInForm button,
+        .accountPrimary {
+          background: #2c1f18;
+          color: #fff9f0;
+        }
+
+        .accountSecondary {
+          background: transparent;
+          color: #2c1f18;
+        }
+
+        .darkMode .accountSecondary { color: #fff9f0; }
         .toast {
           position: fixed;
           left: 50%;
@@ -2903,7 +3305,9 @@ export default function App() {
             min-height: 36px;
           }
 
-          .navActions { gap: 6px; }
+          .navActions { gap: 6px; flex-wrap: nowrap; }
+          .signInBtn { padding: 0 9px; max-width: 84px; }
+          .signInBtn .accountShortName { max-width: 58px; overflow: hidden; text-overflow: ellipsis; }
 
           .hero {
             min-height: auto;
@@ -3205,7 +3609,235 @@ export default function App() {
             top: 18px;
           }
 
-          .toast {
+  
+        .signInBackdrop {
+          position: fixed;
+          inset: 0;
+          z-index: 95;
+          background: rgba(36, 26, 20, 0.58);
+          backdrop-filter: blur(12px);
+          display: grid;
+          place-items: center;
+          padding: 22px;
+          animation: fadeIn 0.28s ease both;
+        }
+
+        .signInPanel {
+          width: min(460px, 100%);
+          border-radius: 34px;
+          background: linear-gradient(145deg, #fff9f0, #efe3d2);
+          border: 1px solid rgba(176, 138, 69, 0.42);
+          box-shadow: 0 28px 90px rgba(36, 26, 20, 0.34);
+          padding: 30px;
+          position: relative;
+          overflow: hidden;
+          animation: modalRise 0.42s cubic-bezier(0.22, 1, 0.36, 1) both;
+        }
+
+        .signInPanel::before {
+          content: "LA GRAZIA";
+          position: absolute;
+          right: -18px;
+          bottom: -18px;
+          font-family: Georgia, "Times New Roman", serif;
+          font-size: 60px;
+          letter-spacing: 0.12em;
+          color: rgba(176, 138, 69, 0.08);
+          pointer-events: none;
+        }
+
+        .darkMode .signInPanel {
+          background: linear-gradient(145deg, #2c1f18, #211713);
+          color: #fff9f0;
+          border-color: rgba(215, 180, 111, 0.42);
+        }
+
+        .signInClose {
+          position: absolute;
+          right: 18px;
+          top: 18px;
+          width: 38px;
+          height: 38px;
+          border-radius: 50%;
+          border: 1px solid rgba(176, 138, 69, 0.34);
+          background: rgba(255, 249, 240, 0.68);
+          color: #2c1f18;
+          font-size: 22px;
+          z-index: 2;
+        }
+
+        .darkMode .signInClose {
+          background: rgba(255, 249, 240, 0.08);
+          color: #fff9f0;
+          border-color: rgba(215, 180, 111, 0.42);
+        }
+
+        .signInPanel h3 {
+          margin: 8px 0 12px;
+          font-family: Georgia, "Times New Roman", serif;
+          font-size: 36px;
+          font-weight: 500;
+          line-height: 1;
+          position: relative;
+          z-index: 1;
+        }
+
+        .signInPanel p {
+          margin: 0 0 20px;
+          color: #6a5545;
+          line-height: 1.75;
+          position: relative;
+          z-index: 1;
+        }
+
+        .darkMode .signInPanel p { color: #e9dcc8; }
+
+        .signInTabs {
+          position: relative;
+          z-index: 1;
+          display: grid;
+          grid-template-columns: 1fr 1fr;
+          gap: 8px;
+          padding: 6px;
+          border-radius: 999px;
+          background: rgba(176, 138, 69, 0.12);
+          border: 1px solid rgba(176, 138, 69, 0.28);
+          margin: 0 0 18px;
+        }
+
+        .signInTab {
+          border: 0;
+          border-radius: 999px;
+          padding: 12px 14px;
+          background: transparent;
+          color: #6a5545;
+          letter-spacing: 0.14em;
+          text-transform: uppercase;
+          font-size: 10px;
+          transition: 0.22s ease;
+        }
+
+        .signInTab.active {
+          background: #2c1f18;
+          color: #fff9f0;
+          box-shadow: 0 10px 22px rgba(36, 26, 20, 0.16);
+        }
+
+        .darkMode .signInTabs {
+          background: rgba(255, 249, 240, 0.08);
+          border-color: rgba(215, 180, 111, 0.35);
+        }
+
+        .darkMode .signInTab { color: #e9dcc8; }
+
+        .darkMode .signInTab.active {
+          background: #d7b46f;
+          color: #211713;
+        }
+
+        .authSwitchBtn {
+          border: 0 !important;
+          background: transparent !important;
+          color: #b08a45 !important;
+          padding: 6px 8px !important;
+          font-size: 11px !important;
+          letter-spacing: 0.08em !important;
+          text-transform: none !important;
+          text-decoration: underline;
+          text-underline-offset: 4px;
+        }
+
+        .darkMode .authSwitchBtn { color: #d7b46f !important; }
+
+        .signInForm {
+          display: grid;
+          gap: 12px;
+          position: relative;
+          z-index: 1;
+        }
+
+        .signInForm input {
+          width: 100%;
+          border-radius: 999px;
+          border: 1px solid rgba(176, 138, 69, 0.38);
+          background: rgba(255, 249, 240, 0.82);
+          color: #2c1f18;
+          padding: 15px 18px;
+          outline: none;
+          font-size: 14px;
+        }
+
+        .signInForm input:focus {
+          border-color: #b08a45;
+          box-shadow: 0 0 0 4px rgba(176, 138, 69, 0.12);
+        }
+
+        .darkMode .signInForm input {
+          background: rgba(255, 249, 240, 0.08);
+          color: #fff9f0;
+          border-color: rgba(215, 180, 111, 0.42);
+        }
+
+        .accountSavedBox {
+          border-radius: 24px;
+          border: 1px solid rgba(176, 138, 69, 0.32);
+          background: rgba(255, 249, 240, 0.55);
+          padding: 18px;
+          margin: 18px 0;
+          position: relative;
+          z-index: 1;
+        }
+
+        .darkMode .accountSavedBox { background: rgba(255, 249, 240, 0.08); }
+
+        .accountSavedBox strong {
+          display: block;
+          font-family: Georgia, "Times New Roman", serif;
+          font-size: 24px;
+          font-weight: 500;
+          margin-bottom: 6px;
+        }
+
+        .accountSavedBox span {
+          display: block;
+          color: #7a6250;
+          font-size: 13px;
+          line-height: 1.6;
+        }
+
+        .darkMode .accountSavedBox span { color: #e9dcc8; }
+
+        .accountActions {
+          display: grid;
+          grid-template-columns: 1fr 1fr;
+          gap: 10px;
+          position: relative;
+          z-index: 1;
+        }
+
+        .accountActions button,
+        .signInForm button {
+          border-radius: 999px;
+          padding: 14px 18px;
+          border: 1px solid rgba(176, 138, 69, 0.45);
+          letter-spacing: 0.14em;
+          text-transform: uppercase;
+          font-size: 11px;
+        }
+
+        .signInForm button,
+        .accountPrimary {
+          background: #2c1f18;
+          color: #fff9f0;
+        }
+
+        .accountSecondary {
+          background: transparent;
+          color: #2c1f18;
+        }
+
+        .darkMode .accountSecondary { color: #fff9f0; }
+        .toast {
             bottom: 92px;
             width: calc(100vw - 36px);
             text-align: center;
@@ -3247,6 +3879,8 @@ export default function App() {
           .modalImage { min-height: 430px; height: 52vh; }
           .brandMark h1 { font-size: 18px; }
           .navActions { gap: 4px; }
+          .signInBtn { max-width: 72px; padding: 0 8px; }
+          .accountDot { display: none; }
         }
       
 
@@ -3567,6 +4201,80 @@ export default function App() {
 
       {toast && <div className="toast">{toast}</div>}
 
+      {signInOpen && (
+        <div className="signInBackdrop" onClick={() => setSignInOpen(false)}>
+          <div className="signInPanel" onClick={(event) => event.stopPropagation()}>
+            <button className="signInClose" onClick={() => setSignInOpen(false)} aria-label="Close sign in">
+              ×
+            </button>
+            <p className="eyebrow">{accountUser ? t.myAccount : authMode === "signUp" ? t.signUp : t.signIn}</p>
+            <h3>{accountUser ? t.signInTitle : authMode === "signUp" ? t.signUpTitle : t.signInTitle}</h3>
+            <p>{accountUser ? t.signInText : authMode === "signUp" ? t.signUpText : t.signInText}</p>
+
+            {!accountUser && (
+              <div className="signInTabs" role="tablist" aria-label="Account options">
+                <button
+                  type="button"
+                  className={authMode === "signIn" ? "signInTab active" : "signInTab"}
+                  onClick={() => setAuthMode("signIn")}
+                >
+                  {t.signIn}
+                </button>
+                <button
+                  type="button"
+                  className={authMode === "signUp" ? "signInTab active" : "signInTab"}
+                  onClick={() => setAuthMode("signUp")}
+                >
+                  {t.signUp}
+                </button>
+              </div>
+            )}
+
+            {accountUser ? (
+              <>
+                <div className="accountSavedBox">
+                  <strong>{accountUser.name}</strong>
+                  <span>{accountUser.email}</span>
+                  {accountUser.phone && <span>{accountUser.phone}</span>}
+                </div>
+                <div className="accountActions">
+                  <button className="accountSecondary" onClick={handleSignOut}>{t.signOut}</button>
+                  <button className="accountPrimary" onClick={() => setSignInOpen(false)}>{t.continueSignIn}</button>
+                </div>
+              </>
+            ) : (
+              <form className="signInForm" onSubmit={handleSignInSubmit}>
+                <input
+                  value={accountForm.name}
+                  onChange={(event) => setAccountForm((current) => ({ ...current, name: event.target.value }))}
+                  placeholder={t.fullName}
+                />
+                <input
+                  type="email"
+                  value={accountForm.email}
+                  onChange={(event) => setAccountForm((current) => ({ ...current, email: event.target.value }))}
+                  placeholder={t.signInEmail}
+                  required={authMode === "signUp"}
+                />
+                <input
+                  value={accountForm.phone}
+                  onChange={(event) => setAccountForm((current) => ({ ...current, phone: event.target.value }))}
+                  placeholder={t.phoneNumber}
+                />
+                <button type="submit">{authMode === "signUp" ? t.createAccount : t.continueSignIn}</button>
+                <button
+                  type="button"
+                  className="authSwitchBtn"
+                  onClick={() => setAuthMode(authMode === "signUp" ? "signIn" : "signUp")}
+                >
+                  {authMode === "signUp" ? t.haveAccount : t.noAccount}
+                </button>
+              </form>
+            )}
+          </div>
+        </div>
+      )}
+
       {searchOpen && (
         <div className="searchOverlay">
           <div className="searchOverlayTop">
@@ -3637,9 +4345,9 @@ export default function App() {
       )}
 
       {menuOpen && (
-        <div className="menuOverlay" onClick={() => setMenuOpen(false)}>
+        <div className="menuOverlay" onClick={() => { setMenuOpen(false); setCollectionMenuOpen(false); }}>
           <aside className="menuPanel" onClick={(event) => event.stopPropagation()}>
-            <button className="menuClose" onClick={() => setMenuOpen(false)} aria-label="Close menu">×</button>
+            <button className="menuClose" onClick={() => { setMenuOpen(false); setCollectionMenuOpen(false); }} aria-label="Close menu">×</button>
 
             <div className="menuSearch">
               <SearchIcon />
@@ -3650,13 +4358,29 @@ export default function App() {
               <a href="#best" onClick={() => setMenuOpen(false)}>{t.bestTitle}</a>
 
               <div className="menuCollectionBlock">
-                <button className="menuCollectionMain" onClick={() => openCollectionGroup("All")}>{t.fullCollection}</button>
-                <div className="menuCollectionGrid">
-                  {collectionMenuItems.map((item) => (
-                    <button key={item.key} onClick={() => openCollectionGroup(item.key)}>
-                      {item.label}
+                <button
+                  type="button"
+                  className="menuCollectionMain"
+                  onClick={() => setCollectionMenuOpen((current) => !current)}
+                  aria-expanded={collectionMenuOpen}
+                >
+                  <span>{t.navCollection}</span>
+                  <span className={collectionMenuOpen ? "menuArrow open" : "menuArrow"}>⌄</span>
+                </button>
+
+                <div className={collectionMenuOpen ? "menuCollectionDropdown open" : "menuCollectionDropdown"}>
+                  <div className="menuCollectionDropdownInner">
+                    <button className="menuCollectionAll" type="button" onClick={() => openCollectionGroup("All")}>
+                      {t.fullCollection}
                     </button>
-                  ))}
+                    <div className="menuCollectionGrid">
+                      {collectionMenuItems.map((item) => (
+                        <button key={item.key} type="button" onClick={() => openCollectionGroup(item.key)}>
+                          {item.label}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
                 </div>
               </div>
 
@@ -3728,6 +4452,13 @@ export default function App() {
                     {cart.reduce((total, item) => total + item.quantity, 0)}
                   </span>
                 )}
+              </button>
+
+              <button className="pillBtn signInBtn" onClick={() => { setAuthMode("signIn"); setSignInOpen(true); }}>
+                <span className="accountShortName">
+                  {accountUser && <span className="accountDot" />}
+                  {accountUser ? t.myAccount : t.signIn}
+                </span>
               </button>
 
               <button className="pillBtn" onClick={() => setLanguage(isArabic ? "EN" : "AR")}>
