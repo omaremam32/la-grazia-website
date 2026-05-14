@@ -560,6 +560,7 @@ export default function App() {
 
   const [searchTerm, setSearchTerm] = useState("");
   const [activeFilter, setActiveFilter] = useState("All");
+  const [collectionFilter, setCollectionFilter] = useState("All");
   const [sortOption, setSortOption] = useState("Featured");
 
   const [selectedMood, setSelectedMood] = useState("Old Money");
@@ -591,6 +592,41 @@ export default function App() {
     "Premium Piece": isArabic ? "قطع فاخرة" : "Premium Piece",
   };
 
+  const collectionMenuItems = [
+    { key: "Tops", label: isArabic ? "توبس" : "Tops" },
+    { key: "Pants", label: isArabic ? "بنطلونات" : "Pants" },
+    { key: "Coats", label: isArabic ? "كوتس وجاكيتات" : "Coats" },
+  ];
+
+  function productMatchesCollection(product: Product, collection: string) {
+    const textValue = `${product.name} ${product.category}`.toLowerCase();
+
+    if (collection === "Tops") {
+      return textValue.includes("top") || textValue.includes("knit") || textValue.includes("shirt") || textValue.includes("vest") || textValue.includes("cardigan");
+    }
+
+    if (collection === "Pants") {
+      return textValue.includes("trouser") || textValue.includes("palazzo") || textValue.includes("pants");
+    }
+
+    if (collection === "Coats") {
+      return textValue.includes("jacket") || textValue.includes("coat") || textValue.includes("bouclé") || textValue.includes("cardigan");
+    }
+
+    return true;
+  }
+
+  function openCollectionGroup(group: string) {
+    setCollectionFilter(group);
+    setActiveFilter("All");
+    setSearchTerm("");
+    setMenuOpen(false);
+
+    window.setTimeout(() => {
+      document.getElementById("collection")?.scrollIntoView({ behavior: "smooth" });
+    }, 80);
+  }
+
   const filteredProducts = useMemo(() => {
     const result = products.filter((product) => {
       const search =
@@ -600,15 +636,16 @@ export default function App() {
         product.tag.toLowerCase().includes(searchTerm.toLowerCase());
 
       const filter = activeFilter === "All" || product.tag === activeFilter;
+      const collection = productMatchesCollection(product, collectionFilter);
 
-      return search && filter;
+      return search && filter && collection;
     });
 
     if (sortOption === "Price Low to High") return [...result].sort((a, b) => a.minPrice - b.minPrice);
     if (sortOption === "Price High to Low") return [...result].sort((a, b) => b.minPrice - a.minPrice);
 
     return result;
-  }, [searchTerm, activeFilter, sortOption]);
+  }, [searchTerm, activeFilter, collectionFilter, sortOption]);
 
   const wishlistProducts = products.filter((product) => wishlist.includes(product.name));
 
@@ -1653,6 +1690,48 @@ export default function App() {
           margin-bottom: 32px;
         }
 
+        .activeCollectionPill {
+          margin: 0 0 18px;
+          width: fit-content;
+          display: flex;
+          align-items: center;
+          gap: 12px;
+          border: 1px solid rgba(176, 138, 69, 0.35);
+          background: #fff9f0;
+          border-radius: 999px;
+          padding: 10px 14px;
+          color: #5a4636;
+          box-shadow: 0 10px 24px rgba(36, 26, 20, 0.06);
+        }
+
+        .activeCollectionPill span {
+          font-size: 11px;
+          letter-spacing: 0.14em;
+          text-transform: uppercase;
+        }
+
+        .activeCollectionPill button {
+          border: 0;
+          background: #2c1f18;
+          color: #fff9f0;
+          border-radius: 999px;
+          padding: 8px 12px;
+          font-size: 10px;
+          letter-spacing: 0.12em;
+          text-transform: uppercase;
+        }
+
+        .darkMode .activeCollectionPill {
+          background: #2c1f18;
+          color: #eadcc8;
+          border-color: rgba(215, 180, 111, 0.45);
+        }
+
+        .darkMode .activeCollectionPill button {
+          background: #d6b66f;
+          color: #211713;
+        }
+
         .filterBtn,
         .moodBtn,
         .sizeBtn,
@@ -2086,6 +2165,54 @@ export default function App() {
           font-family: Georgia, "Times New Roman", serif;
           font-size: 25px;
           letter-spacing: 0.06em;
+        }
+
+        .menuCollectionBlock {
+          border-top: 1px solid rgba(198, 161, 91, 0.22);
+          border-bottom: 1px solid rgba(198, 161, 91, 0.22);
+          padding: 18px 0 20px;
+          display: grid;
+          gap: 14px;
+        }
+
+        .menuCollectionMain {
+          color: #f7f1e8;
+          background: transparent;
+          border: 0;
+          padding: 0;
+          text-align: left;
+          font-family: Georgia, "Times New Roman", serif;
+          font-weight: 400;
+          font-size: 25px;
+          letter-spacing: 0.06em;
+        }
+
+        .menuCollectionGrid {
+          display: grid;
+          grid-template-columns: repeat(3, 1fr);
+          gap: 10px;
+        }
+
+        .menuCollectionGrid button {
+          border: 1px solid rgba(198, 161, 91, 0.42);
+          border-radius: 999px;
+          background: rgba(255, 249, 240, 0.08);
+          color: #f7f1e8;
+          padding: 12px 10px;
+          font-size: 11px;
+          letter-spacing: 0.14em;
+          text-transform: uppercase;
+          font-family: Inter, Arial, sans-serif;
+        }
+
+        .menuCollectionGrid button:hover {
+          background: #d6b66f;
+          color: #211713;
+          transform: translateY(-2px);
+        }
+
+        .page.arabic .menuCollectionMain {
+          text-align: right;
         }
 
         .menuWishlist {
@@ -3521,7 +3648,18 @@ export default function App() {
 
             <nav className="menuLinks">
               <a href="#best" onClick={() => setMenuOpen(false)}>{t.bestTitle}</a>
-              <a href="#collection" onClick={() => setMenuOpen(false)}>{t.fullCollection}</a>
+
+              <div className="menuCollectionBlock">
+                <button className="menuCollectionMain" onClick={() => openCollectionGroup("All")}>{t.fullCollection}</button>
+                <div className="menuCollectionGrid">
+                  {collectionMenuItems.map((item) => (
+                    <button key={item.key} onClick={() => openCollectionGroup(item.key)}>
+                      {item.label}
+                    </button>
+                  ))}
+                </div>
+              </div>
+
               <a href="#style" onClick={() => setMenuOpen(false)}>{t.styleFinder}</a>
               <a href="#size" onClick={() => setMenuOpen(false)}>{t.sizeGuide}</a>
               <a href="#gift-card" onClick={() => setMenuOpen(false)}>{t.giftTitle}</a>
@@ -3569,7 +3707,6 @@ export default function App() {
               </button>
 
               <nav className="navLinks">
-                <a href="#collection">{t.navCollection}</a>
                 <a href="#story">{t.navAbout}</a>
               </nav>
             </div>
@@ -3680,9 +3817,16 @@ export default function App() {
               </div>
             </div>
 
+            {collectionFilter !== "All" && (
+              <div className="activeCollectionPill">
+                <span>{isArabic ? "المجموعة:" : "Collection:"} {collectionMenuItems.find((item) => item.key === collectionFilter)?.label}</span>
+                <button onClick={() => setCollectionFilter("All")}>{isArabic ? "عرض الكل" : "Show All"}</button>
+              </div>
+            )}
+
             <div className="filterRow">
               {filters.map((filter) => (
-                <button key={filter} className={activeFilter === filter ? "filterBtn active" : "filterBtn"} onClick={() => setActiveFilter(filter)}>
+                <button key={filter} className={activeFilter === filter ? "filterBtn active" : "filterBtn"} onClick={() => { setActiveFilter(filter); setCollectionFilter("All"); }}>
                   {filterLabels[filter]}
                 </button>
               ))}
