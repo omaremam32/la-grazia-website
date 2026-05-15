@@ -5773,6 +5773,323 @@ export default function App() {
           }
         }
 
+
+
+        @media (min-width: 701px) {
+          .menuOverlay {
+            background: rgba(36, 26, 20, 0.46) !important;
+          }
+
+          .menuPanel {
+            width: min(420px, 32vw) !important;
+            min-width: 360px !important;
+            height: 100vh !important;
+            padding: 26px 28px 34px !important;
+            background:
+              radial-gradient(circle at top left, rgba(215, 180, 111, 0.12), transparent 34%),
+              linear-gradient(180deg, #2b1d17 0%, #21130f 100%) !important;
+            box-shadow: 22px 0 70px rgba(0, 0, 0, 0.25) !important;
+          }
+
+          .menuClose {
+            width: 42px !important;
+            height: 42px !important;
+            margin: 0 auto 26px !important;
+            display: grid !important;
+            place-items: center !important;
+            font-size: 27px !important;
+            background: rgba(255, 249, 240, 0.035) !important;
+            border-color: rgba(215, 180, 111, 0.55) !important;
+            box-shadow: 0 10px 24px rgba(0, 0, 0, 0.14) !important;
+          }
+
+          .menuSearch {
+            min-height: 54px !important;
+            padding: 12px 17px !important;
+            margin-bottom: 28px !important;
+            gap: 12px !important;
+            border-color: rgba(215, 180, 111, 0.52) !important;
+            background: rgba(255, 249, 240, 0.035) !important;
+          }
+
+          .menuSearch input {
+            font-size: 14px !important;
+            letter-spacing: 0.02em !important;
+          }
+
+          .menuLinks {
+            gap: 16px !important;
+          }
+
+          .menuLinks a,
+          .menuLinks button {
+            font-size: 21px !important;
+            line-height: 1.16 !important;
+            letter-spacing: 0.045em !important;
+          }
+
+          .menuCollectionBlock {
+            padding: 15px 0 14px !important;
+            border-top-color: rgba(215, 180, 111, 0.22) !important;
+            border-bottom-color: rgba(215, 180, 111, 0.22) !important;
+          }
+
+          .menuCollectionMain {
+            justify-content: flex-start !important;
+            gap: 12px !important;
+            font-size: 22px !important;
+          }
+
+          .menuArrow {
+            width: 28px !important;
+            height: 28px !important;
+            font-size: 0 !important;
+            background: rgba(215, 180, 111, 0.12) !important;
+            border: 1px solid rgba(215, 180, 111, 0.58) !important;
+            color: #d7b46f !important;
+            box-shadow: inset 0 0 0 1px rgba(255, 249, 240, 0.04), 0 8px 18px rgba(0, 0, 0, 0.13) !important;
+          }
+
+          .menuArrow::before {
+            content: "";
+            width: 8px;
+            height: 8px;
+            border-right: 1.8px solid currentColor;
+            border-bottom: 1.8px solid currentColor;
+            transform: rotate(45deg) translate(-1px, -1px);
+            transition: transform 0.28s ease;
+          }
+
+          .menuArrow.open {
+            transform: none !important;
+            background: linear-gradient(135deg, #d7b46f, #b08a45) !important;
+            color: #211713 !important;
+            border-color: rgba(255, 249, 240, 0.24) !important;
+          }
+
+          .menuArrow.open::before {
+            transform: rotate(225deg) translate(-1px, -1px);
+          }
+
+          .menuCollectionDropdown.open {
+            margin-top: 13px !important;
+          }
+
+          .menuCollectionDropdownInner {
+            gap: 9px !important;
+          }
+
+          .menuCollectionAll {
+            padding: 12px 14px !important;
+            font-size: 10px !important;
+            letter-spacing: 0.18em !important;
+            border-radius: 18px !important;
+            background: rgba(215, 180, 111, 0.19) !important;
+          }
+
+          .menuCollectionGrid {
+            grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+            gap: 8px !important;
+          }
+
+          .menuCollectionGrid button {
+            padding: 11px 7px !important;
+            font-size: 12px !important;
+            letter-spacing: 0.18em !important;
+            border-radius: 18px !important;
+            min-width: 0 !important;
+          }
+
+          .menuWishlist {
+            margin-top: 24px !important;
+            padding-top: 18px !important;
+            border-top-color: rgba(215, 180, 111, 0.24) !important;
+            text-align: center !important;
+          }
+
+          .menuWishlist h3 {
+            font-size: 18px !important;
+            margin-bottom: 12px !important;
+          }
+
+          .menuWishlist p {
+            font-size: 13px !important;
+            line-height: 1.65 !important;
+          }
+        }
+
+
+
+        /* Final menu refinement: compact text + forward/down chevron */
+        .menuPanel {
+          max-width: 430px !important;
+        }
+
+        .menuLinks {
+          gap: 14px !important;
+        }
+
+        .menuLinks a,
+        .menuLinks button {
+          font-size: 20px !important;
+          line-height: 1.12 !important;
+          letter-spacing: 0.035em !important;
+        }
+
+        .menuCollectionMain {
+          justify-content: space-between !important;
+          gap: 12px !important;
+          font-size: 20px !important;
+          width: 100% !important;
+        }
+
+        .menuArrow {
+          width: 30px !important;
+          height: 30px !important;
+          min-width: 30px !important;
+          border-radius: 999px !important;
+          display: inline-grid !important;
+          place-items: center !important;
+          font-size: 0 !important;
+          color: #d7b46f !important;
+          background: rgba(215, 180, 111, 0.08) !important;
+          border: 1px solid rgba(215, 180, 111, 0.48) !important;
+          box-shadow: inset 0 0 0 1px rgba(255, 249, 240, 0.035), 0 8px 18px rgba(0, 0, 0, 0.12) !important;
+          transform: none !important;
+          transition: background 0.25s ease, color 0.25s ease, transform 0.25s ease, border-color 0.25s ease !important;
+        }
+
+        .menuArrow::before {
+          content: "" !important;
+          width: 8px !important;
+          height: 8px !important;
+          border-right: 1.8px solid currentColor !important;
+          border-bottom: 1.8px solid currentColor !important;
+          transform: rotate(-45deg) !important;
+          transition: transform 0.25s ease !important;
+          margin-left: -2px !important;
+        }
+
+        .menuArrow.open {
+          background: linear-gradient(135deg, #d7b46f, #b08a45) !important;
+          color: #211713 !important;
+          border-color: rgba(255, 249, 240, 0.22) !important;
+          transform: none !important;
+        }
+
+        .menuArrow.open::before {
+          transform: rotate(45deg) !important;
+          margin-left: 0 !important;
+          margin-top: -3px !important;
+        }
+
+        .menuCollectionAll {
+          padding: 11px 14px !important;
+          font-size: 10px !important;
+          letter-spacing: 0.18em !important;
+        }
+
+        .menuCollectionGrid button {
+          padding: 10px 7px !important;
+          font-size: 11px !important;
+          letter-spacing: 0.15em !important;
+        }
+
+        @media (max-width: 700px) {
+          .menuPanel {
+            padding: 18px 22px 125px !important;
+          }
+
+          .menuClose {
+            width: 42px !important;
+            height: 42px !important;
+            font-size: 25px !important;
+            margin-bottom: 20px !important;
+          }
+
+          .menuSearch {
+            min-height: 52px !important;
+            padding: 10px 16px !important;
+            margin-bottom: 24px !important;
+          }
+
+          .menuSearch input {
+            font-size: 13px !important;
+          }
+
+          .menuLinks {
+            gap: 12px !important;
+          }
+
+          .menuLinks a,
+          .menuLinks button {
+            font-size: 18px !important;
+            line-height: 1.08 !important;
+            letter-spacing: 0.03em !important;
+          }
+
+          .menuCollectionBlock {
+            padding: 13px 0 !important;
+          }
+
+          .menuCollectionMain {
+            font-size: 18px !important;
+          }
+
+          .menuArrow {
+            width: 28px !important;
+            height: 28px !important;
+            min-width: 28px !important;
+          }
+
+          .menuArrow::before {
+            width: 7px !important;
+            height: 7px !important;
+          }
+
+          .menuCollectionDropdown.open {
+            margin-top: 11px !important;
+          }
+
+          .menuCollectionAll {
+            padding: 10px 12px !important;
+            font-size: 9px !important;
+            letter-spacing: 0.17em !important;
+          }
+
+          .menuCollectionGrid {
+            gap: 7px !important;
+          }
+
+          .menuCollectionGrid button {
+            padding: 9px 6px !important;
+            font-size: 10px !important;
+            letter-spacing: 0.13em !important;
+          }
+
+          .menuWishlist h3 {
+            font-size: 18px !important;
+          }
+
+          .menuWishlist p,
+          .menuWishlist .emptyState {
+            font-size: 13px !important;
+          }
+        }
+
+        @media (max-width: 390px) {
+          .menuLinks a,
+          .menuLinks button,
+          .menuCollectionMain {
+            font-size: 17px !important;
+          }
+
+          .menuCollectionGrid button {
+            font-size: 9px !important;
+            letter-spacing: 0.12em !important;
+          }
+        }
+
 `}</style>
 
       <div className="scrollProgress" style={{ width: `${scrollProgress}%` }} />
@@ -6038,7 +6355,7 @@ export default function App() {
                   aria-expanded={collectionMenuOpen}
                 >
                   <span>{t.navCollection}</span>
-                  <span className={collectionMenuOpen ? "menuArrow open" : "menuArrow"}>⌄</span>
+                  <span className={collectionMenuOpen ? "menuArrow open" : "menuArrow"} aria-hidden="true"></span>
                 </button>
 
                 <div className={collectionMenuOpen ? "menuCollectionDropdown open" : "menuCollectionDropdown"}>
