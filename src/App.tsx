@@ -7286,7 +7286,7 @@ export default function App() {
                       </div>
                     </div>
                   </>
-                ) : (
+                ) : accountView === "orders" ? (
                   <>
                     <div className="accountPageTitleRow">
                       <div>
