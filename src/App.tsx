@@ -6261,6 +6261,153 @@ export default function App() {
           }
         }
 
+
+        /* Final footer + item size chart luxury refinement */
+        .footerLinks .footerTextBtn {
+          white-space: nowrap;
+        }
+
+        .modalSizeHeader {
+          gap: 10px !important;
+          margin-top: 14px !important;
+          padding: 10px 12px !important;
+          border: 1px solid rgba(176, 138, 69, 0.22) !important;
+          border-radius: 22px !important;
+          background: rgba(255, 249, 240, 0.48) !important;
+        }
+
+        .modalSizeHeader p {
+          flex: 1 1 auto !important;
+          text-align: left !important;
+          letter-spacing: 0.06em !important;
+          text-transform: uppercase !important;
+          font-size: 11px !important;
+          color: #6a5545 !important;
+        }
+
+        .page.arabic .modalSizeHeader p {
+          text-align: right !important;
+        }
+
+        .inlineSizeToggle {
+          min-height: 42px !important;
+          padding: 0 14px 0 18px !important;
+          border-radius: 999px !important;
+          border: 1px solid rgba(176, 138, 69, 0.50) !important;
+          background: linear-gradient(135deg, #2c1f18, #4b3328) !important;
+          color: #fff9f0 !important;
+          box-shadow: 0 12px 26px rgba(44, 31, 24, 0.13), inset 0 0 0 1px rgba(255, 249, 240, 0.08) !important;
+          letter-spacing: 0.16em !important;
+          gap: 11px !important;
+          white-space: nowrap !important;
+        }
+
+        .inlineSizeToggle:hover {
+          background: linear-gradient(135deg, #3b291f, #6a4b36) !important;
+          transform: translateY(-2px) !important;
+        }
+
+        .inlineSizeArrow {
+          width: 24px !important;
+          height: 24px !important;
+          min-width: 24px !important;
+          border-radius: 999px !important;
+          border: 1px solid rgba(215, 180, 111, 0.65) !important;
+          display: inline-grid !important;
+          place-items: center !important;
+          background: rgba(215, 180, 111, 0.14) !important;
+          position: relative !important;
+          transform: none !important;
+        }
+
+        .inlineSizeArrow::before {
+          content: "" !important;
+          width: 7px !important;
+          height: 7px !important;
+          border-right: 1.7px solid currentColor !important;
+          border-bottom: 1.7px solid currentColor !important;
+          transform: rotate(-45deg) !important;
+          margin-left: -2px !important;
+          transition: transform 0.25s ease, margin 0.25s ease !important;
+        }
+
+        .inlineSizeToggle.open .inlineSizeArrow {
+          transform: none !important;
+          background: linear-gradient(135deg, #d7b46f, #b08a45) !important;
+          color: #211713 !important;
+          border-color: rgba(255, 249, 240, 0.22) !important;
+        }
+
+        .inlineSizeToggle.open .inlineSizeArrow::before {
+          transform: rotate(45deg) !important;
+          margin-left: 0 !important;
+          margin-top: -3px !important;
+        }
+
+        .modalSizeChart {
+          border-radius: 24px !important;
+          border-color: rgba(176, 138, 69, 0.34) !important;
+          background: linear-gradient(180deg, rgba(255,249,240,0.94), rgba(239,227,210,0.78)) !important;
+        }
+
+        .modalSizeHelp {
+          background: linear-gradient(135deg, rgba(44,31,24,0.96), rgba(75,51,40,0.94)) !important;
+          color: #fff9f0 !important;
+          border-color: rgba(176, 138, 69, 0.54) !important;
+          box-shadow: 0 12px 26px rgba(44, 31, 24, 0.13) !important;
+        }
+
+        .modalSizeHelp:hover {
+          background: linear-gradient(135deg, #3b291f, #6a4b36) !important;
+        }
+
+        .darkMode .modalSizeHeader {
+          background: rgba(255, 249, 240, 0.05) !important;
+          border-color: rgba(215, 180, 111, 0.34) !important;
+        }
+
+        .darkMode .modalSizeHeader p {
+          color: #eadcc8 !important;
+        }
+
+        .darkMode .inlineSizeToggle,
+        .darkMode .modalSizeHelp {
+          background: linear-gradient(135deg, #d7b46f, #b08a45) !important;
+          color: #211713 !important;
+          border-color: rgba(255, 249, 240, 0.22) !important;
+        }
+
+        @media (max-width: 700px) {
+          .footerLinks {
+            gap: 14px !important;
+          }
+
+          .modalSizeHeader {
+            padding: 9px 10px !important;
+            border-radius: 20px !important;
+            align-items: center !important;
+          }
+
+          .modalSizeHeader p {
+            font-size: 9px !important;
+            letter-spacing: 0.08em !important;
+          }
+
+          .inlineSizeToggle {
+            min-height: 38px !important;
+            padding: 0 10px 0 13px !important;
+            font-size: 8px !important;
+            letter-spacing: 0.12em !important;
+            gap: 8px !important;
+          }
+
+          .inlineSizeArrow {
+            width: 21px !important;
+            height: 21px !important;
+            min-width: 21px !important;
+          }
+        }
+
 `}</style>
 
       <div className="scrollProgress" style={{ width: `${scrollProgress}%` }} />
@@ -7034,7 +7181,6 @@ export default function App() {
 
             <div className="footerLinks">
               <a href="#collection" onClick={() => setAccountPageOpen(false)}>{t.shop}</a>
-              <button type="button" className="footerTextBtn" onClick={openSizeGuideFromMenu}>{t.sizeGuide}</button>
               <a href="#gift-card" onClick={() => setAccountPageOpen(false)}>{t.giftTitle}</a>
               <a href="#story" onClick={() => setAccountPageOpen(false)}>{t.navAbout}</a>
               <a href={`mailto:${BRAND_EMAIL}`}>{t.email}</a>
