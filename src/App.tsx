@@ -28,6 +28,7 @@ type AccountUser = {
   name: string;
   email: string;
   phone: string;
+  isAdmin?: boolean;
 };
 
 type AccountOrderItem = {
@@ -49,7 +50,14 @@ type AccountOrder = {
   payment_status: string;
   order_status: string;
   created_at: string;
+  customer_name?: string | null;
+  customer_email?: string | null;
+  customer_phone?: string | null;
   order_items?: AccountOrderItem[];
+};
+
+type AdminOrder = AccountOrder & {
+  user_id?: string | null;
 };
 
 const WHATSAPP_NUMBER = "201101900086";
@@ -647,8 +655,10 @@ export default function App() {
   const [accountForm, setAccountForm] = useState({ name: "", email: "", phone: "", password: "" });
   const [session, setSession] = useState<Session | null>(null);
   const [accountLoading, setAccountLoading] = useState(false);
-  const [accountView, setAccountView] = useState<"profile" | "orders">("profile");
+  const [accountView, setAccountView] = useState<"profile" | "orders" | "admin">("profile");
   const [accountOrders, setAccountOrders] = useState<AccountOrder[]>([]);
+  const [adminOrders, setAdminOrders] = useState<AdminOrder[]>([]);
+  const [adminLoading, setAdminLoading] = useState(false);
 
   const [searchTerm, setSearchTerm] = useState("");
   const [activeFilter, setActiveFilter] = useState("All");
@@ -881,6 +891,7 @@ export default function App() {
     if (!nextSession?.user || !supabase) {
       setAccountUser(null);
       setAccountOrders([]);
+      setAdminOrders([]);
       return;
     }
 
@@ -889,7 +900,7 @@ export default function App() {
 
     const { data: profile } = await supabase
       .from("profiles")
-      .select("id, full_name, email, phone")
+      .select("id, full_name, email, phone, is_admin")
       .eq("id", user.id)
       .maybeSingle();
 
@@ -898,11 +909,15 @@ export default function App() {
       name: String(profile?.full_name || metadata.full_name || "La Grazia Client"),
       email: String(profile?.email || user.email || ""),
       phone: String(profile?.phone || metadata.phone || ""),
+      isAdmin: Boolean(profile?.is_admin),
     };
 
     setAccountUser(nextUser);
     setAccountForm({ name: nextUser.name, email: nextUser.email, phone: nextUser.phone, password: "" });
     fetchUserOrders(user.id);
+    if (Boolean(profile?.is_admin)) {
+      fetchAdminOrders();
+    }
   }
 
   async function fetchUserOrders(userId = session?.user?.id) {
@@ -917,6 +932,61 @@ export default function App() {
     if (!error && data) {
       setAccountOrders(data as AccountOrder[]);
     }
+  }
+
+  async function fetchAdminOrders() {
+    if (!supabase) return;
+
+    setAdminLoading(true);
+
+    const { data, error } = await supabase
+      .from("orders")
+      .select("id, user_id, order_reference, total_amount, currency, payment_status, order_status, customer_name, customer_email, customer_phone, created_at, order_items(id, product_name, product_image, size, color, quantity, unit_price, total_price)")
+      .order("created_at", { ascending: false });
+
+    if (error) {
+      console.error(error);
+      setToast(error.message);
+    } else {
+      setAdminOrders((data || []) as AdminOrder[]);
+    }
+
+    setAdminLoading(false);
+  }
+
+  async function updateAdminOrderStatus(orderId: string, nextStatus: string) {
+    if (!supabase || !accountUser?.isAdmin) return;
+
+    const nextPaymentStatus = nextStatus === "Pending Payment" ? "pending" : nextStatus === "Cancelled" ? "cancelled" : "paid";
+
+    const { error } = await supabase
+      .from("orders")
+      .update({
+        order_status: nextStatus,
+        payment_status: nextPaymentStatus,
+        updated_at: new Date().toISOString(),
+      })
+      .eq("id", orderId);
+
+    if (error) {
+      console.error(error);
+      setToast(error.message);
+      return;
+    }
+
+    setAdminOrders((current) =>
+      current.map((order) =>
+        order.id === orderId
+          ? { ...order, order_status: nextStatus, payment_status: nextPaymentStatus }
+          : order
+      )
+    );
+
+    if (session?.user?.id) {
+      fetchUserOrders(session.user.id);
+    }
+
+    setToast(isArabic ? "تم تحديث حالة الطلب" : "Order status updated");
   }
 
   function openProduct(product: Product) {
@@ -1192,6 +1262,7 @@ export default function App() {
     setAccountUser(null);
     setAccountForm({ name: "", email: "", phone: "", password: "" });
     setAccountOrders([]);
+    setAdminOrders([]);
     setSession(null);
     setAuthMode("signIn");
     setAccountPageOpen(false);
@@ -4048,6 +4119,151 @@ export default function App() {
           .productImage { height: clamp(470px, 42vw, 620px); }
         }
 
+
+
+        .adminTab {
+          border-color: rgba(176, 138, 69, 0.55) !important;
+        }
+
+        .adminStatsGrid {
+          display: grid;
+          grid-template-columns: repeat(3, minmax(0, 1fr));
+          gap: 14px;
+          margin: 22px 0;
+        }
+
+        .adminStatCard,
+        .adminOrderCard {
+          border: 1px solid rgba(176, 138, 69, 0.24);
+          background: rgba(255, 249, 240, 0.76);
+          border-radius: 24px;
+          box-shadow: 0 18px 42px rgba(36, 26, 20, 0.07);
+        }
+
+        .darkMode .adminStatCard,
+        .darkMode .adminOrderCard {
+          background: rgba(255, 249, 240, 0.08);
+          border-color: rgba(215, 180, 111, 0.28);
+        }
+
+        .adminStatCard {
+          padding: 18px;
+        }
+
+        .adminStatCard small,
+        .adminOrderTop small {
+          display: block;
+          color: #b08a45;
+          font-size: 10px;
+          letter-spacing: 0.22em;
+          text-transform: uppercase;
+          margin-bottom: 8px;
+        }
+
+        .adminStatCard strong {
+          font-family: Georgia, "Times New Roman", serif;
+          font-size: 36px;
+          font-weight: 500;
+        }
+
+        .adminOrdersList {
+          display: grid;
+          gap: 18px;
+          max-height: 70vh;
+          overflow: auto;
+          padding: 2px 8px 24px 2px;
+          scrollbar-width: thin;
+        }
+
+        .adminOrderCard {
+          padding: 20px;
+        }
+
+        .adminOrderTop {
+          display: flex;
+          justify-content: space-between;
+          align-items: flex-start;
+          gap: 16px;
+          padding-bottom: 14px;
+          border-bottom: 1px solid rgba(176, 138, 69, 0.20);
+        }
+
+        .adminOrderTop strong {
+          display: block;
+          font-family: Georgia, "Times New Roman", serif;
+          font-size: 24px;
+          font-weight: 500;
+          word-break: break-word;
+        }
+
+        .adminOrderTop span:not(.orderStatusPill) {
+          display: block;
+          color: #7a6656;
+          font-size: 12px;
+          margin-top: 6px;
+        }
+
+        .adminCustomerGrid {
+          display: grid;
+          grid-template-columns: repeat(2, minmax(0, 1fr));
+          gap: 10px 16px;
+          padding: 16px 0;
+          color: #6a5545;
+          font-size: 13px;
+          line-height: 1.6;
+        }
+
+        .darkMode .adminCustomerGrid,
+        .darkMode .adminOrderTop span:not(.orderStatusPill) {
+          color: #eadcc8;
+        }
+
+        .adminOrderItems {
+          display: grid;
+          gap: 10px;
+          padding: 12px 0 16px;
+          border-top: 1px solid rgba(176, 138, 69, 0.16);
+        }
+
+        .adminStatusButtons {
+          display: flex;
+          flex-wrap: wrap;
+          gap: 8px;
+          padding-top: 14px;
+          border-top: 1px solid rgba(176, 138, 69, 0.18);
+        }
+
+        .statusUpdateBtn {
+          border: 1px solid rgba(176, 138, 69, 0.34);
+          background: rgba(255, 249, 240, 0.72);
+          color: #2c1f18;
+          border-radius: 999px;
+          padding: 10px 13px;
+          font-size: 10px;
+          letter-spacing: 0.10em;
+          text-transform: uppercase;
+          transition: transform 0.25s ease, background 0.25s ease, color 0.25s ease;
+        }
+
+        .statusUpdateBtn:hover,
+        .statusUpdateBtn.active {
+          background: #2c1f18;
+          color: #fff9f0;
+          transform: translateY(-2px);
+        }
+
+        .darkMode .statusUpdateBtn {
+          background: rgba(255, 249, 240, 0.08);
+          color: #fff9f0;
+          border-color: rgba(215, 180, 111, 0.32);
+        }
+
+        .darkMode .statusUpdateBtn:hover,
+        .darkMode .statusUpdateBtn.active {
+          background: #d7b46f;
+          color: #211713;
+        }
+
         @media (max-width: 1100px) {
           .productGrid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
           .styleFinder, .storyGrid, .newsletterBox, .giftCardBox { grid-template-columns: 1fr; }
@@ -4755,6 +4971,37 @@ export default function App() {
       
 
         @media (max-width: 700px) {
+
+          .adminStatsGrid,
+          .adminCustomerGrid {
+            grid-template-columns: 1fr;
+          }
+
+          .adminOrdersList {
+            max-height: none;
+            overflow: visible;
+            padding-right: 0;
+          }
+
+          .adminOrderCard {
+            padding: 16px;
+            border-radius: 22px;
+          }
+
+          .adminOrderTop {
+            flex-direction: column;
+            align-items: flex-start;
+          }
+
+          .adminStatusButtons {
+            gap: 7px;
+          }
+
+          .statusUpdateBtn {
+            padding: 9px 11px;
+            font-size: 9px;
+          }
+
           .productGrid,
           .bestSellerGrid,
           .wishlistGrid {
@@ -7003,6 +7250,15 @@ export default function App() {
                   >
                     {isArabic ? "طلباتي" : "My Orders"}
                   </button>
+                  {accountUser.isAdmin && (
+                    <button
+                      type="button"
+                      className={accountView === "admin" ? "accountFullTab active adminTab" : "accountFullTab adminTab"}
+                      onClick={() => { setAccountView("admin"); fetchAdminOrders(); }}
+                    >
+                      {isArabic ? "لوحة التحكم" : "Admin"}
+                    </button>
+                  )}
                 </div>
 
                 {accountView === "profile" ? (
@@ -7101,7 +7357,85 @@ export default function App() {
                       </div>
                     )}
                   </>
-                )}
+                ) : accountView === "admin" && accountUser.isAdmin ? (
+                  <>
+                    <div className="accountPageTitleRow">
+                      <div>
+                        <p className="eyebrow">{isArabic ? "إدارة الطلبات" : "Admin Dashboard"}</p>
+                        <h3>{isArabic ? "كل طلبات لا غراتسيا" : "All La Grazia Orders"}</h3>
+                        <p>
+                          {isArabic
+                            ? "تابع كل الطلبات وغيّر حالة الطلب من لوحة واحدة."
+                            : "View every order and update its tracking status from one elegant dashboard."}
+                        </p>
+                      </div>
+                      <button className="secondaryBtn" onClick={fetchAdminOrders}>
+                        {adminLoading ? (isArabic ? "جاري التحديث..." : "Refreshing...") : (isArabic ? "تحديث" : "Refresh")}
+                      </button>
+                    </div>
+
+                    <div className="adminStatsGrid">
+                      <div className="adminStatCard"><small>{isArabic ? "كل الطلبات" : "Total Orders"}</small><strong>{adminOrders.length}</strong></div>
+                      <div className="adminStatCard"><small>{isArabic ? "مدفوعة" : "Paid"}</small><strong>{adminOrders.filter((order) => order.payment_status === "paid").length}</strong></div>
+                      <div className="adminStatCard"><small>{isArabic ? "قيد التجهيز" : "Preparing"}</small><strong>{adminOrders.filter((order) => order.order_status === "Preparing").length}</strong></div>
+                    </div>
+
+                    {adminOrders.length === 0 ? (
+                      <div className="noOrdersBox">
+                        <strong>{isArabic ? "لا توجد طلبات بعد" : "No orders yet"}</strong>
+                        <span>{isArabic ? "كل طلب جديد سيظهر هنا." : "Every new customer order will appear here."}</span>
+                      </div>
+                    ) : (
+                      <div className="adminOrdersList">
+                        {adminOrders.map((order) => (
+                          <article className="adminOrderCard" key={order.id}>
+                            <div className="adminOrderTop">
+                              <div>
+                                <small>{isArabic ? "رقم الطلب" : "Order"}</small>
+                                <strong>{order.order_reference}</strong>
+                                <span>{new Date(order.created_at).toLocaleString()}</span>
+                              </div>
+                              <span className="orderStatusPill">{order.order_status}</span>
+                            </div>
+
+                            <div className="adminCustomerGrid">
+                              <span><b>{isArabic ? "العميل" : "Customer"}:</b> {order.customer_name || "La Grazia Client"}</span>
+                              <span><b>{isArabic ? "الإيميل" : "Email"}:</b> {order.customer_email || "-"}</span>
+                              <span><b>{isArabic ? "الهاتف" : "Phone"}:</b> {order.customer_phone || "-"}</span>
+                              <span><b>{isArabic ? "الإجمالي" : "Total"}:</b> {order.currency} {Number(order.total_amount || 0).toLocaleString()}</span>
+                              <span><b>{isArabic ? "الدفع" : "Payment"}:</b> {order.payment_status}</span>
+                            </div>
+
+                            <div className="adminOrderItems">
+                              {order.order_items?.map((item) => (
+                                <div className="orderMiniItem" key={item.id}>
+                                  {item.product_image && <img src={item.product_image} alt={item.product_name} />}
+                                  <div>
+                                    <strong>{item.product_name}</strong>
+                                    <span>Size: {item.size || "M"} · Color: {item.color || "Cream"} · Qty: {item.quantity}</span>
+                                  </div>
+                                </div>
+                              ))}
+                            </div>
+
+                            <div className="adminStatusButtons">
+                              {["Pending Payment", "Paid", "Preparing", "Out for Delivery", "Delivered", "Cancelled"].map((status) => (
+                                <button
+                                  type="button"
+                                  key={status}
+                                  className={order.order_status === status ? "statusUpdateBtn active" : "statusUpdateBtn"}
+                                  onClick={() => updateAdminOrderStatus(order.id, status)}
+                                >
+                                  {status}
+                                </button>
+                              ))}
+                            </div>
+                          </article>
+                        ))}
+                      </div>
+                    )}
+                  </>
+                ) : null}
               </div>
             </section>
           </main>
