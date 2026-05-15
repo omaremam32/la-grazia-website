@@ -2079,19 +2079,22 @@ export default function App() {
 
         .shopTools {
           display: grid;
-          grid-template-columns: 1fr 280px;
-          gap: 16px;
-          align-items: center;
+          grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+          gap: 18px;
+          align-items: stretch;
           margin-bottom: 24px;
         }
 
         .searchBox {
+          width: 100%;
+          min-height: 64px;
           border: 1px solid rgba(176, 138, 69, 0.34);
           background: rgba(255, 249, 240, 0.78);
           color: inherit;
           border-radius: 999px;
-          padding: 16px 20px;
+          padding: 16px 24px;
           outline: none;
+          box-sizing: border-box;
         }
 
         .luxurySort {
@@ -4325,7 +4328,10 @@ export default function App() {
             gap: 12px;
           }
 
-          .searchBox { padding: 15px 18px; }
+          .searchBox {
+            min-height: 58px;
+            padding: 15px 18px;
+          }
 
           .luxurySortButton {
             min-height: 58px;
