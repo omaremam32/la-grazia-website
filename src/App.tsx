@@ -4819,6 +4819,300 @@ export default function App() {
           }
         }
 
+
+
+        /* Final account/nav/order layout polish */
+        .signInBtn {
+          width: 44px !important;
+          max-width: 44px !important;
+          min-width: 44px !important;
+          height: 44px !important;
+          min-height: 44px !important;
+          padding: 0 !important;
+          border-radius: 999px !important;
+          display: inline-grid !important;
+          place-items: center !important;
+        }
+
+        .signInBtn .accountShortName {
+          width: 100% !important;
+          height: 100% !important;
+          display: grid !important;
+          place-items: center !important;
+          gap: 0 !important;
+        }
+
+        .signInBtn .accountDesktopLabel {
+          display: none !important;
+        }
+
+        .signInBtn .accountAvatar {
+          width: 31px !important;
+          height: 31px !important;
+          font-size: 10px !important;
+          letter-spacing: 0.05em !important;
+        }
+
+        .signInBtn .accountAvatar svg {
+          width: 17px !important;
+          height: 17px !important;
+        }
+
+        .signedAccountBtn {
+          box-shadow: 0 12px 26px rgba(176, 138, 69, 0.18) !important;
+        }
+
+        .signInBackdrop {
+          align-items: center !important;
+          justify-items: center !important;
+          padding: 18px !important;
+          overflow: hidden !important;
+        }
+
+        .signInPanel {
+          width: min(420px, calc(100vw - 32px)) !important;
+          max-height: min(88vh, 760px) !important;
+          overflow-y: auto !important;
+          overflow-x: hidden !important;
+          border-radius: 28px !important;
+          padding: 24px 24px 20px !important;
+          scrollbar-width: thin !important;
+          scrollbar-color: rgba(176, 138, 69, 0.55) transparent !important;
+        }
+
+        .signInPanel::-webkit-scrollbar {
+          width: 5px;
+        }
+
+        .signInPanel::-webkit-scrollbar-thumb {
+          background: rgba(176, 138, 69, 0.55);
+          border-radius: 999px;
+        }
+
+        .signInPanel h3 {
+          font-size: 31px !important;
+          margin: 5px 0 8px !important;
+          line-height: 1.04 !important;
+        }
+
+        .signInPanel > p {
+          font-size: 15px !important;
+          line-height: 1.55 !important;
+          margin-bottom: 15px !important;
+        }
+
+        .signInClose {
+          width: 34px !important;
+          height: 34px !important;
+          top: 16px !important;
+          right: 16px !important;
+          font-size: 20px !important;
+        }
+
+        .accountSavedBox {
+          border-radius: 20px !important;
+          padding: 14px 16px !important;
+          margin: 13px 0 !important;
+        }
+
+        .accountSavedBox strong {
+          font-size: 22px !important;
+          margin-bottom: 4px !important;
+        }
+
+        .accountSavedBox span {
+          font-size: 12px !important;
+          line-height: 1.45 !important;
+        }
+
+        .profileTabs {
+          margin: 12px 0 !important;
+          padding: 5px !important;
+          gap: 6px !important;
+        }
+
+        .profileTab {
+          padding: 10px 8px !important;
+          font-size: 10px !important;
+        }
+
+        .profileInfoGrid {
+          gap: 9px !important;
+          margin: 10px 0 !important;
+        }
+
+        .profileInfoCard,
+        .noOrdersBox,
+        .orderCard {
+          border-radius: 18px !important;
+          padding: 13px !important;
+        }
+
+        .profileInfoCard small,
+        .orderCard small {
+          font-size: 9px !important;
+          margin-bottom: 5px !important;
+        }
+
+        .profileInfoCard strong,
+        .noOrdersBox strong {
+          font-size: 13px !important;
+          overflow-wrap: anywhere !important;
+        }
+
+        .ordersPanel {
+          display: flex !important;
+          gap: 12px !important;
+          overflow-x: auto !important;
+          overflow-y: hidden !important;
+          max-height: none !important;
+          padding: 2px 4px 12px !important;
+          margin: 10px -4px 12px !important;
+          scroll-snap-type: x mandatory !important;
+          -webkit-overflow-scrolling: touch !important;
+        }
+
+        .ordersPanel::-webkit-scrollbar {
+          height: 5px;
+        }
+
+        .ordersPanel::-webkit-scrollbar-thumb {
+          background: rgba(176, 138, 69, 0.45);
+          border-radius: 999px;
+        }
+
+        .orderCard {
+          flex: 0 0 min(330px, 88%) !important;
+          scroll-snap-align: center !important;
+          min-width: 0 !important;
+        }
+
+        .orderCardTop strong {
+          font-size: 17px !important;
+        }
+
+        .orderStatusPill {
+          padding: 7px 9px !important;
+          font-size: 9px !important;
+        }
+
+        .orderMetaGrid {
+          gap: 6px !important;
+          margin: 10px 0 !important;
+          font-size: 11px !important;
+        }
+
+        .orderMiniItem {
+          grid-template-columns: 38px 1fr !important;
+          gap: 8px !important;
+          padding-top: 7px !important;
+        }
+
+        .orderMiniItem img {
+          width: 38px !important;
+          height: 48px !important;
+          border-radius: 10px !important;
+        }
+
+        .orderMiniItem strong {
+          font-size: 12px !important;
+          line-height: 1.25 !important;
+        }
+
+        .orderMiniItem span {
+          font-size: 10px !important;
+        }
+
+        .accountActions {
+          gap: 8px !important;
+          margin-top: 10px !important;
+        }
+
+        .accountActions button,
+        .signInForm button {
+          padding: 12px 14px !important;
+          font-size: 10px !important;
+        }
+
+        @media (max-width: 700px) {
+          .navActions {
+            gap: 6px !important;
+          }
+
+          .signInBtn {
+            width: 38px !important;
+            max-width: 38px !important;
+            min-width: 38px !important;
+            height: 38px !important;
+            min-height: 38px !important;
+          }
+
+          .signInBtn .accountAvatar {
+            width: 29px !important;
+            height: 29px !important;
+          }
+
+          .signInPanel {
+            width: calc(100vw - 24px) !important;
+            max-height: calc(100dvh - 78px) !important;
+            border-radius: 26px !important;
+            padding: 22px 18px 26px !important;
+          }
+
+          .signInPanel h3 {
+            font-size: 28px !important;
+          }
+
+          .signInPanel > p {
+            font-size: 14px !important;
+            line-height: 1.5 !important;
+          }
+
+          .accountSavedBox {
+            padding: 13px 14px !important;
+          }
+
+          .accountSavedBox strong {
+            font-size: 21px !important;
+          }
+
+          .profileInfoGrid {
+            gap: 8px !important;
+          }
+
+          .profileInfoCard {
+            min-height: auto !important;
+          }
+
+          .ordersPanel {
+            display: flex !important;
+            flex-direction: row !important;
+            overflow-x: auto !important;
+            overflow-y: hidden !important;
+            max-height: none !important;
+            padding-bottom: 14px !important;
+          }
+
+          .orderCard {
+            flex: 0 0 86% !important;
+          }
+
+          .orderCardTop {
+            flex-direction: row !important;
+            align-items: flex-start !important;
+          }
+
+          .orderMetaGrid {
+            grid-template-columns: 1fr !important;
+          }
+
+          .accountActions {
+            grid-template-columns: 1fr 1fr !important;
+            padding-bottom: max(8px, env(safe-area-inset-bottom)) !important;
+          }
+        }
+
+
 `}</style>
 
       <div className="scrollProgress" style={{ width: `${scrollProgress}%` }} />
