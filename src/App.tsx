@@ -1,4 +1,5 @@
 import React, { useEffect, useMemo, useState } from "react";
+import { createClient, type Session } from "@supabase/supabase-js";
 
 type Lang = "EN" | "AR";
 
@@ -23,13 +24,44 @@ type CartItem = {
 };
 
 type AccountUser = {
+  id: string;
   name: string;
   email: string;
   phone: string;
 };
 
+type AccountOrderItem = {
+  id: string;
+  product_name: string;
+  product_image?: string | null;
+  size?: string | null;
+  color?: string | null;
+  quantity: number;
+  unit_price: number;
+  total_price: number;
+};
+
+type AccountOrder = {
+  id: string;
+  order_reference: string;
+  total_amount: number;
+  currency: string;
+  payment_status: string;
+  order_status: string;
+  created_at: string;
+  order_items?: AccountOrderItem[];
+};
+
 const WHATSAPP_NUMBER = "201101900086";
 const BRAND_EMAIL = "omaromohamed2003@gmail.com";
+
+const SUPABASE_URL = import.meta.env.VITE_SUPABASE_URL as string | undefined;
+const SUPABASE_ANON_KEY = import.meta.env.VITE_SUPABASE_ANON_KEY as string | undefined;
+
+const supabase =
+  SUPABASE_URL && SUPABASE_ANON_KEY
+    ? createClient(SUPABASE_URL, SUPABASE_ANON_KEY)
+    : null;
 
 const products: Product[] = [
   {
@@ -601,7 +633,11 @@ export default function App() {
   const [signInOpen, setSignInOpen] = useState(false);
   const [authMode, setAuthMode] = useState<"signIn" | "signUp">("signIn");
   const [accountUser, setAccountUser] = useState<AccountUser | null>(null);
-  const [accountForm, setAccountForm] = useState({ name: "", email: "", phone: "" });
+  const [accountForm, setAccountForm] = useState({ name: "", email: "", phone: "", password: "" });
+  const [session, setSession] = useState<Session | null>(null);
+  const [accountLoading, setAccountLoading] = useState(false);
+  const [accountView, setAccountView] = useState<"profile" | "orders">("profile");
+  const [accountOrders, setAccountOrders] = useState<AccountOrder[]>([]);
 
   const [searchTerm, setSearchTerm] = useState("");
   const [activeFilter, setActiveFilter] = useState("All");
@@ -779,6 +815,64 @@ export default function App() {
     return () => window.removeEventListener("keydown", closeOnEsc);
   }, []);
 
+  useEffect(() => {
+    if (!supabase) return;
+
+    supabase.auth.getSession().then(({ data }) => {
+      handleSupabaseSession(data.session);
+    });
+
+    const { data } = supabase.auth.onAuthStateChange((_event, nextSession) => {
+      handleSupabaseSession(nextSession);
+    });
+
+    return () => data.subscription.unsubscribe();
+  }, []);
+
+  async function handleSupabaseSession(nextSession: Session | null) {
+    setSession(nextSession);
+
+    if (!nextSession?.user || !supabase) {
+      setAccountUser(null);
+      setAccountOrders([]);
+      return;
+    }
+
+    const user = nextSession.user;
+    const metadata = user.user_metadata || {};
+
+    const { data: profile } = await supabase
+      .from("profiles")
+      .select("id, full_name, email, phone")
+      .eq("id", user.id)
+      .maybeSingle();
+
+    const nextUser: AccountUser = {
+      id: user.id,
+      name: String(profile?.full_name || metadata.full_name || "La Grazia Client"),
+      email: String(profile?.email || user.email || ""),
+      phone: String(profile?.phone || metadata.phone || ""),
+    };
+
+    setAccountUser(nextUser);
+    setAccountForm({ name: nextUser.name, email: nextUser.email, phone: nextUser.phone, password: "" });
+    fetchUserOrders(user.id);
+  }
+
+  async function fetchUserOrders(userId = session?.user?.id) {
+    if (!supabase || !userId) return;
+
+    const { data, error } = await supabase
+      .from("orders")
+      .select("id, order_reference, total_amount, currency, payment_status, order_status, created_at, order_items(id, product_name, product_image, size, color, quantity, unit_price, total_price)")
+      .eq("user_id", userId)
+      .order("created_at", { ascending: false });
+
+    if (!error && data) {
+      setAccountOrders(data as AccountOrder[]);
+    }
+  }
+
   function openProduct(product: Product) {
     setSelectedProduct(product);
     setSelectedSize("M");
@@ -857,6 +951,13 @@ export default function App() {
       return;
     }
 
+    if (!session?.user || !accountUser) {
+      setAuthMode("signIn");
+      setSignInOpen(true);
+      setToast(isArabic ? "سجلي الدخول أولاً لحفظ الطلب ومتابعته." : "Please sign in first to save and track your order.");
+      return;
+    }
+
     try {
       setPaymentLoading(true);
 
@@ -867,6 +968,11 @@ export default function App() {
         description: `${item.product.name} - Size: ${item.size} - Color: ${item.color}`,
       }));
 
+      const totalAmount = cart.reduce((total, item) => total + item.product.minPrice * item.quantity, 0);
+      const nameParts = accountUser.name.trim().split(" ").filter(Boolean);
+      const firstName = nameParts[0] || "La";
+      const lastName = nameParts.slice(1).join(" ") || "Grazia";
+
       const response = await fetch("/api/create-paymob-payment", {
         method: "POST",
         headers: {
@@ -875,10 +981,10 @@ export default function App() {
         body: JSON.stringify({
           items: paymentItems,
           customer: {
-            firstName: "La",
-            lastName: "Grazia Customer",
-            email: BRAND_EMAIL,
-            phone: `+${WHATSAPP_NUMBER}`,
+            firstName,
+            lastName,
+            email: accountUser.email || BRAND_EMAIL,
+            phone: accountUser.phone || `+${WHATSAPP_NUMBER}`,
             city: "Cairo",
             street: "Cairo",
             building: "1",
@@ -888,7 +994,7 @@ export default function App() {
         }),
       });
 
-      let data: { checkoutUrl?: string; url?: string; error?: string } = {};
+      let data: { checkoutUrl?: string; url?: string; orderReference?: string; error?: string } = {};
 
       try {
         data = await response.json();
@@ -910,6 +1016,46 @@ export default function App() {
         return;
       }
 
+      if (supabase) {
+        const orderReference = data.orderReference || `LG-${Date.now()}`;
+
+        const { data: orderData, error: orderError } = await supabase
+          .from("orders")
+          .insert({
+            user_id: session.user.id,
+            order_reference: orderReference,
+            total_amount: totalAmount,
+            currency: "EGP",
+            payment_status: "pending",
+            order_status: "Pending Payment",
+            paymob_checkout_url: checkoutUrl,
+            customer_name: accountUser.name,
+            customer_email: accountUser.email,
+            customer_phone: accountUser.phone,
+          })
+          .select("id")
+          .single();
+
+        if (!orderError && orderData?.id) {
+          const orderItems = cart.map((item) => ({
+            order_id: orderData.id,
+            user_id: session.user.id,
+            product_name: item.product.name,
+            product_image: item.product.image,
+            size: item.size,
+            color: item.color,
+            quantity: item.quantity,
+            unit_price: item.product.minPrice,
+            total_price: item.product.minPrice * item.quantity,
+          }));
+
+          await supabase.from("order_items").insert(orderItems);
+          fetchUserOrders(session.user.id);
+        } else {
+          console.error(orderError);
+        }
+      }
+
       window.location.href = checkoutUrl;
     } catch (error) {
       console.error(error);
@@ -924,25 +1070,82 @@ export default function App() {
     }
   }
 
-  function handleSignInSubmit(event: React.FormEvent<HTMLFormElement>) {
+  async function handleSignInSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
 
-    const cleanAccount: AccountUser = {
-      name: accountForm.name.trim() || "La Grazia Client",
-      email: accountForm.email.trim() || "guest@lagrazia.eg",
-      phone: accountForm.phone.trim(),
-    };
+    if (!supabase) {
+      setToast(isArabic ? "Supabase غير متصل. تأكدي من متغيرات Vercel." : "Supabase is not connected. Check your Vercel environment variables.");
+      return;
+    }
 
-    setAccountUser(cleanAccount);
-    window.localStorage.setItem("laGraziaAccount", JSON.stringify(cleanAccount));
-    setSignInOpen(false);
-    setToast(authMode === "signUp" ? t.accountCreated : t.signedInWelcome);
+    const email = accountForm.email.trim();
+    const password = accountForm.password.trim();
+    const fullName = accountForm.name.trim() || "La Grazia Client";
+    const phone = accountForm.phone.trim();
+
+    if (!email || !password || password.length < 6) {
+      setToast(isArabic ? "اكتبي إيميل وباسورد من ٦ حروف على الأقل." : "Enter an email and a password of at least 6 characters.");
+      return;
+    }
+
+    setAccountLoading(true);
+
+    try {
+      if (authMode === "signUp") {
+        const { data, error } = await supabase.auth.signUp({
+          email,
+          password,
+          options: {
+            data: {
+              full_name: fullName,
+              phone,
+            },
+          },
+        });
+
+        if (error) {
+          setToast(error.message);
+          return;
+        }
+
+        if (data.session && data.user) {
+          await supabase.from("profiles").upsert({
+            id: data.user.id,
+            full_name: fullName,
+            email,
+            phone,
+            updated_at: new Date().toISOString(),
+          });
+        }
+
+        setToast(data.session ? t.accountCreated : (isArabic ? "تم إنشاء الحساب. افحصي الإيميل للتأكيد." : "Account created. Check your email to confirm it."));
+      } else {
+        const { error } = await supabase.auth.signInWithPassword({ email, password });
+
+        if (error) {
+          setToast(error.message);
+          return;
+        }
+
+        setToast(t.signedInWelcome);
+      }
+
+      setSignInOpen(false);
+      setAccountForm((current) => ({ ...current, password: "" }));
+    } finally {
+      setAccountLoading(false);
+    }
   }
 
-  function handleSignOut() {
+  async function handleSignOut() {
+    if (supabase) {
+      await supabase.auth.signOut();
+    }
+
     setAccountUser(null);
-    setAccountForm({ name: "", email: "", phone: "" });
-    window.localStorage.removeItem("laGraziaAccount");
+    setAccountForm({ name: "", email: "", phone: "", password: "" });
+    setAccountOrders([]);
+    setSession(null);
     setAuthMode("signIn");
   }
 
@@ -3017,6 +3220,189 @@ export default function App() {
           border-color: rgba(215, 180, 111, 0.42);
         }
 
+
+        .profileHeroBox {
+          text-align: left;
+          background:
+            linear-gradient(135deg, rgba(255, 249, 240, 0.92), rgba(232, 214, 189, 0.78)),
+            radial-gradient(circle at top right, rgba(176, 138, 69, 0.18), transparent 44%);
+        }
+
+        .profileTabs {
+          display: grid;
+          grid-template-columns: 1fr 1fr;
+          gap: 8px;
+          margin: 16px 0;
+          padding: 6px;
+          border: 1px solid rgba(176, 138, 69, 0.24);
+          border-radius: 999px;
+          background: rgba(239, 227, 210, 0.55);
+        }
+
+        .profileTab {
+          border: 0;
+          border-radius: 999px;
+          background: transparent;
+          color: #6a5545;
+          padding: 12px;
+          font-size: 11px;
+          letter-spacing: 0.12em;
+          text-transform: uppercase;
+          transition: background 0.25s ease, color 0.25s ease, transform 0.25s ease;
+        }
+
+        .profileTab.active {
+          background: #2c1f18;
+          color: #fff9f0;
+          transform: translateY(-1px);
+        }
+
+        .profileInfoGrid {
+          display: grid;
+          gap: 10px;
+          margin: 14px 0;
+        }
+
+        .profileInfoCard,
+        .noOrdersBox,
+        .orderCard {
+          border: 1px solid rgba(176, 138, 69, 0.22);
+          background: rgba(255, 249, 240, 0.68);
+          border-radius: 20px;
+          padding: 16px;
+        }
+
+        .profileInfoCard small,
+        .orderCard small {
+          display: block;
+          color: #b08a45;
+          letter-spacing: 0.16em;
+          text-transform: uppercase;
+          margin-bottom: 6px;
+          font-size: 10px;
+        }
+
+        .profileInfoCard strong,
+        .noOrdersBox strong {
+          display: block;
+          color: #2c1f18;
+          font-size: 14px;
+        }
+
+        .ordersPanel {
+          max-height: 360px;
+          overflow-y: auto;
+          padding-right: 4px;
+          display: grid;
+          gap: 12px;
+          margin: 14px 0;
+        }
+
+        .noOrdersBox {
+          text-align: center;
+          padding: 30px 18px;
+        }
+
+        .noOrdersBox span {
+          display: block;
+          color: #7a6250;
+          margin-top: 10px;
+          line-height: 1.6;
+        }
+
+        .orderCardTop {
+          display: flex;
+          justify-content: space-between;
+          align-items: flex-start;
+          gap: 14px;
+        }
+
+        .orderCardTop strong {
+          font-family: Georgia, "Times New Roman", serif;
+          font-size: 19px;
+          font-weight: 500;
+        }
+
+        .orderStatusPill {
+          border-radius: 999px;
+          padding: 8px 10px;
+          background: #2c1f18;
+          color: #fff9f0 !important;
+          font-size: 10px;
+          letter-spacing: 0.08em;
+          white-space: nowrap;
+        }
+
+        .orderMetaGrid {
+          display: grid;
+          grid-template-columns: repeat(3, 1fr);
+          gap: 8px;
+          margin: 14px 0;
+          color: #6a5545;
+          font-size: 12px;
+        }
+
+        .orderItemsList {
+          display: grid;
+          gap: 8px;
+        }
+
+        .orderMiniItem {
+          display: grid;
+          grid-template-columns: 44px 1fr;
+          gap: 10px;
+          align-items: center;
+          border-top: 1px solid rgba(176, 138, 69, 0.16);
+          padding-top: 8px;
+        }
+
+        .orderMiniItem img {
+          width: 44px;
+          height: 54px;
+          object-fit: cover;
+          border-radius: 12px;
+        }
+
+        .orderMiniItem strong {
+          display: block;
+          color: #2c1f18;
+          font-size: 13px;
+        }
+
+        .orderMiniItem span {
+          display: block;
+          margin-top: 3px;
+          color: #7a6250;
+          font-size: 11px;
+          line-height: 1.45;
+        }
+
+        .darkMode .profileTabs,
+        .darkMode .profileInfoCard,
+        .darkMode .noOrdersBox,
+        .darkMode .orderCard {
+          background: rgba(255, 249, 240, 0.08);
+          border-color: rgba(215, 180, 111, 0.32);
+        }
+
+        .darkMode .profileInfoCard strong,
+        .darkMode .orderMiniItem strong,
+        .darkMode .orderCardTop strong,
+        .darkMode .noOrdersBox strong {
+          color: #fff9f0;
+        }
+
+        .darkMode .profileTab.active,
+        .darkMode .orderStatusPill {
+          background: #d7b46f;
+          color: #211713 !important;
+        }
+
+        @media (max-width: 640px) {
+          .orderMetaGrid { grid-template-columns: 1fr; }
+          .ordersPanel { max-height: 310px; }
+          .orderCardTop { flex-direction: column; }
+        }
         .accountSavedBox {
           border-radius: 24px;
           border: 1px solid rgba(176, 138, 69, 0.32);
@@ -4232,11 +4618,86 @@ export default function App() {
 
             {accountUser ? (
               <>
-                <div className="accountSavedBox">
-                  <strong>{accountUser.name}</strong>
-                  <span>{accountUser.email}</span>
-                  {accountUser.phone && <span>{accountUser.phone}</span>}
+                <div className="accountSavedBox profileHeroBox">
+                  <div>
+                    <span>{isArabic ? "حساب لا غراتسيا" : "La Grazia Profile"}</span>
+                    <strong>{accountUser.name}</strong>
+                    <span>{accountUser.email}</span>
+                    {accountUser.phone && <span>{accountUser.phone}</span>}
+                  </div>
                 </div>
+
+                <div className="profileTabs">
+                  <button
+                    type="button"
+                    className={accountView === "profile" ? "profileTab active" : "profileTab"}
+                    onClick={() => setAccountView("profile")}
+                  >
+                    {isArabic ? "الملف الشخصي" : "Profile"}
+                  </button>
+                  <button
+                    type="button"
+                    className={accountView === "orders" ? "profileTab active" : "profileTab"}
+                    onClick={() => { setAccountView("orders"); fetchUserOrders(); }}
+                  >
+                    {isArabic ? "طلباتي" : "My Orders"}
+                  </button>
+                </div>
+
+                {accountView === "profile" ? (
+                  <div className="profileInfoGrid">
+                    <div className="profileInfoCard">
+                      <small>{isArabic ? "الاسم" : "Name"}</small>
+                      <strong>{accountUser.name}</strong>
+                    </div>
+                    <div className="profileInfoCard">
+                      <small>{isArabic ? "الإيميل" : "Email"}</small>
+                      <strong>{accountUser.email}</strong>
+                    </div>
+                    <div className="profileInfoCard">
+                      <small>{isArabic ? "رقم الهاتف" : "Phone"}</small>
+                      <strong>{accountUser.phone || (isArabic ? "غير مضاف" : "Not added")}</strong>
+                    </div>
+                  </div>
+                ) : (
+                  <div className="ordersPanel">
+                    {accountOrders.length === 0 ? (
+                      <div className="noOrdersBox">
+                        <strong>{isArabic ? "لا توجد طلبات حتى الآن" : "No orders yet"}</strong>
+                        <span>{isArabic ? "عند الدفع، سيظهر طلبك هنا لتتبعي حالته." : "When you pay, your order will appear here so you can track it."}</span>
+                      </div>
+                    ) : (
+                      accountOrders.map((order) => (
+                        <div className="orderCard" key={order.id}>
+                          <div className="orderCardTop">
+                            <div>
+                              <small>{isArabic ? "رقم الطلب" : "Order"}</small>
+                              <strong>{order.order_reference}</strong>
+                            </div>
+                            <span className="orderStatusPill">{order.order_status}</span>
+                          </div>
+                          <div className="orderMetaGrid">
+                            <span>{isArabic ? "الدفع" : "Payment"}: {order.payment_status}</span>
+                            <span>{isArabic ? "الإجمالي" : "Total"}: {order.currency} {Number(order.total_amount).toLocaleString()}</span>
+                            <span>{new Date(order.created_at).toLocaleDateString()}</span>
+                          </div>
+                          <div className="orderItemsList">
+                            {(order.order_items || []).map((orderItem) => (
+                              <div className="orderMiniItem" key={orderItem.id}>
+                                {orderItem.product_image && <img src={orderItem.product_image} alt={orderItem.product_name} />}
+                                <div>
+                                  <strong>{orderItem.product_name}</strong>
+                                  <span>Size: {orderItem.size} · Color: {orderItem.color} · Qty: {orderItem.quantity}</span>
+                                </div>
+                              </div>
+                            ))}
+                          </div>
+                        </div>
+                      ))
+                    )}
+                  </div>
+                )}
+
                 <div className="accountActions">
                   <button className="accountSecondary" onClick={handleSignOut}>{t.signOut}</button>
                   <button className="accountPrimary" onClick={() => setSignInOpen(false)}>{t.continueSignIn}</button>
@@ -4261,7 +4722,17 @@ export default function App() {
                   onChange={(event) => setAccountForm((current) => ({ ...current, phone: event.target.value }))}
                   placeholder={t.phoneNumber}
                 />
-                <button type="submit">{authMode === "signUp" ? t.createAccount : t.continueSignIn}</button>
+                <input
+                  type="password"
+                  value={accountForm.password}
+                  onChange={(event) => setAccountForm((current) => ({ ...current, password: event.target.value }))}
+                  placeholder={isArabic ? "كلمة المرور" : "Password"}
+                  required
+                  minLength={6}
+                />
+                <button type="submit" disabled={accountLoading}>
+                  {accountLoading ? (isArabic ? "جاري التحميل..." : "Loading...") : authMode === "signUp" ? t.createAccount : t.continueSignIn}
+                </button>
                 <button
                   type="button"
                   className="authSwitchBtn"
