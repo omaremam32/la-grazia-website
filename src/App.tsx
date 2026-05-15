@@ -150,6 +150,28 @@ type ReviewForm = {
   reviewText: string;
 };
 
+type SupportMessage = {
+  id: string;
+  user_id?: string | null;
+  customer_name?: string | null;
+  customer_email?: string | null;
+  customer_phone?: string | null;
+  subject: string;
+  message: string;
+  related_order_reference?: string | null;
+  related_product_name?: string | null;
+  status: string;
+  admin_note?: string | null;
+  created_at: string;
+};
+
+type SupportForm = {
+  subject: string;
+  message: string;
+  relatedOrderReference: string;
+  relatedProductName: string;
+};
+
 const WHATSAPP_NUMBER = "201101900086";
 const BRAND_EMAIL = "omaromohamed2003@gmail.com";
 
@@ -189,6 +211,13 @@ const emptyProductForm: ProductForm = {
   description: "",
   isActive: true,
   sortOrder: "0",
+};
+
+const emptySupportForm: SupportForm = {
+  subject: "Order Question",
+  message: "",
+  relatedOrderReference: "",
+  relatedProductName: "",
 };
 
 const products: Product[] = [
@@ -807,6 +836,12 @@ export default function App() {
   const [reviewsLoading, setReviewsLoading] = useState(false);
   const [reviewSubmitting, setReviewSubmitting] = useState(false);
   const [reviewForm, setReviewForm] = useState<ReviewForm>({ rating: 5, reviewText: "" });
+  const [supportMessages, setSupportMessages] = useState<SupportMessage[]>([]);
+  const [adminSupportMessages, setAdminSupportMessages] = useState<SupportMessage[]>([]);
+  const [supportForm, setSupportForm] = useState<SupportForm>(emptySupportForm);
+  const [supportSubmitting, setSupportSubmitting] = useState(false);
+  const [supportLoading, setSupportLoading] = useState(false);
+  const [adminSupportLoading, setAdminSupportLoading] = useState(false);
 
   const [searchTerm, setSearchTerm] = useState("");
   const [activeFilter, setActiveFilter] = useState("All");
@@ -1054,8 +1089,15 @@ export default function App() {
       fetchAdminOrders();
       fetchAdminProducts();
       fetchAdminReviews();
+      fetchAdminSupportMessages();
     }
   }, [accountPageOpen, accountView, canAccessAdmin]);
+
+  useEffect(() => {
+    if (accountPageOpen && session?.user?.id) {
+      fetchUserSupportMessages(session.user.id);
+    }
+  }, [accountPageOpen, session?.user?.id]);
 
   useEffect(() => {
     if (!toast) return;
@@ -1462,6 +1504,147 @@ export default function App() {
     setAllReviews((current) => current.filter((review) => review.id !== reviewId));
     if (selectedProduct) fetchProductReviews(selectedProduct.name);
     setToast(isArabic ? "تم حذف التقييم" : "Review deleted");
+  }
+
+  async function fetchUserSupportMessages(userId = session?.user?.id) {
+    if (!supabase || !userId) return;
+
+    setSupportLoading(true);
+
+    const { data, error } = await supabase
+      .from("support_messages")
+      .select("id, user_id, customer_name, customer_email, customer_phone, subject, message, related_order_reference, related_product_name, status, admin_note, created_at")
+      .eq("user_id", userId)
+      .order("created_at", { ascending: false });
+
+    if (error) {
+      console.error(error);
+      setSupportLoading(false);
+      return;
+    }
+
+    setSupportMessages((data || []) as SupportMessage[]);
+    setSupportLoading(false);
+  }
+
+  async function fetchAdminSupportMessages() {
+    if (!supabase || !canAccessAdmin) return;
+
+    setAdminSupportLoading(true);
+
+    const { data, error } = await supabase
+      .from("support_messages")
+      .select("id, user_id, customer_name, customer_email, customer_phone, subject, message, related_order_reference, related_product_name, status, admin_note, created_at")
+      .order("created_at", { ascending: false });
+
+    if (error) {
+      console.error(error);
+      setToast(error.message);
+      setAdminSupportLoading(false);
+      return;
+    }
+
+    setAdminSupportMessages((data || []) as SupportMessage[]);
+    setAdminSupportLoading(false);
+  }
+
+  async function submitSupportMessage(event?: React.FormEvent<HTMLFormElement>) {
+    event?.preventDefault();
+
+    if (!supabase || !session?.user || !accountUser) {
+      setAuthMode("signIn");
+      setSignInOpen(true);
+      setToast(isArabic ? "سجلي الدخول أولاً للتواصل معنا." : "Please sign in first to contact support.");
+      return;
+    }
+
+    const cleanMessage = supportForm.message.trim();
+
+    if (!cleanMessage || cleanMessage.length < 8) {
+      setToast(isArabic ? "اكتبي رسالة واضحة أولاً." : "Write a clear support message first.");
+      return;
+    }
+
+    setSupportSubmitting(true);
+
+    const { error } = await supabase.from("support_messages").insert({
+      user_id: session.user.id,
+      customer_name: accountUser.name,
+      customer_email: accountUser.email,
+      customer_phone: accountUser.phone,
+      subject: supportForm.subject.trim() || "Support Request",
+      message: cleanMessage,
+      related_order_reference: supportForm.relatedOrderReference.trim() || null,
+      related_product_name: supportForm.relatedProductName.trim() || null,
+      status: "Open",
+    });
+
+    if (error) {
+      console.error(error);
+      setToast(error.message);
+      setSupportSubmitting(false);
+      return;
+    }
+
+    setSupportForm(emptySupportForm);
+    await fetchUserSupportMessages(session.user.id);
+    if (canAccessAdmin) fetchAdminSupportMessages();
+    setToast(isArabic ? "تم إرسال رسالتك للدعم" : "Support message sent");
+    setSupportSubmitting(false);
+  }
+
+  async function updateSupportMessageStatus(messageId: string, status: string) {
+    if (!supabase || !canAccessAdmin) return;
+
+    const { error } = await supabase
+      .from("support_messages")
+      .update({ status, updated_at: new Date().toISOString() })
+      .eq("id", messageId);
+
+    if (error) {
+      setToast(error.message);
+      return;
+    }
+
+    setAdminSupportMessages((current) =>
+      current.map((message) => (message.id === messageId ? { ...message, status } : message))
+    );
+    setToast(isArabic ? "تم تحديث حالة الرسالة" : "Support status updated");
+  }
+
+  async function updateSupportAdminNote(messageId: string, adminNote: string) {
+    if (!supabase || !canAccessAdmin) return;
+
+    const { error } = await supabase
+      .from("support_messages")
+      .update({ admin_note: adminNote, updated_at: new Date().toISOString() })
+      .eq("id", messageId);
+
+    if (error) {
+      setToast(error.message);
+      return;
+    }
+
+    setAdminSupportMessages((current) =>
+      current.map((message) => (message.id === messageId ? { ...message, admin_note: adminNote } : message))
+    );
+  }
+
+  async function deleteSupportMessage(messageId: string) {
+    if (!supabase || !canAccessAdmin) return;
+
+    const confirmed = window.confirm(isArabic ? "هل تريد حذف هذه الرسالة؟" : "Delete this support message?");
+    if (!confirmed) return;
+
+    const { error } = await supabase.from("support_messages").delete().eq("id", messageId);
+
+    if (error) {
+      setToast(error.message);
+      return;
+    }
+
+    setAdminSupportMessages((current) => current.filter((message) => message.id !== messageId));
+    setToast(isArabic ? "تم حذف الرسالة" : "Support message deleted");
   }
 
   async function fetchUserAddresses(userId = session?.user?.id) {
@@ -8356,6 +8539,87 @@ export default function App() {
             width: 100%;
           }
         }
+
+.supportPanel,
+.supportFormPanel,
+.supportMessagesList,
+.supportAdminPanel {
+  margin-top: 24px;
+}
+
+.supportFormPanel,
+.supportMessageCard,
+.supportAdminCard {
+  border: 1px solid rgba(176, 138, 69, 0.24);
+  background: linear-gradient(135deg, rgba(255, 249, 240, 0.96), rgba(247, 241, 232, 0.88));
+  border-radius: 24px;
+  padding: 20px;
+  box-shadow: 0 18px 40px rgba(44, 31, 24, 0.06);
+}
+
+.supportMessagesList {
+  display: grid;
+  gap: 14px;
+}
+
+.supportMessageCard p,
+.supportAdminCard p {
+  color: var(--muted);
+  line-height: 1.7;
+  margin: 12px 0 0;
+}
+
+.supportAdminNote {
+  border-top: 1px solid rgba(176, 138, 69, 0.2);
+  padding-top: 12px;
+}
+
+.adminNoteField {
+  display: grid;
+  gap: 8px;
+  margin-top: 14px;
+}
+
+.adminNoteField span {
+  color: var(--gold);
+  font-size: 0.72rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+}
+
+.adminNoteField textarea,
+.supportFormPanel textarea,
+.supportFormPanel select {
+  border: 1px solid rgba(176, 138, 69, 0.3);
+  background: rgba(255, 249, 240, 0.85);
+  border-radius: 18px;
+  color: var(--ink);
+  font: inherit;
+  min-height: 46px;
+  outline: none;
+  padding: 13px 14px;
+  resize: vertical;
+}
+
+.supportFormPanel textarea,
+.adminNoteField textarea {
+  min-height: 110px;
+}
+
+.statusUpdateBtn.danger {
+  border-color: rgba(125, 45, 35, 0.38);
+  color: #7d2d23;
+}
+
+@media (max-width: 720px) {
+  .supportFormPanel,
+  .supportMessageCard,
+  .supportAdminCard {
+    border-radius: 20px;
+    padding: 16px;
+  }
+}
+
 `}</style>
 
       <div className="scrollProgress" style={{ width: `${scrollProgress}%` }} />
@@ -8937,6 +9201,75 @@ export default function App() {
                         </div>
                       </form>
                     </div>
+
+                    <div className="supportPanel">
+                      <div className="miniSectionHead">
+                        <div>
+                          <span>{isArabic ? "الدعم" : "Support"}</span>
+                          <strong>{isArabic ? "تواصلي مع لا غراتسيا" : "Contact La Grazia"}</strong>
+                        </div>
+                        <button type="button" className="luxurySmallBtn secondary" onClick={() => fetchUserSupportMessages()}>
+                          {supportLoading ? (isArabic ? "جاري التحديث..." : "Refreshing...") : (isArabic ? "تحديث" : "Refresh")}
+                        </button>
+                      </div>
+
+                      <form className="supportFormPanel" onSubmit={submitSupportMessage}>
+                        <div className="profileFormGrid">
+                          <label>
+                            <span>{isArabic ? "الموضوع" : "Subject"}</span>
+                            <select value={supportForm.subject} onChange={(event) => setSupportForm((current) => ({ ...current, subject: event.target.value }))}>
+                              <option>Order Question</option>
+                              <option>Product Question</option>
+                              <option>Payment Question</option>
+                              <option>Delivery Question</option>
+                              <option>Return / Exchange</option>
+                              <option>Other</option>
+                            </select>
+                          </label>
+                          <label>
+                            <span>{isArabic ? "رقم الطلب" : "Order Reference"}</span>
+                            <input value={supportForm.relatedOrderReference} onChange={(event) => setSupportForm((current) => ({ ...current, relatedOrderReference: event.target.value }))} placeholder="LG-..." />
+                          </label>
+                          <label>
+                            <span>{isArabic ? "اسم المنتج" : "Product Name"}</span>
+                            <input value={supportForm.relatedProductName} onChange={(event) => setSupportForm((current) => ({ ...current, relatedProductName: event.target.value }))} placeholder={isArabic ? "اختياري" : "Optional"} />
+                          </label>
+                          <label className="profileWide">
+                            <span>{isArabic ? "رسالتك" : "Message"}</span>
+                            <textarea value={supportForm.message} onChange={(event) => setSupportForm((current) => ({ ...current, message: event.target.value }))} placeholder={isArabic ? "اكتبي تفاصيل طلبك أو سؤالك..." : "Write your order question, product question, or support request..."} />
+                          </label>
+                        </div>
+                        <div className="addressFormActions">
+                          <button type="submit" className="primaryBtn" disabled={supportSubmitting}>
+                            {supportSubmitting ? (isArabic ? "جاري الإرسال..." : "Sending...") : (isArabic ? "إرسال للدعم" : "Send to Support")}
+                          </button>
+                          <a className="secondaryBtn" href={createWhatsAppLink("Hello La Grazia, I need support with my account/order.")} target="_blank" rel="noreferrer">
+                            {isArabic ? "واتساب" : "WhatsApp"}
+                          </a>
+                        </div>
+                      </form>
+
+                      <div className="supportMessagesList">
+                        {supportMessages.length === 0 ? (
+                          <div className="emptyAddressCard">
+                            {isArabic ? "لا توجد رسائل دعم بعد." : "No support messages yet."}
+                          </div>
+                        ) : supportMessages.map((message) => (
+                          <article className="supportMessageCard" key={message.id}>
+                            <div className="adminReviewTop">
+                              <div>
+                                <small>{new Date(message.created_at).toLocaleDateString()}</small>
+                                <strong>{message.subject}</strong>
+                                <span>{[message.related_order_reference, message.related_product_name].filter(Boolean).join(" · ") || (isArabic ? "طلب دعم عام" : "General support request")}</span>
+                              </div>
+                              <span className={message.status === "Closed" ? "reviewApprovalPill approved" : "reviewApprovalPill pending"}>{message.status}</span>
+                            </div>
+                            <p>{message.message}</p>
+                            {message.admin_note && <p className="supportAdminNote"><b>{isArabic ? "رد الإدارة:" : "Admin note:"}</b> {message.admin_note}</p>}
+                          </article>
+                        ))}
+                      </div>
+                    </div>
                   </>
                 ) : accountView === "orders" ? (
                   <>
@@ -9086,6 +9419,79 @@ export default function App() {
                         ))}
                       </div>
                     )}
+
+                    <div className="adminProductsPanel supportAdminPanel">
+                      <div className="accountPageTitleRow productAdminHeader">
+                        <div>
+                          <p className="eyebrow">{isArabic ? "رسائل الدعم" : "Support Messages"}</p>
+                          <h3>{isArabic ? "رسائل العملاء" : "Customer Support Inbox"}</h3>
+                          <p>
+                            {isArabic
+                              ? "راجعي رسائل العملاء وغيّري حالتها من نفس لوحة الإدارة."
+                              : "Review customer messages and update their support status from the admin dashboard."}
+                          </p>
+                        </div>
+                        <button className="secondaryBtn" type="button" onClick={fetchAdminSupportMessages}>
+                          {adminSupportLoading ? (isArabic ? "جاري التحديث..." : "Refreshing...") : (isArabic ? "تحديث الرسائل" : "Refresh Messages")}
+                        </button>
+                      </div>
+
+                      <div className="adminStatsGrid">
+                        <div className="adminStatCard"><small>{isArabic ? "كل الرسائل" : "Total Messages"}</small><strong>{adminSupportMessages.length}</strong></div>
+                        <div className="adminStatCard"><small>{isArabic ? "مفتوحة" : "Open"}</small><strong>{adminSupportMessages.filter((message) => message.status === "Open").length}</strong></div>
+                        <div className="adminStatCard"><small>{isArabic ? "مغلقة" : "Closed"}</small><strong>{adminSupportMessages.filter((message) => message.status === "Closed").length}</strong></div>
+                      </div>
+
+                      {adminSupportMessages.length === 0 ? (
+                        <div className="noOrdersBox">
+                          <strong>{isArabic ? "لا توجد رسائل دعم" : "No support messages yet"}</strong>
+                          <span>{isArabic ? "أي رسالة من عميل ستظهر هنا." : "Every customer support message will appear here."}</span>
+                        </div>
+                      ) : (
+                        <div className="adminReviewsList">
+                          {adminSupportMessages.map((message) => (
+                            <article className="adminReviewCard supportAdminCard" key={message.id}>
+                              <div className="adminReviewTop">
+                                <div>
+                                  <small>{new Date(message.created_at).toLocaleString()}</small>
+                                  <strong>{message.subject}</strong>
+                                  <span>{message.customer_name || "La Grazia Client"} · {message.customer_email || "-"} · {message.customer_phone || "-"}</span>
+                                </div>
+                                <span className={message.status === "Closed" ? "reviewApprovalPill approved" : "reviewApprovalPill pending"}>{message.status}</span>
+                              </div>
+                              <div className="adminOrderInfoGrid">
+                                <span><b>{isArabic ? "طلب" : "Order"}:</b> {message.related_order_reference || "-"}</span>
+                                <span><b>{isArabic ? "منتج" : "Product"}:</b> {message.related_product_name || "-"}</span>
+                              </div>
+                              <p>{message.message}</p>
+                              <label className="adminNoteField">
+                                <span>{isArabic ? "ملاحظة الإدارة" : "Admin Note"}</span>
+                                <textarea
+                                  defaultValue={message.admin_note || ""}
+                                  onBlur={(event) => updateSupportAdminNote(message.id, event.target.value)}
+                                  placeholder={isArabic ? "اكتبي ملاحظة داخلية أو رد مختصر..." : "Write an internal note or short response..."}
+                                />
+                              </label>
+                              <div className="adminStatusButtons">
+                                {["Open", "Replied", "Closed"].map((status) => (
+                                  <button
+                                    type="button"
+                                    key={status}
+                                    className={message.status === status ? "statusUpdateBtn active" : "statusUpdateBtn"}
+                                    onClick={() => updateSupportMessageStatus(message.id, status)}
+                                  >
+                                    {status}
+                                  </button>
+                                ))}
+                                <button type="button" className="statusUpdateBtn danger" onClick={() => deleteSupportMessage(message.id)}>
+                                  {isArabic ? "حذف" : "Delete"}
+                                </button>
+                              </div>
+                            </article>
+                          ))}
+                        </div>
+                      )}
+                    </div>
 
                     <div className="adminProductsPanel reviewAdminPanel">
                       <div className="accountPageTitleRow productAdminHeader">
