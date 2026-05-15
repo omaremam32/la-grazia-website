@@ -4,6 +4,7 @@ import { createClient, type Session } from "@supabase/supabase-js";
 type Lang = "EN" | "AR";
 
 type Product = {
+  id?: string;
   name: string;
   price: string;
   minPrice: number;
@@ -14,6 +15,8 @@ type Product = {
   colors: string[];
   complete: string[];
   description: string;
+  isActive?: boolean;
+  sortOrder?: number;
 };
 
 type CartItem = {
@@ -98,6 +101,38 @@ type AdminOrder = AccountOrder & {
   user_id?: string | null;
 };
 
+
+type ProductRow = {
+  id: string;
+  name: string;
+  price: string;
+  min_price: number;
+  category: string;
+  image: string;
+  tag: string | null;
+  occasion: string | null;
+  colors: string[] | null;
+  complete: string[] | null;
+  description: string | null;
+  is_active: boolean;
+  sort_order: number | null;
+};
+
+type ProductForm = {
+  name: string;
+  price: string;
+  minPrice: string;
+  category: string;
+  image: string;
+  tag: string;
+  occasion: string;
+  colors: string;
+  complete: string;
+  description: string;
+  isActive: boolean;
+  sortOrder: string;
+};
+
 const WHATSAPP_NUMBER = "201101900086";
 const BRAND_EMAIL = "omaromohamed2003@gmail.com";
 
@@ -121,6 +156,22 @@ const emptyAddressForm: AddressForm = {
   apartment: "",
   deliveryNotes: "",
   isDefault: true,
+};
+
+
+const emptyProductForm: ProductForm = {
+  name: "",
+  price: "EGP 0",
+  minPrice: "0",
+  category: "",
+  image: "/photos/la-grazia-01.jpeg",
+  tag: "New Arrival",
+  occasion: "Everyday Chic",
+  colors: "Cream, White",
+  complete: "Gold earrings, Mini bag",
+  description: "",
+  isActive: true,
+  sortOrder: "0",
 };
 
 const products: Product[] = [
@@ -691,6 +742,7 @@ export default function App() {
   const [selectedColor, setSelectedColor] = useState("Cream");
   const [quantity, setQuantity] = useState(1);
   const [itemSizeChartOpen, setItemSizeChartOpen] = useState(false);
+  const [displayProducts, setDisplayProducts] = useState<Product[]>(products);
 
   const [cart, setCart] = useState<CartItem[]>([]);
   const [cartOpen, setCartOpen] = useState(false);
@@ -728,6 +780,11 @@ export default function App() {
   const [accountOrders, setAccountOrders] = useState<AccountOrder[]>([]);
   const [adminOrders, setAdminOrders] = useState<AdminOrder[]>([]);
   const [adminLoading, setAdminLoading] = useState(false);
+  const [adminProducts, setAdminProducts] = useState<ProductRow[]>([]);
+  const [adminProductsLoading, setAdminProductsLoading] = useState(false);
+  const [productSaving, setProductSaving] = useState(false);
+  const [editingProductId, setEditingProductId] = useState<string | null>(null);
+  const [productForm, setProductForm] = useState<ProductForm>(emptyProductForm);
 
   const [searchTerm, setSearchTerm] = useState("");
   const [activeFilter, setActiveFilter] = useState("All");
@@ -777,7 +834,7 @@ export default function App() {
     return addresses.find((address) => address.is_default) || addresses[0] || null;
   }, [addresses]);
 
-  const bestSellers = products.filter((product) =>
+  const bestSellers = displayProducts.filter((product) =>
     ["Milano Cream Palazzo Trouser", "Vaticano Printed Silk Scarf", "Bianca Off-Shoulder Knit", "Firenze Cream Tailored Vest"].includes(product.name)
   );
 
@@ -836,7 +893,7 @@ export default function App() {
   }
 
   function openSizeGuideFromMenu() {
-    const guideProduct = selectedProduct || products[0];
+    const guideProduct = selectedProduct || displayProducts[0] || products[0];
     setMenuOpen(false);
     setCollectionMenuOpen(false);
     setAccountPageOpen(false);
@@ -848,7 +905,7 @@ export default function App() {
   }
 
   const filteredProducts = useMemo(() => {
-    const result = products.filter((product) => {
+    const result = displayProducts.filter((product) => {
       const search =
         product.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
         product.category.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -865,12 +922,12 @@ export default function App() {
     if (sortOption === "Price High to Low") return [...result].sort((a, b) => b.minPrice - a.minPrice);
 
     return result;
-  }, [searchTerm, activeFilter, collectionFilter, sortOption]);
+  }, [displayProducts, searchTerm, activeFilter, collectionFilter, sortOption]);
 
-  const wishlistProducts = products.filter((product) => wishlist.includes(product.name));
+  const wishlistProducts = displayProducts.filter((product) => wishlist.includes(product.name));
 
   const moodResult = moodOptions.find((option) => option.mood === selectedMood) || moodOptions[0];
-  const moodProduct = products.find((product) => product.name === moodResult.result) || products[0];
+  const moodProduct = displayProducts.find((product) => product.name === moodResult.result) || displayProducts[0] || products[0];
 
   const lineBreak = String.fromCharCode(10);
 
@@ -895,6 +952,11 @@ export default function App() {
   useEffect(() => {
     const timer = window.setTimeout(() => setLoading(false), 4300);
     return () => window.clearTimeout(timer);
+  }, []);
+
+
+  useEffect(() => {
+    fetchStoreProducts();
   }, []);
 
   useEffect(() => {
@@ -952,6 +1014,14 @@ export default function App() {
 
     return () => observer.disconnect();
   }, [language, searchTerm, activeFilter, collectionFilter, sortOption, wishlist.length, accountPageOpen, filteredProducts.length]);
+
+
+  useEffect(() => {
+    if (accountPageOpen && accountView === "admin" && canAccessAdmin) {
+      fetchAdminOrders();
+      fetchAdminProducts();
+    }
+  }, [accountPageOpen, accountView, canAccessAdmin]);
 
   useEffect(() => {
     if (!toast) return;
@@ -1048,7 +1118,189 @@ export default function App() {
     const email = String(profile?.email || user.email || "").trim().toLowerCase();
     if (Boolean(profile?.is_admin) || email === BRAND_EMAIL.toLowerCase() || email === "omaromohamed2003@gmail.com") {
       fetchAdminOrders();
+      fetchAdminProducts();
     }
+  }
+
+
+  function mapProductRow(row: ProductRow): Product {
+    return {
+      id: row.id,
+      name: row.name,
+      price: row.price,
+      minPrice: Number(row.min_price || 0),
+      category: row.category,
+      image: row.image,
+      tag: row.tag || "New Arrival",
+      occasion: row.occasion || "Everyday Chic",
+      colors: row.colors && row.colors.length > 0 ? row.colors : ["Cream"],
+      complete: row.complete && row.complete.length > 0 ? row.complete : [],
+      description: row.description || "",
+      isActive: Boolean(row.is_active),
+      sortOrder: Number(row.sort_order || 0),
+    };
+  }
+
+  async function fetchStoreProducts() {
+    if (!supabase) {
+      setDisplayProducts(products);
+      return;
+    }
+
+    const { data, error } = await supabase
+      .from("products")
+      .select("id, name, price, min_price, category, image, tag, occasion, colors, complete, description, is_active, sort_order")
+      .eq("is_active", true)
+      .order("sort_order", { ascending: true })
+      .order("created_at", { ascending: true });
+
+    if (error) {
+      console.error(error);
+      setDisplayProducts(products);
+      return;
+    }
+
+    if (data && data.length > 0) {
+      setDisplayProducts((data as ProductRow[]).map(mapProductRow));
+    } else {
+      setDisplayProducts(products);
+    }
+  }
+
+  async function fetchAdminProducts() {
+    if (!supabase || !canAccessAdmin) return;
+
+    setAdminProductsLoading(true);
+
+    const { data, error } = await supabase
+      .from("products")
+      .select("id, name, price, min_price, category, image, tag, occasion, colors, complete, description, is_active, sort_order")
+      .order("sort_order", { ascending: true })
+      .order("created_at", { ascending: true });
+
+    if (error) {
+      console.error(error);
+      setToast(error.message);
+    } else {
+      setAdminProducts((data || []) as ProductRow[]);
+    }
+
+    setAdminProductsLoading(false);
+  }
+
+  function splitListValue(value: string) {
+    return value
+      .split(",")
+      .map((item) => item.trim())
+      .filter(Boolean);
+  }
+
+  function startEditProduct(product: ProductRow) {
+    setEditingProductId(product.id);
+    setProductForm({
+      name: product.name || "",
+      price: product.price || "",
+      minPrice: String(product.min_price || 0),
+      category: product.category || "",
+      image: product.image || "/photos/la-grazia-01.jpeg",
+      tag: product.tag || "New Arrival",
+      occasion: product.occasion || "Everyday Chic",
+      colors: (product.colors || []).join(", "),
+      complete: (product.complete || []).join(", "),
+      description: product.description || "",
+      isActive: Boolean(product.is_active),
+      sortOrder: String(product.sort_order || 0),
+    });
+  }
+
+  function resetProductForm() {
+    setEditingProductId(null);
+    setProductForm(emptyProductForm);
+  }
+
+  async function saveProduct(event?: React.FormEvent<HTMLFormElement>) {
+    event?.preventDefault();
+
+    if (!supabase || !canAccessAdmin) return;
+
+    if (!productForm.name.trim() || !productForm.category.trim() || !productForm.image.trim()) {
+      setToast(isArabic ? "اكتبي اسم المنتج والتصنيف والصورة." : "Add product name, category, and image.");
+      return;
+    }
+
+    setProductSaving(true);
+
+    const payload = {
+      name: productForm.name.trim(),
+      price: productForm.price.trim() || "EGP 0",
+      min_price: Number(productForm.minPrice || 0),
+      category: productForm.category.trim(),
+      image: productForm.image.trim(),
+      tag: productForm.tag.trim() || "New Arrival",
+      occasion: productForm.occasion.trim() || "Everyday Chic",
+      colors: splitListValue(productForm.colors),
+      complete: splitListValue(productForm.complete),
+      description: productForm.description.trim(),
+      is_active: productForm.isActive,
+      sort_order: Number(productForm.sortOrder || 0),
+      updated_at: new Date().toISOString(),
+    };
+
+    const query = editingProductId
+      ? supabase.from("products").update(payload).eq("id", editingProductId)
+      : supabase.from("products").insert(payload);
+
+    const { error } = await query;
+
+    if (error) {
+      console.error(error);
+      setToast(error.message);
+      setProductSaving(false);
+      return;
+    }
+
+    await fetchStoreProducts();
+    await fetchAdminProducts();
+    resetProductForm();
+    setToast(isArabic ? "تم حفظ المنتج" : "Product saved");
+    setProductSaving(false);
+  }
+
+  async function toggleProductActive(product: ProductRow) {
+    if (!supabase || !canAccessAdmin) return;
+
+    const { error } = await supabase
+      .from("products")
+      .update({ is_active: !product.is_active, updated_at: new Date().toISOString() })
+      .eq("id", product.id);
+
+    if (error) {
+      setToast(error.message);
+      return;
+    }
+
+    await fetchStoreProducts();
+    await fetchAdminProducts();
+    setToast(product.is_active ? (isArabic ? "تم إخفاء المنتج" : "Product hidden") : (isArabic ? "تم إظهار المنتج" : "Product shown"));
+  }
+
+  async function deleteProduct(productId: string) {
+    if (!supabase || !canAccessAdmin) return;
+
+    const confirmed = window.confirm(isArabic ? "هل تريد حذف هذا المنتج؟" : "Delete this product?");
+    if (!confirmed) return;
+
+    const { error } = await supabase.from("products").delete().eq("id", productId);
+
+    if (error) {
+      setToast(error.message);
+      return;
+    }
+
+    await fetchStoreProducts();
+    await fetchAdminProducts();
+    if (editingProductId === productId) resetProductForm();
+    setToast(isArabic ? "تم حذف المنتج" : "Product deleted");
   }
 
   async function fetchUserAddresses(userId = session?.user?.id) {
@@ -4387,6 +4639,260 @@ export default function App() {
 
         @keyframes loaderOut {
           to { opacity: 0; pointer-events: none; transform: scale(1.01); }
+        }
+
+
+
+        .adminProductsPanel {
+          margin-top: 34px;
+          padding-top: 30px;
+          border-top: 1px solid rgba(176, 138, 69, 0.22);
+        }
+
+        .productAdminHeader {
+          margin-bottom: 22px;
+        }
+
+        .adminProductForm {
+          background: rgba(255, 249, 240, 0.74);
+          border: 1px solid rgba(176, 138, 69, 0.28);
+          border-radius: 30px;
+          padding: 24px;
+          box-shadow: 0 14px 34px rgba(36, 26, 20, 0.06);
+          margin-bottom: 24px;
+        }
+
+        .darkMode .adminProductForm {
+          background: rgba(255, 249, 240, 0.06);
+          border-color: rgba(215, 180, 111, 0.32);
+        }
+
+        .adminProductFormHead {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          gap: 12px;
+          margin-bottom: 18px;
+        }
+
+        .adminProductFormHead strong {
+          font-family: Georgia, "Times New Roman", serif;
+          font-size: 26px;
+          font-weight: 500;
+        }
+
+        .ghostSmallBtn {
+          border: 1px solid rgba(176, 138, 69, 0.38);
+          background: transparent;
+          color: inherit;
+          border-radius: 999px;
+          padding: 9px 13px;
+          font-size: 10px;
+          letter-spacing: 0.12em;
+          text-transform: uppercase;
+        }
+
+        .adminProductGrid {
+          display: grid;
+          grid-template-columns: repeat(4, minmax(0, 1fr));
+          gap: 14px;
+        }
+
+        .adminProductGrid label {
+          display: flex;
+          flex-direction: column;
+          gap: 7px;
+          min-width: 0;
+        }
+
+        .adminProductGrid label span,
+        .productActiveSwitch span {
+          color: #b08a45;
+          font-size: 10px;
+          letter-spacing: 0.14em;
+          text-transform: uppercase;
+        }
+
+        .adminProductGrid input,
+        .adminProductGrid textarea {
+          width: 100%;
+          border: 1px solid rgba(176, 138, 69, 0.34);
+          background: rgba(255, 249, 240, 0.86);
+          color: #241a14;
+          border-radius: 18px;
+          padding: 13px 14px;
+          outline: none;
+          font-size: 13px;
+        }
+
+        .darkMode .adminProductGrid input,
+        .darkMode .adminProductGrid textarea {
+          background: rgba(255, 249, 240, 0.08);
+          color: #fff9f0;
+          border-color: rgba(215, 180, 111, 0.40);
+        }
+
+        .adminProductGrid textarea {
+          min-height: 96px;
+          resize: vertical;
+        }
+
+        .wideField {
+          grid-column: span 2;
+        }
+
+        .productActiveSwitch {
+          display: flex;
+          flex-direction: row !important;
+          align-items: center;
+          gap: 10px !important;
+          padding: 12px 14px;
+          border: 1px solid rgba(176, 138, 69, 0.28);
+          border-radius: 18px;
+          background: rgba(255, 249, 240, 0.45);
+        }
+
+        .productActiveSwitch input {
+          width: auto !important;
+          accent-color: #b08a45;
+        }
+
+        .adminProductSave {
+          width: fit-content;
+          margin-top: 18px;
+        }
+
+        .adminProductsList {
+          display: grid;
+          grid-template-columns: repeat(2, minmax(0, 1fr));
+          gap: 16px;
+        }
+
+        .adminProductCard {
+          display: grid;
+          grid-template-columns: 112px 1fr;
+          gap: 16px;
+          align-items: center;
+          background: #fff9f0;
+          border: 1px solid rgba(176, 138, 69, 0.24);
+          border-radius: 24px;
+          padding: 14px;
+          box-shadow: 0 12px 28px rgba(36, 26, 20, 0.05);
+        }
+
+        .darkMode .adminProductCard {
+          background: rgba(255, 249, 240, 0.06);
+          border-color: rgba(215, 180, 111, 0.28);
+        }
+
+        .adminProductCard.hiddenProduct {
+          opacity: 0.62;
+        }
+
+        .adminProductCard img {
+          width: 112px;
+          height: 140px;
+          object-fit: cover;
+          object-position: top center;
+          border-radius: 18px;
+          background: #e8d6bd;
+        }
+
+        .adminProductCard small {
+          color: #b08a45;
+          letter-spacing: 0.12em;
+          text-transform: uppercase;
+          font-size: 10px;
+        }
+
+        .adminProductCard strong {
+          display: block;
+          margin: 6px 0;
+          font-family: Georgia, "Times New Roman", serif;
+          font-size: 22px;
+          font-weight: 500;
+        }
+
+        .adminProductCard span,
+        .adminProductCard p {
+          display: block;
+          color: #6a5545;
+          font-size: 13px;
+          line-height: 1.5;
+          margin: 0;
+        }
+
+        .adminProductCard p {
+          margin-top: 6px;
+          display: -webkit-box;
+          -webkit-line-clamp: 2;
+          -webkit-box-orient: vertical;
+          overflow: hidden;
+        }
+
+        .adminProductActions {
+          display: flex;
+          flex-wrap: wrap;
+          gap: 8px;
+          margin-top: 12px;
+        }
+
+        .adminProductActions button {
+          border: 1px solid rgba(176, 138, 69, 0.36);
+          background: transparent;
+          color: inherit;
+          border-radius: 999px;
+          padding: 8px 12px;
+          font-size: 10px;
+          letter-spacing: 0.11em;
+          text-transform: uppercase;
+        }
+
+        .adminProductActions .dangerBtn {
+          border-color: rgba(150, 51, 43, 0.45);
+          color: #96332b;
+        }
+
+        @media (max-width: 900px) {
+          .adminProductGrid {
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+          }
+
+          .adminProductsList {
+            grid-template-columns: 1fr;
+          }
+        }
+
+        @media (max-width: 640px) {
+          .adminProductForm {
+            padding: 16px;
+            border-radius: 24px;
+          }
+
+          .adminProductGrid {
+            grid-template-columns: 1fr;
+          }
+
+          .wideField {
+            grid-column: auto;
+          }
+
+          .adminProductCard {
+            grid-template-columns: 86px 1fr;
+            gap: 12px;
+            padding: 12px;
+            border-radius: 20px;
+          }
+
+          .adminProductCard img {
+            width: 86px;
+            height: 116px;
+            border-radius: 15px;
+          }
+
+          .adminProductCard strong {
+            font-size: 18px;
+          }
         }
 
         @keyframes pageFade {
@@ -8122,6 +8628,82 @@ export default function App() {
                         ))}
                       </div>
                     )}
+
+                    <div className="adminProductsPanel">
+                      <div className="accountPageTitleRow productAdminHeader">
+                        <div>
+                          <p className="eyebrow">{isArabic ? "إدارة المنتجات" : "Product Management"}</p>
+                          <h3>{isArabic ? "منتجات لا غراتسيا" : "La Grazia Products"}</h3>
+                          <p>
+                            {isArabic
+                              ? "أضيفي أو عدّلي أو أخفي المنتجات بدون تغيير الكود."
+                              : "Add, edit, hide, or remove products without touching the code."}
+                          </p>
+                        </div>
+                        <button className="secondaryBtn" type="button" onClick={fetchAdminProducts}>
+                          {adminProductsLoading ? (isArabic ? "جاري التحديث..." : "Refreshing...") : (isArabic ? "تحديث المنتجات" : "Refresh Products")}
+                        </button>
+                      </div>
+
+                      <form className="adminProductForm" onSubmit={saveProduct}>
+                        <div className="adminProductFormHead">
+                          <strong>{editingProductId ? (isArabic ? "تعديل منتج" : "Edit Product") : (isArabic ? "إضافة منتج" : "Add Product")}</strong>
+                          {editingProductId && (
+                            <button type="button" className="ghostSmallBtn" onClick={resetProductForm}>
+                              {isArabic ? "إلغاء التعديل" : "Cancel Edit"}
+                            </button>
+                          )}
+                        </div>
+
+                        <div className="adminProductGrid">
+                          <label><span>{isArabic ? "اسم المنتج" : "Product Name"}</span><input value={productForm.name} onChange={(event) => setProductForm((current) => ({ ...current, name: event.target.value }))} /></label>
+                          <label><span>{isArabic ? "السعر النصي" : "Display Price"}</span><input value={productForm.price} onChange={(event) => setProductForm((current) => ({ ...current, price: event.target.value }))} placeholder="EGP 1,900 - 2,400" /></label>
+                          <label><span>{isArabic ? "السعر للدفع" : "Payment Price"}</span><input type="number" value={productForm.minPrice} onChange={(event) => setProductForm((current) => ({ ...current, minPrice: event.target.value }))} /></label>
+                          <label><span>{isArabic ? "التصنيف" : "Category"}</span><input value={productForm.category} onChange={(event) => setProductForm((current) => ({ ...current, category: event.target.value }))} /></label>
+                          <label><span>{isArabic ? "الصورة" : "Image Path"}</span><input value={productForm.image} onChange={(event) => setProductForm((current) => ({ ...current, image: event.target.value }))} placeholder="/photos/la-grazia-01.jpeg" /></label>
+                          <label><span>{isArabic ? "العلامة" : "Tag"}</span><input value={productForm.tag} onChange={(event) => setProductForm((current) => ({ ...current, tag: event.target.value }))} /></label>
+                          <label><span>{isArabic ? "المناسبة" : "Occasion"}</span><input value={productForm.occasion} onChange={(event) => setProductForm((current) => ({ ...current, occasion: event.target.value }))} /></label>
+                          <label><span>{isArabic ? "الترتيب" : "Sort Order"}</span><input type="number" value={productForm.sortOrder} onChange={(event) => setProductForm((current) => ({ ...current, sortOrder: event.target.value }))} /></label>
+                          <label className="wideField"><span>{isArabic ? "الألوان" : "Colors"}</span><input value={productForm.colors} onChange={(event) => setProductForm((current) => ({ ...current, colors: event.target.value }))} placeholder="Cream, White, Beige" /></label>
+                          <label className="wideField"><span>{isArabic ? "تنسيق القطعة" : "Complete With"}</span><input value={productForm.complete} onChange={(event) => setProductForm((current) => ({ ...current, complete: event.target.value }))} placeholder="Gold earrings, Mini bag" /></label>
+                          <label className="wideField"><span>{isArabic ? "الوصف" : "Description"}</span><textarea value={productForm.description} onChange={(event) => setProductForm((current) => ({ ...current, description: event.target.value }))} /></label>
+                          <label className="productActiveSwitch">
+                            <input type="checkbox" checked={productForm.isActive} onChange={(event) => setProductForm((current) => ({ ...current, isActive: event.target.checked }))} />
+                            <span>{isArabic ? "ظاهر في الموقع" : "Visible on website"}</span>
+                          </label>
+                        </div>
+
+                        <button className="primaryBtn adminProductSave" type="submit" disabled={productSaving}>
+                          {productSaving ? (isArabic ? "جاري الحفظ..." : "Saving...") : editingProductId ? (isArabic ? "حفظ التعديل" : "Save Changes") : (isArabic ? "إضافة المنتج" : "Add Product")}
+                        </button>
+                      </form>
+
+                      <div className="adminProductsList">
+                        {adminProducts.length === 0 ? (
+                          <div className="noOrdersBox">
+                            <strong>{isArabic ? "لا توجد منتجات" : "No products found"}</strong>
+                            <span>{isArabic ? "أضيفي أول منتج من النموذج بالأعلى." : "Add your first product from the form above."}</span>
+                          </div>
+                        ) : (
+                          adminProducts.map((product) => (
+                            <article className={product.is_active ? "adminProductCard" : "adminProductCard hiddenProduct"} key={product.id}>
+                              <img src={product.image} alt={product.name} />
+                              <div>
+                                <small>{product.category} · {product.tag}</small>
+                                <strong>{product.name}</strong>
+                                <span>{product.price} · Sort {product.sort_order || 0}</span>
+                                <p>{product.description}</p>
+                                <div className="adminProductActions">
+                                  <button type="button" onClick={() => startEditProduct(product)}>{isArabic ? "تعديل" : "Edit"}</button>
+                                  <button type="button" onClick={() => toggleProductActive(product)}>{product.is_active ? (isArabic ? "إخفاء" : "Hide") : (isArabic ? "إظهار" : "Show")}</button>
+                                  <button type="button" className="dangerBtn" onClick={() => deleteProduct(product.id)}>{isArabic ? "حذف" : "Delete"}</button>
+                                </div>
+                              </div>
+                            </article>
+                          ))
+                        )}
+                      </div>
+                    </div>
                   </>
                 ) : null}
               </div>
