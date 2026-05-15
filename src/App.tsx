@@ -1306,16 +1306,72 @@ export default function App() {
         .topBar {
           background: #2c1f18;
           color: #f7f1e8;
-          padding: 10px 16px;
-          text-align: center;
-          font-size: 11px;
-          letter-spacing: 0.22em;
-          text-transform: uppercase;
-          animation: topBarDrop 0.75s ease both;
-          white-space: nowrap;
+          padding: 0;
           overflow: hidden;
-          text-overflow: ellipsis;
-          line-height: 1.2;
+          white-space: nowrap;
+          border-bottom: 1px solid rgba(215, 180, 111, 0.18);
+          animation: topBarDrop 0.75s ease both;
+          line-height: 1;
+          position: relative;
+        }
+
+        .topBar::before,
+        .topBar::after {
+          content: "";
+          position: absolute;
+          top: 0;
+          bottom: 0;
+          width: 80px;
+          z-index: 2;
+          pointer-events: none;
+        }
+
+        .topBar::before {
+          left: 0;
+          background: linear-gradient(90deg, #2c1f18, rgba(44, 31, 24, 0));
+        }
+
+        .topBar::after {
+          right: 0;
+          background: linear-gradient(270deg, #2c1f18, rgba(44, 31, 24, 0));
+        }
+
+        .topBarTrack {
+          display: flex;
+          width: max-content;
+          align-items: center;
+          animation: topBarMarquee 22s linear infinite;
+          will-change: transform;
+        }
+
+        .topBar:hover .topBarTrack {
+          animation-play-state: paused;
+        }
+
+        .topBarGroup {
+          display: flex;
+          align-items: center;
+          flex-shrink: 0;
+        }
+
+        .topBarItem {
+          display: inline-flex;
+          align-items: center;
+          padding: 12px 0;
+          font-size: 11px;
+          letter-spacing: 0.24em;
+          text-transform: uppercase;
+          color: #f7f1e8;
+        }
+
+        .topBarDivider {
+          width: 5px;
+          height: 5px;
+          border-radius: 50%;
+          background: #d7b46f;
+          margin: 0 46px;
+          box-shadow: 0 0 16px rgba(215, 180, 111, 0.55);
+          flex: 0 0 auto;
         }
 
         .nav {
@@ -3617,6 +3673,11 @@ export default function App() {
           to { opacity: 1; transform: translateY(0); }
         }
 
+        @keyframes topBarMarquee {
+          from { transform: translateX(0); }
+          to { transform: translateX(-50%); }
+        }
+
         @keyframes navDrop {
           from { opacity: 0; transform: translateY(-20px); }
           to { opacity: 1; transform: translateY(0); }
@@ -3685,11 +3746,16 @@ export default function App() {
 
 
         @media (max-width: 390px) {
-          .topBar {
-            font-size: 6.8px;
-            letter-spacing: 0.055em;
-            padding-left: 6px;
-            padding-right: 6px;
+          .topBarItem {
+            font-size: 7.4px;
+            letter-spacing: 0.11em;
+            padding: 9px 0;
+          }
+
+          .topBarDivider {
+            width: 4px;
+            height: 4px;
+            margin: 0 24px;
           }
         }
 
@@ -3717,13 +3783,23 @@ export default function App() {
         @media (max-width: 900px) {
           body { padding-bottom: 84px; }
 
-          .topBar {
-            padding: 8px 8px;
+          .topBar::before,
+          .topBar::after {
+            width: 38px;
+          }
+
+          .topBarTrack {
+            animation-duration: 18s;
+          }
+
+          .topBarItem {
+            padding: 9px 0;
             font-size: clamp(7px, 2.15vw, 9px);
-            letter-spacing: 0.08em;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
+            letter-spacing: 0.11em;
+          }
+
+          .topBarDivider {
+            margin: 0 28px;
           }
 
           .navInner {
@@ -5865,7 +5941,20 @@ export default function App() {
       )}
 
       <div className={`${darkMode ? "page darkMode" : "page"} ${isArabic ? "arabic" : ""}`} id="top">
-        <div className="topBar">{t.topBar}</div>
+        <div className="topBar" aria-label={t.topBar}>
+          <div className="topBarTrack">
+            {[0, 1].map((group) => (
+              <div className="topBarGroup" key={group} aria-hidden={group === 1}>
+                {[0, 1, 2, 3].map((item) => (
+                  <React.Fragment key={`${group}-${item}`}>
+                    <span className="topBarItem">{t.topBar}</span>
+                    <span className="topBarDivider" />
+                  </React.Fragment>
+                ))}
+              </div>
+            ))}
+          </div>
+        </div>
 
         <header className="nav">
           <div className="navInner">
