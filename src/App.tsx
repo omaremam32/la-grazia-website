@@ -630,6 +630,7 @@ export default function App() {
   const [selectedSize, setSelectedSize] = useState("M");
   const [selectedColor, setSelectedColor] = useState("Cream");
   const [quantity, setQuantity] = useState(1);
+  const [itemSizeChartOpen, setItemSizeChartOpen] = useState(false);
 
   const [cart, setCart] = useState<CartItem[]>([]);
   const [cartOpen, setCartOpen] = useState(false);
@@ -733,6 +734,18 @@ export default function App() {
     }, 80);
   }
 
+  function openSizeGuideFromMenu() {
+    const guideProduct = selectedProduct || products[0];
+    setMenuOpen(false);
+    setCollectionMenuOpen(false);
+    setAccountPageOpen(false);
+    setSelectedProduct(guideProduct);
+    setSelectedSize("M");
+    setSelectedColor(guideProduct.colors[0]);
+    setQuantity(1);
+    setItemSizeChartOpen(true);
+  }
+
   const filteredProducts = useMemo(() => {
     const result = products.filter((product) => {
       const search =
@@ -832,6 +845,7 @@ export default function App() {
         setSearchOpen(false);
         setCartOpen(false);
         setSelectedProduct(null);
+        setItemSizeChartOpen(false);
       }
     };
 
@@ -902,6 +916,7 @@ export default function App() {
     setSelectedSize("M");
     setSelectedColor(product.colors[0]);
     setQuantity(1);
+    setItemSizeChartOpen(false);
   }
 
   function addToCart(product: Product, size = "M", color = product.colors[0], qty = 1) {
@@ -3118,6 +3133,147 @@ export default function App() {
           margin: 10px 0 16px;
         }
 
+
+
+        .modalSizeHeader {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          gap: 12px;
+          flex-wrap: wrap;
+          margin-top: 10px;
+        }
+
+        .modalSizeHeader p {
+          margin: 0 !important;
+        }
+
+        .inlineSizeToggle {
+          border: 1px solid rgba(176, 138, 69, 0.36);
+          background: rgba(255, 249, 240, 0.72);
+          color: #2c1f18;
+          border-radius: 999px;
+          padding: 9px 12px;
+          display: inline-flex;
+          align-items: center;
+          gap: 8px;
+          font-size: 10px;
+          letter-spacing: 0.12em;
+          text-transform: uppercase;
+          transition: transform 0.25s ease, background 0.25s ease, color 0.25s ease;
+        }
+
+        .inlineSizeToggle:hover {
+          transform: translateY(-2px);
+          background: #e8d6bd;
+        }
+
+        .inlineSizeArrow {
+          width: 7px;
+          height: 7px;
+          border-right: 1.5px solid currentColor;
+          border-bottom: 1.5px solid currentColor;
+          transform: rotate(45deg) translateY(-1px);
+          transition: transform 0.25s ease;
+        }
+
+        .inlineSizeToggle.open .inlineSizeArrow {
+          transform: rotate(225deg) translateY(-1px);
+        }
+
+        .compactSizeButtons {
+          margin-bottom: 10px;
+        }
+
+        .modalSizeChart {
+          border: 1px solid rgba(176, 138, 69, 0.26);
+          background: linear-gradient(180deg, rgba(255,249,240,0.88), rgba(239,227,210,0.62));
+          border-radius: 22px;
+          padding: 14px;
+          margin: 10px 0 18px;
+          box-shadow: inset 0 0 0 1px rgba(255,255,255,0.32), 0 14px 30px rgba(36, 26, 20, 0.06);
+          animation: softPop 0.22s ease;
+        }
+
+        .modalSizeTableWrap {
+          overflow-x: auto;
+          border-radius: 16px;
+          border: 1px solid rgba(176, 138, 69, 0.16);
+        }
+
+        .modalSizeTable {
+          width: 100%;
+          border-collapse: collapse;
+          min-width: 480px;
+          background: #fff9f0;
+        }
+
+        .modalSizeTable th {
+          background: #2c1f18;
+          color: #fff9f0;
+          padding: 11px 10px;
+          text-align: center;
+          font-size: 9px;
+          letter-spacing: 0.12em;
+          text-transform: uppercase;
+          font-weight: 500;
+        }
+
+        .modalSizeTable td {
+          padding: 11px 10px;
+          border-bottom: 1px solid rgba(176, 138, 69, 0.14);
+          color: #5f4c3e;
+          text-align: center;
+          font-size: 12px;
+          white-space: nowrap;
+        }
+
+        .modalFitNotes {
+          display: grid;
+          gap: 8px;
+          margin-top: 12px;
+          text-align: left;
+        }
+
+        .modalFitNotes p {
+          margin: 0 !important;
+          font-size: 12px;
+          line-height: 1.55 !important;
+          color: #6a5545;
+        }
+
+        .modalSizeHelp {
+          margin-top: 12px;
+          border: 1px solid rgba(176, 138, 69, 0.42);
+          border-radius: 999px;
+          padding: 11px 14px;
+          display: block;
+          font-size: 10px;
+          letter-spacing: 0.13em;
+          text-transform: uppercase;
+          color: #2c1f18;
+          background: rgba(255, 249, 240, 0.66);
+          transition: transform 0.25s ease, background 0.25s ease;
+        }
+
+        .modalSizeHelp:hover {
+          transform: translateY(-2px);
+          background: #e8d6bd;
+        }
+
+        .darkMode .inlineSizeToggle,
+        .darkMode .modalSizeChart,
+        .darkMode .modalSizeTable,
+        .darkMode .modalSizeHelp {
+          background: rgba(255, 249, 240, 0.08);
+          color: #fff9f0;
+          border-color: rgba(215, 180, 111, 0.36);
+        }
+
+        .darkMode .modalSizeTable td,
+        .darkMode .modalFitNotes p {
+          color: #eadcc8;
+        }
         .qtyBox {
           display: flex;
           align-items: center;
@@ -3646,6 +3802,21 @@ export default function App() {
           margin: 38px auto 0;
           background: linear-gradient(90deg, transparent, #d7b46f, transparent);
           animation: loaderLine 2.65s ease 0.8s forwards;
+        }
+
+
+
+        .footerTextBtn {
+          border: 0;
+          background: transparent;
+          color: inherit;
+          padding: 0;
+          font: inherit;
+          text-decoration: none;
+        }
+
+        .footerTextBtn:hover {
+          color: #b08a45;
         }
 
         @keyframes loaderLogo {
@@ -6375,7 +6546,7 @@ export default function App() {
               </div>
 
               <a href="#style" onClick={() => setMenuOpen(false)}>{t.styleFinder}</a>
-              <a href="#size" onClick={() => setMenuOpen(false)}>{t.sizeGuide}</a>
+              <button type="button" onClick={openSizeGuideFromMenu}>{t.sizeGuide}</button>
               <a href="#gift-card" onClick={() => setMenuOpen(false)}>{t.giftTitle}</a>
               <a href="#story" onClick={() => setMenuOpen(false)}>{t.navAbout}</a>
               <a href="#club" onClick={() => setMenuOpen(false)}>{t.privateList}</a>
@@ -6794,60 +6965,6 @@ export default function App() {
             </div>
           </section>
 
-          <section className="section reveal" id="size">
-            <div className="sectionHead">
-              <div>
-                <p className="eyebrow">{t.fitGuide}</p>
-                <h2 className="sectionTitle">{t.sizeTitle}</h2>
-                <p className="sectionIntro">{t.sizeIntro}</p>
-              </div>
-
-              <a className="secondaryBtn" href={createWhatsAppLink("Hello La Grazia, I need help choosing my size. Can I send my measurements?")} target="_blank" rel="noreferrer">
-                {t.askSize}
-              </a>
-            </div>
-
-            <div className="sizeBox">
-              <div className="sizeTableWrap">
-                <table className="sizeTable">
-                  <thead>
-                    <tr>
-                      <th>{t.size}</th>
-                      <th>{t.bust}</th>
-                      <th>{t.waist}</th>
-                      <th>{t.hips}</th>
-                      <th>{t.trouserFit}</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {sizeChart.map((row) => (
-                      <tr key={row[0]}>
-                        {row.map((cell) => (
-                          <td key={cell}>{cell}</td>
-                        ))}
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
-
-              <div className="fitNotes">
-                <div className="fitNote">
-                  <h4>{t.trousers}</h4>
-                  <p>{t.trousersText}</p>
-                </div>
-                <div className="fitNote">
-                  <h4>{t.knitTops}</h4>
-                  <p>{t.knitText}</p>
-                </div>
-                <div className="fitNote">
-                  <h4>{t.jackets}</h4>
-                  <p>{t.jacketsText}</p>
-                </div>
-              </div>
-            </div>
-          </section>
-
           <section className="section reveal" id="gift-card">
             <div className="giftCardBox">
               <div>
@@ -6917,7 +7034,7 @@ export default function App() {
 
             <div className="footerLinks">
               <a href="#collection" onClick={() => setAccountPageOpen(false)}>{t.shop}</a>
-              <a href="#size" onClick={() => setAccountPageOpen(false)}>{t.sizeGuide}</a>
+              <button type="button" className="footerTextBtn" onClick={openSizeGuideFromMenu}>{t.sizeGuide}</button>
               <a href="#gift-card" onClick={() => setAccountPageOpen(false)}>{t.giftTitle}</a>
               <a href="#story" onClick={() => setAccountPageOpen(false)}>{t.navAbout}</a>
               <a href={`mailto:${BRAND_EMAIL}`}>{t.email}</a>
@@ -7003,8 +7120,8 @@ export default function App() {
       )}
 
       {selectedProduct && (
-        <div className="modalBackdrop" onClick={() => setSelectedProduct(null)}>
-          <button className="closeBtn" onClick={() => setSelectedProduct(null)}>×</button>
+        <div className="modalBackdrop" onClick={() => { setSelectedProduct(null); setItemSizeChartOpen(false); }}>
+          <button className="closeBtn" onClick={() => { setSelectedProduct(null); setItemSizeChartOpen(false); }}>×</button>
 
           <div className="modal" onClick={(event) => event.stopPropagation()}>
             <div className="modalImage">
@@ -7020,14 +7137,64 @@ export default function App() {
               <p><strong>{t.stock}</strong> {t.only} {getStock(selectedProduct.name)} {t.piecesLeft}</p>
               <p><strong>{t.model}</strong> {getModelInfo(selectedProduct.name)}</p>
 
-              <p><strong>{t.chooseSize}</strong></p>
-              <div className="buttonList">
+              <div className="modalSizeHeader">
+                <p><strong>{t.chooseSize}</strong></p>
+                <button
+                  type="button"
+                  className={itemSizeChartOpen ? "inlineSizeToggle open" : "inlineSizeToggle"}
+                  onClick={() => setItemSizeChartOpen((current) => !current)}
+                >
+                  <span>{t.fitGuide}</span>
+                  <span className="inlineSizeArrow" aria-hidden="true"></span>
+                </button>
+              </div>
+              <div className="buttonList compactSizeButtons">
                 {["XS", "S", "M", "L", "XL"].map((size) => (
                   <button key={size} className={selectedSize === size ? "sizeBtn selected" : "sizeBtn"} onClick={() => setSelectedSize(size)}>
                     {size}
                   </button>
                 ))}
               </div>
+
+              {itemSizeChartOpen && (
+                <div className="modalSizeChart">
+                  <div className="modalSizeTableWrap">
+                    <table className="modalSizeTable">
+                      <thead>
+                        <tr>
+                          <th>{t.size}</th>
+                          <th>{t.bust}</th>
+                          <th>{t.waist}</th>
+                          <th>{t.hips}</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {sizeChart.map((row) => (
+                          <tr key={row[0]}>
+                            <td>{row[0]}</td>
+                            <td>{row[1]}</td>
+                            <td>{row[2]}</td>
+                            <td>{row[3]}</td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+                  <div className="modalFitNotes">
+                    <p><strong>{t.trousers}</strong> {t.trousersText}</p>
+                    <p><strong>{t.knitTops}</strong> {t.knitText}</p>
+                    <p><strong>{t.jackets}</strong> {t.jacketsText}</p>
+                  </div>
+                  <a
+                    className="modalSizeHelp"
+                    href={createWhatsAppLink("Hello La Grazia, I need help choosing my size. Can I send my measurements?")}
+                    target="_blank"
+                    rel="noreferrer"
+                  >
+                    {t.askSize}
+                  </a>
+                </div>
+              )}
 
               <p><strong>{t.chooseColor}</strong></p>
               <div className="buttonList">
