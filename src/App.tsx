@@ -5620,6 +5620,159 @@ export default function App() {
           }
         }
 
+
+
+        @media (max-width: 700px) {
+          .menuOverlay {
+            background: rgba(36, 26, 20, 0.68) !important;
+          }
+
+          .menuPanel {
+            width: 100vw !important;
+            height: 100dvh !important;
+            padding: 20px 22px 118px !important;
+            background:
+              radial-gradient(circle at top left, rgba(215, 180, 111, 0.14), transparent 34%),
+              linear-gradient(180deg, #2b1d17 0%, #21130f 100%) !important;
+            box-shadow: none !important;
+          }
+
+          .menuClose {
+            width: 48px !important;
+            height: 48px !important;
+            margin: 0 auto 22px !important;
+            display: grid !important;
+            place-items: center !important;
+            font-size: 28px !important;
+            background: rgba(255, 249, 240, 0.04) !important;
+            border-color: rgba(215, 180, 111, 0.55) !important;
+            box-shadow: 0 12px 28px rgba(0, 0, 0, 0.18) !important;
+          }
+
+          .menuSearch {
+            min-height: 58px !important;
+            padding: 12px 18px !important;
+            margin-bottom: 28px !important;
+            gap: 12px !important;
+            border-color: rgba(215, 180, 111, 0.56) !important;
+            background: rgba(255, 249, 240, 0.035) !important;
+          }
+
+          .menuSearch input {
+            font-size: 14px !important;
+            letter-spacing: 0.02em !important;
+          }
+
+          .menuLinks {
+            gap: 15px !important;
+          }
+
+          .menuLinks a,
+          .menuLinks button {
+            font-size: 21px !important;
+            line-height: 1.15 !important;
+            letter-spacing: 0.045em !important;
+          }
+
+          .menuCollectionBlock {
+            padding: 16px 0 15px !important;
+            border-top-color: rgba(215, 180, 111, 0.22) !important;
+            border-bottom-color: rgba(215, 180, 111, 0.22) !important;
+          }
+
+          .menuCollectionMain {
+            justify-content: flex-start !important;
+            gap: 12px !important;
+            font-size: 23px !important;
+          }
+
+          .menuArrow {
+            width: 30px !important;
+            height: 30px !important;
+            font-size: 0 !important;
+            background: rgba(215, 180, 111, 0.12) !important;
+            border: 1px solid rgba(215, 180, 111, 0.58) !important;
+            box-shadow: inset 0 0 0 1px rgba(255, 249, 240, 0.04), 0 8px 18px rgba(0, 0, 0, 0.13) !important;
+          }
+
+          .menuArrow::before {
+            content: "";
+            width: 8px;
+            height: 8px;
+            border-right: 1.8px solid currentColor;
+            border-bottom: 1.8px solid currentColor;
+            transform: rotate(45deg) translate(-1px, -1px);
+            transition: transform 0.28s ease;
+          }
+
+          .menuArrow.open {
+            transform: none !important;
+            background: linear-gradient(135deg, #d7b46f, #b08a45) !important;
+            color: #211713 !important;
+            border-color: rgba(255, 249, 240, 0.24) !important;
+          }
+
+          .menuArrow.open::before {
+            transform: rotate(225deg) translate(-1px, -1px);
+          }
+
+          .menuCollectionDropdown.open {
+            margin-top: 13px !important;
+          }
+
+          .menuCollectionDropdownInner {
+            gap: 9px !important;
+          }
+
+          .menuCollectionAll {
+            padding: 12px 14px !important;
+            font-size: 10px !important;
+            letter-spacing: 0.18em !important;
+            border-radius: 18px !important;
+            background: rgba(215, 180, 111, 0.19) !important;
+          }
+
+          .menuCollectionGrid {
+            grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+            gap: 8px !important;
+          }
+
+          .menuCollectionGrid button {
+            padding: 11px 7px !important;
+            font-size: 12px !important;
+            letter-spacing: 0.18em !important;
+            border-radius: 18px !important;
+            min-width: 0 !important;
+          }
+
+          .menuWishlist {
+            margin-top: 24px !important;
+            padding-top: 18px !important;
+          }
+        }
+
+        @media (max-width: 390px) {
+          .menuPanel {
+            padding-left: 18px !important;
+            padding-right: 18px !important;
+          }
+
+          .menuLinks a,
+          .menuLinks button {
+            font-size: 20px !important;
+          }
+
+          .menuCollectionMain {
+            font-size: 22px !important;
+          }
+
+          .menuCollectionGrid button {
+            font-size: 11px !important;
+            letter-spacing: 0.15em !important;
+            padding: 10px 6px !important;
+          }
+        }
+
 `}</style>
 
       <div className="scrollProgress" style={{ width: `${scrollProgress}%` }} />
