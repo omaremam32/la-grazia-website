@@ -551,6 +551,15 @@ function MenuIcon() {
   );
 }
 
+function UserIcon() {
+  return (
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M20 21a8 8 0 0 0-16 0" />
+      <circle cx="12" cy="8" r="4" />
+    </svg>
+  );
+}
+
 function WhatsAppIcon() {
   return (
     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
@@ -657,6 +666,19 @@ export default function App() {
 
   const isArabic = language === "AR";
   const t = text[language];
+
+  const accountInitials = useMemo(() => {
+    if (!accountUser) return "";
+
+    const source = (accountUser.name || accountUser.email || "").trim();
+    const parts = source.split(/\s+/).filter(Boolean);
+
+    if (parts.length >= 2) {
+      return `${parts[0][0]}${parts[1][0]}`.toUpperCase();
+    }
+
+    return source.slice(0, 2).toUpperCase();
+  }, [accountUser]);
 
   const bestSellers = products.filter((product) =>
     ["Milano Cream Palazzo Trouser", "Vaticano Printed Silk Scarf", "Bianca Off-Shoulder Knit", "Firenze Cream Tailored Vest"].includes(product.name)
@@ -1460,9 +1482,49 @@ export default function App() {
         .accountShortName {
           display: inline-flex;
           align-items: center;
-          gap: 7px;
+          gap: 8px;
           position: relative;
           z-index: 1;
+        }
+
+        .accountAvatar {
+          width: 26px;
+          height: 26px;
+          border-radius: 999px;
+          display: inline-grid;
+          place-items: center;
+          flex: 0 0 auto;
+          background: #2c1f18;
+          color: #fff9f0;
+          border: 1px solid rgba(176, 138, 69, 0.45);
+          font-size: 10px;
+          line-height: 1;
+          letter-spacing: 0.08em;
+          font-weight: 700;
+          text-transform: uppercase;
+          box-shadow: 0 7px 15px rgba(36, 26, 20, 0.10);
+        }
+
+        .accountAvatar svg {
+          width: 16px;
+          height: 16px;
+        }
+
+        .accountDesktopLabel {
+          display: inline-block;
+          position: relative;
+          z-index: 1;
+        }
+
+        .signedAccountBtn .accountAvatar {
+          background: linear-gradient(135deg, #2c1f18, #5a4636);
+          color: #fff9f0;
+        }
+
+        .darkMode .accountAvatar {
+          background: #d7b46f;
+          color: #211713;
+          border-color: rgba(255, 249, 240, 0.32);
         }
 
         .accountDot {
@@ -3691,9 +3753,46 @@ export default function App() {
             min-height: 36px;
           }
 
-          .navActions { gap: 6px; flex-wrap: nowrap; }
-          .signInBtn { padding: 0 9px; max-width: 84px; }
-          .signInBtn .accountShortName { max-width: 58px; overflow: hidden; text-overflow: ellipsis; }
+          .navActions { gap: 5px; flex-wrap: nowrap; }
+          .signInBtn {
+            width: 36px !important;
+            min-width: 36px !important;
+            max-width: 36px !important;
+            height: 36px !important;
+            min-height: 36px !important;
+            padding: 0 !important;
+            display: grid !important;
+            place-items: center !important;
+            border-radius: 999px !important;
+          }
+
+          .signInBtn::before { display: none !important; }
+
+          .signInBtn .accountShortName {
+            width: 100% !important;
+            height: 100% !important;
+            max-width: none !important;
+            overflow: visible !important;
+            display: grid !important;
+            place-items: center !important;
+            gap: 0 !important;
+          }
+
+          .signInBtn .accountAvatar {
+            width: 29px !important;
+            height: 29px !important;
+            font-size: 10px !important;
+            letter-spacing: 0.05em !important;
+          }
+
+          .signInBtn .accountAvatar svg {
+            width: 17px !important;
+            height: 17px !important;
+          }
+
+          .signInBtn .accountDesktopLabel {
+            display: none !important;
+          }
 
           .hero {
             min-height: auto;
@@ -4571,6 +4670,155 @@ export default function App() {
           }
         }
 
+
+        /* Mobile profile/account page scroll fix */
+        @media (max-width: 700px) {
+          .signInBackdrop {
+            display: block !important;
+            place-items: unset !important;
+            overflow-y: auto !important;
+            overflow-x: hidden !important;
+            -webkit-overflow-scrolling: touch !important;
+            min-height: 100dvh !important;
+            height: 100dvh !important;
+            padding: calc(16px + env(safe-area-inset-top)) 14px calc(150px + env(safe-area-inset-bottom)) !important;
+          }
+
+          .signInPanel {
+            width: 100% !important;
+            max-width: 520px !important;
+            margin: 16px auto 0 !important;
+            max-height: none !important;
+            height: auto !important;
+            min-height: auto !important;
+            overflow: visible !important;
+            border-radius: 30px !important;
+            padding: 26px 18px 28px !important;
+          }
+
+          .signInClose {
+            right: 14px !important;
+            top: 14px !important;
+            width: 42px !important;
+            height: 42px !important;
+            font-size: 24px !important;
+            z-index: 5 !important;
+          }
+
+          .signInPanel .eyebrow {
+            text-align: center !important;
+            margin-top: 8px !important;
+            margin-bottom: 10px !important;
+            font-size: 10px !important;
+            letter-spacing: 0.28em !important;
+          }
+
+          .signInPanel h3 {
+            font-size: clamp(34px, 10vw, 48px) !important;
+            line-height: 0.98 !important;
+            text-align: center !important;
+            margin: 8px auto 14px !important;
+            max-width: 330px !important;
+          }
+
+          .signInPanel > p {
+            font-size: 16px !important;
+            line-height: 1.65 !important;
+            text-align: center !important;
+            margin: 0 auto 20px !important;
+            max-width: 330px !important;
+          }
+
+          .profileHeroBox {
+            text-align: left !important;
+            border-radius: 24px !important;
+            padding: 18px !important;
+            margin: 14px 0 16px !important;
+          }
+
+          .profileHeroBox span,
+          .accountSavedBox span {
+            font-size: 13px !important;
+            line-height: 1.55 !important;
+            word-break: break-word !important;
+          }
+
+          .profileHeroBox strong,
+          .accountSavedBox strong {
+            font-size: clamp(24px, 8vw, 34px) !important;
+            line-height: 1.08 !important;
+            word-break: break-word !important;
+          }
+
+          .profileTabs {
+            margin: 14px 0 18px !important;
+            padding: 6px !important;
+            gap: 6px !important;
+          }
+
+          .profileTab {
+            padding: 13px 8px !important;
+            font-size: 10px !important;
+            letter-spacing: 0.16em !important;
+          }
+
+          .profileInfoGrid {
+            gap: 12px !important;
+            margin: 14px 0 18px !important;
+          }
+
+          .profileInfoCard,
+          .noOrdersBox,
+          .orderCard {
+            border-radius: 24px !important;
+            padding: 18px 14px !important;
+          }
+
+          .profileInfoCard small,
+          .orderCard small {
+            text-align: center !important;
+            margin-bottom: 10px !important;
+            font-size: 10px !important;
+            letter-spacing: 0.18em !important;
+          }
+
+          .profileInfoCard strong {
+            text-align: center !important;
+            font-size: 15px !important;
+            line-height: 1.35 !important;
+            overflow-wrap: anywhere !important;
+          }
+
+          .ordersPanel {
+            max-height: none !important;
+            overflow: visible !important;
+            padding-right: 0 !important;
+            margin: 14px 0 18px !important;
+          }
+
+          .orderCardTop {
+            flex-direction: column !important;
+            align-items: flex-start !important;
+          }
+
+          .orderMetaGrid {
+            grid-template-columns: 1fr !important;
+          }
+
+          .accountActions {
+            grid-template-columns: 1fr !important;
+            gap: 10px !important;
+            margin-top: 16px !important;
+            padding-bottom: 8px !important;
+          }
+
+          .accountActions button,
+          .signInForm button {
+            width: 100% !important;
+            padding: 15px 16px !important;
+          }
+        }
+
 `}</style>
 
       <div className="scrollProgress" style={{ width: `${scrollProgress}%` }} />
@@ -4925,10 +5173,18 @@ export default function App() {
                 )}
               </button>
 
-              <button className="pillBtn signInBtn" onClick={() => { setAuthMode("signIn"); setSignInOpen(true); }}>
+              <button
+                className={accountUser ? "pillBtn signInBtn signedAccountBtn" : "pillBtn signInBtn"}
+                onClick={() => { setAuthMode("signIn"); setSignInOpen(true); }}
+                aria-label={accountUser ? t.myAccount : t.signIn}
+              >
                 <span className="accountShortName">
-                  {accountUser && <span className="accountDot" />}
-                  {accountUser ? t.myAccount : t.signIn}
+                  <span className="accountAvatar" aria-hidden="true">
+                    {accountUser ? accountInitials : <UserIcon />}
+                  </span>
+                  <span className="accountDesktopLabel">
+                    {accountUser ? t.myAccount : t.signIn}
+                  </span>
                 </span>
               </button>
 
