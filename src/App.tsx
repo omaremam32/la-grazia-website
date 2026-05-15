@@ -172,6 +172,8 @@ type SupportForm = {
   relatedProductName: string;
 };
 
+type PolicyKey = "delivery" | "exchange" | "privacy" | "terms" | "faq" | "contact";
+
 const WHATSAPP_NUMBER = "201101900086";
 const BRAND_EMAIL = "omaromohamed2003@gmail.com";
 
@@ -218,6 +220,166 @@ const emptySupportForm: SupportForm = {
   message: "",
   relatedOrderReference: "",
   relatedProductName: "",
+};
+
+
+const policySections: Record<
+  PolicyKey,
+  {
+    titleEN: string;
+    titleAR: string;
+    eyebrowEN: string;
+    eyebrowAR: string;
+    introEN: string;
+    introAR: string;
+    pointsEN: string[];
+    pointsAR: string[];
+  }
+> = {
+  delivery: {
+    titleEN: "Delivery Policy",
+    titleAR: "سياسة التوصيل",
+    eyebrowEN: "La Grazia Service",
+    eyebrowAR: "خدمة لا غراتسيا",
+    introEN:
+      "We prepare every La Grazia order carefully and arrange delivery across Cairo with clear communication before dispatch.",
+    introAR:
+      "نقوم بتجهيز كل طلب من لا غراتسيا بعناية، ويتم تنسيق التوصيل داخل القاهرة مع التواصل مع العميلة قبل إرسال الطلب.",
+    pointsEN: [
+      "Free Cairo delivery is available for orders above EGP 3,000.",
+      "Standard Cairo delivery usually takes 2–4 working days after order confirmation.",
+      "Delivery timing may change during launches, holidays, or high-demand periods.",
+      "Please make sure your phone number and address are correct before confirming payment.",
+      "For urgent delivery questions, contact us through WhatsApp support."
+    ],
+    pointsAR: [
+      "التوصيل المجاني داخل القاهرة متاح للطلبات فوق ٣٠٠٠ جنيه.",
+      "التوصيل داخل القاهرة يستغرق عادة من ٢ إلى ٤ أيام عمل بعد تأكيد الطلب.",
+      "قد تختلف مدة التوصيل في فترات الإطلاقات الجديدة أو المواسم أو الضغط العالي.",
+      "يرجى التأكد من رقم الهاتف والعنوان قبل تأكيد الدفع.",
+      "لأي سؤال عاجل عن التوصيل يمكنك التواصل معنا عبر واتساب."
+    ],
+  },
+  exchange: {
+    titleEN: "Exchange / Return Policy",
+    titleAR: "سياسة الاستبدال والاسترجاع",
+    eyebrowEN: "Customer Care",
+    eyebrowAR: "رعاية العميلات",
+    introEN:
+      "We want every piece to feel right. Exchanges are handled with care while keeping every La Grazia piece in its original condition.",
+    introAR:
+      "نريد أن تكون كل قطعة مناسبة لكِ. يتم التعامل مع طلبات الاستبدال بعناية مع الحفاظ على حالة القطعة الأصلية.",
+    pointsEN: [
+      "Exchange requests are accepted within 14 days from receiving the order.",
+      "Items must be unused, unworn, unwashed, and returned with original packaging/tags.",
+      "Exchange availability depends on the requested size, color, and product stock.",
+      "Personalized, damaged-by-use, or worn items cannot be exchanged.",
+      "To request an exchange, contact us with your order number and product details."
+    ],
+    pointsAR: [
+      "طلبات الاستبدال متاحة خلال ١٤ يوم من استلام الطلب.",
+      "يجب أن تكون القطعة غير مستخدمة أو مغسولة أو ملبوسة وبنفس التغليف/التاج الأصلي.",
+      "توافر الاستبدال يعتمد على المقاس واللون والمنتج المطلوب.",
+      "لا يمكن استبدال القطع المستخدمة أو التالفة بسبب الاستخدام.",
+      "لطلب الاستبدال، تواصلي معنا برقم الطلب وتفاصيل القطعة."
+    ],
+  },
+  privacy: {
+    titleEN: "Privacy Policy",
+    titleAR: "سياسة الخصوصية",
+    eyebrowEN: "Your Details",
+    eyebrowAR: "بياناتك",
+    introEN:
+      "Your privacy matters. We only collect the details needed to process orders, support your account, and improve your La Grazia experience.",
+    introAR:
+      "خصوصيتك مهمة لنا. نقوم بجمع البيانات المطلوبة فقط لمعالجة الطلبات، دعم حسابك، وتحسين تجربتك مع لا غراتسيا.",
+    pointsEN: [
+      "We may collect your name, email, phone number, address, orders, wishlist, and support messages.",
+      "Your details are used for checkout, delivery, order tracking, customer service, and account features.",
+      "Payment processing is handled securely through Paymob; we do not store card details.",
+      "We do not sell customer personal data to third parties.",
+      "You can contact us anytime to request help with your saved account details."
+    ],
+    pointsAR: [
+      "قد نقوم بجمع الاسم، البريد الإلكتروني، رقم الهاتف، العنوان، الطلبات، المفضلة، ورسائل الدعم.",
+      "تُستخدم بياناتك لإتمام الطلب، التوصيل، متابعة الطلب، خدمة العملاء، ومزايا الحساب.",
+      "معالجة الدفع تتم بشكل آمن من خلال Paymob ولا نقوم بتخزين بيانات الكارت.",
+      "لا نقوم ببيع بيانات العميلات لأي طرف ثالث.",
+      "يمكنك التواصل معنا في أي وقت للمساعدة بخصوص بيانات حسابك المحفوظة."
+    ],
+  },
+  terms: {
+    titleEN: "Terms & Conditions",
+    titleAR: "الشروط والأحكام",
+    eyebrowEN: "Store Terms",
+    eyebrowAR: "شروط المتجر",
+    introEN:
+      "By using La Grazia, you agree to shop respectfully and provide accurate details so we can process your order smoothly.",
+    introAR:
+      "باستخدامك لموقع لا غراتسيا، فأنتِ توافقين على استخدام الموقع بشكل صحيح وتقديم بيانات دقيقة لمعالجة الطلب بسهولة.",
+    pointsEN: [
+      "Product colors may slightly vary due to screen lighting and photography conditions.",
+      "Prices, availability, and product details may be updated without prior notice.",
+      "Orders are confirmed after successful payment or direct confirmation through our team.",
+      "La Grazia may cancel or reject orders with incorrect, incomplete, or suspicious details.",
+      "All website content, visuals, and brand assets belong to La Grazia."
+    ],
+    pointsAR: [
+      "قد تختلف ألوان المنتجات بدرجة بسيطة بسبب إضاءة الشاشة والتصوير.",
+      "يمكن تحديث الأسعار والتوافر وتفاصيل المنتجات دون إشعار مسبق.",
+      "يتم تأكيد الطلب بعد نجاح الدفع أو التأكيد المباشر من فريقنا.",
+      "يحق للا غراتسيا إلغاء أو رفض الطلبات ذات البيانات الخاطئة أو غير المكتملة أو المشبوهة.",
+      "جميع محتويات الموقع والصور وعناصر الهوية البصرية مملوكة للا غراتسيا."
+    ],
+  },
+  faq: {
+    titleEN: "FAQ",
+    titleAR: "الأسئلة الشائعة",
+    eyebrowEN: "Need Help?",
+    eyebrowAR: "تحتاجين مساعدة؟",
+    introEN:
+      "Quick answers to the most common La Grazia questions about orders, delivery, sizing, and support.",
+    introAR:
+      "إجابات سريعة لأشهر الأسئلة عن الطلبات، التوصيل، المقاسات، والدعم في لا غراتسيا.",
+    pointsEN: [
+      "How do I choose my size? Open any product and use the Size Chart section or contact WhatsApp styling help.",
+      "Can I track my order? Sign in, open My Account, then My Orders to see your order status.",
+      "Can I save my address? Yes, use the Address Book in your profile to save your default delivery address.",
+      "Can I save pieces for later? Yes, tap the heart icon on any product to add it to your saved wishlist.",
+      "How can I contact support? Use Contact La Grazia in your account or message us directly on WhatsApp."
+    ],
+    pointsAR: [
+      "كيف أختار المقاس؟ افتحي أي منتج واستخدمي قسم جدول المقاسات أو تواصلي مع مساعدة التنسيق عبر واتساب.",
+      "هل يمكن متابعة الطلب؟ سجلي الدخول وافتحي حسابي ثم طلباتي لمتابعة حالة الطلب.",
+      "هل يمكن حفظ العنوان؟ نعم، يمكنك حفظ عنوانك الافتراضي من Address Book داخل البروفايل.",
+      "هل يمكن حفظ القطع لوقت لاحق؟ نعم، اضغطي على علامة القلب على أي منتج لإضافته للمفضلة.",
+      "كيف أتواصل مع الدعم؟ استخدمي Contact La Grazia داخل الحساب أو تواصلي معنا مباشرة على واتساب."
+    ],
+  },
+  contact: {
+    titleEN: "Contact La Grazia",
+    titleAR: "تواصلي مع لا غراتسيا",
+    eyebrowEN: "Support",
+    eyebrowAR: "الدعم",
+    introEN:
+      "For orders, styling help, delivery updates, or collaboration questions, our team is ready to help.",
+    introAR:
+      "للطلبات، المساعدة في التنسيق، تحديثات التوصيل، أو الاستفسارات، فريقنا جاهز لمساعدتك.",
+    pointsEN: [
+      "WhatsApp: +20 110 190 0086",
+      "Email: omaromohamed2003@gmail.com",
+      "For order support, include your order reference starting with LG-.",
+      "For product support, include the product name, preferred size, and preferred color.",
+      "You can also use the support form inside your account for organized follow-up."
+    ],
+    pointsAR: [
+      "واتساب: +20 110 190 0086",
+      "البريد الإلكتروني: omaromohamed2003@gmail.com",
+      "للدعم بخصوص الطلب، ارسلي رقم الطلب الذي يبدأ بـ LG-.",
+      "للاستفسار عن منتج، ارسلي اسم المنتج والمقاس واللون المطلوب.",
+      "يمكنك أيضاً استخدام فورم الدعم داخل حسابك لمتابعة منظمة."
+    ],
+  },
 };
 
 const products: Product[] = [
@@ -842,6 +1004,7 @@ export default function App() {
   const [supportSubmitting, setSupportSubmitting] = useState(false);
   const [supportLoading, setSupportLoading] = useState(false);
   const [adminSupportLoading, setAdminSupportLoading] = useState(false);
+  const [policyOpen, setPolicyOpen] = useState<PolicyKey | null>(null);
 
   const [searchTerm, setSearchTerm] = useState("");
   const [activeFilter, setActiveFilter] = useState("All");
@@ -1115,6 +1278,7 @@ export default function App() {
         setSelectedProduct(null);
         setSortDropdownOpen(false);
         setItemSizeChartOpen(false);
+        setPolicyOpen(null);
       }
     };
 
@@ -5026,6 +5190,158 @@ export default function App() {
           color: #b08a45;
         }
 
+
+        .policyModalBackdrop {
+          display: grid;
+          place-items: center;
+          padding: 22px;
+          overflow-y: auto;
+          -webkit-overflow-scrolling: touch;
+        }
+
+        .policyModalPanel {
+          width: min(860px, 94vw);
+          max-height: min(86vh, 780px);
+          overflow-y: auto;
+          position: relative;
+          background:
+            radial-gradient(circle at top, rgba(176, 138, 69, 0.16), transparent 42%),
+            #fff9f0;
+          border: 1px solid rgba(176, 138, 69, 0.34);
+          border-radius: 36px;
+          box-shadow: 0 34px 100px rgba(36, 26, 20, 0.36);
+          padding: clamp(28px, 4vw, 52px);
+          color: #2c1f18;
+          animation: fadeUp 0.34s ease both;
+        }
+
+        .darkMode .policyModalPanel {
+          background:
+            radial-gradient(circle at top, rgba(176, 138, 69, 0.12), transparent 42%),
+            #211713;
+          color: #f7f1e8;
+        }
+
+        .policyModalClose {
+          position: absolute;
+          top: 18px;
+          right: 18px;
+          width: 46px;
+          height: 46px;
+          border-radius: 50%;
+          border: 1px solid rgba(176, 138, 69, 0.34);
+          background: rgba(255, 249, 240, 0.72);
+          color: #2c1f18;
+          font-size: 26px;
+        }
+
+        .darkMode .policyModalClose {
+          background: rgba(44, 31, 24, 0.84);
+          color: #f7f1e8;
+        }
+
+        .policyModalHeader {
+          text-align: center;
+          max-width: 690px;
+          margin: 0 auto 28px;
+        }
+
+        .policyModalHeader h2 {
+          margin: 8px 0 12px;
+          font-family: Georgia, "Times New Roman", serif;
+          font-size: clamp(34px, 5vw, 58px);
+          font-weight: 500;
+          line-height: 1;
+        }
+
+        .policyModalHeader p {
+          margin: 0 auto;
+          color: #6a5545;
+          line-height: 1.75;
+          font-size: 16px;
+        }
+
+        .darkMode .policyModalHeader p {
+          color: #d8c7b2;
+        }
+
+        .policyModalList {
+          display: grid;
+          grid-template-columns: repeat(2, minmax(0, 1fr));
+          gap: 14px;
+        }
+
+        .policyModalPoint {
+          border: 1px solid rgba(176, 138, 69, 0.22);
+          background: rgba(247, 241, 232, 0.7);
+          border-radius: 24px;
+          padding: 18px;
+        }
+
+        .darkMode .policyModalPoint {
+          background: rgba(44, 31, 24, 0.52);
+        }
+
+        .policyModalPoint span {
+          display: inline-flex;
+          align-items: center;
+          justify-content: center;
+          width: 34px;
+          height: 34px;
+          border-radius: 50%;
+          background: #2c1f18;
+          color: #f7f1e8;
+          font-size: 11px;
+          letter-spacing: 0.08em;
+          margin-bottom: 12px;
+        }
+
+        .policyModalPoint p {
+          margin: 0;
+          color: #5f4c3e;
+          line-height: 1.65;
+          font-size: 14px;
+        }
+
+        .darkMode .policyModalPoint p {
+          color: #e8dccd;
+        }
+
+        .policyModalActions {
+          display: flex;
+          justify-content: center;
+          gap: 12px;
+          flex-wrap: wrap;
+          margin-top: 28px;
+        }
+
+        @media (max-width: 700px) {
+          .policyModalBackdrop {
+            align-items: flex-start;
+            padding: calc(14px + env(safe-area-inset-top)) 12px calc(100px + env(safe-area-inset-bottom));
+          }
+
+          .policyModalPanel {
+            width: 100%;
+            max-height: none;
+            border-radius: 30px;
+            padding: 58px 18px 22px;
+          }
+
+          .policyModalList {
+            grid-template-columns: 1fr;
+          }
+
+          .policyModalHeader h2 {
+            font-size: 36px;
+          }
+
+          .policyModalActions .primaryBtn,
+          .policyModalActions .secondaryBtn {
+            width: 100%;
+          }
+        }
+
         @keyframes loaderLogo {
           from { opacity: 0; letter-spacing: 0.05em; transform: translateY(18px) scale(0.98); }
           to { opacity: 1; letter-spacing: 0.18em; transform: translateY(0) scale(1); }
@@ -8908,6 +9224,10 @@ export default function App() {
               <button type="button" onClick={openSizeGuideFromMenu}>{t.sizeGuide}</button>
               <a href="#gift-card" onClick={() => setMenuOpen(false)}>{t.giftTitle}</a>
               <a href="#story" onClick={() => setMenuOpen(false)}>{t.navAbout}</a>
+              <button type="button" onClick={() => { setPolicyOpen("delivery"); setMenuOpen(false); }}>{isArabic ? "سياسة التوصيل" : "Delivery Policy"}</button>
+              <button type="button" onClick={() => { setPolicyOpen("exchange"); setMenuOpen(false); }}>{isArabic ? "الاستبدال والاسترجاع" : "Exchange / Return"}</button>
+              <button type="button" onClick={() => { setPolicyOpen("faq"); setMenuOpen(false); }}>{isArabic ? "الأسئلة الشائعة" : "FAQ"}</button>
+              <button type="button" onClick={() => { setPolicyOpen("contact"); setMenuOpen(false); }}>{isArabic ? "تواصلي معنا" : "Contact"}</button>
               <a href="#club" onClick={() => setMenuOpen(false)}>{t.privateList}</a>
               <a href={createWhatsAppLink("Hello La Grazia, I want styling help choosing a piece.")} target="_blank" rel="noreferrer">
                 {t.whatsappStyling}
@@ -9866,6 +10186,11 @@ export default function App() {
               <a href="#collection" onClick={() => setAccountPageOpen(false)}>{t.shop}</a>
               <a href="#gift-card" onClick={() => setAccountPageOpen(false)}>{t.giftTitle}</a>
               <a href="#story" onClick={() => setAccountPageOpen(false)}>{t.navAbout}</a>
+              <button className="footerTextBtn" type="button" onClick={() => setPolicyOpen("delivery")}>{isArabic ? "التوصيل" : "Delivery"}</button>
+              <button className="footerTextBtn" type="button" onClick={() => setPolicyOpen("exchange")}>{isArabic ? "الاستبدال" : "Exchange"}</button>
+              <button className="footerTextBtn" type="button" onClick={() => setPolicyOpen("privacy")}>{isArabic ? "الخصوصية" : "Privacy"}</button>
+              <button className="footerTextBtn" type="button" onClick={() => setPolicyOpen("terms")}>{isArabic ? "الشروط" : "Terms"}</button>
+              <button className="footerTextBtn" type="button" onClick={() => setPolicyOpen("faq")}>{isArabic ? "FAQ" : "FAQ"}</button>
               <a href={`mailto:${BRAND_EMAIL}`}>{t.email}</a>
               <a href={createWhatsAppLink("Hello La Grazia, I want to contact you.")} target="_blank" rel="noreferrer">
                 {t.whatsapp}
@@ -9889,6 +10214,61 @@ export default function App() {
           </a>
         </div>
       </div>
+
+      {policyOpen && (
+        <div className="modalBackdrop policyModalBackdrop" onClick={() => setPolicyOpen(null)}>
+          <div className="policyModalPanel" onClick={(event) => event.stopPropagation()}>
+            <button className="policyModalClose" type="button" onClick={() => setPolicyOpen(null)} aria-label="Close policy">×</button>
+
+            <div className="policyModalHeader">
+              <p className="eyebrow">{isArabic ? policySections[policyOpen].eyebrowAR : policySections[policyOpen].eyebrowEN}</p>
+              <h2>{isArabic ? policySections[policyOpen].titleAR : policySections[policyOpen].titleEN}</h2>
+              <p>{isArabic ? policySections[policyOpen].introAR : policySections[policyOpen].introEN}</p>
+            </div>
+
+            <div className="policyModalList">
+              {(isArabic ? policySections[policyOpen].pointsAR : policySections[policyOpen].pointsEN).map((point, index) => (
+                <div className="policyModalPoint" key={`${policyOpen}-${index}`}>
+                  <span>{String(index + 1).padStart(2, "0")}</span>
+                  <p>{point}</p>
+                </div>
+              ))}
+            </div>
+
+            <div className="policyModalActions">
+              <a className="primaryBtn" href={createWhatsAppLink(`Hello La Grazia, I want to ask about ${isArabic ? policySections[policyOpen].titleAR : policySections[policyOpen].titleEN}.`)} target="_blank" rel="noreferrer">
+                {isArabic ? "اسألي عبر واتساب" : "Ask on WhatsApp"}
+              </a>
+              {accountUser ? (
+                <button
+                  type="button"
+                  className="secondaryBtn"
+                  onClick={() => {
+                    setPolicyOpen(null);
+                    setAccountPageOpen(true);
+                    setAccountView("profile");
+                    window.setTimeout(() => document.querySelector(".supportPanel")?.scrollIntoView({ behavior: "smooth", block: "start" }), 120);
+                  }}
+                >
+                  {isArabic ? "افتحي الدعم" : "Open Support"}
+                </button>
+              ) : (
+                <button
+                  type="button"
+                  className="secondaryBtn"
+                  onClick={() => {
+                    setPolicyOpen(null);
+                    setAuthMode("signIn");
+                    setSignInOpen(true);
+                  }}
+                >
+                  {isArabic ? "سجلي الدخول" : "Sign In"}
+                </button>
+              )}
+            </div>
+          </div>
+        </div>
+      )}
 
       {cartOpen && (
         <div className="cartDrawer">
