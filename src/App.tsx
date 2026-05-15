@@ -1773,6 +1773,13 @@ export default function App() {
             customer_name: checkoutName,
             customer_email: accountUser.email,
             customer_phone: checkoutPhone,
+            delivery_city: checkoutCity,
+            delivery_area: deliveryAddress?.area || accountUser.area || "",
+            delivery_street: checkoutStreet,
+            delivery_building: checkoutBuilding,
+            delivery_floor: checkoutFloor,
+            delivery_apartment: checkoutApartment,
+            delivery_notes: deliveryAddress?.delivery_notes || accountUser.deliveryNotes || "",
           })
           .select("id")
           .single();
@@ -1791,6 +1798,53 @@ export default function App() {
           }));
 
           await supabase.from("order_items").insert(orderItems);
+
+          try {
+            await fetch("/api/send-order-email", {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify({
+                order: {
+                  id: orderData.id,
+                  orderReference,
+                  totalAmount,
+                  currency: "EGP",
+                  paymentStatus: "pending",
+                  orderStatus: "Pending Payment",
+                  checkoutUrl,
+                  createdAt: new Date().toISOString(),
+                },
+                customer: {
+                  name: checkoutName,
+                  email: accountUser.email,
+                  phone: checkoutPhone,
+                },
+                address: {
+                  city: checkoutCity,
+                  area: deliveryAddress?.area || accountUser.area || "",
+                  street: checkoutStreet,
+                  building: checkoutBuilding,
+                  floor: checkoutFloor,
+                  apartment: checkoutApartment,
+                  notes: deliveryAddress?.delivery_notes || accountUser.deliveryNotes || "",
+                },
+                items: orderItems.map((item) => ({
+                  productName: item.product_name,
+                  productImage: item.product_image,
+                  size: item.size,
+                  color: item.color,
+                  quantity: item.quantity,
+                  unitPrice: item.unit_price,
+                  totalPrice: item.total_price,
+                })),
+              }),
+            });
+          } catch (emailError) {
+            console.error("Order confirmation email failed:", emailError);
+          }
+
           fetchUserOrders(session.user.id);
         } else {
           console.error(orderError);
