@@ -1,11 +1,4 @@
-from pathlib import Path
-import shutil, zipfile
-
-base = Path("/mnt/data/la_grazia_seo_ready")
-public = base / "public"
-public.mkdir(parents=True, exist_ok=True)
-
-index_html = """<!doctype html>
+<!doctype html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
@@ -13,16 +6,16 @@ index_html = """<!doctype html>
 
     <meta name="google-site-verification" content="1TFGo0qOwJ6bhEWz_2G7XYy8UbTGIRtba9reLqtYAfU" />
 
-    <title>La Grazia | Women-Only Fashion Egypt</title>
+    <title>La Grazia Egypt | Women-Only Quiet Luxury Fashion</title>
 
     <meta
       name="description"
-      content="La Grazia is a women-only Egyptian fashion brand inspired by Italian old-money elegance, soft neutrals, tailored pieces, statement scarves, and quiet luxury."
+      content="La Grazia Egypt is a women-only fashion brand inspired by Italian old-money elegance, soft neutrals, tailored pieces, statement scarves, and quiet luxury."
     />
 
     <meta
       name="keywords"
-      content="La Grazia, La Grazia Egypt, La Grazia fashion, women fashion Egypt, women-only fashion Egypt, Italian fashion Egypt, old money style Egypt, scarves Egypt, tailored pieces Egypt, quiet luxury fashion Egypt"
+      content="La Grazia Egypt, La Grazia, women-only fashion Egypt, quiet luxury fashion Egypt, Italian old money style, women fashion Egypt, scarves Egypt, tailored pieces Egypt, soft neutrals fashion, elegant women fashion Egypt"
     />
 
     <meta name="author" content="La Grazia" />
@@ -32,7 +25,7 @@ index_html = """<!doctype html>
     <link rel="canonical" href="https://www.lagrazia-eg.online/" />
 
     <meta property="og:type" content="website" />
-    <meta property="og:title" content="La Grazia | Women-Only Fashion Egypt" />
+    <meta property="og:title" content="La Grazia Egypt | Women-Only Quiet Luxury Fashion" />
     <meta
       property="og:description"
       content="Women-only Egyptian fashion inspired by Italian old-money elegance, soft neutrals, tailored pieces, statement scarves, and quiet luxury."
@@ -40,11 +33,11 @@ index_html = """<!doctype html>
     <meta property="og:url" content="https://www.lagrazia-eg.online/" />
     <meta property="og:site_name" content="La Grazia" />
     <meta property="og:image" content="https://www.lagrazia-eg.online/la-grazia-og-image.png" />
-    <meta property="og:image:alt" content="La Grazia luxury women-only fashion brand preview" />
+    <meta property="og:image:alt" content="La Grazia Egypt quiet luxury women-only fashion brand" />
     <meta property="og:image:type" content="image/png" />
 
     <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content="La Grazia | Women-Only Fashion Egypt" />
+    <meta name="twitter:title" content="La Grazia Egypt | Women-Only Quiet Luxury Fashion" />
     <meta
       name="twitter:description"
       content="Women-only Egyptian fashion inspired by Italian old-money elegance, soft neutrals, tailored pieces, statement scarves, and quiet luxury."
@@ -61,62 +54,3 @@ index_html = """<!doctype html>
     <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>
-"""
-
-manifest = """{
-  "name": "La Grazia",
-  "short_name": "La Grazia",
-  "description": "Women-only Egyptian fashion inspired by Italian old-money elegance, soft neutrals, tailored pieces, and quiet luxury.",
-  "start_url": "/",
-  "display": "standalone",
-  "background_color": "#f7f1e8",
-  "theme_color": "#2c1f18",
-  "icons": [
-    {
-      "src": "/favicon.png",
-      "sizes": "512x512",
-      "type": "image/png"
-    }
-  ]
-}
-"""
-
-robots = """User-agent: *
-Allow: /
-
-Sitemap: https://www.lagrazia-eg.online/sitemap.xml
-"""
-
-sitemap = """<?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-  <url>
-    <loc>https://www.lagrazia-eg.online/</loc>
-    <priority>1.0</priority>
-  </url>
-</urlset>
-"""
-
-(base / "index.html").write_text(index_html, encoding="utf-8")
-(public / "site.webmanifest").write_text(manifest, encoding="utf-8")
-(public / "robots.txt").write_text(robots, encoding="utf-8")
-(public / "sitemap.xml").write_text(sitemap, encoding="utf-8")
-
-# Copy luxury generated images with correct names
-favicon_src = Path("/mnt/data/ghostwriter_images/generated/a_clean_minimal_luxury_logo_design_on_a_neutral_c_2_batch_2.png")
-og_src = Path("/mnt/data/ghostwriter_images/generated/a_clean_elegant_brand_promo_graphic_banner_with_3_batch_3.png")
-wide_src = Path("/mnt/data/ghostwriter_images/generated/a_clean_minimalist_logo_branding_image_on_a_pale_c_1_batch_1.png")
-
-if favicon_src.exists():
-    shutil.copy(favicon_src, public / "favicon.png")
-if og_src.exists():
-    shutil.copy(og_src, public / "la-grazia-og-image.png")
-if wide_src.exists():
-    shutil.copy(wide_src, public / "la-grazia-wide-logo.png")
-
-zip_path = Path("/mnt/data/la_grazia_luxury_seo_files.zip")
-with zipfile.ZipFile(zip_path, "w", compression=zipfile.ZIP_DEFLATED) as z:
-    for file in base.rglob("*"):
-        if file.is_file():
-            z.write(file, file.relative_to(base))
-
-print(zip_path)
