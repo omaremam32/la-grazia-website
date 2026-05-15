@@ -654,6 +654,7 @@ export default function App() {
   const [activeFilter, setActiveFilter] = useState("All");
   const [collectionFilter, setCollectionFilter] = useState("All");
   const [sortOption, setSortOption] = useState("Featured");
+  const [sortDropdownOpen, setSortDropdownOpen] = useState(false);
 
   const [selectedMood, setSelectedMood] = useState("Old Money");
   const [darkMode, setDarkMode] = useState(false);
@@ -701,6 +702,12 @@ export default function App() {
     { key: "Tops", label: isArabic ? "توبس" : "Tops" },
     { key: "Pants", label: isArabic ? "بنطلونات" : "Pants" },
     { key: "Coats", label: isArabic ? "كوتس وجاكيتات" : "Coats" },
+  ];
+
+  const sortOptions = [
+    { value: "Featured", label: t.featured },
+    { value: "Price Low to High", label: t.priceLow },
+    { value: "Price High to Low", label: t.priceHigh },
   ];
 
   function productMatchesCollection(product: Product, collection: string) {
@@ -845,6 +852,7 @@ export default function App() {
         setSearchOpen(false);
         setCartOpen(false);
         setSelectedProduct(null);
+        setSortDropdownOpen(false);
         setItemSizeChartOpen(false);
       }
     };
@@ -2086,51 +2094,146 @@ export default function App() {
           outline: none;
         }
 
-        .selectWrap { position: relative; }
-
-        .selectWrap::before {
-          content: "CURATED";
-          position: absolute;
-          left: 18px;
-          top: 8px;
-          z-index: 1;
-          font-size: 9px;
-          letter-spacing: 0.2em;
-          color: #b08a45;
-          pointer-events: none;
-        }
-
-        .selectWrap::after {
-          content: "⌄";
-          position: absolute;
-          right: 18px;
-          top: 50%;
-          transform: translateY(-50%);
-          color: #b08a45;
-          pointer-events: none;
-          font-size: 18px;
-        }
-
-        .sortSelect {
+        .luxurySort {
+          position: relative;
           width: 100%;
-          appearance: none;
+          z-index: 8;
+        }
+
+        .luxurySortButton {
+          width: 100%;
+          min-height: 64px;
           border: 1px solid rgba(176, 138, 69, 0.48);
-          background: linear-gradient(135deg, rgba(255,249,240,0.96), rgba(239,227,210,0.86));
+          background: linear-gradient(135deg, rgba(255,249,240,0.98), rgba(239,227,210,0.88));
           color: #241a14;
           border-radius: 999px;
-          padding: 22px 48px 11px 18px;
+          padding: 14px 54px 12px 24px;
           outline: none;
-          font-size: 13px;
-          letter-spacing: 0.06em;
-          box-shadow: 0 12px 28px rgba(36, 26, 20, 0.07);
+          box-shadow: 0 16px 34px rgba(36, 26, 20, 0.08);
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          gap: 16px;
+          text-align: left;
+          transition: transform 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease, background 0.25s ease;
+        }
+
+        .luxurySortButton:hover,
+        .luxurySort.open .luxurySortButton {
+          transform: translateY(-2px);
+          border-color: rgba(176, 138, 69, 0.72);
+          box-shadow: 0 22px 44px rgba(36, 26, 20, 0.12);
+        }
+
+        .luxurySortCopy {
+          display: grid;
+          gap: 3px;
+          min-width: 0;
+        }
+
+        .luxurySortCopy small {
+          display: block;
+          color: #b08a45;
+          font-size: 9px;
+          letter-spacing: 0.28em;
+          line-height: 1;
+          text-transform: uppercase;
+        }
+
+        .luxurySortCopy span {
+          color: #241a14;
+          font-family: Georgia, "Times New Roman", serif;
+          font-size: 22px;
+          line-height: 1;
+          letter-spacing: 0.03em;
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
+        }
+
+        .luxurySortArrow {
+          width: 30px;
+          height: 30px;
+          border-radius: 999px;
+          border: 1px solid rgba(176, 138, 69, 0.42);
+          display: inline-grid;
+          place-items: center;
+          flex: 0 0 auto;
+          color: #b08a45;
+          background: rgba(255, 249, 240, 0.55);
+          transition: transform 0.25s ease, background 0.25s ease;
+        }
+
+        .luxurySort.open .luxurySortArrow {
+          transform: rotate(90deg);
+          background: #e7d2ad;
+          color: #2c1f18;
+        }
+
+        .luxurySortMenu {
+          position: absolute;
+          left: 0;
+          right: 0;
+          top: calc(100% + 10px);
+          background: rgba(255, 249, 240, 0.98);
+          border: 1px solid rgba(176, 138, 69, 0.42);
+          border-radius: 24px;
+          padding: 8px;
+          box-shadow: 0 26px 58px rgba(36, 26, 20, 0.18);
+          backdrop-filter: blur(14px);
+          display: grid;
+          gap: 6px;
+          animation: sortMenuDrop 0.22s ease both;
+          overflow: hidden;
+        }
+
+        .luxurySortOption {
+          width: 100%;
+          border: 1px solid transparent;
+          background: transparent;
+          color: #4f3c31;
+          border-radius: 18px;
+          padding: 13px 16px;
+          font-size: 12px;
+          letter-spacing: 0.13em;
+          text-transform: uppercase;
+          text-align: left;
+          transition: background 0.22s ease, color 0.22s ease, border-color 0.22s ease, transform 0.22s ease;
+        }
+
+        .luxurySortOption:hover,
+        .luxurySortOption.active {
+          background: #2c1f18;
+          color: #fff9f0;
+          border-color: rgba(176, 138, 69, 0.36);
+          transform: translateX(2px);
         }
 
         .darkMode .searchBox,
-        .darkMode .sortSelect,
         .darkMode .emailForm input {
           background: #211713;
           color: #fff9f0;
           border-color: rgba(215, 180, 111, 0.48);
+        }
+
+        .darkMode .luxurySortButton,
+        .darkMode .luxurySortMenu {
+          background: linear-gradient(135deg, rgba(33, 23, 19, 0.98), rgba(44, 31, 24, 0.96));
+          color: #fff9f0;
+          border-color: rgba(215, 180, 111, 0.50);
+        }
+
+        .darkMode .luxurySortCopy span { color: #fff9f0; }
+        .darkMode .luxurySortOption { color: #eadcc8; }
+        .darkMode .luxurySortOption:hover,
+        .darkMode .luxurySortOption.active {
+          background: #d7b46f;
+          color: #211713;
+        }
+
+        @keyframes sortMenuDrop {
+          from { opacity: 0; transform: translateY(-8px) scale(0.98); }
+          to { opacity: 1; transform: translateY(0) scale(1); }
         }
 
         .filterRow {
@@ -4223,6 +4326,31 @@ export default function App() {
           }
 
           .searchBox { padding: 15px 18px; }
+
+          .luxurySortButton {
+            min-height: 58px;
+            padding: 12px 48px 11px 18px;
+          }
+
+          .luxurySortCopy small {
+            font-size: 8px;
+            letter-spacing: 0.22em;
+          }
+
+          .luxurySortCopy span {
+            font-size: 18px;
+          }
+
+          .luxurySortArrow {
+            width: 28px;
+            height: 28px;
+          }
+
+          .luxurySortOption {
+            padding: 12px 14px;
+            font-size: 10px;
+            letter-spacing: 0.11em;
+          }
 
           .filterRow {
             overflow-x: auto;
@@ -7038,12 +7166,40 @@ export default function App() {
             <div className="shopTools">
               <input className="searchBox" value={searchTerm} onFocus={openSearch} onChange={(event) => setSearchTerm(event.target.value)} placeholder={t.searchPlaceholder} />
 
-              <div className="selectWrap">
-                <select className="sortSelect" value={sortOption} onChange={(event) => setSortOption(event.target.value)}>
-                  <option value="Featured">{t.featured}</option>
-                  <option value="Price Low to High">{t.priceLow}</option>
-                  <option value="Price High to Low">{t.priceHigh}</option>
-                </select>
+              <div
+                className={sortDropdownOpen ? "luxurySort open" : "luxurySort"}
+                onBlur={() => window.setTimeout(() => setSortDropdownOpen(false), 120)}
+              >
+                <button
+                  type="button"
+                  className="luxurySortButton"
+                  onClick={() => setSortDropdownOpen((open) => !open)}
+                  aria-expanded={sortDropdownOpen}
+                >
+                  <span className="luxurySortCopy">
+                    <small>{isArabic ? "منسق" : "Curated"}</small>
+                    <span>{sortOptions.find((option) => option.value === sortOption)?.label || t.featured}</span>
+                  </span>
+                  <span className="luxurySortArrow" aria-hidden="true">›</span>
+                </button>
+
+                {sortDropdownOpen && (
+                  <div className="luxurySortMenu">
+                    {sortOptions.map((option) => (
+                      <button
+                        key={option.value}
+                        type="button"
+                        className={sortOption === option.value ? "luxurySortOption active" : "luxurySortOption"}
+                        onClick={() => {
+                          setSortOption(option.value);
+                          setSortDropdownOpen(false);
+                        }}
+                      >
+                        {option.label}
+                      </button>
+                    ))}
+                  </div>
+                )}
               </div>
             </div>
 
