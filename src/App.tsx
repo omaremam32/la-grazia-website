@@ -133,6 +133,23 @@ type ProductForm = {
   sortOrder: string;
 };
 
+type ProductReview = {
+  id: string;
+  user_id?: string | null;
+  product_name: string;
+  rating: number;
+  review_text: string;
+  customer_name?: string | null;
+  customer_email?: string | null;
+  is_approved: boolean;
+  created_at: string;
+};
+
+type ReviewForm = {
+  rating: number;
+  reviewText: string;
+};
+
 const WHATSAPP_NUMBER = "201101900086";
 const BRAND_EMAIL = "omaromohamed2003@gmail.com";
 
@@ -785,6 +802,11 @@ export default function App() {
   const [productSaving, setProductSaving] = useState(false);
   const [editingProductId, setEditingProductId] = useState<string | null>(null);
   const [productForm, setProductForm] = useState<ProductForm>(emptyProductForm);
+  const [productReviews, setProductReviews] = useState<ProductReview[]>([]);
+  const [allReviews, setAllReviews] = useState<ProductReview[]>([]);
+  const [reviewsLoading, setReviewsLoading] = useState(false);
+  const [reviewSubmitting, setReviewSubmitting] = useState(false);
+  const [reviewForm, setReviewForm] = useState<ReviewForm>({ rating: 5, reviewText: "" });
 
   const [searchTerm, setSearchTerm] = useState("");
   const [activeFilter, setActiveFilter] = useState("All");
@@ -860,6 +882,17 @@ export default function App() {
     { value: "Price Low to High", label: t.priceLow },
     { value: "Price High to Low", label: t.priceHigh },
   ];
+
+
+  const approvedProductReviews = useMemo(() => {
+    return productReviews.filter((review) => review.is_approved);
+  }, [productReviews]);
+
+  const productReviewAverage = useMemo(() => {
+    if (approvedProductReviews.length === 0) return 0;
+    const total = approvedProductReviews.reduce((sum, review) => sum + Number(review.rating || 0), 0);
+    return Math.round((total / approvedProductReviews.length) * 10) / 10;
+  }, [approvedProductReviews]);
 
   function productMatchesCollection(product: Product, collection: string) {
     const textValue = `${product.name} ${product.category}`.toLowerCase();
@@ -1020,6 +1053,7 @@ export default function App() {
     if (accountPageOpen && accountView === "admin" && canAccessAdmin) {
       fetchAdminOrders();
       fetchAdminProducts();
+      fetchAdminReviews();
     }
   }, [accountPageOpen, accountView, canAccessAdmin]);
 
@@ -1303,6 +1337,133 @@ export default function App() {
     setToast(isArabic ? "تم حذف المنتج" : "Product deleted");
   }
 
+  async function fetchProductReviews(productName: string) {
+    if (!supabase || !productName) {
+      setProductReviews([]);
+      return;
+    }
+
+    setReviewsLoading(true);
+
+    const { data, error } = await supabase
+      .from("product_reviews")
+      .select("id, user_id, product_name, rating, review_text, customer_name, customer_email, is_approved, created_at")
+      .eq("product_name", productName)
+      .order("created_at", { ascending: false });
+
+    if (error) {
+      console.error(error);
+      setProductReviews([]);
+    } else {
+      setProductReviews((data || []) as ProductReview[]);
+    }
+
+    setReviewsLoading(false);
+  }
+
+  async function fetchAdminReviews() {
+    if (!supabase || !canAccessAdmin) return;
+
+    const { data, error } = await supabase
+      .from("product_reviews")
+      .select("id, user_id, product_name, rating, review_text, customer_name, customer_email, is_approved, created_at")
+      .order("created_at", { ascending: false });
+
+    if (error) {
+      console.error(error);
+      setToast(error.message);
+      return;
+    }
+
+    setAllReviews((data || []) as ProductReview[]);
+  }
+
+  async function submitProductReview(event?: React.FormEvent<HTMLFormElement>) {
+    event?.preventDefault();
+
+    if (!selectedProduct) return;
+
+    if (!supabase || !session?.user || !accountUser) {
+      setAuthMode("signIn");
+      setSignInOpen(true);
+      setToast(isArabic ? "سجلي الدخول أولاً لإضافة تقييم." : "Please sign in first to leave a review.");
+      return;
+    }
+
+    const cleanText = reviewForm.reviewText.trim();
+
+    if (!cleanText || cleanText.length < 6) {
+      setToast(isArabic ? "اكتبي تقييم قصير للمنتج." : "Write a short product review first.");
+      return;
+    }
+
+    setReviewSubmitting(true);
+
+    const { error } = await supabase.from("product_reviews").insert({
+      user_id: session.user.id,
+      product_name: selectedProduct.name,
+      rating: Math.min(5, Math.max(1, Number(reviewForm.rating || 5))),
+      review_text: cleanText,
+      customer_name: accountUser.name,
+      customer_email: accountUser.email,
+      is_approved: false,
+    });
+
+    if (error) {
+      console.error(error);
+      setToast(error.message);
+      setReviewSubmitting(false);
+      return;
+    }
+
+    setReviewForm({ rating: 5, reviewText: "" });
+    await fetchProductReviews(selectedProduct.name);
+    if (canAccessAdmin) fetchAdminReviews();
+    setToast(isArabic ? "تم إرسال التقييم للمراجعة" : "Review submitted for approval");
+    setReviewSubmitting(false);
+  }
+
+  async function updateReviewApproval(reviewId: string, approved: boolean) {
+    if (!supabase || !canAccessAdmin) return;
+
+    const { error } = await supabase
+      .from("product_reviews")
+      .update({ is_approved: approved, updated_at: new Date().toISOString() })
+      .eq("id", reviewId);
+
+    if (error) {
+      setToast(error.message);
+      return;
+    }
+
+    setAllReviews((current) =>
+      current.map((review) =>
+        review.id === reviewId ? { ...review, is_approved: approved } : review
+      )
+    );
+
+    if (selectedProduct) fetchProductReviews(selectedProduct.name);
+    setToast(approved ? (isArabic ? "تم قبول التقييم" : "Review approved") : (isArabic ? "تم إخفاء التقييم" : "Review hidden"));
+  }
+
+  async function deleteReview(reviewId: string) {
+    if (!supabase || !canAccessAdmin) return;
+
+    const confirmed = window.confirm(isArabic ? "هل تريد حذف هذا التقييم؟" : "Delete this review?");
+    if (!confirmed) return;
+
+    const { error } = await supabase.from("product_reviews").delete().eq("id", reviewId);
+
+    if (error) {
+      setToast(error.message);
+      return;
+    }
+
+    setAllReviews((current) => current.filter((review) => review.id !== reviewId));
+    if (selectedProduct) fetchProductReviews(selectedProduct.name);
+    setToast(isArabic ? "تم حذف التقييم" : "Review deleted");
+  }
+
   async function fetchUserAddresses(userId = session?.user?.id) {
     if (!supabase || !userId) return;
 
@@ -1573,6 +1734,8 @@ export default function App() {
     setSelectedColor(product.colors[0]);
     setQuantity(1);
     setItemSizeChartOpen(false);
+    setReviewForm({ rating: 5, reviewText: "" });
+    fetchProductReviews(product.name);
   }
 
   function addToCart(product: Product, size = "M", color = product.colors[0], qty = 1) {
@@ -4696,6 +4859,247 @@ export default function App() {
         }
 
 
+
+        .productReviewsPanel {
+          margin: 18px 0 20px;
+          border: 1px solid rgba(176, 138, 69, 0.24);
+          background: rgba(247, 241, 232, 0.66);
+          border-radius: 24px;
+          padding: 18px;
+        }
+
+        .productReviewsHeader {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          gap: 16px;
+          margin-bottom: 12px;
+        }
+
+        .productReviewsHeader .eyebrow {
+          margin-bottom: 6px;
+          font-size: 10px;
+        }
+
+        .productReviewsHeader h4 {
+          margin: 0;
+          font-family: Georgia, "Times New Roman", serif;
+          font-size: 22px;
+          font-weight: 500;
+        }
+
+        .reviewStars,
+        .productReviewCard span {
+          color: #b08a45;
+          letter-spacing: 0.08em;
+          white-space: nowrap;
+        }
+
+        .reviewEmptyText {
+          margin: 0 0 12px !important;
+          color: #6a5545 !important;
+          font-size: 13px !important;
+        }
+
+        .productReviewsList {
+          display: grid;
+          gap: 10px;
+          margin-bottom: 14px;
+        }
+
+        .productReviewCard {
+          background: rgba(255, 249, 240, 0.84);
+          border: 1px solid rgba(176, 138, 69, 0.18);
+          border-radius: 18px;
+          padding: 13px;
+        }
+
+        .productReviewCard div {
+          display: flex;
+          justify-content: space-between;
+          gap: 12px;
+          align-items: center;
+        }
+
+        .productReviewCard strong {
+          font-family: Georgia, "Times New Roman", serif;
+          font-size: 15px;
+          font-weight: 500;
+        }
+
+        .productReviewCard p {
+          margin: 8px 0 0 !important;
+          font-size: 13px !important;
+          line-height: 1.55 !important;
+        }
+
+        .reviewForm {
+          border-top: 1px solid rgba(176, 138, 69, 0.18);
+          padding-top: 14px;
+          display: grid;
+          gap: 10px;
+        }
+
+        .reviewFormTop {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          gap: 12px;
+        }
+
+        .reviewFormTop label {
+          font-size: 11px;
+          letter-spacing: 0.16em;
+          color: #b08a45;
+          text-transform: uppercase;
+        }
+
+        .reviewRatingButtons {
+          display: flex;
+          gap: 4px;
+        }
+
+        .reviewStarBtn {
+          border: 0;
+          background: transparent;
+          color: rgba(176, 138, 69, 0.34);
+          font-size: 20px;
+          padding: 0 2px;
+          line-height: 1;
+        }
+
+        .reviewStarBtn.active {
+          color: #b08a45;
+        }
+
+        .reviewForm textarea {
+          width: 100%;
+          min-height: 82px;
+          resize: vertical;
+          border: 1px solid rgba(176, 138, 69, 0.28);
+          background: #fff9f0;
+          border-radius: 18px;
+          padding: 13px 14px;
+          color: #241a14;
+          outline: none;
+          line-height: 1.55;
+        }
+
+        .reviewSubmitBtn {
+          border: 1px solid rgba(176, 138, 69, 0.42);
+          background: #2c1f18;
+          color: #fff9f0;
+          border-radius: 999px;
+          padding: 12px 16px;
+          font-size: 11px;
+          letter-spacing: 0.14em;
+          text-transform: uppercase;
+        }
+
+        .reviewSubmitBtn:disabled {
+          opacity: 0.6;
+          cursor: not-allowed;
+        }
+
+        .reviewForm small {
+          color: #7a6250;
+          line-height: 1.5;
+        }
+
+        .adminReviewsList {
+          display: grid;
+          gap: 14px;
+        }
+
+        .adminReviewCard {
+          border: 1px solid rgba(176, 138, 69, 0.24);
+          background: #fff9f0;
+          border-radius: 24px;
+          padding: 20px;
+          box-shadow: 0 12px 28px rgba(36, 26, 20, 0.06);
+        }
+
+        .adminReviewTop {
+          display: flex;
+          justify-content: space-between;
+          gap: 16px;
+          align-items: flex-start;
+          margin-bottom: 12px;
+        }
+
+        .adminReviewTop small {
+          display: block;
+          color: #b08a45;
+          letter-spacing: 0.12em;
+          text-transform: uppercase;
+          font-size: 10px;
+          margin-bottom: 6px;
+        }
+
+        .adminReviewTop strong {
+          display: block;
+          color: #b08a45;
+          letter-spacing: 0.06em;
+          font-size: 18px;
+        }
+
+        .adminReviewTop span:not(.reviewApprovalPill) {
+          display: block;
+          color: #6a5545;
+          margin-top: 6px;
+          font-size: 13px;
+        }
+
+        .reviewApprovalPill {
+          border-radius: 999px;
+          padding: 9px 12px;
+          font-size: 10px;
+          letter-spacing: 0.12em;
+          text-transform: uppercase;
+          white-space: nowrap;
+        }
+
+        .reviewApprovalPill.approved {
+          background: rgba(78, 126, 89, 0.14);
+          color: #416f4d;
+          border: 1px solid rgba(78, 126, 89, 0.28);
+        }
+
+        .reviewApprovalPill.pending {
+          background: rgba(176, 138, 69, 0.12);
+          color: #8a682f;
+          border: 1px solid rgba(176, 138, 69, 0.24);
+        }
+
+        .adminReviewCard p {
+          color: #5f4c3e;
+          line-height: 1.7;
+          margin: 0 0 14px;
+        }
+
+        .statusUpdateBtn.danger {
+          border-color: rgba(139, 48, 48, 0.36);
+          color: #8b3030;
+        }
+
+        .darkMode .productReviewsPanel,
+        .darkMode .productReviewCard,
+        .darkMode .adminReviewCard {
+          background: #211713;
+          border-color: rgba(215, 180, 111, 0.28);
+        }
+
+        .darkMode .reviewForm textarea {
+          background: #2c1f18;
+          color: #fff9f0;
+          border-color: rgba(215, 180, 111, 0.38);
+        }
+
+        .darkMode .adminReviewCard p,
+        .darkMode .reviewForm small,
+        .darkMode .adminReviewTop span:not(.reviewApprovalPill) {
+          color: #eadcc8;
+        }
 
         .adminProductsPanel {
           margin-top: 34px;
@@ -8683,6 +9087,59 @@ export default function App() {
                       </div>
                     )}
 
+                    <div className="adminProductsPanel reviewAdminPanel">
+                      <div className="accountPageTitleRow productAdminHeader">
+                        <div>
+                          <p className="eyebrow">{isArabic ? "إدارة التقييمات" : "Review Management"}</p>
+                          <h3>{isArabic ? "تقييمات العملاء" : "Customer Reviews"}</h3>
+                          <p>
+                            {isArabic
+                              ? "راجعي التقييمات قبل ظهورها على صفحات المنتجات."
+                              : "Approve, hide, or delete customer reviews before they appear publicly."}
+                          </p>
+                        </div>
+                        <button className="secondaryBtn" type="button" onClick={fetchAdminReviews}>
+                          {isArabic ? "تحديث التقييمات" : "Refresh Reviews"}
+                        </button>
+                      </div>
+
+                      {allReviews.length === 0 ? (
+                        <div className="noOrdersBox">
+                          <strong>{isArabic ? "لا توجد تقييمات بعد" : "No reviews yet"}</strong>
+                          <span>{isArabic ? "أي تقييم جديد سيظهر هنا للمراجعة." : "Every submitted product review will appear here for approval."}</span>
+                        </div>
+                      ) : (
+                        <div className="adminReviewsList">
+                          {allReviews.map((review) => (
+                            <article className="adminReviewCard" key={review.id}>
+                              <div className="adminReviewTop">
+                                <div>
+                                  <small>{review.product_name}</small>
+                                  <strong>{"★".repeat(review.rating)}{"☆".repeat(5 - review.rating)}</strong>
+                                  <span>{review.customer_name || "La Grazia Client"} · {review.customer_email || "-"}</span>
+                                </div>
+                                <span className={review.is_approved ? "reviewApprovalPill approved" : "reviewApprovalPill pending"}>
+                                  {review.is_approved ? (isArabic ? "ظاهر" : "Approved") : (isArabic ? "قيد المراجعة" : "Pending")}
+                                </span>
+                              </div>
+                              <p>{review.review_text}</p>
+                              <div className="adminStatusButtons">
+                                <button type="button" className="statusUpdateBtn active" onClick={() => updateReviewApproval(review.id, true)}>
+                                  {isArabic ? "قبول" : "Approve"}
+                                </button>
+                                <button type="button" className="statusUpdateBtn" onClick={() => updateReviewApproval(review.id, false)}>
+                                  {isArabic ? "إخفاء" : "Hide"}
+                                </button>
+                                <button type="button" className="statusUpdateBtn danger" onClick={() => deleteReview(review.id)}>
+                                  {isArabic ? "حذف" : "Delete"}
+                                </button>
+                              </div>
+                            </article>
+                          ))}
+                        </div>
+                      )}
+                    </div>
+
                     <div className="adminProductsPanel">
                       <div className="accountPageTitleRow productAdminHeader">
                         <div>
@@ -9183,6 +9640,64 @@ export default function App() {
                 {selectedProduct.complete.map((item) => (
                   <span key={item}>{item}</span>
                 ))}
+              </div>
+
+              <div className="productReviewsPanel">
+                <div className="productReviewsHeader">
+                  <div>
+                    <p className="eyebrow">{isArabic ? "تقييمات العملاء" : "Customer Reviews"}</p>
+                    <h4>{approvedProductReviews.length > 0 ? `${productReviewAverage} / 5` : (isArabic ? "لا توجد تقييمات بعد" : "No reviews yet")}</h4>
+                  </div>
+                  {approvedProductReviews.length > 0 && (
+                    <span className="reviewStars">{"★".repeat(Math.round(productReviewAverage))}{"☆".repeat(5 - Math.round(productReviewAverage))}</span>
+                  )}
+                </div>
+
+                {reviewsLoading ? (
+                  <p className="reviewEmptyText">{isArabic ? "جاري تحميل التقييمات..." : "Loading reviews..."}</p>
+                ) : approvedProductReviews.length === 0 ? (
+                  <p className="reviewEmptyText">{isArabic ? "كوني أول من يقيّم هذه القطعة." : "Be the first to review this piece."}</p>
+                ) : (
+                  <div className="productReviewsList">
+                    {approvedProductReviews.slice(0, 3).map((review) => (
+                      <article className="productReviewCard" key={review.id}>
+                        <div>
+                          <strong>{review.customer_name || "La Grazia Client"}</strong>
+                          <span>{"★".repeat(review.rating)}{"☆".repeat(5 - review.rating)}</span>
+                        </div>
+                        <p>{review.review_text}</p>
+                      </article>
+                    ))}
+                  </div>
+                )}
+
+                <form className="reviewForm" onSubmit={submitProductReview}>
+                  <div className="reviewFormTop">
+                    <label>{isArabic ? "التقييم" : "Rating"}</label>
+                    <div className="reviewRatingButtons">
+                      {[1, 2, 3, 4, 5].map((star) => (
+                        <button
+                          type="button"
+                          key={star}
+                          className={reviewForm.rating >= star ? "reviewStarBtn active" : "reviewStarBtn"}
+                          onClick={() => setReviewForm((current) => ({ ...current, rating: star }))}
+                          aria-label={`Rate ${star} stars`}
+                        >
+                          ★
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                  <textarea
+                    value={reviewForm.reviewText}
+                    onChange={(event) => setReviewForm((current) => ({ ...current, reviewText: event.target.value }))}
+                    placeholder={isArabic ? "اكتبي رأيك في القطعة..." : "Write your review of this piece..."}
+                  />
+                  <button className="reviewSubmitBtn" type="submit" disabled={reviewSubmitting}>
+                    {reviewSubmitting ? (isArabic ? "جاري الإرسال..." : "Submitting...") : (isArabic ? "إرسال التقييم" : "Submit Review")}
+                  </button>
+                  <small>{isArabic ? "التقييم يظهر بعد موافقة الإدارة." : "Reviews appear publicly after admin approval."}</small>
+                </form>
               </div>
 
               <button className="secondaryBtn" onClick={() => addToCart(selectedProduct, selectedSize, selectedColor, quantity)}>
