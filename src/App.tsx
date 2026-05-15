@@ -693,6 +693,17 @@ export default function App() {
     return source.slice(0, 2).toUpperCase();
   }, [accountUser]);
 
+  const canAccessAdmin = useMemo(() => {
+    const email = (accountUser?.email || "").trim().toLowerCase();
+    const brandEmail = BRAND_EMAIL.trim().toLowerCase();
+
+    return Boolean(
+      accountUser?.isAdmin ||
+      email === brandEmail ||
+      email === "omaromohamed2003@gmail.com"
+    );
+  }, [accountUser]);
+
   const bestSellers = products.filter((product) =>
     ["Milano Cream Palazzo Trouser", "Vaticano Printed Silk Scarf", "Bianca Off-Shoulder Knit", "Firenze Cream Tailored Vest"].includes(product.name)
   );
@@ -846,7 +857,7 @@ export default function App() {
     elements.forEach((element) => observer.observe(element));
 
     return () => observer.disconnect();
-  }, [language, searchTerm, activeFilter, sortOption, wishlist.length]);
+  }, [language, searchTerm, activeFilter, collectionFilter, sortOption, wishlist.length, accountPageOpen]);
 
   useEffect(() => {
     if (!toast) return;
@@ -885,6 +896,18 @@ export default function App() {
     return () => data.subscription.unsubscribe();
   }, []);
 
+  useEffect(() => {
+    if (accountPageOpen) return;
+
+    const timer = window.setTimeout(() => {
+      document.querySelectorAll(".reveal").forEach((element) => {
+        element.classList.add("visible");
+      });
+    }, 120);
+
+    return () => window.clearTimeout(timer);
+  }, [accountPageOpen]);
+
   async function handleSupabaseSession(nextSession: Session | null) {
     setSession(nextSession);
 
@@ -915,7 +938,8 @@ export default function App() {
     setAccountUser(nextUser);
     setAccountForm({ name: nextUser.name, email: nextUser.email, phone: nextUser.phone, password: "" });
     fetchUserOrders(user.id);
-    if (Boolean(profile?.is_admin)) {
+    const email = String(profile?.email || user.email || "").trim().toLowerCase();
+    if (Boolean(profile?.is_admin) || email === BRAND_EMAIL.toLowerCase() || email === "omaromohamed2003@gmail.com") {
       fetchAdminOrders();
     }
   }
@@ -955,7 +979,7 @@ export default function App() {
   }
 
   async function updateAdminOrderStatus(orderId: string, nextStatus: string) {
-    if (!supabase || !accountUser?.isAdmin) return;
+    if (!supabase || !canAccessAdmin) return;
 
     const nextPaymentStatus = nextStatus === "Pending Payment" ? "pending" : nextStatus === "Cancelled" ? "cancelled" : "paid";
 
@@ -7250,7 +7274,7 @@ export default function App() {
                   >
                     {isArabic ? "طلباتي" : "My Orders"}
                   </button>
-                  {accountUser.isAdmin && (
+                  {canAccessAdmin && (
                     <button
                       type="button"
                       className={accountView === "admin" ? "accountFullTab active adminTab" : "accountFullTab adminTab"}
@@ -7357,7 +7381,7 @@ export default function App() {
                       </div>
                     )}
                   </>
-                ) : accountView === "admin" && accountUser.isAdmin ? (
+                ) : accountView === "admin" && canAccessAdmin ? (
                   <>
                     <div className="accountPageTitleRow">
                       <div>
