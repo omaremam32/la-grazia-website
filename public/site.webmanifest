@@ -1,0 +1,16 @@
+{
+  "name": "La Grazia",
+  "short_name": "La Grazia",
+  "description": "Women-only Egyptian fashion inspired by Italian old-money elegance, soft neutrals, tailored pieces, and quiet luxury.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#f7f1e8",
+  "theme_color": "#2c1f18",
+  "icons": [
+    {
+      "src": "/favicon.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}
