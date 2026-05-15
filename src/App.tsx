@@ -640,6 +640,7 @@ export default function App() {
   const [collectionMenuOpen, setCollectionMenuOpen] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
   const [signInOpen, setSignInOpen] = useState(false);
+  const [accountPageOpen, setAccountPageOpen] = useState(false);
   const [authMode, setAuthMode] = useState<"signIn" | "signUp">("signIn");
   const [accountUser, setAccountUser] = useState<AccountUser | null>(null);
   const [accountForm, setAccountForm] = useState({ name: "", email: "", phone: "", password: "" });
@@ -725,6 +726,7 @@ export default function App() {
     setSearchTerm("");
     setMenuOpen(false);
     setCollectionMenuOpen(false);
+    setAccountPageOpen(false);
 
     window.setTimeout(() => {
       document.getElementById("collection")?.scrollIntoView({ behavior: "smooth" });
@@ -1169,6 +1171,7 @@ export default function App() {
     setAccountOrders([]);
     setSession(null);
     setAuthMode("signIn");
+    setAccountPageOpen(false);
   }
 
   function openSearch() {
@@ -1179,6 +1182,7 @@ export default function App() {
 
   function goToCollectionFromSearch() {
     setSearchOpen(false);
+    setAccountPageOpen(false);
     window.setTimeout(() => {
       document.getElementById("collection")?.scrollIntoView({ behavior: "smooth" });
     }, 80);
@@ -5113,6 +5117,433 @@ export default function App() {
         }
 
 
+
+        /* Full account page layout */
+        .accountPageMain {
+          width: min(1680px, 100%);
+          margin: 0 auto;
+          padding: 48px clamp(24px, 4vw, 72px) 92px;
+          min-height: calc(100vh - 140px);
+        }
+
+        .accountFullShell {
+          display: grid;
+          grid-template-columns: minmax(280px, 0.8fr) minmax(0, 1.2fr);
+          gap: 28px;
+          align-items: start;
+        }
+
+        .accountFullHero,
+        .accountFullContent {
+          background: rgba(255, 249, 240, 0.86);
+          border: 1px solid rgba(176, 138, 69, 0.25);
+          border-radius: 34px;
+          box-shadow: 0 18px 44px rgba(36, 26, 20, 0.08);
+        }
+
+        .darkMode .accountFullHero,
+        .darkMode .accountFullContent {
+          background: #2c1f18;
+          border-color: rgba(215, 180, 111, 0.34);
+        }
+
+        .accountFullHero {
+          position: sticky;
+          top: 116px;
+          padding: 34px;
+          overflow: hidden;
+        }
+
+        .accountFullHero::after {
+          content: "LG";
+          position: absolute;
+          right: -20px;
+          bottom: -48px;
+          font-family: Georgia, "Times New Roman", serif;
+          font-size: 180px;
+          color: rgba(176, 138, 69, 0.09);
+          pointer-events: none;
+        }
+
+        .accountFullHero > * {
+          position: relative;
+          z-index: 1;
+        }
+
+        .accountFullAvatar {
+          width: 72px;
+          height: 72px;
+          border-radius: 999px;
+          display: grid;
+          place-items: center;
+          background: linear-gradient(135deg, #2c1f18, #5a4636);
+          color: #fff9f0;
+          border: 1px solid rgba(176, 138, 69, 0.55);
+          font-size: 23px;
+          font-weight: 700;
+          letter-spacing: 0.08em;
+          margin-bottom: 18px;
+          box-shadow: 0 16px 34px rgba(36, 26, 20, 0.16);
+        }
+
+        .darkMode .accountFullAvatar {
+          background: #d7b46f;
+          color: #211713;
+        }
+
+        .accountFullHero h2 {
+          font-family: Georgia, "Times New Roman", serif;
+          font-size: clamp(38px, 3vw, 56px);
+          line-height: 1.02;
+          font-weight: 500;
+          margin: 0 0 12px;
+        }
+
+        .accountFullHero p {
+          margin: 0;
+          color: #6a5545;
+          line-height: 1.75;
+        }
+
+        .accountFullDetails {
+          margin-top: 24px;
+          display: grid;
+          gap: 12px;
+        }
+
+        .accountFullDetail {
+          border: 1px solid rgba(176, 138, 69, 0.2);
+          background: rgba(247, 241, 232, 0.58);
+          border-radius: 20px;
+          padding: 14px 16px;
+        }
+
+        .darkMode .accountFullDetail {
+          background: rgba(255, 249, 240, 0.06);
+          border-color: rgba(215, 180, 111, 0.24);
+        }
+
+        .accountFullDetail small {
+          display: block;
+          color: #b08a45;
+          letter-spacing: 0.18em;
+          text-transform: uppercase;
+          font-size: 10px;
+          margin-bottom: 6px;
+        }
+
+        .accountFullDetail strong {
+          display: block;
+          font-size: 15px;
+          overflow-wrap: anywhere;
+        }
+
+        .accountFullContent {
+          padding: 30px;
+        }
+
+        .accountFullTabs {
+          display: grid;
+          grid-template-columns: repeat(2, 1fr);
+          gap: 8px;
+          background: #efe3d2;
+          border: 1px solid rgba(176, 138, 69, 0.22);
+          border-radius: 999px;
+          padding: 7px;
+          margin-bottom: 24px;
+        }
+
+        .darkMode .accountFullTabs {
+          background: rgba(255, 249, 240, 0.06);
+          border-color: rgba(215, 180, 111, 0.28);
+        }
+
+        .accountFullTab {
+          border: 0;
+          border-radius: 999px;
+          padding: 14px;
+          background: transparent;
+          color: #6a5545;
+          letter-spacing: 0.15em;
+          text-transform: uppercase;
+          font-size: 11px;
+          transition: background 0.25s ease, color 0.25s ease, transform 0.25s ease;
+        }
+
+        .accountFullTab.active {
+          background: #2c1f18;
+          color: #fff9f0;
+          box-shadow: 0 10px 24px rgba(36, 26, 20, 0.12);
+        }
+
+        .darkMode .accountFullTab {
+          color: #eadcc8;
+        }
+
+        .darkMode .accountFullTab.active {
+          background: #d7b46f;
+          color: #211713;
+        }
+
+        .accountPageTitleRow {
+          display: flex;
+          align-items: end;
+          justify-content: space-between;
+          gap: 18px;
+          margin-bottom: 20px;
+        }
+
+        .accountPageTitleRow h3 {
+          font-family: Georgia, "Times New Roman", serif;
+          font-size: clamp(30px, 2.5vw, 48px);
+          font-weight: 500;
+          line-height: 1.05;
+          margin: 0;
+        }
+
+        .accountPageTitleRow p {
+          margin: 8px 0 0;
+          color: #6a5545;
+          line-height: 1.65;
+        }
+
+        .accountProfileGrid {
+          display: grid;
+          grid-template-columns: repeat(3, minmax(0, 1fr));
+          gap: 14px;
+        }
+
+        .accountProfileCard {
+          min-height: 136px;
+          border-radius: 24px;
+          border: 1px solid rgba(176, 138, 69, 0.22);
+          background: linear-gradient(135deg, rgba(255,249,240,0.92), rgba(239,227,210,0.72));
+          padding: 22px;
+          display: flex;
+          flex-direction: column;
+          justify-content: center;
+          text-align: center;
+        }
+
+        .darkMode .accountProfileCard {
+          background: rgba(255, 249, 240, 0.06);
+          border-color: rgba(215, 180, 111, 0.26);
+        }
+
+        .accountProfileCard small {
+          display: block;
+          color: #b08a45;
+          letter-spacing: 0.2em;
+          text-transform: uppercase;
+          font-size: 10px;
+          margin-bottom: 10px;
+        }
+
+        .accountProfileCard strong {
+          font-size: 17px;
+          overflow-wrap: anywhere;
+        }
+
+        .accountOrdersCarousel {
+          display: flex;
+          gap: 16px;
+          overflow-x: auto;
+          scroll-snap-type: x mandatory;
+          padding: 4px 4px 18px;
+          scrollbar-width: thin;
+          scrollbar-color: rgba(176, 138, 69, 0.55) transparent;
+        }
+
+        .accountOrdersCarousel::-webkit-scrollbar {
+          height: 8px;
+        }
+
+        .accountOrdersCarousel::-webkit-scrollbar-thumb {
+          background: rgba(176, 138, 69, 0.55);
+          border-radius: 999px;
+        }
+
+        .accountOrderSlide {
+          flex: 0 0 min(520px, 88%);
+          scroll-snap-align: start;
+        }
+
+        .trackSteps {
+          display: grid;
+          grid-template-columns: repeat(5, 1fr);
+          gap: 6px;
+          margin: 16px 0 0;
+        }
+
+        .trackStep {
+          position: relative;
+          text-align: center;
+          color: #9b8471;
+          font-size: 9px;
+          letter-spacing: 0.08em;
+          text-transform: uppercase;
+          line-height: 1.35;
+        }
+
+        .trackStep::before {
+          content: "";
+          width: 10px;
+          height: 10px;
+          border-radius: 50%;
+          display: block;
+          margin: 0 auto 7px;
+          background: #e8d6bd;
+          border: 1px solid rgba(176, 138, 69, 0.35);
+        }
+
+        .trackStep.active {
+          color: #2c1f18;
+          font-weight: 700;
+        }
+
+        .trackStep.active::before {
+          background: #2c1f18;
+          border-color: #2c1f18;
+          box-shadow: 0 0 0 4px rgba(176, 138, 69, 0.12);
+        }
+
+        .darkMode .trackStep.active {
+          color: #fff9f0;
+        }
+
+        .darkMode .trackStep.active::before {
+          background: #d7b46f;
+          border-color: #d7b46f;
+        }
+
+        .accountFullActions {
+          display: flex;
+          flex-wrap: wrap;
+          gap: 12px;
+          margin-top: 24px;
+        }
+
+        .accountFullActions button,
+        .accountFullActions a {
+          flex: 1;
+          min-width: 170px;
+        }
+
+        @media (max-width: 980px) {
+          .accountPageMain {
+            padding: 28px 16px 105px;
+          }
+
+          .accountFullShell {
+            grid-template-columns: 1fr;
+            gap: 18px;
+          }
+
+          .accountFullHero {
+            position: relative;
+            top: auto;
+            padding: 26px;
+          }
+
+          .accountFullHero h2 {
+            font-size: 40px;
+          }
+
+          .accountFullContent {
+            padding: 18px;
+            border-radius: 28px;
+          }
+
+          .accountProfileGrid {
+            grid-template-columns: 1fr;
+            gap: 10px;
+          }
+
+          .accountProfileCard {
+            min-height: auto;
+            padding: 18px;
+          }
+
+          .accountPageTitleRow {
+            align-items: start;
+            flex-direction: column;
+          }
+
+          .accountOrdersCarousel {
+            gap: 12px;
+            padding-bottom: 16px;
+          }
+
+          .accountOrderSlide {
+            flex-basis: 88%;
+          }
+
+          .trackSteps {
+            grid-template-columns: repeat(5, minmax(54px, 1fr));
+            overflow-x: auto;
+            padding-bottom: 6px;
+          }
+        }
+
+        @media (max-width: 640px) {
+          .accountPageMain {
+            padding: 18px 12px 112px;
+          }
+
+          .accountFullHero,
+          .accountFullContent {
+            border-radius: 24px;
+          }
+
+          .accountFullHero {
+            padding: 22px;
+          }
+
+          .accountFullAvatar {
+            width: 58px;
+            height: 58px;
+            font-size: 18px;
+            margin-bottom: 14px;
+          }
+
+          .accountFullHero h2 {
+            font-size: 34px;
+          }
+
+          .accountFullHero p {
+            font-size: 14px;
+            line-height: 1.6;
+          }
+
+          .accountFullTabs {
+            margin-bottom: 18px;
+          }
+
+          .accountFullTab {
+            padding: 12px 8px;
+            font-size: 10px;
+          }
+
+          .accountPageTitleRow h3 {
+            font-size: 30px;
+          }
+
+          .accountOrderSlide {
+            flex-basis: 92%;
+          }
+
+          .accountFullActions {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+          }
+
+          .accountFullActions button,
+          .accountFullActions a {
+            min-width: 0;
+            width: 100%;
+          }
+        }
+
 `}</style>
 
       <div className="scrollProgress" style={{ width: `${scrollProgress}%` }} />
@@ -5444,11 +5875,11 @@ export default function App() {
               </button>
 
               <nav className="navLinks">
-                <a href="#story">{t.navAbout}</a>
+                <a href="#story" onClick={() => setAccountPageOpen(false)}>{t.navAbout}</a>
               </nav>
             </div>
 
-            <a href="#top" className="brandMark">
+            <a href="#top" className="brandMark" onClick={() => setAccountPageOpen(false)}>
               <h1>LA GRAZIA</h1>
               <p>{t.womenOnly}</p>
             </a>
@@ -5469,7 +5900,20 @@ export default function App() {
 
               <button
                 className={accountUser ? "pillBtn signInBtn signedAccountBtn" : "pillBtn signInBtn"}
-                onClick={() => { setAuthMode("signIn"); setSignInOpen(true); }}
+                onClick={() => {
+                  if (accountUser) {
+                    setAccountPageOpen(true);
+                    setAccountView("profile");
+                    fetchUserOrders();
+                    setMenuOpen(false);
+                    setSearchOpen(false);
+                    setCartOpen(false);
+                    window.scrollTo({ top: 0, behavior: "smooth" });
+                  } else {
+                    setAuthMode("signIn");
+                    setSignInOpen(true);
+                  }
+                }}
                 aria-label={accountUser ? t.myAccount : t.signIn}
               >
                 <span className="accountShortName">
@@ -5494,6 +5938,163 @@ export default function App() {
           </div>
         </header>
 
+        {accountPageOpen && accountUser ? (
+          <main className="accountPageMain">
+            <section className="accountFullShell reveal visible">
+              <aside className="accountFullHero">
+                <div className="accountFullAvatar">{accountInitials}</div>
+                <p className="eyebrow">{isArabic ? "حساب لا غراتسيا" : "La Grazia Account"}</p>
+                <h2>{isArabic ? "مساحتك الخاصة" : "Your Private Profile"}</h2>
+                <p>
+                  {isArabic
+                    ? "تابعي بياناتك وطلباتك وحالة التوصيل من صفحة واحدة مصممة بأسلوب لا غراتسيا."
+                    : "Track your details, orders, and delivery status from one elegant La Grazia space."}
+                </p>
+
+                <div className="accountFullDetails">
+                  <div className="accountFullDetail">
+                    <small>{isArabic ? "الاسم" : "Name"}</small>
+                    <strong>{accountUser.name}</strong>
+                  </div>
+                  <div className="accountFullDetail">
+                    <small>{isArabic ? "الإيميل" : "Email"}</small>
+                    <strong>{accountUser.email}</strong>
+                  </div>
+                  <div className="accountFullDetail">
+                    <small>{isArabic ? "الهاتف" : "Phone"}</small>
+                    <strong>{accountUser.phone || (isArabic ? "غير مضاف" : "Not added")}</strong>
+                  </div>
+                </div>
+
+                <div className="accountFullActions">
+                  <button className="secondaryBtn" onClick={() => { setAccountPageOpen(false); window.setTimeout(() => document.getElementById("collection")?.scrollIntoView({ behavior: "smooth" }), 80); }}>
+                    {isArabic ? "تسوقي الآن" : "Continue Shopping"}
+                  </button>
+                  <button className="primaryBtn" onClick={handleSignOut}>
+                    {t.signOut}
+                  </button>
+                </div>
+              </aside>
+
+              <div className="accountFullContent">
+                <div className="accountFullTabs">
+                  <button
+                    type="button"
+                    className={accountView === "profile" ? "accountFullTab active" : "accountFullTab"}
+                    onClick={() => setAccountView("profile")}
+                  >
+                    {isArabic ? "الملف الشخصي" : "Profile"}
+                  </button>
+                  <button
+                    type="button"
+                    className={accountView === "orders" ? "accountFullTab active" : "accountFullTab"}
+                    onClick={() => { setAccountView("orders"); fetchUserOrders(); }}
+                  >
+                    {isArabic ? "طلباتي" : "My Orders"}
+                  </button>
+                </div>
+
+                {accountView === "profile" ? (
+                  <>
+                    <div className="accountPageTitleRow">
+                      <div>
+                        <p className="eyebrow">{isArabic ? "بيانات الحساب" : "Account Details"}</p>
+                        <h3>{isArabic ? "بياناتك المحفوظة" : "Saved Profile"}</h3>
+                        <p>{isArabic ? "هذه البيانات تساعدنا على تسهيل الدفع والتوصيل." : "These details help speed up checkout and delivery."}</p>
+                      </div>
+                    </div>
+
+                    <div className="accountProfileGrid">
+                      <div className="accountProfileCard">
+                        <small>{isArabic ? "الاسم" : "Name"}</small>
+                        <strong>{accountUser.name}</strong>
+                      </div>
+                      <div className="accountProfileCard">
+                        <small>{isArabic ? "الإيميل" : "Email"}</small>
+                        <strong>{accountUser.email}</strong>
+                      </div>
+                      <div className="accountProfileCard">
+                        <small>{isArabic ? "رقم الهاتف" : "Phone"}</small>
+                        <strong>{accountUser.phone || (isArabic ? "غير مضاف" : "Not added")}</strong>
+                      </div>
+                    </div>
+                  </>
+                ) : (
+                  <>
+                    <div className="accountPageTitleRow">
+                      <div>
+                        <p className="eyebrow">{isArabic ? "تتبع الطلبات" : "Order Tracking"}</p>
+                        <h3>{isArabic ? "طلباتي" : "My Orders"}</h3>
+                        <p>
+                          {isArabic
+                            ? "اسحبي يميناً أو يساراً لمشاهدة كل الطلبات عند وجود أكثر من طلب."
+                            : "Swipe or slide sideways to browse all orders when you have more than one."}
+                        </p>
+                      </div>
+                      <button className="secondaryBtn" onClick={() => fetchUserOrders()}>
+                        {isArabic ? "تحديث" : "Refresh"}
+                      </button>
+                    </div>
+
+                    {accountOrders.length === 0 ? (
+                      <div className="noOrdersBox">
+                        <strong>{isArabic ? "لا توجد طلبات حتى الآن" : "No orders yet"}</strong>
+                        <span>{isArabic ? "عند الدفع، سيظهر طلبك هنا لتتبعي حالته." : "When you pay, your order will appear here so you can track it."}</span>
+                      </div>
+                    ) : (
+                      <div className="accountOrdersCarousel" aria-label="Order history">
+                        {accountOrders.map((order) => {
+                          const statusSteps = ["Pending Payment", "Paid", "Preparing", "Out for Delivery", "Delivered"];
+                          const activeIndex = Math.max(0, statusSteps.findIndex((step) => step === order.order_status));
+
+                          return (
+                            <div className="accountOrderSlide" key={order.id}>
+                              <div className="orderCard">
+                                <div className="orderCardTop">
+                                  <div>
+                                    <small>{isArabic ? "رقم الطلب" : "Order"}</small>
+                                    <strong>{order.order_reference}</strong>
+                                  </div>
+                                  <span className="orderStatusPill">{order.order_status}</span>
+                                </div>
+
+                                <div className="orderMetaGrid">
+                                  <span>{isArabic ? "الدفع" : "Payment"}: {order.payment_status}</span>
+                                  <span>{isArabic ? "الإجمالي" : "Total"}: {order.currency} {Number(order.total_amount || 0).toLocaleString()}</span>
+                                  <span>{new Date(order.created_at).toLocaleDateString()}</span>
+                                </div>
+
+                                <div className="trackSteps">
+                                  {statusSteps.map((step, stepIndex) => (
+                                    <span key={step} className={stepIndex <= activeIndex ? "trackStep active" : "trackStep"}>
+                                      {step}
+                                    </span>
+                                  ))}
+                                </div>
+
+                                <div className="orderItemsList">
+                                  {order.order_items?.map((item) => (
+                                    <div className="orderMiniItem" key={item.id}>
+                                      {item.product_image && <img src={item.product_image} alt={item.product_name} />}
+                                      <div>
+                                        <strong>{item.product_name}</strong>
+                                        <span>Size: {item.size || "M"} · Color: {item.color || "Cream"} · Qty: {item.quantity}</span>
+                                      </div>
+                                    </div>
+                                  ))}
+                                </div>
+                              </div>
+                            </div>
+                          );
+                        })}
+                      </div>
+                    )}
+                  </>
+                )}
+              </div>
+            </section>
+          </main>
+        ) : (
         <main>
           <section className="hero">
             <div className="heroCopy">
@@ -5746,6 +6347,7 @@ export default function App() {
             </div>
           </section>
         </main>
+        )}
 
         <footer className="footer reveal">
           <div className="footerInner">
@@ -5755,10 +6357,10 @@ export default function App() {
             </div>
 
             <div className="footerLinks">
-              <a href="#collection">{t.shop}</a>
-              <a href="#size">{t.sizeGuide}</a>
-              <a href="#gift-card">{t.giftTitle}</a>
-              <a href="#story">{t.navAbout}</a>
+              <a href="#collection" onClick={() => setAccountPageOpen(false)}>{t.shop}</a>
+              <a href="#size" onClick={() => setAccountPageOpen(false)}>{t.sizeGuide}</a>
+              <a href="#gift-card" onClick={() => setAccountPageOpen(false)}>{t.giftTitle}</a>
+              <a href="#story" onClick={() => setAccountPageOpen(false)}>{t.navAbout}</a>
               <a href={`mailto:${BRAND_EMAIL}`}>{t.email}</a>
               <a href={createWhatsAppLink("Hello La Grazia, I want to contact you.")} target="_blank" rel="noreferrer">
                 {t.whatsapp}
@@ -5775,7 +6377,7 @@ export default function App() {
 
         <div className="mobileBottom">
           <a href="#top">{t.home}</a>
-          <a href="#collection">{t.shop}</a>
+          <a href="#collection" onClick={() => setAccountPageOpen(false)}>{t.shop}</a>
           <button onClick={() => setCartOpen(true)}>{t.bag}</button>
           <a href={createWhatsAppLink("Hello La Grazia, I want to order.")} target="_blank" rel="noreferrer">
             {t.whatsapp}
