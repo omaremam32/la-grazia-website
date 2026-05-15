@@ -838,7 +838,9 @@ export default function App() {
   }, []);
 
   useEffect(() => {
-    const elements = document.querySelectorAll(".reveal");
+    if (accountPageOpen) return;
+
+    const elements = Array.from(document.querySelectorAll(".reveal"));
 
     const observer = new IntersectionObserver(
       (entries) => {
@@ -846,18 +848,37 @@ export default function App() {
           if (entry.isIntersecting) {
             window.setTimeout(() => {
               entry.target.classList.add("visible");
-            }, index * 70);
+            }, index * 75);
             observer.unobserve(entry.target);
           }
         });
       },
-      { threshold: 0.08 }
+      { threshold: 0.1, rootMargin: "0px 0px -8% 0px" }
     );
 
-    elements.forEach((element) => observer.observe(element));
+    elements.forEach((element, index) => {
+      const box = element.getBoundingClientRect();
+      const isAlreadyPassed = box.bottom < 0;
+      const isInFirstView = box.top < window.innerHeight * 0.92;
+
+      if (isAlreadyPassed) {
+        element.classList.add("visible");
+        return;
+      }
+
+      if (isInFirstView) {
+        window.setTimeout(() => {
+          element.classList.add("visible");
+        }, index * 55);
+        return;
+      }
+
+      element.classList.remove("visible");
+      observer.observe(element);
+    });
 
     return () => observer.disconnect();
-  }, [language, searchTerm, activeFilter, collectionFilter, sortOption, wishlist.length, accountPageOpen]);
+  }, [language, searchTerm, activeFilter, collectionFilter, sortOption, wishlist.length, accountPageOpen, filteredProducts.length]);
 
   useEffect(() => {
     if (!toast) return;
@@ -895,18 +916,6 @@ export default function App() {
 
     return () => data.subscription.unsubscribe();
   }, []);
-
-  useEffect(() => {
-    if (accountPageOpen) return;
-
-    const timer = window.setTimeout(() => {
-      document.querySelectorAll(".reveal").forEach((element) => {
-        element.classList.add("visible");
-      });
-    }, 120);
-
-    return () => window.clearTimeout(timer);
-  }, [accountPageOpen]);
 
   async function handleSupabaseSession(nextSession: Session | null) {
     setSession(nextSession);
@@ -1340,6 +1349,7 @@ export default function App() {
           opacity: 0;
           transform: translateY(44px);
           transition: opacity 1.15s cubic-bezier(.16, 1, .3, 1), transform 1.15s cubic-bezier(.16, 1, .3, 1);
+          will-change: opacity, transform;
         }
 
         .reveal.visible {
