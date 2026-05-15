@@ -15,6 +15,11 @@ export default async function handler(req, res) {
     const publicKey = process.env.PAYMOB_PUBLIC_KEY;
     const integrationId = process.env.PAYMOB_INTEGRATION_ID;
 
+    const siteUrl =
+      process.env.VERCEL_PROJECT_PRODUCTION_URL
+        ? `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}`
+        : process.env.SITE_URL || "https://la-grazia-website.vercel.app";
+
     if (!secretKey || !publicKey || !integrationId) {
       return res.status(500).json({
         error: "Missing Paymob environment variables on Vercel.",
@@ -26,7 +31,7 @@ export default async function handler(req, res) {
       });
     }
 
-    const { items, customer } = req.body || {};
+    const { items, customer, orderReference: sentOrderReference } = req.body || {};
 
     if (!items || !Array.isArray(items) || items.length === 0) {
       return res.status(400).json({ error: "Your bag is empty." });
@@ -52,12 +57,15 @@ export default async function handler(req, res) {
       return res.status(400).json({ error: "Invalid payment amount." });
     }
 
-    const orderReference = `LG-${Date.now()}`;
+    const orderReference = sentOrderReference || `LG-${Date.now()}`;
 
     const payload = {
       amount,
       currency: "EGP",
       payment_methods: [Number(integrationId)],
+      special_reference: orderReference,
+      notification_url: `${siteUrl}/api/paymob-webhook`,
+      redirection_url: `${siteUrl}/#account`,
       items: cleanItems,
       billing_data: {
         first_name: customer?.firstName || "La",
@@ -73,6 +81,7 @@ export default async function handler(req, res) {
       },
       extras: {
         merchant_order_id: orderReference,
+        order_reference: orderReference,
       },
     };
 
@@ -110,6 +119,8 @@ export default async function handler(req, res) {
     return res.status(200).json({
       checkoutUrl,
       orderReference,
+      paymobIntentionId: data.id || data.intention_id || null,
+      paymobClientSecret: clientSecret,
     });
   } catch (error) {
     return res.status(500).json({
