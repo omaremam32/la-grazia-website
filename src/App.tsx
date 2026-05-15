@@ -29,6 +29,44 @@ type AccountUser = {
   email: string;
   phone: string;
   isAdmin?: boolean;
+  addressLine?: string;
+  city?: string;
+  area?: string;
+  building?: string;
+  floor?: string;
+  apartment?: string;
+  deliveryNotes?: string;
+};
+
+type AccountAddress = {
+  id: string;
+  user_id: string;
+  label: string | null;
+  full_name: string | null;
+  phone: string | null;
+  city: string | null;
+  area: string | null;
+  street: string | null;
+  building: string | null;
+  floor: string | null;
+  apartment: string | null;
+  delivery_notes: string | null;
+  is_default: boolean;
+  created_at?: string | null;
+};
+
+type AddressForm = {
+  label: string;
+  fullName: string;
+  phone: string;
+  city: string;
+  area: string;
+  street: string;
+  building: string;
+  floor: string;
+  apartment: string;
+  deliveryNotes: string;
+  isDefault: boolean;
 };
 
 type AccountOrderItem = {
@@ -70,6 +108,20 @@ const supabase =
   SUPABASE_URL && SUPABASE_ANON_KEY
     ? createClient(SUPABASE_URL, SUPABASE_ANON_KEY)
     : null;
+
+const emptyAddressForm: AddressForm = {
+  label: "Home",
+  fullName: "",
+  phone: "",
+  city: "Cairo",
+  area: "",
+  street: "",
+  building: "",
+  floor: "",
+  apartment: "",
+  deliveryNotes: "",
+  isDefault: true,
+};
 
 const products: Product[] = [
   {
@@ -653,6 +705,23 @@ export default function App() {
   const [authMode, setAuthMode] = useState<"signIn" | "signUp">("signIn");
   const [accountUser, setAccountUser] = useState<AccountUser | null>(null);
   const [accountForm, setAccountForm] = useState({ name: "", email: "", phone: "", password: "" });
+  const [profileForm, setProfileForm] = useState({
+    name: "",
+    email: "",
+    phone: "",
+    addressLine: "",
+    city: "Cairo",
+    area: "",
+    building: "",
+    floor: "",
+    apartment: "",
+    deliveryNotes: "",
+  });
+  const [addresses, setAddresses] = useState<AccountAddress[]>([]);
+  const [addressForm, setAddressForm] = useState<AddressForm>(emptyAddressForm);
+  const [editingAddressId, setEditingAddressId] = useState<string | null>(null);
+  const [profileSaving, setProfileSaving] = useState(false);
+  const [addressSaving, setAddressSaving] = useState(false);
   const [session, setSession] = useState<Session | null>(null);
   const [accountLoading, setAccountLoading] = useState(false);
   const [accountView, setAccountView] = useState<"profile" | "orders" | "admin">("profile");
@@ -703,6 +772,10 @@ export default function App() {
       email === "omaromohamed2003@gmail.com"
     );
   }, [accountUser]);
+
+  const defaultAddress = useMemo(() => {
+    return addresses.find((address) => address.is_default) || addresses[0] || null;
+  }, [addresses]);
 
   const bestSellers = products.filter((product) =>
     ["Milano Cream Palazzo Trouser", "Vaticano Printed Silk Scarf", "Bianca Off-Shoulder Knit", "Firenze Cream Tailored Vest"].includes(product.name)
@@ -924,6 +997,10 @@ export default function App() {
       setAccountUser(null);
       setAccountOrders([]);
       setAdminOrders([]);
+      setAddresses([]);
+      setProfileForm({ name: "", email: "", phone: "", addressLine: "", city: "Cairo", area: "", building: "", floor: "", apartment: "", deliveryNotes: "" });
+      setAddressForm(emptyAddressForm);
+      setEditingAddressId(null);
       return;
     }
 
@@ -932,7 +1009,7 @@ export default function App() {
 
     const { data: profile } = await supabase
       .from("profiles")
-      .select("id, full_name, email, phone, is_admin")
+      .select("id, full_name, email, phone, is_admin, address_line, city, area, building, floor, apartment, delivery_notes")
       .eq("id", user.id)
       .maybeSingle();
 
@@ -942,15 +1019,213 @@ export default function App() {
       email: String(profile?.email || user.email || ""),
       phone: String(profile?.phone || metadata.phone || ""),
       isAdmin: Boolean(profile?.is_admin),
+      addressLine: String(profile?.address_line || ""),
+      city: String(profile?.city || "Cairo"),
+      area: String(profile?.area || ""),
+      building: String(profile?.building || ""),
+      floor: String(profile?.floor || ""),
+      apartment: String(profile?.apartment || ""),
+      deliveryNotes: String(profile?.delivery_notes || ""),
     };
 
     setAccountUser(nextUser);
     setAccountForm({ name: nextUser.name, email: nextUser.email, phone: nextUser.phone, password: "" });
+    setProfileForm({
+      name: nextUser.name,
+      email: nextUser.email,
+      phone: nextUser.phone,
+      addressLine: nextUser.addressLine || "",
+      city: nextUser.city || "Cairo",
+      area: nextUser.area || "",
+      building: nextUser.building || "",
+      floor: nextUser.floor || "",
+      apartment: nextUser.apartment || "",
+      deliveryNotes: nextUser.deliveryNotes || "",
+    });
     fetchUserOrders(user.id);
+    fetchUserAddresses(user.id);
     const email = String(profile?.email || user.email || "").trim().toLowerCase();
     if (Boolean(profile?.is_admin) || email === BRAND_EMAIL.toLowerCase() || email === "omaromohamed2003@gmail.com") {
       fetchAdminOrders();
     }
+  }
+
+  async function fetchUserAddresses(userId = session?.user?.id) {
+    if (!supabase || !userId) return;
+
+    const { data, error } = await supabase
+      .from("addresses")
+      .select("id, user_id, label, full_name, phone, city, area, street, building, floor, apartment, delivery_notes, is_default, created_at")
+      .eq("user_id", userId)
+      .order("is_default", { ascending: false })
+      .order("created_at", { ascending: false });
+
+    if (error) {
+      console.error(error);
+      return;
+    }
+
+    setAddresses((data || []) as AccountAddress[]);
+  }
+
+  async function saveProfileDetails(event?: React.FormEvent<HTMLFormElement>) {
+    event?.preventDefault();
+    if (!supabase || !session?.user?.id || !accountUser) return;
+
+    setProfileSaving(true);
+
+    const payload = {
+      id: session.user.id,
+      full_name: profileForm.name.trim() || accountUser.name,
+      email: accountUser.email,
+      phone: profileForm.phone.trim(),
+      address_line: profileForm.addressLine.trim(),
+      city: profileForm.city.trim() || "Cairo",
+      area: profileForm.area.trim(),
+      building: profileForm.building.trim(),
+      floor: profileForm.floor.trim(),
+      apartment: profileForm.apartment.trim(),
+      delivery_notes: profileForm.deliveryNotes.trim(),
+      updated_at: new Date().toISOString(),
+    };
+
+    const { error } = await supabase.from("profiles").upsert(payload);
+
+    if (error) {
+      console.error(error);
+      setToast(error.message);
+      setProfileSaving(false);
+      return;
+    }
+
+    setAccountUser((current) => current ? {
+      ...current,
+      name: payload.full_name,
+      phone: payload.phone,
+      addressLine: payload.address_line,
+      city: payload.city,
+      area: payload.area,
+      building: payload.building,
+      floor: payload.floor,
+      apartment: payload.apartment,
+      deliveryNotes: payload.delivery_notes,
+    } : current);
+
+    setToast(isArabic ? "تم حفظ بيانات الحساب" : "Profile details saved");
+    setProfileSaving(false);
+  }
+
+  function resetAddressForm() {
+    setEditingAddressId(null);
+    setAddressForm({
+      ...emptyAddressForm,
+      fullName: accountUser?.name || "",
+      phone: accountUser?.phone || "",
+      city: accountUser?.city || "Cairo",
+    });
+  }
+
+  function startEditAddress(address: AccountAddress) {
+    setEditingAddressId(address.id);
+    setAddressForm({
+      label: address.label || "Home",
+      fullName: address.full_name || accountUser?.name || "",
+      phone: address.phone || accountUser?.phone || "",
+      city: address.city || "Cairo",
+      area: address.area || "",
+      street: address.street || "",
+      building: address.building || "",
+      floor: address.floor || "",
+      apartment: address.apartment || "",
+      deliveryNotes: address.delivery_notes || "",
+      isDefault: Boolean(address.is_default),
+    });
+  }
+
+  async function saveAddress(event?: React.FormEvent<HTMLFormElement>) {
+    event?.preventDefault();
+    if (!supabase || !session?.user?.id) return;
+
+    setAddressSaving(true);
+
+    if (addressForm.isDefault) {
+      await supabase
+        .from("addresses")
+        .update({ is_default: false, updated_at: new Date().toISOString() })
+        .eq("user_id", session.user.id);
+    }
+
+    const payload = {
+      user_id: session.user.id,
+      label: addressForm.label.trim() || "Home",
+      full_name: addressForm.fullName.trim() || accountUser?.name || "La Grazia Client",
+      phone: addressForm.phone.trim() || accountUser?.phone || "",
+      city: addressForm.city.trim() || "Cairo",
+      area: addressForm.area.trim(),
+      street: addressForm.street.trim(),
+      building: addressForm.building.trim(),
+      floor: addressForm.floor.trim(),
+      apartment: addressForm.apartment.trim(),
+      delivery_notes: addressForm.deliveryNotes.trim(),
+      is_default: addressForm.isDefault || addresses.length === 0,
+      updated_at: new Date().toISOString(),
+    };
+
+    const query = editingAddressId
+      ? supabase.from("addresses").update(payload).eq("id", editingAddressId).eq("user_id", session.user.id)
+      : supabase.from("addresses").insert(payload);
+
+    const { error } = await query;
+
+    if (error) {
+      console.error(error);
+      setToast(error.message);
+      setAddressSaving(false);
+      return;
+    }
+
+    await fetchUserAddresses(session.user.id);
+    resetAddressForm();
+    setToast(isArabic ? "تم حفظ عنوان التوصيل" : "Delivery address saved");
+    setAddressSaving(false);
+  }
+
+  async function deleteAddress(addressId: string) {
+    if (!supabase || !session?.user?.id) return;
+
+    const { error } = await supabase
+      .from("addresses")
+      .delete()
+      .eq("id", addressId)
+      .eq("user_id", session.user.id);
+
+    if (error) {
+      setToast(error.message);
+      return;
+    }
+
+    await fetchUserAddresses(session.user.id);
+    if (editingAddressId === addressId) resetAddressForm();
+    setToast(isArabic ? "تم حذف العنوان" : "Address removed");
+  }
+
+  async function makeDefaultAddress(address: AccountAddress) {
+    if (!supabase || !session?.user?.id) return;
+
+    await supabase.from("addresses").update({ is_default: false }).eq("user_id", session.user.id);
+    const { error } = await supabase
+      .from("addresses")
+      .update({ is_default: true, updated_at: new Date().toISOString() })
+      .eq("id", address.id)
+      .eq("user_id", session.user.id);
+
+    if (error) {
+      setToast(error.message);
+      return;
+    }
+
+    fetchUserAddresses(session.user.id);
+    setToast(isArabic ? "تم اختيار العنوان الافتراضي" : "Default address updated");
   }
 
   async function fetchUserOrders(userId = session?.user?.id) {
@@ -1119,9 +1394,17 @@ export default function App() {
       }));
 
       const totalAmount = cart.reduce((total, item) => total + item.product.minPrice * item.quantity, 0);
-      const nameParts = accountUser.name.trim().split(" ").filter(Boolean);
+      const deliveryAddress = defaultAddress;
+      const checkoutName = deliveryAddress?.full_name || accountUser.name;
+      const nameParts = checkoutName.trim().split(" ").filter(Boolean);
       const firstName = nameParts[0] || "La";
       const lastName = nameParts.slice(1).join(" ") || "Grazia";
+      const checkoutPhone = deliveryAddress?.phone || accountUser.phone || `+${WHATSAPP_NUMBER}`;
+      const checkoutCity = deliveryAddress?.city || accountUser.city || "Cairo";
+      const checkoutStreet = [deliveryAddress?.area, deliveryAddress?.street, accountUser.addressLine].filter(Boolean).join(" - ") || "Cairo";
+      const checkoutBuilding = deliveryAddress?.building || accountUser.building || "1";
+      const checkoutFloor = deliveryAddress?.floor || accountUser.floor || "1";
+      const checkoutApartment = deliveryAddress?.apartment || accountUser.apartment || "1";
 
       const response = await fetch("/api/create-paymob-payment", {
         method: "POST",
@@ -1134,12 +1417,12 @@ export default function App() {
             firstName,
             lastName,
             email: accountUser.email || BRAND_EMAIL,
-            phone: accountUser.phone || `+${WHATSAPP_NUMBER}`,
-            city: "Cairo",
-            street: "Cairo",
-            building: "1",
-            floor: "1",
-            apartment: "1",
+            phone: checkoutPhone,
+            city: checkoutCity,
+            street: checkoutStreet,
+            building: checkoutBuilding,
+            floor: checkoutFloor,
+            apartment: checkoutApartment,
           },
         }),
       });
@@ -1179,9 +1462,9 @@ export default function App() {
             payment_status: "pending",
             order_status: "Pending Payment",
             paymob_checkout_url: checkoutUrl,
-            customer_name: accountUser.name,
+            customer_name: checkoutName,
             customer_email: accountUser.email,
-            customer_phone: accountUser.phone,
+            customer_phone: checkoutPhone,
           })
           .select("id")
           .single();
@@ -1294,6 +1577,10 @@ export default function App() {
 
     setAccountUser(null);
     setAccountForm({ name: "", email: "", phone: "", password: "" });
+    setProfileForm({ name: "", email: "", phone: "", addressLine: "", city: "Cairo", area: "", building: "", floor: "", apartment: "", deliveryNotes: "" });
+    setAddressForm(emptyAddressForm);
+    setEditingAddressId(null);
+    setAddresses([]);
     setAccountOrders([]);
     setAdminOrders([]);
     setSession(null);
@@ -6006,6 +6293,202 @@ export default function App() {
           overflow-wrap: anywhere;
         }
 
+        .profileEditPanel,
+        .addressBookPanel,
+        .addressFormPanel {
+          margin-top: 22px;
+          border: 1px solid rgba(176, 138, 69, 0.22);
+          background: rgba(255, 249, 240, 0.62);
+          border-radius: 28px;
+          padding: 22px;
+          box-shadow: 0 18px 42px rgba(36, 26, 20, 0.06);
+        }
+
+        .darkMode .profileEditPanel,
+        .darkMode .addressBookPanel,
+        .darkMode .addressFormPanel {
+          background: rgba(255, 249, 240, 0.055);
+          border-color: rgba(215, 180, 111, 0.28);
+        }
+
+        .miniSectionHead {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          gap: 16px;
+          margin-bottom: 18px;
+        }
+
+        .miniSectionHead.compact { margin-bottom: 12px; }
+
+        .miniSectionHead span {
+          display: block;
+          color: #b08a45;
+          font-size: 10px;
+          letter-spacing: 0.22em;
+          text-transform: uppercase;
+          margin-bottom: 7px;
+        }
+
+        .miniSectionHead strong {
+          font-family: Georgia, "Times New Roman", serif;
+          font-size: 26px;
+          font-weight: 500;
+          line-height: 1.1;
+        }
+
+        .luxurySmallBtn {
+          border: 1px solid rgba(176, 138, 69, 0.42);
+          border-radius: 999px;
+          padding: 12px 18px;
+          background: #2c1f18;
+          color: #fff9f0;
+          letter-spacing: 0.14em;
+          text-transform: uppercase;
+          font-size: 10px;
+          white-space: nowrap;
+          transition: transform 0.25s ease, box-shadow 0.25s ease;
+        }
+
+        .luxurySmallBtn.secondary {
+          background: transparent;
+          color: #2c1f18;
+        }
+
+        .darkMode .luxurySmallBtn.secondary { color: #fff9f0; }
+
+        .luxurySmallBtn:hover {
+          transform: translateY(-2px);
+          box-shadow: 0 12px 26px rgba(36, 26, 20, 0.14);
+        }
+
+        .profileFormGrid {
+          display: grid;
+          grid-template-columns: repeat(3, minmax(0, 1fr));
+          gap: 12px;
+        }
+
+        .profileFormGrid label,
+        .defaultCheck {
+          display: flex;
+          flex-direction: column;
+          gap: 7px;
+          color: #6a5545;
+          font-size: 12px;
+        }
+
+        .profileFormGrid label span {
+          color: #b08a45;
+          letter-spacing: 0.18em;
+          text-transform: uppercase;
+          font-size: 9px;
+        }
+
+        .profileFormGrid input {
+          width: 100%;
+          min-height: 46px;
+          border: 1px solid rgba(176, 138, 69, 0.26);
+          border-radius: 18px;
+          background: rgba(255, 249, 240, 0.76);
+          color: #241a14;
+          padding: 0 14px;
+          outline: 0;
+        }
+
+        .profileFormGrid input:focus {
+          border-color: rgba(176, 138, 69, 0.72);
+          box-shadow: 0 0 0 4px rgba(176, 138, 69, 0.10);
+        }
+
+        .profileFormGrid input:disabled {
+          opacity: 0.72;
+          cursor: not-allowed;
+        }
+
+        .darkMode .profileFormGrid input {
+          background: rgba(255, 249, 240, 0.08);
+          color: #fff9f0;
+          border-color: rgba(215, 180, 111, 0.30);
+        }
+
+        .profileWide { grid-column: 1 / -1; }
+
+        .addressCardsGrid {
+          display: grid;
+          grid-template-columns: repeat(2, minmax(0, 1fr));
+          gap: 14px;
+          margin-bottom: 18px;
+        }
+
+        .addressCard,
+        .emptyAddressCard {
+          border: 1px solid rgba(176, 138, 69, 0.22);
+          border-radius: 24px;
+          padding: 18px;
+          background: linear-gradient(135deg, rgba(255,249,240,0.86), rgba(239,227,210,0.58));
+        }
+
+        .addressCard.default {
+          border-color: rgba(176, 138, 69, 0.68);
+          box-shadow: 0 14px 30px rgba(176, 138, 69, 0.10);
+        }
+
+        .darkMode .addressCard,
+        .darkMode .emptyAddressCard {
+          background: rgba(255, 249, 240, 0.06);
+          border-color: rgba(215, 180, 111, 0.28);
+        }
+
+        .addressCard small {
+          display: block;
+          color: #b08a45;
+          letter-spacing: 0.18em;
+          text-transform: uppercase;
+          font-size: 9px;
+          margin-bottom: 8px;
+        }
+
+        .addressCard strong {
+          font-family: Georgia, "Times New Roman", serif;
+          font-size: 23px;
+          font-weight: 500;
+        }
+
+        .addressCard p,
+        .emptyAddressCard {
+          margin: 8px 0 0;
+          color: #6a5545;
+          line-height: 1.55;
+          overflow-wrap: anywhere;
+        }
+
+        .addressActions,
+        .addressFormActions {
+          display: flex;
+          flex-wrap: wrap;
+          gap: 8px;
+          margin-top: 14px;
+        }
+
+        .addressActions button {
+          border: 1px solid rgba(176, 138, 69, 0.26);
+          border-radius: 999px;
+          background: transparent;
+          color: inherit;
+          padding: 9px 12px;
+          font-size: 10px;
+          letter-spacing: 0.12em;
+          text-transform: uppercase;
+        }
+
+        .defaultCheck {
+          flex-direction: row;
+          align-items: center;
+          margin: 14px 0;
+        }
+
+        .defaultCheck input { accent-color: #2c1f18; }
+
         .accountOrdersCarousel {
           display: flex;
           gap: 16px;
@@ -6823,6 +7306,35 @@ export default function App() {
           }
         }
 
+
+        @media (max-width: 760px) {
+          .miniSectionHead {
+            align-items: flex-start;
+            flex-direction: column;
+          }
+
+          .miniSectionHead strong {
+            font-size: 22px;
+          }
+
+          .profileEditPanel,
+          .addressBookPanel,
+          .addressFormPanel {
+            padding: 16px;
+            border-radius: 22px;
+          }
+
+          .profileFormGrid,
+          .addressCardsGrid {
+            grid-template-columns: 1fr;
+          }
+
+          .addressFormActions .primaryBtn,
+          .addressFormActions .secondaryBtn,
+          .luxurySmallBtn {
+            width: 100%;
+          }
+        }
 `}</style>
 
       <div className="scrollProgress" style={{ width: `${scrollProgress}%` }} />
@@ -7318,6 +7830,91 @@ export default function App() {
                         <small>{isArabic ? "رقم الهاتف" : "Phone"}</small>
                         <strong>{accountUser.phone || (isArabic ? "غير مضاف" : "Not added")}</strong>
                       </div>
+                    </div>
+
+                    <form className="profileEditPanel" onSubmit={saveProfileDetails}>
+                      <div className="miniSectionHead">
+                        <div>
+                          <span>{isArabic ? "تعديل البيانات" : "Edit Profile"}</span>
+                          <strong>{isArabic ? "بيانات الحساب والتوصيل" : "Account and delivery details"}</strong>
+                        </div>
+                        <button type="submit" className="luxurySmallBtn" disabled={profileSaving}>
+                          {profileSaving ? (isArabic ? "جاري الحفظ..." : "Saving...") : (isArabic ? "حفظ البيانات" : "Save Details")}
+                        </button>
+                      </div>
+                      <div className="profileFormGrid">
+                        <label><span>{isArabic ? "الاسم" : "Name"}</span><input value={profileForm.name} onChange={(event) => setProfileForm((current) => ({ ...current, name: event.target.value }))} /></label>
+                        <label><span>{isArabic ? "الإيميل" : "Email"}</span><input value={profileForm.email} disabled /></label>
+                        <label><span>{isArabic ? "الهاتف" : "Phone"}</span><input value={profileForm.phone} onChange={(event) => setProfileForm((current) => ({ ...current, phone: event.target.value }))} /></label>
+                        <label><span>{isArabic ? "المدينة" : "City"}</span><input value={profileForm.city} onChange={(event) => setProfileForm((current) => ({ ...current, city: event.target.value }))} /></label>
+                        <label><span>{isArabic ? "المنطقة" : "Area"}</span><input value={profileForm.area} onChange={(event) => setProfileForm((current) => ({ ...current, area: event.target.value }))} /></label>
+                        <label><span>{isArabic ? "العنوان" : "Street / Address"}</span><input value={profileForm.addressLine} onChange={(event) => setProfileForm((current) => ({ ...current, addressLine: event.target.value }))} /></label>
+                        <label><span>{isArabic ? "المبنى" : "Building"}</span><input value={profileForm.building} onChange={(event) => setProfileForm((current) => ({ ...current, building: event.target.value }))} /></label>
+                        <label><span>{isArabic ? "الدور" : "Floor"}</span><input value={profileForm.floor} onChange={(event) => setProfileForm((current) => ({ ...current, floor: event.target.value }))} /></label>
+                        <label><span>{isArabic ? "الشقة" : "Apartment"}</span><input value={profileForm.apartment} onChange={(event) => setProfileForm((current) => ({ ...current, apartment: event.target.value }))} /></label>
+                        <label className="profileWide"><span>{isArabic ? "ملاحظات التوصيل" : "Delivery Notes"}</span><input value={profileForm.deliveryNotes} onChange={(event) => setProfileForm((current) => ({ ...current, deliveryNotes: event.target.value }))} /></label>
+                      </div>
+                    </form>
+
+                    <div className="addressBookPanel">
+                      <div className="miniSectionHead">
+                        <div>
+                          <span>{isArabic ? "دفتر العناوين" : "Address Book"}</span>
+                          <strong>{isArabic ? "اختاري عنوان التوصيل الافتراضي" : "Choose your default delivery address"}</strong>
+                        </div>
+                        <button type="button" className="luxurySmallBtn secondary" onClick={resetAddressForm}>
+                          {isArabic ? "عنوان جديد" : "New Address"}
+                        </button>
+                      </div>
+
+                      <div className="addressCardsGrid">
+                        {addresses.length === 0 ? (
+                          <div className="emptyAddressCard">
+                            {isArabic ? "لا توجد عناوين محفوظة بعد. أضيفي عنوانك لتسريع الدفع." : "No saved addresses yet. Add your delivery address to speed up checkout."}
+                          </div>
+                        ) : addresses.map((address) => (
+                          <article className={address.is_default ? "addressCard default" : "addressCard"} key={address.id}>
+                            <div>
+                              <small>{address.is_default ? (isArabic ? "افتراضي" : "Default") : (address.label || "Address")}</small>
+                              <strong>{address.label || "Home"}</strong>
+                              <p>{address.full_name || accountUser.name} · {address.phone || accountUser.phone}</p>
+                              <p>{[address.area, address.street, address.city].filter(Boolean).join(" · ")}</p>
+                              <p>{[address.building && `Bldg ${address.building}`, address.floor && `Floor ${address.floor}`, address.apartment && `Apt ${address.apartment}`].filter(Boolean).join(" · ")}</p>
+                            </div>
+                            <div className="addressActions">
+                              {!address.is_default && <button type="button" onClick={() => makeDefaultAddress(address)}>{isArabic ? "افتراضي" : "Default"}</button>}
+                              <button type="button" onClick={() => startEditAddress(address)}>{isArabic ? "تعديل" : "Edit"}</button>
+                              <button type="button" onClick={() => deleteAddress(address.id)}>{isArabic ? "حذف" : "Delete"}</button>
+                            </div>
+                          </article>
+                        ))}
+                      </div>
+
+                      <form className="addressFormPanel" onSubmit={saveAddress}>
+                        <div className="miniSectionHead compact">
+                          <div>
+                            <span>{editingAddressId ? (isArabic ? "تعديل عنوان" : "Edit Address") : (isArabic ? "إضافة عنوان" : "Add Address")}</span>
+                            <strong>{isArabic ? "سيستخدم في Paymob وواتساب" : "Used for Paymob and WhatsApp checkout"}</strong>
+                          </div>
+                        </div>
+                        <div className="profileFormGrid">
+                          <label><span>{isArabic ? "اسم العنوان" : "Label"}</span><input value={addressForm.label} onChange={(event) => setAddressForm((current) => ({ ...current, label: event.target.value }))} /></label>
+                          <label><span>{isArabic ? "اسم المستلم" : "Receiver Name"}</span><input value={addressForm.fullName} onChange={(event) => setAddressForm((current) => ({ ...current, fullName: event.target.value }))} /></label>
+                          <label><span>{isArabic ? "الهاتف" : "Phone"}</span><input value={addressForm.phone} onChange={(event) => setAddressForm((current) => ({ ...current, phone: event.target.value }))} /></label>
+                          <label><span>{isArabic ? "المدينة" : "City"}</span><input value={addressForm.city} onChange={(event) => setAddressForm((current) => ({ ...current, city: event.target.value }))} /></label>
+                          <label><span>{isArabic ? "المنطقة" : "Area"}</span><input value={addressForm.area} onChange={(event) => setAddressForm((current) => ({ ...current, area: event.target.value }))} /></label>
+                          <label><span>{isArabic ? "الشارع" : "Street"}</span><input value={addressForm.street} onChange={(event) => setAddressForm((current) => ({ ...current, street: event.target.value }))} /></label>
+                          <label><span>{isArabic ? "المبنى" : "Building"}</span><input value={addressForm.building} onChange={(event) => setAddressForm((current) => ({ ...current, building: event.target.value }))} /></label>
+                          <label><span>{isArabic ? "الدور" : "Floor"}</span><input value={addressForm.floor} onChange={(event) => setAddressForm((current) => ({ ...current, floor: event.target.value }))} /></label>
+                          <label><span>{isArabic ? "الشقة" : "Apartment"}</span><input value={addressForm.apartment} onChange={(event) => setAddressForm((current) => ({ ...current, apartment: event.target.value }))} /></label>
+                          <label className="profileWide"><span>{isArabic ? "ملاحظات" : "Notes"}</span><input value={addressForm.deliveryNotes} onChange={(event) => setAddressForm((current) => ({ ...current, deliveryNotes: event.target.value }))} /></label>
+                        </div>
+                        <label className="defaultCheck"><input type="checkbox" checked={addressForm.isDefault} onChange={(event) => setAddressForm((current) => ({ ...current, isDefault: event.target.checked }))} /> {isArabic ? "استخدامه كعنوان افتراضي" : "Use as default address"}</label>
+                        <div className="addressFormActions">
+                          <button type="submit" className="primaryBtn" disabled={addressSaving}>{addressSaving ? (isArabic ? "جاري الحفظ..." : "Saving...") : editingAddressId ? (isArabic ? "حفظ التعديل" : "Save Changes") : (isArabic ? "حفظ العنوان" : "Save Address")}</button>
+                          <button type="button" className="secondaryBtn" onClick={resetAddressForm}>{isArabic ? "إلغاء" : "Cancel"}</button>
+                        </div>
+                      </form>
                     </div>
                   </>
                 ) : accountView === "orders" ? (
