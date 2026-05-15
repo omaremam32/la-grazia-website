@@ -91,6 +91,13 @@ type AccountOrder = {
   customer_name?: string | null;
   customer_email?: string | null;
   customer_phone?: string | null;
+  delivery_city?: string | null;
+  delivery_area?: string | null;
+  delivery_street?: string | null;
+  delivery_building?: string | null;
+  delivery_floor?: string | null;
+  delivery_apartment?: string | null;
+  delivery_notes?: string | null;
   order_items?: AccountOrderItem[];
 };
 
@@ -727,6 +734,7 @@ export default function App() {
   const [accountView, setAccountView] = useState<"profile" | "orders" | "admin">("profile");
   const [accountOrders, setAccountOrders] = useState<AccountOrder[]>([]);
   const [adminOrders, setAdminOrders] = useState<AdminOrder[]>([]);
+  const [selectedOrder, setSelectedOrder] = useState<AccountOrder | AdminOrder | null>(null);
   const [adminLoading, setAdminLoading] = useState(false);
 
   const [searchTerm, setSearchTerm] = useState("");
@@ -776,6 +784,21 @@ export default function App() {
   const defaultAddress = useMemo(() => {
     return addresses.find((address) => address.is_default) || addresses[0] || null;
   }, [addresses]);
+
+  const selectedOrderAddress = useMemo(() => {
+    if (!selectedOrder) return isArabic ? "غير مضاف" : "Not added";
+
+    const parts = [
+      selectedOrder.delivery_area,
+      selectedOrder.delivery_street,
+      selectedOrder.delivery_building ? `${isArabic ? "مبنى" : "Building"} ${selectedOrder.delivery_building}` : "",
+      selectedOrder.delivery_floor ? `${isArabic ? "دور" : "Floor"} ${selectedOrder.delivery_floor}` : "",
+      selectedOrder.delivery_apartment ? `${isArabic ? "شقة" : "Apartment"} ${selectedOrder.delivery_apartment}` : "",
+      selectedOrder.delivery_city,
+    ].filter(Boolean);
+
+    return parts.length > 0 ? parts.join(" · ") : (isArabic ? "غير مضاف" : "Not added");
+  }, [selectedOrder, isArabic]);
 
   const bestSellers = products.filter((product) =>
     ["Milano Cream Palazzo Trouser", "Vaticano Printed Silk Scarf", "Bianca Off-Shoulder Knit", "Firenze Cream Tailored Vest"].includes(product.name)
@@ -997,6 +1020,7 @@ export default function App() {
       setAccountUser(null);
       setAccountOrders([]);
       setAdminOrders([]);
+      setSelectedOrder(null);
       setAddresses([]);
       setProfileForm({ name: "", email: "", phone: "", addressLine: "", city: "Cairo", area: "", building: "", floor: "", apartment: "", deliveryNotes: "" });
       setAddressForm(emptyAddressForm);
@@ -1233,7 +1257,7 @@ export default function App() {
 
     const { data, error } = await supabase
       .from("orders")
-      .select("id, order_reference, total_amount, currency, payment_status, order_status, created_at, order_items(id, product_name, product_image, size, color, quantity, unit_price, total_price)")
+      .select("id, order_reference, total_amount, currency, payment_status, order_status, created_at, customer_name, customer_email, customer_phone, delivery_city, delivery_area, delivery_street, delivery_building, delivery_floor, delivery_apartment, delivery_notes, order_items(id, product_name, product_image, size, color, quantity, unit_price, total_price)")
       .eq("user_id", userId)
       .order("created_at", { ascending: false });
 
@@ -1249,7 +1273,7 @@ export default function App() {
 
     const { data, error } = await supabase
       .from("orders")
-      .select("id, user_id, order_reference, total_amount, currency, payment_status, order_status, customer_name, customer_email, customer_phone, created_at, order_items(id, product_name, product_image, size, color, quantity, unit_price, total_price)")
+      .select("id, user_id, order_reference, total_amount, currency, payment_status, order_status, customer_name, customer_email, customer_phone, created_at, delivery_city, delivery_area, delivery_street, delivery_building, delivery_floor, delivery_apartment, delivery_notes, order_items(id, product_name, product_image, size, color, quantity, unit_price, total_price)")
       .order("created_at", { ascending: false });
 
     if (error) {
@@ -1465,6 +1489,13 @@ export default function App() {
             customer_name: checkoutName,
             customer_email: accountUser.email,
             customer_phone: checkoutPhone,
+            delivery_city: checkoutCity,
+            delivery_area: deliveryAddress?.area || accountUser.area || "",
+            delivery_street: checkoutStreet,
+            delivery_building: checkoutBuilding,
+            delivery_floor: checkoutFloor,
+            delivery_apartment: checkoutApartment,
+            delivery_notes: deliveryAddress?.delivery_notes || accountUser.deliveryNotes || "",
           })
           .select("id")
           .single();
@@ -1583,6 +1614,7 @@ export default function App() {
     setAddresses([]);
     setAccountOrders([]);
     setAdminOrders([]);
+    setSelectedOrder(null);
     setSession(null);
     setAuthMode("signIn");
     setAccountPageOpen(false);
@@ -7335,6 +7367,247 @@ export default function App() {
             width: 100%;
           }
         }
+
+        .orderDetailsPage {
+          animation: fadeUp 0.55s cubic-bezier(.16, 1, .3, 1) both;
+        }
+
+        .orderDetailsTitleRow {
+          align-items: center;
+        }
+
+        .orderDetailsHeroCard {
+          display: grid;
+          grid-template-columns: repeat(4, minmax(0, 1fr));
+          gap: 14px;
+          margin: 22px 0;
+        }
+
+        .orderDetailsHeroCard > div,
+        .orderDetailsPanel,
+        .orderDetailsStep {
+          border: 1px solid rgba(176, 138, 69, 0.25);
+          background: rgba(255, 249, 240, 0.74);
+          border-radius: 24px;
+          box-shadow: 0 14px 32px rgba(36, 26, 20, 0.06);
+        }
+
+        .darkMode .orderDetailsHeroCard > div,
+        .darkMode .orderDetailsPanel,
+        .darkMode .orderDetailsStep {
+          background: rgba(255, 249, 240, 0.07);
+          border-color: rgba(215, 180, 111, 0.34);
+        }
+
+        .orderDetailsHeroCard > div {
+          padding: 20px;
+        }
+
+        .orderDetailsHeroCard small,
+        .orderDetailsInfoBlock small {
+          display: block;
+          color: #b08a45;
+          text-transform: uppercase;
+          letter-spacing: 0.16em;
+          font-size: 10px;
+          margin-bottom: 8px;
+        }
+
+        .orderDetailsHeroCard strong {
+          display: block;
+          font-family: Georgia, "Times New Roman", serif;
+          font-size: 22px;
+          font-weight: 500;
+          color: #241a14;
+        }
+
+        .orderDetailsTracking {
+          display: grid;
+          grid-template-columns: repeat(5, minmax(0, 1fr));
+          gap: 12px;
+          margin: 22px 0;
+        }
+
+        .orderDetailsStep {
+          padding: 16px 14px;
+          display: flex;
+          align-items: center;
+          gap: 10px;
+          opacity: 0.62;
+        }
+
+        .orderDetailsStep span {
+          width: 28px;
+          height: 28px;
+          border-radius: 999px;
+          display: grid;
+          place-items: center;
+          background: #efe3d2;
+          color: #2c1f18;
+          font-size: 11px;
+          font-weight: 700;
+          flex: 0 0 auto;
+        }
+
+        .orderDetailsStep strong {
+          font-size: 11px;
+          letter-spacing: 0.08em;
+          text-transform: uppercase;
+          line-height: 1.35;
+        }
+
+        .orderDetailsStep.active {
+          opacity: 1;
+          border-color: rgba(176, 138, 69, 0.50);
+          background: linear-gradient(135deg, rgba(255, 249, 240, 0.96), rgba(232, 214, 189, 0.62));
+        }
+
+        .orderDetailsStep.active span {
+          background: #2c1f18;
+          color: #fff9f0;
+        }
+
+        .darkMode .orderDetailsStep.active {
+          background: rgba(215, 180, 111, 0.18);
+        }
+
+        .darkMode .orderDetailsStep.active span {
+          background: #d7b46f;
+          color: #211713;
+        }
+
+        .orderDetailsGrid {
+          display: grid;
+          grid-template-columns: minmax(0, 1.25fr) minmax(310px, 0.75fr);
+          gap: 18px;
+          align-items: start;
+        }
+
+        .orderDetailsPanel {
+          padding: 24px;
+        }
+
+        .orderDetailsItemsList {
+          display: flex;
+          flex-direction: column;
+          gap: 12px;
+          margin-top: 16px;
+        }
+
+        .orderDetailsItem {
+          display: grid;
+          grid-template-columns: 74px 1fr;
+          gap: 14px;
+          align-items: center;
+          padding: 12px;
+          border-radius: 18px;
+          background: rgba(239, 227, 210, 0.48);
+        }
+
+        .darkMode .orderDetailsItem {
+          background: rgba(255, 249, 240, 0.06);
+        }
+
+        .orderDetailsItem img {
+          width: 74px;
+          height: 92px;
+          object-fit: cover;
+          object-position: top center;
+          border-radius: 14px;
+        }
+
+        .orderDetailsItem strong,
+        .orderDetailsInfoBlock strong {
+          display: block;
+          font-family: Georgia, "Times New Roman", serif;
+          font-size: 20px;
+          font-weight: 500;
+          color: #241a14;
+          line-height: 1.2;
+        }
+
+        .orderDetailsItem span,
+        .orderDetailsItem small,
+        .orderDetailsInfoBlock span {
+          display: block;
+          color: #6a5545;
+          line-height: 1.65;
+          margin-top: 4px;
+          font-size: 13px;
+        }
+
+        .orderDetailsInfoBlock {
+          padding-bottom: 18px;
+          margin-bottom: 18px;
+          border-bottom: 1px solid rgba(176, 138, 69, 0.20);
+        }
+
+        .orderDetailsInfoBlock:last-of-type {
+          border-bottom: 0;
+        }
+
+        .orderDetailsSupportBtn,
+        .orderDetailsOpenBtn {
+          width: 100%;
+          margin-top: 14px;
+        }
+
+        .adminDetailsBtn {
+          margin: 14px 0 4px;
+        }
+
+        @media (max-width: 980px) {
+          .orderDetailsHeroCard {
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+          }
+
+          .orderDetailsTracking {
+            grid-template-columns: 1fr;
+          }
+
+          .orderDetailsGrid {
+            grid-template-columns: 1fr;
+          }
+        }
+
+        @media (max-width: 640px) {
+          .orderDetailsHeroCard {
+            grid-template-columns: 1fr;
+            gap: 10px;
+          }
+
+          .orderDetailsHeroCard > div,
+          .orderDetailsPanel {
+            padding: 16px;
+            border-radius: 20px;
+          }
+
+          .orderDetailsHeroCard strong {
+            font-size: 18px;
+          }
+
+          .orderDetailsStep {
+            padding: 13px;
+          }
+
+          .orderDetailsItem {
+            grid-template-columns: 58px 1fr;
+            gap: 10px;
+            padding: 10px;
+          }
+
+          .orderDetailsItem img {
+            width: 58px;
+            height: 76px;
+            border-radius: 12px;
+          }
+
+          .orderDetailsItem strong,
+          .orderDetailsInfoBlock strong {
+            font-size: 16px;
+          }
+        }
+
 `}</style>
 
       <div className="scrollProgress" style={{ width: `${scrollProgress}%` }} />
@@ -7395,14 +7668,14 @@ export default function App() {
                   <button
                     type="button"
                     className={accountView === "profile" ? "profileTab active" : "profileTab"}
-                    onClick={() => setAccountView("profile")}
+                    onClick={() => { setAccountView("profile"); setSelectedOrder(null); }}
                   >
                     {isArabic ? "الملف الشخصي" : "Profile"}
                   </button>
                   <button
                     type="button"
                     className={accountView === "orders" ? "profileTab active" : "profileTab"}
-                    onClick={() => { setAccountView("orders"); fetchUserOrders(); }}
+                    onClick={() => { setAccountView("orders"); setSelectedOrder(null); fetchUserOrders(); }}
                   >
                     {isArabic ? "طلباتي" : "My Orders"}
                   </button>
@@ -7785,14 +8058,14 @@ export default function App() {
                   <button
                     type="button"
                     className={accountView === "profile" ? "accountFullTab active" : "accountFullTab"}
-                    onClick={() => setAccountView("profile")}
+                    onClick={() => { setAccountView("profile"); setSelectedOrder(null); }}
                   >
                     {isArabic ? "الملف الشخصي" : "Profile"}
                   </button>
                   <button
                     type="button"
                     className={accountView === "orders" ? "accountFullTab active" : "accountFullTab"}
-                    onClick={() => { setAccountView("orders"); fetchUserOrders(); }}
+                    onClick={() => { setAccountView("orders"); setSelectedOrder(null); fetchUserOrders(); }}
                   >
                     {isArabic ? "طلباتي" : "My Orders"}
                   </button>
@@ -7800,14 +8073,103 @@ export default function App() {
                     <button
                       type="button"
                       className={accountView === "admin" ? "accountFullTab active adminTab" : "accountFullTab adminTab"}
-                      onClick={() => { setAccountView("admin"); fetchAdminOrders(); }}
+                      onClick={() => { setAccountView("admin"); setSelectedOrder(null); fetchAdminOrders(); }}
                     >
                       {isArabic ? "لوحة التحكم" : "Admin"}
                     </button>
                   )}
                 </div>
 
-                {accountView === "profile" ? (
+                {selectedOrder ? (
+                  <div className="orderDetailsPage">
+                    <div className="accountPageTitleRow orderDetailsTitleRow">
+                      <div>
+                        <p className="eyebrow">{isArabic ? "تفاصيل الطلب" : "Order Details"}</p>
+                        <h3>{selectedOrder.order_reference}</h3>
+                        <p>{isArabic ? "راجعي كل تفاصيل الطلب، المنتجات، العنوان، وحالة التوصيل من صفحة واحدة." : "Review the full order, products, delivery address, and tracking status in one clean page."}</p>
+                      </div>
+                      <button className="secondaryBtn" onClick={() => setSelectedOrder(null)}>
+                        {isArabic ? "العودة للطلبات" : "Back to Orders"}
+                      </button>
+                    </div>
+
+                    <div className="orderDetailsHeroCard">
+                      <div>
+                        <small>{isArabic ? "حالة الطلب" : "Order Status"}</small>
+                        <strong>{selectedOrder.order_status}</strong>
+                      </div>
+                      <div>
+                        <small>{isArabic ? "حالة الدفع" : "Payment Status"}</small>
+                        <strong>{selectedOrder.payment_status}</strong>
+                      </div>
+                      <div>
+                        <small>{isArabic ? "الإجمالي" : "Total"}</small>
+                        <strong>{selectedOrder.currency} {Number(selectedOrder.total_amount || 0).toLocaleString()}</strong>
+                      </div>
+                      <div>
+                        <small>{isArabic ? "تاريخ الطلب" : "Order Date"}</small>
+                        <strong>{new Date(selectedOrder.created_at).toLocaleDateString()}</strong>
+                      </div>
+                    </div>
+
+                    <div className="orderDetailsTracking">
+                      {["Pending Payment", "Paid", "Preparing", "Out for Delivery", "Delivered"].map((step, index) => {
+                        const activeIndex = Math.max(0, ["Pending Payment", "Paid", "Preparing", "Out for Delivery", "Delivered"].findIndex((item) => item === selectedOrder.order_status));
+                        return (
+                          <div className={index <= activeIndex ? "orderDetailsStep active" : "orderDetailsStep"} key={step}>
+                            <span>{index + 1}</span>
+                            <strong>{step}</strong>
+                          </div>
+                        );
+                      })}
+                    </div>
+
+                    <div className="orderDetailsGrid">
+                      <section className="orderDetailsPanel orderDetailsItemsPanel">
+                        <div className="miniSectionHead">
+                          <div>
+                            <span>{isArabic ? "المنتجات" : "Items"}</span>
+                            <strong>{isArabic ? "القطع المطلوبة" : "Ordered pieces"}</strong>
+                          </div>
+                        </div>
+                        <div className="orderDetailsItemsList">
+                          {selectedOrder.order_items?.map((item) => (
+                            <div className="orderDetailsItem" key={item.id}>
+                              {item.product_image && <img src={item.product_image} alt={item.product_name} />}
+                              <div>
+                                <strong>{item.product_name}</strong>
+                                <span>Size: {item.size || "M"} · Color: {item.color || "Cream"} · Qty: {item.quantity}</span>
+                                <small>{selectedOrder.currency} {Number(item.total_price || 0).toLocaleString()}</small>
+                              </div>
+                            </div>
+                          ))}
+                        </div>
+                      </section>
+
+                      <aside className="orderDetailsPanel">
+                        <div className="orderDetailsInfoBlock">
+                          <small>{isArabic ? "بيانات العميل" : "Customer"}</small>
+                          <strong>{selectedOrder.customer_name || accountUser.name}</strong>
+                          <span>{selectedOrder.customer_email || accountUser.email}</span>
+                          <span>{selectedOrder.customer_phone || accountUser.phone || "-"}</span>
+                        </div>
+                        <div className="orderDetailsInfoBlock">
+                          <small>{isArabic ? "عنوان التوصيل" : "Delivery Address"}</small>
+                          <strong>{selectedOrderAddress}</strong>
+                          {selectedOrder.delivery_notes && <span>{selectedOrder.delivery_notes}</span>}
+                        </div>
+                        <a
+                          className="primaryBtn orderDetailsSupportBtn"
+                          href={createWhatsAppLink(`Hello La Grazia, I need support with order ${selectedOrder.order_reference}.`)}
+                          target="_blank"
+                          rel="noreferrer"
+                        >
+                          {isArabic ? "مساعدة عبر واتساب" : "WhatsApp Support"}
+                        </a>
+                      </aside>
+                    </div>
+                  </div>
+                ) : accountView === "profile" ? (
                   <>
                     <div className="accountPageTitleRow">
                       <div>
@@ -7981,6 +8343,10 @@ export default function App() {
                                     </div>
                                   ))}
                                 </div>
+
+                                <button type="button" className="luxurySmallBtn orderDetailsOpenBtn" onClick={() => setSelectedOrder(order)}>
+                                  {isArabic ? "عرض التفاصيل" : "View Details"}
+                                </button>
                               </div>
                             </div>
                           );
@@ -8048,6 +8414,14 @@ export default function App() {
                                 </div>
                               ))}
                             </div>
+
+                            <button
+                              type="button"
+                              className="luxurySmallBtn orderDetailsOpenBtn adminDetailsBtn"
+                              onClick={() => { setSelectedOrder(order); setAccountView("orders"); }}
+                            >
+                              {isArabic ? "عرض تفاصيل الطلب" : "View Order Details"}
+                            </button>
 
                             <div className="adminStatusButtons">
                               {["Pending Payment", "Paid", "Preparing", "Out for Delivery", "Delivered", "Cancelled"].map((status) => (
