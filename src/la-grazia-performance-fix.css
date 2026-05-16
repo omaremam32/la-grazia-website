@@ -1,0 +1,487 @@
+/* =========================================================
+   LA GRAZIA MOBILE CONTRAST + LAPTOP PERFORMANCE FIX
+   File: src/la-grazia-performance-fix.css
+   ========================================================= */
+
+/* ---------- Global readability ---------- */
+:root {
+  --lg-dark: #1f1712;
+  --lg-espresso: #2c1f18;
+  --lg-brown: #5f4c3f;
+  --lg-gold: #b08a45;
+  --lg-soft-gold: #d8bd87;
+  --lg-cream: #f7f1e8;
+  --lg-card: #f8efe1;
+  --lg-white: #fffaf2;
+}
+
+html,
+body {
+  max-width: 100%;
+  overflow-x: hidden;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+}
+
+body {
+  color: var(--lg-dark);
+}
+
+/* ---------- Fix pale/white text on mobile hero ---------- */
+.heroTitle,
+.hero h1,
+.heroCard h1,
+.heroContent h1,
+.heroText h1,
+.heroCopy h1,
+.heroMainTitle,
+.sectionTitle,
+.logo,
+.brandLogo,
+.headerLogo,
+.siteLogo,
+.productInfo h4,
+.accountTitle,
+.modalTitle,
+.policyTitle,
+.pageTitle {
+  color: var(--lg-dark) !important;
+  text-shadow: none !important;
+  opacity: 1 !important;
+}
+
+.heroEyebrow,
+.eyebrow,
+.category,
+.subtitle,
+.brandSubtitle,
+.kicker,
+.goldText,
+.productTag,
+.accountEyebrow {
+  color: var(--lg-gold) !important;
+  opacity: 1 !important;
+}
+
+.heroDescription,
+.hero p,
+.heroCard p,
+.heroContent p,
+.heroText p,
+.productDescription,
+.accountText,
+.storyText,
+.policyText,
+.modalText {
+  color: var(--lg-brown) !important;
+  opacity: 1 !important;
+}
+
+/* ---------- Header/logo mobile visibility ---------- */
+@media (max-width: 768px) {
+  .logo,
+  .brandLogo,
+  .headerLogo,
+  .siteLogo,
+  .navLogo,
+  .mobileLogo {
+    color: var(--lg-dark) !important;
+    opacity: 1 !important;
+    text-shadow: none !important;
+    filter: none !important;
+  }
+
+  .logo span,
+  .brandLogo span,
+  .headerLogo span,
+  .siteLogo span {
+    color: inherit !important;
+    opacity: 1 !important;
+  }
+
+  .brandSubtitle,
+  .logoSubtitle,
+  .womenOnly,
+  .headerTagline {
+    color: var(--lg-gold) !important;
+    opacity: 1 !important;
+  }
+}
+
+/* ---------- Mobile hero luxury but readable ---------- */
+@media (max-width: 768px) {
+  .hero,
+  .heroSection {
+    padding-top: 24px !important;
+    overflow: hidden !important;
+  }
+
+  .heroCard,
+  .heroPanel,
+  .heroContent,
+  .luxuryHeroCard {
+    background: linear-gradient(145deg, #f8efe1 0%, #f6ead8 100%) !important;
+    border-color: rgba(176, 138, 69, 0.28) !important;
+    box-shadow: 0 18px 45px rgba(44, 31, 24, 0.08) !important;
+  }
+
+  .heroTitle,
+  .hero h1,
+  .heroCard h1,
+  .heroContent h1,
+  .heroText h1,
+  .heroCopy h1,
+  .heroMainTitle {
+    color: var(--lg-dark) !important;
+    font-size: clamp(44px, 13vw, 72px) !important;
+    line-height: 0.98 !important;
+    letter-spacing: -0.04em !important;
+    opacity: 1 !important;
+  }
+
+  .heroEyebrow,
+  .heroCard .eyebrow,
+  .heroContent .eyebrow {
+    color: var(--lg-gold) !important;
+    letter-spacing: 0.38em !important;
+    opacity: 1 !important;
+  }
+
+  .heroDescription,
+  .hero p,
+  .heroCard p,
+  .heroContent p,
+  .heroText p {
+    color: var(--lg-brown) !important;
+    font-size: 17px !important;
+    line-height: 1.75 !important;
+    opacity: 1 !important;
+  }
+}
+
+/* ---------- Button contrast ---------- */
+.primaryBtn,
+.shopBtn,
+.addBtn,
+.checkoutBtn,
+.payBtn,
+.saveBtn,
+.confirmBtn,
+button.primary,
+a.primaryBtn {
+  color: var(--lg-white) !important;
+  background: var(--lg-espresso) !important;
+  border-color: var(--lg-espresso) !important;
+}
+
+.secondaryBtn,
+.outlineBtn,
+.findBtn,
+.viewBtn,
+button.secondary,
+a.secondaryBtn {
+  color: var(--lg-espresso) !important;
+  border-color: var(--lg-gold) !important;
+}
+
+.secondaryBtn:hover,
+.outlineBtn:hover,
+.findBtn:hover,
+.viewBtn:hover {
+  background: rgba(176, 138, 69, 0.10) !important;
+}
+
+/* ---------- Top announcement bar readability ---------- */
+.topBar,
+.deliveryBar,
+.announcementBar,
+.topAnnouncement {
+  color: var(--lg-cream) !important;
+  background: var(--lg-espresso) !important;
+}
+
+.topBar *,
+.deliveryBar *,
+.announcementBar *,
+.topAnnouncement * {
+  color: var(--lg-cream) !important;
+}
+
+/* ---------- Mobile bottom navigation readability ---------- */
+@media (max-width: 768px) {
+  .bottomNav,
+  .mobileBottomNav,
+  .floatingBottomNav {
+    background: rgba(44, 31, 24, 0.96) !important;
+    border-color: rgba(255, 250, 242, 0.08) !important;
+    -webkit-backdrop-filter: none !important;
+    backdrop-filter: none !important;
+  }
+
+  .bottomNav a,
+  .bottomNav button,
+  .mobileBottomNav a,
+  .mobileBottomNav button,
+  .floatingBottomNav a,
+  .floatingBottomNav button {
+    color: var(--lg-white) !important;
+    opacity: 1 !important;
+  }
+}
+
+/* ---------- Product cards readable ---------- */
+.productCard,
+.luxuryCard,
+.accountCard,
+.policyCard,
+.supportCard,
+.reviewCard {
+  color: var(--lg-dark) !important;
+}
+
+.productCard h3,
+.productCard h4,
+.productCard h5,
+.luxuryCard h3,
+.accountCard h3,
+.policyCard h3 {
+  color: var(--lg-dark) !important;
+}
+
+.productCard p,
+.luxuryCard p,
+.accountCard p,
+.policyCard p,
+.supportCard p,
+.reviewCard p {
+  color: var(--lg-brown) !important;
+}
+
+/* ---------- Reduce heavy effects causing dropped frames ---------- */
+* {
+  scroll-behavior: auto;
+}
+
+.reveal,
+.reveal.visible,
+.productCard,
+.heroCard,
+.heroPanel,
+.luxuryCard,
+.accountCard,
+.menuPanel,
+.modal,
+.drawer,
+.cartDrawer,
+.searchOverlay,
+.accountPage,
+.productModal,
+.policyModal,
+.supportModal,
+.adminPanel {
+  will-change: auto !important;
+}
+
+/* Remove/soften blur because it is expensive on phones and laptops */
+@media (max-width: 1200px) {
+  .glass,
+  .glassPanel,
+  .bottomNav,
+  .mobileBottomNav,
+  .floatingBottomNav,
+  .header,
+  .navbar,
+  .menuPanel,
+  .modal,
+  .drawer,
+  .cartDrawer,
+  .searchOverlay,
+  .accountPage,
+  .productModal,
+  .policyModal {
+    -webkit-backdrop-filter: none !important;
+    backdrop-filter: none !important;
+  }
+
+  .heroCard,
+  .heroPanel,
+  .productCard,
+  .luxuryCard,
+  .accountCard,
+  .modal,
+  .drawer,
+  .menuPanel,
+  .searchOverlay,
+  .productModal,
+  .policyModal {
+    box-shadow: 0 14px 38px rgba(44, 31, 24, 0.08) !important;
+  }
+}
+
+/* ---------- Make reveal animation lighter ---------- */
+.reveal {
+  transition: opacity 0.32s ease, transform 0.32s ease !important;
+}
+
+.reveal.visible {
+  transform: translateY(0) !important;
+}
+
+/* On mobile, disable reveal movement completely for smooth scrolling */
+@media (max-width: 768px) {
+  .reveal,
+  .reveal.visible {
+    opacity: 1 !important;
+    transform: none !important;
+    transition: none !important;
+  }
+
+  .floatingBtn,
+  .whatsappFloat,
+  .scrollTopBtn,
+  .backToTop,
+  .quickActionBtn {
+    transform: none !important;
+  }
+}
+
+/* Respect reduced motion and weak devices */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* ---------- Image performance ---------- */
+img {
+  max-width: 100%;
+  height: auto;
+}
+
+@media (max-width: 768px) {
+  img {
+    content-visibility: auto;
+  }
+
+  .productImage img,
+  .heroImage img,
+  .lookImage img {
+    transform: none !important;
+  }
+}
+
+/* ---------- Prevent horizontal mobile overflow ---------- */
+.app,
+.page,
+main,
+section,
+.header,
+.navbar,
+.hero,
+.collection,
+.accountPage,
+.productModal,
+.policyModal {
+  max-width: 100%;
+}
+
+@media (max-width: 768px) {
+  .page,
+  .app,
+  main,
+  section,
+  .header,
+  .navbar,
+  .hero,
+  .collection,
+  .accountPage,
+  .productModal,
+  .policyModal {
+    overflow-x: hidden !important;
+  }
+}
+
+/* ---------- Mobile spacing correction ---------- */
+@media (max-width: 768px) {
+  .heroCard,
+  .heroPanel,
+  .luxuryCard {
+    padding: 42px 22px !important;
+    min-height: auto !important;
+  }
+
+  .section,
+  .collection,
+  .bestSellers,
+  .accountPage {
+    padding-left: 18px !important;
+    padding-right: 18px !important;
+  }
+}
+
+/* ---------- Keep form/input text readable ---------- */
+input,
+textarea,
+select {
+  color: var(--lg-dark) !important;
+}
+
+input::placeholder,
+textarea::placeholder {
+  color: rgba(95, 76, 63, 0.65) !important;
+}
+
+/* ---------- Toast / confirmation message readability ---------- */
+.toast,
+.notification,
+.successMessage,
+.verificationNotice,
+.accountNotice {
+  background: var(--lg-espresso) !important;
+  color: var(--lg-white) !important;
+  border-color: rgba(176, 138, 69, 0.35) !important;
+}
+
+.toast *,
+.notification *,
+.successMessage *,
+.verificationNotice *,
+.accountNotice * {
+  color: var(--lg-white) !important;
+}
+
+/* ---------- Desktop frame-drop helper ---------- */
+@media (min-width: 769px) {
+  .productCard:hover,
+  .luxuryCard:hover,
+  .heroCard:hover {
+    transform: none !important;
+  }
+
+  .productImage img:hover,
+  .heroImage img:hover {
+    transform: none !important;
+  }
+}
+
+/* ---------- Header mobile overlap fixes ---------- */
+@media (max-width: 768px) {
+  .header,
+  .navbar,
+  .mainHeader {
+    background: rgba(247, 241, 232, 0.98) !important;
+    -webkit-backdrop-filter: none !important;
+    backdrop-filter: none !important;
+  }
+
+  .header button,
+  .navbar button,
+  .mainHeader button {
+    color: var(--lg-espresso) !important;
+  }
+}
