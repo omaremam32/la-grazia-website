@@ -1,9 +1,7 @@
 /* =========================================================
    LA GRAZIA MOBILE CONTRAST + LAPTOP PERFORMANCE FIX
-   File: src/la-grazia-performance-fix.css
    ========================================================= */
 
-/* ---------- Global readability ---------- */
 :root {
   --lg-dark: #1f1712;
   --lg-espresso: #2c1f18;
@@ -27,7 +25,6 @@ body {
   color: var(--lg-dark);
 }
 
-/* ---------- Fix pale/white text on mobile hero ---------- */
 .heroTitle,
 .hero h1,
 .heroCard h1,
@@ -77,7 +74,6 @@ body {
   opacity: 1 !important;
 }
 
-/* ---------- Header/logo mobile visibility ---------- */
 @media (max-width: 768px) {
   .logo,
   .brandLogo,
@@ -108,7 +104,6 @@ body {
   }
 }
 
-/* ---------- Mobile hero luxury but readable ---------- */
 @media (max-width: 768px) {
   .hero,
   .heroSection {
@@ -159,7 +154,6 @@ body {
   }
 }
 
-/* ---------- Button contrast ---------- */
 .primaryBtn,
 .shopBtn,
 .addBtn,
@@ -188,10 +182,9 @@ a.secondaryBtn {
 .outlineBtn:hover,
 .findBtn:hover,
 .viewBtn:hover {
-  background: rgba(176, 138, 69, 0.10) !important;
+  background: rgba(176, 138, 69, 0.1) !important;
 }
 
-/* ---------- Top announcement bar readability ---------- */
 .topBar,
 .deliveryBar,
 .announcementBar,
@@ -207,7 +200,6 @@ a.secondaryBtn {
   color: var(--lg-cream) !important;
 }
 
-/* ---------- Mobile bottom navigation readability ---------- */
 @media (max-width: 768px) {
   .bottomNav,
   .mobileBottomNav,
@@ -229,7 +221,6 @@ a.secondaryBtn {
   }
 }
 
-/* ---------- Product cards readable ---------- */
 .productCard,
 .luxuryCard,
 .accountCard,
@@ -257,7 +248,6 @@ a.secondaryBtn {
   color: var(--lg-brown) !important;
 }
 
-/* ---------- Reduce heavy effects causing dropped frames ---------- */
 * {
   scroll-behavior: auto;
 }
@@ -266,7 +256,7 @@ a.secondaryBtn {
 .reveal.visible,
 .productCard,
 .heroCard,
-.heroPanel,
+heroPanel,
 .luxuryCard,
 .accountCard,
 .menuPanel,
@@ -282,7 +272,6 @@ a.secondaryBtn {
   will-change: auto !important;
 }
 
-/* Remove/soften blur because it is expensive on phones and laptops */
 @media (max-width: 1200px) {
   .glass,
   .glassPanel,
@@ -318,7 +307,6 @@ a.secondaryBtn {
   }
 }
 
-/* ---------- Make reveal animation lighter ---------- */
 .reveal {
   transition: opacity 0.32s ease, transform 0.32s ease !important;
 }
@@ -327,7 +315,6 @@ a.secondaryBtn {
   transform: translateY(0) !important;
 }
 
-/* On mobile, disable reveal movement completely for smooth scrolling */
 @media (max-width: 768px) {
   .reveal,
   .reveal.visible {
@@ -345,7 +332,6 @@ a.secondaryBtn {
   }
 }
 
-/* Respect reduced motion and weak devices */
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,
@@ -357,7 +343,6 @@ a.secondaryBtn {
   }
 }
 
-/* ---------- Image performance ---------- */
 img {
   max-width: 100%;
   height: auto;
@@ -375,7 +360,6 @@ img {
   }
 }
 
-/* ---------- Prevent horizontal mobile overflow ---------- */
 .app,
 .page,
 main,
@@ -406,7 +390,6 @@ section,
   }
 }
 
-/* ---------- Mobile spacing correction ---------- */
 @media (max-width: 768px) {
   .heroCard,
   .heroPanel,
@@ -424,7 +407,6 @@ section,
   }
 }
 
-/* ---------- Keep form/input text readable ---------- */
 input,
 textarea,
 select {
@@ -436,7 +418,6 @@ textarea::placeholder {
   color: rgba(95, 76, 63, 0.65) !important;
 }
 
-/* ---------- Toast / confirmation message readability ---------- */
 .toast,
 .notification,
 .successMessage,
@@ -455,7 +436,6 @@ textarea::placeholder {
   color: var(--lg-white) !important;
 }
 
-/* ---------- Desktop frame-drop helper ---------- */
 @media (min-width: 769px) {
   .productCard:hover,
   .luxuryCard:hover,
@@ -469,7 +449,6 @@ textarea::placeholder {
   }
 }
 
-/* ---------- Header mobile overlap fixes ---------- */
 @media (max-width: 768px) {
   .header,
   .navbar,

@@ -1,0 +1,318 @@
+/* =========================================================
+   LA GRAZIA FINAL DARK MOBILE CONTRAST FIX
+   ========================================================= */
+
+@media (max-width: 768px) {
+  body.dark,
+  .dark,
+  .darkMode {
+    --lg-dark-bg: #160f0b;
+    --lg-dark-panel: #241711;
+    --lg-dark-card: #2b1d17;
+    --lg-dark-soft: #37251d;
+    --lg-dark-border: rgba(216, 189, 135, 0.42);
+    --lg-dark-gold: #e0bd69;
+    --lg-dark-cream: #fff6e8;
+    --lg-dark-muted: #e8d9c4;
+    --lg-dark-text: #fffaf2;
+  }
+
+  body.dark,
+  .dark body,
+  .dark .app,
+  .dark .page,
+  .dark main {
+    background: var(--lg-dark-bg) !important;
+    color: var(--lg-dark-text) !important;
+  }
+
+  .dark .heroCard,
+  .dark .heroPanel,
+  .dark .signatureCard,
+  .dark .signaturePanel,
+  .dark .signatureEdit,
+  .dark .editorialCard,
+  .dark .luxuryCard,
+  .dark .productCard,
+  .dark .accountCard,
+  .dark .menuPanel,
+  .dark .modal,
+  .dark .drawer,
+  .dark .cartDrawer,
+  .dark .searchOverlay,
+  .dark .productModal,
+  .dark .policyModal,
+  .dark .supportCard,
+  .dark .reviewCard {
+    background: linear-gradient(145deg, #2b1d17 0%, #1f1510 100%) !important;
+    color: var(--lg-dark-text) !important;
+    border-color: var(--lg-dark-border) !important;
+    box-shadow: 0 18px 44px rgba(0, 0, 0, 0.24) !important;
+    -webkit-backdrop-filter: none !important;
+    backdrop-filter: none !important;
+  }
+
+  .dark .signatureCard *,
+  .dark .signaturePanel *,
+  .dark .signatureEdit *,
+  .dark .editorialCard *,
+  .dark .heroCard *,
+  .dark .heroPanel *,
+  .dark .luxuryCard *,
+  .dark .productCard *,
+  .dark .accountCard *,
+  .dark .modal *,
+  .dark .drawer *,
+  .dark .cartDrawer *,
+  .dark .searchOverlay *,
+  .dark .productModal *,
+  .dark .policyModal *,
+  .dark .supportCard *,
+  .dark .reviewCard * {
+    text-shadow: none !important;
+  }
+
+  .dark h1,
+  .dark h2,
+  .dark h3,
+  .dark h4,
+  .dark h5,
+  .dark h6,
+  .dark .heroTitle,
+  .dark .sectionTitle,
+  .dark .signatureTitle,
+  .dark .signatureCard h2,
+  .dark .signatureCard h3,
+  .dark .signaturePanel h2,
+  .dark .signaturePanel h3,
+  .dark .editorialCard h2,
+  .dark .editorialCard h3,
+  .dark .productInfo h4,
+  .dark .modalTitle,
+  .dark .accountTitle,
+  .dark .policyTitle {
+    color: var(--lg-dark-cream) !important;
+    opacity: 1 !important;
+  }
+
+  .dark p,
+  .dark span,
+  .dark li,
+  .dark label,
+  .dark .heroDescription,
+  .dark .signatureText,
+  .dark .signatureCard p,
+  .dark .signaturePanel p,
+  .dark .editorialCard p,
+  .dark .productDescription,
+  .dark .accountText,
+  .dark .policyText,
+  .dark .modalText {
+    color: var(--lg-dark-muted) !important;
+    opacity: 1 !important;
+  }
+
+  .dark .eyebrow,
+  .dark .heroEyebrow,
+  .dark .category,
+  .dark .subtitle,
+  .dark .brandSubtitle,
+  .dark .kicker,
+  .dark .goldText,
+  .dark .productTag,
+  .dark .accountEyebrow,
+  .dark .signatureEyebrow,
+  .dark .signatureCard .eyebrow,
+  .dark .signaturePanel .eyebrow {
+    color: var(--lg-dark-gold) !important;
+    opacity: 1 !important;
+  }
+
+  .dark .trustCard,
+  .dark .trustItem,
+  .dark .featureCard,
+  .dark .benefitCard {
+    background: #2b1d17 !important;
+    color: var(--lg-dark-text) !important;
+    border-color: var(--lg-dark-border) !important;
+  }
+
+  .dark .trustCard *,
+  .dark .trustItem *,
+  .dark .featureCard *,
+  .dark .benefitCard * {
+    color: var(--lg-dark-text) !important;
+    opacity: 1 !important;
+  }
+
+  .dark .trustNumber,
+  .dark .featureNumber,
+  .dark .benefitNumber,
+  .dark .numberBadge {
+    background: var(--lg-dark-gold) !important;
+    color: #2c1f18 !important;
+  }
+
+  .dark .primaryBtn,
+  .dark .shopBtn,
+  .dark .addBtn,
+  .dark .checkoutBtn,
+  .dark .payBtn,
+  .dark .saveBtn,
+  .dark .confirmBtn {
+    background: var(--lg-dark-gold) !important;
+    color: #2c1f18 !important;
+    border-color: var(--lg-dark-gold) !important;
+  }
+
+  .dark .secondaryBtn,
+  .dark .outlineBtn,
+  .dark .findBtn,
+  .dark .viewBtn {
+    background: transparent !important;
+    color: var(--lg-dark-cream) !important;
+    border-color: var(--lg-dark-gold) !important;
+  }
+
+  .dark input,
+  .dark textarea,
+  .dark select {
+    background: #211711 !important;
+    color: var(--lg-dark-cream) !important;
+    border-color: var(--lg-dark-border) !important;
+  }
+
+  .dark input::placeholder,
+  .dark textarea::placeholder {
+    color: rgba(232, 217, 196, 0.68) !important;
+  }
+
+  .dark .topBar,
+  .dark .deliveryBar,
+  .dark .announcementBar {
+    background: #130c08 !important;
+    color: var(--lg-dark-cream) !important;
+  }
+
+  .dark .header,
+  .dark .navbar,
+  .dark .mainHeader {
+    background: rgba(22, 15, 11, 0.98) !important;
+    border-color: rgba(216, 189, 135, 0.2) !important;
+    -webkit-backdrop-filter: none !important;
+    backdrop-filter: none !important;
+  }
+
+  .dark .logo,
+  .dark .brandLogo,
+  .dark .headerLogo,
+  .dark .siteLogo,
+  .dark .navLogo,
+  .dark .mobileLogo {
+    color: var(--lg-dark-cream) !important;
+    opacity: 1 !important;
+    text-shadow: none !important;
+    filter: none !important;
+  }
+
+  .dark .brandSubtitle,
+  .dark .logoSubtitle,
+  .dark .womenOnly,
+  .dark .headerTagline {
+    color: var(--lg-dark-gold) !important;
+    opacity: 1 !important;
+  }
+
+  .dark .iconBtn,
+  .dark .roundBtn,
+  .dark .header button,
+  .dark .navbar button {
+    background: rgba(255, 246, 232, 0.06) !important;
+    color: var(--lg-dark-cream) !important;
+    border-color: var(--lg-dark-border) !important;
+  }
+
+  .dark .bottomNav,
+  .dark .mobileBottomNav,
+  .dark .floatingBottomNav {
+    background: rgba(31, 21, 16, 0.98) !important;
+    border-color: var(--lg-dark-border) !important;
+    -webkit-backdrop-filter: none !important;
+    backdrop-filter: none !important;
+  }
+
+  .dark .bottomNav a,
+  .dark .bottomNav button,
+  .dark .mobileBottomNav a,
+  .dark .mobileBottomNav button,
+  .dark .floatingBottomNav a,
+  .dark .floatingBottomNav button {
+    color: var(--lg-dark-cream) !important;
+    opacity: 1 !important;
+  }
+
+  .dark .heartBtn,
+  .dark .wishlistBtn {
+    background: rgba(255, 246, 232, 0.92) !important;
+    color: #2c1f18 !important;
+  }
+
+  .dark .toast,
+  .dark .notification,
+  .dark .successMessage,
+  .dark .verificationNotice,
+  .dark .accountNotice {
+    background: #fff6e8 !important;
+    color: #2c1f18 !important;
+    border-color: var(--lg-dark-gold) !important;
+  }
+
+  .dark .toast *,
+  .dark .notification *,
+  .dark .successMessage *,
+  .dark .verificationNotice *,
+  .dark .accountNotice * {
+    color: #2c1f18 !important;
+  }
+
+  .dark .reveal,
+  .dark .reveal.visible {
+    opacity: 1 !important;
+    transform: none !important;
+    transition: none !important;
+  }
+
+  .dark img {
+    content-visibility: auto;
+  }
+}
+
+@media (max-width: 768px) {
+  [class*="dark"] [class*="signature"],
+  [class*="dark"] [class*="hero"],
+  [class*="dark"] [class*="card"],
+  [class*="dark"] [class*="panel"] {
+    color: #fffaf2 !important;
+  }
+
+  [class*="dark"] [class*="signature"] h1,
+  [class*="dark"] [class*="signature"] h2,
+  [class*="dark"] [class*="signature"] h3,
+  [class*="dark"] [class*="hero"] h1,
+  [class*="dark"] [class*="hero"] h2,
+  [class*="dark"] [class*="hero"] h3,
+  [class*="dark"] [class*="card"] h1,
+  [class*="dark"] [class*="card"] h2,
+  [class*="dark"] [class*="card"] h3 {
+    color: #fffaf2 !important;
+    opacity: 1 !important;
+  }
+
+  [class*="dark"] [class*="signature"] p,
+  [class*="dark"] [class*="hero"] p,
+  [class*="dark"] [class*="card"] p,
+  [class*="dark"] [class*="panel"] p {
+    color: #e8d9c4 !important;
+    opacity: 1 !important;
+  }
+}
