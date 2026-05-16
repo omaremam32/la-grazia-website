@@ -8682,554 +8682,351 @@ export default function App() {
   }
 }
 
-
-/* =========================================================
-   FINAL BUILT-IN FIX: MOBILE CONTRAST + PERFORMANCE
-   This is inside App.tsx so it overrides the old inline CSS.
-   ========================================================= */
-
-:root {
-  --lg-final-dark: #1f1712;
-  --lg-final-espresso: #2c1f18;
-  --lg-final-brown: #5f4c3f;
-  --lg-final-gold: #b08a45;
-  --lg-final-cream: #f7f1e8;
-  --lg-final-card: #f8efe1;
-  --lg-final-white: #fffaf2;
-}
-
-html,
-body,
-.page {
-  max-width: 100%;
-  overflow-x: hidden !important;
-}
-
-/* Force all key light-mode text to be visible */
-.page:not(.darkMode) .brandMark h1,
-.page:not(.darkMode) .brandMark p,
-.page:not(.darkMode) .heroCopy h2,
-.page:not(.darkMode) .sectionTitle,
-.page:not(.darkMode) .panelTitle,
-.page:not(.darkMode) .productInfo h4,
-.page:not(.darkMode) .modalTitle,
-.page:not(.darkMode) .accountTitle,
-.page:not(.darkMode) .policyTitle,
-.page:not(.darkMode) .miniSectionHead strong {
-  color: var(--lg-final-dark) !important;
-  opacity: 1 !important;
-  text-shadow: none !important;
-  filter: none !important;
-}
-
-.page:not(.darkMode) .heroCopy p.description,
-.page:not(.darkMode) .sectionIntro,
-.page:not(.darkMode) .panelText,
-.page:not(.darkMode) .productInfo p,
-.page:not(.darkMode) .modalInfo p,
-.page:not(.darkMode) .cartItem p,
-.page:not(.darkMode) .emptyState,
-.page:not(.darkMode) .fitNote p,
-.page:not(.darkMode) .supportMessageCard p,
-.page:not(.darkMode) .supportAdminCard p,
-.page:not(.darkMode) .policyModal p,
-.page:not(.darkMode) .policyModal li,
-.page:not(.darkMode) .profileEditPanel p,
-.page:not(.darkMode) .addressBookPanel p {
-  color: var(--lg-final-brown) !important;
-  opacity: 1 !important;
-}
-
-.page:not(.darkMode) .eyebrow,
-.page:not(.darkMode) .category,
-.page:not(.darkMode) .footerTag,
-.page:not(.darkMode) .newsletterStatus,
-.page:not(.darkMode) .storyPoint span,
-.page:not(.darkMode) .accountEyebrow,
-.page:not(.darkMode) .goldText,
-.page:not(.darkMode) .adminNoteField span {
-  color: var(--lg-final-gold) !important;
-  opacity: 1 !important;
-}
-
-/* Mobile specific: make hero and header readable */
-@media (max-width: 700px) {
-  .page:not(.darkMode) .nav {
-    background: rgba(247, 241, 232, 0.98) !important;
-    -webkit-backdrop-filter: none !important;
-    backdrop-filter: none !important;
-  }
-
-  .page:not(.darkMode) .brandMark h1 {
-    color: var(--lg-final-dark) !important;
-    font-weight: 500 !important;
-  }
-
-  .page:not(.darkMode) .brandMark p {
-    color: var(--lg-final-gold) !important;
-  }
-
-  .page:not(.darkMode) .iconBtn,
-  .page:not(.darkMode) .pillBtn,
-  .page:not(.darkMode) .menuTrigger,
-  .page:not(.darkMode) .navActions button {
-    color: var(--lg-final-espresso) !important;
-    border-color: rgba(176, 138, 69, 0.38) !important;
-    background: rgba(255, 249, 240, 0.84) !important;
-  }
-
-  .page:not(.darkMode) .heroCopy {
-    background: linear-gradient(145deg, #f8efe1 0%, #f4e6d1 100%) !important;
-    border-color: rgba(176, 138, 69, 0.30) !important;
-    box-shadow: 0 14px 34px rgba(44, 31, 24, 0.07) !important;
-  }
-
-  .page:not(.darkMode) .heroCopy h2 {
-    color: var(--lg-final-dark) !important;
-    opacity: 1 !important;
-    text-shadow: none !important;
-  }
-
-  .page:not(.darkMode) .heroCopy p.description {
-    color: var(--lg-final-brown) !important;
-    opacity: 1 !important;
-  }
-
-  .page:not(.darkMode) .heroCopy .eyebrow {
-    color: var(--lg-final-gold) !important;
-    opacity: 1 !important;
-  }
-
-  .heroCopy h2 {
-    font-size: clamp(40px, 11.5vw, 58px) !important;
-    line-height: 1.02 !important;
-  }
-
-  .heroCopy p.description {
-    font-size: 16px !important;
-    line-height: 1.78 !important;
-  }
-
-  .heroVisual {
-    min-height: 430px !important;
-  }
-
-  .heroCard {
-    background: rgba(255, 249, 240, 0.96) !important;
-    -webkit-backdrop-filter: none !important;
-    backdrop-filter: none !important;
-  }
-
-  .heroCard small,
-  .heroCard strong,
-  .heroCard span {
-    color: var(--lg-final-dark) !important;
-    opacity: 1 !important;
-  }
-
-  .primaryBtn,
-  .shopBtn,
-  .addBtn,
-  .checkoutBtn,
-  .payBtn,
-  .saveBtn {
-    color: var(--lg-final-white) !important;
-    background: var(--lg-final-espresso) !important;
-    border-color: var(--lg-final-espresso) !important;
-  }
-
-  .secondaryBtn,
-  .outlineBtn,
-  .viewBtn,
-  .findBtn {
-    color: var(--lg-final-espresso) !important;
-    background: rgba(255, 249, 240, 0.82) !important;
-    border-color: var(--lg-final-gold) !important;
-  }
-}
-
-/* Smoothness/performance: reduce heavy effects */
-.reveal {
-  transition: opacity 0.34s ease, transform 0.34s ease !important;
-  will-change: auto !important;
-}
-
-.productCard,
-.heroCopy,
-.heroVisual,
-.heroCard,
-.cleanPanel,
-.menuPanel,
-.modal,
-.drawer,
-.cartDrawer,
-.searchOverlay,
-.accountPage,
-.policyModal,
-.supportFormPanel,
-.supportMessageCard,
-.supportAdminCard {
-  will-change: auto !important;
-}
-
-@media (max-width: 1100px) {
-  .nav,
-  .searchOverlay,
-  .menuPanel,
-  .modal,
-  .cartDrawer,
-  .drawer,
-  .heroCard,
-  .accountPage {
-    -webkit-backdrop-filter: none !important;
-    backdrop-filter: none !important;
-  }
-
-  .heroCopy,
-  .heroVisual,
-  .productCard,
-  .cleanPanel,
-  .modal,
-  .menuPanel,
-  .cartDrawer,
-  .supportFormPanel,
-  .supportMessageCard,
-  .supportAdminCard {
-    box-shadow: 0 14px 34px rgba(44, 31, 24, 0.07) !important;
-  }
-}
-
-@media (max-width: 700px) {
-  .reveal,
-  .reveal.visible {
-    opacity: 1 !important;
-    transform: none !important;
-    transition: none !important;
-  }
-
-  .heroCopy .eyebrow,
-  .heroCopy h2,
-  .heroCopy .description,
-  .heroCopy .actions {
-    opacity: 1 !important;
-    animation: none !important;
-  }
-
-  .heroCopy,
-  .heroVisual,
-  .nav,
-  .topBarTrack {
-    animation: none !important;
-  }
-
-  .productCard:hover,
-  .heroVisual img:hover,
-  .productImage img:hover {
-    transform: none !important;
-  }
-
-  img {
-    content-visibility: auto;
-  }
-}
-
-/* If the browser/device asks for less motion, remove movement fully */
-@media (prefers-reduced-motion: reduce) {
-  *,
-  *::before,
-  *::after {
-    animation-duration: 0.001ms !important;
-    animation-iteration-count: 1 !important;
-    transition-duration: 0.001ms !important;
-    scroll-behavior: auto !important;
-  }
-}
-
-/* Make forms readable everywhere */
-input,
-textarea,
-select {
-  color: var(--lg-final-dark) !important;
-}
-
-input::placeholder,
-textarea::placeholder {
-  color: rgba(95, 76, 63, 0.64) !important;
-}
-
-.toast,
-.notification,
-.successMessage,
-.verificationNotice,
-.accountNotice {
-  background: var(--lg-final-espresso) !important;
-  color: var(--lg-final-white) !important;
-  border-color: rgba(176, 138, 69, 0.38) !important;
-}
-
-.toast *,
-.notification *,
-.successMessage *,
-.verificationNotice *,
-.accountNotice * {
-  color: var(--lg-final-white) !important;
-}
-
-
-/* =========================================================
-   LA GRAZIA FINAL DARK MOBILE CONTRAST + SMOOTHNESS FIX
-   ========================================================= */
-@media (max-width: 768px) {
-  .darkMode,
-  .darkMode .page,
-  .darkMode body {
-    background: linear-gradient(180deg, #1f1510 0%, #160f0b 100%) !important;
-    color: #fff9f0 !important;
-  }
-
-  .darkMode .heroCard,
-  .darkMode .heroPanel,
-  .darkMode .heroContent,
-  .darkMode .luxuryHeroCard,
-  .darkMode .productCard,
-  .darkMode .luxuryCard,
-  .darkMode .accountCard,
-  .darkMode .policyCard,
-  .darkMode .supportCard,
-  .darkMode .reviewCard,
-  .darkMode .modal,
-  .darkMode .drawer,
-  .darkMode .menuPanel,
-  .darkMode .cartDrawer,
-  .darkMode .searchOverlay,
-  .darkMode .accountPage,
-  .darkMode .productModal,
-  .darkMode .policyModal,
-  .darkMode .cleanPanel,
-  .darkMode .newsletterBox,
-  .darkMode .giftCardBox {
-    background: linear-gradient(145deg, #2c1f18 0%, #1f1510 100%) !important;
-    border-color: rgba(215, 180, 111, 0.32) !important;
-    box-shadow: 0 14px 34px rgba(0, 0, 0, 0.28) !important;
-    color: #fff9f0 !important;
-    -webkit-backdrop-filter: none !important;
-    backdrop-filter: none !important;
-  }
-
-  .darkMode .heroTitle,
-  .darkMode .hero h1,
-  .darkMode .heroCard h1,
-  .darkMode .heroContent h1,
-  .darkMode .heroText h1,
-  .darkMode .heroCopy h1,
-  .darkMode .heroMainTitle,
-  .darkMode .sectionTitle,
-  .darkMode .panelTitle,
-  .darkMode .productInfo h4,
-  .darkMode .accountTitle,
-  .darkMode .modalTitle,
-  .darkMode .policyTitle,
-  .darkMode .pageTitle,
-  .darkMode .brandMark h1,
-  .darkMode .brandLogo,
-  .darkMode .logo,
-  .darkMode .headerLogo,
-  .darkMode .siteLogo,
-  .darkMode h1,
-  .darkMode h2,
-  .darkMode h3,
-  .darkMode h4,
-  .darkMode h5 {
-    color: #fff9f0 !important;
-    opacity: 1 !important;
-    text-shadow: none !important;
-  }
-
-  .darkMode .heroEyebrow,
-  .darkMode .eyebrow,
-  .darkMode .category,
-  .darkMode .subtitle,
-  .darkMode .brandSubtitle,
-  .darkMode .footerTag,
-  .darkMode .goldText,
-  .darkMode .productTag,
-  .darkMode .accountEyebrow,
-  .darkMode .brandMark p {
-    color: #d7b46f !important;
-    opacity: 1 !important;
-  }
-
-  .darkMode .heroDescription,
-  .darkMode .hero p,
-  .darkMode .heroCard p,
-  .darkMode .heroContent p,
-  .darkMode .heroText p,
-  .darkMode .productDescription,
-  .darkMode .accountText,
-  .darkMode .storyText,
-  .darkMode .policyText,
-  .darkMode .modalText,
-  .darkMode .sectionIntro,
-  .darkMode .panelText,
-  .darkMode .price,
-  .darkMode .productInfo p,
-  .darkMode .modalInfo p,
-  .darkMode .cartItem p,
-  .darkMode .emptyState,
-  .darkMode .fitNote p,
-  .darkMode p,
-  .darkMode span,
-  .darkMode td,
-  .darkMode a,
-  .darkMode label,
-  .darkMode li {
-    color: #eadcc8 !important;
-    opacity: 1 !important;
-  }
-
-  .darkMode .nav,
-  .darkMode .header,
-  .darkMode .navbar,
-  .darkMode .mainHeader {
-    background: rgba(31, 21, 16, 0.98) !important;
-    border-color: rgba(215, 180, 111, 0.24) !important;
-    -webkit-backdrop-filter: none !important;
-    backdrop-filter: none !important;
-  }
-
-  .darkMode .nav button,
-  .darkMode .header button,
-  .darkMode .navbar button,
-  .darkMode .mainHeader button,
-  .darkMode .iconBtn,
-  .darkMode .pillBtn {
-    color: #fff9f0 !important;
-    background: rgba(255, 249, 240, 0.08) !important;
-    border-color: rgba(215, 180, 111, 0.38) !important;
-  }
-
-  .darkMode .primaryBtn,
-  .darkMode .shopBtn,
-  .darkMode .addBtn,
-  .darkMode .checkoutBtn,
-  .darkMode .payBtn,
-  .darkMode .saveBtn,
-  .darkMode .confirmBtn,
-  .darkMode button.primary,
-  .darkMode a.primaryBtn {
-    background: #d7b46f !important;
-    color: #1f1510 !important;
-    border-color: #d7b46f !important;
-    box-shadow: none !important;
-  }
-
-  .darkMode .secondaryBtn,
-  .darkMode .outlineBtn,
-  .darkMode .findBtn,
-  .darkMode .viewBtn,
-  .darkMode button.secondary,
-  .darkMode a.secondaryBtn {
-    color: #fff9f0 !important;
-    background: rgba(255, 249, 240, 0.05) !important;
-    border-color: rgba(215, 180, 111, 0.50) !important;
-  }
-
-  .darkMode input,
-  .darkMode textarea,
-  .darkMode select {
-    background: rgba(255, 249, 240, 0.07) !important;
-    color: #fff9f0 !important;
-    border-color: rgba(215, 180, 111, 0.34) !important;
-  }
-
-  .darkMode input::placeholder,
-  .darkMode textarea::placeholder {
-    color: rgba(234, 220, 200, 0.62) !important;
-  }
-
-  .darkMode .bottomNav,
-  .darkMode .mobileBottomNav,
-  .darkMode .floatingBottomNav {
-    background: rgba(22, 15, 11, 0.98) !important;
-    border-color: rgba(215, 180, 111, 0.24) !important;
-    -webkit-backdrop-filter: none !important;
-    backdrop-filter: none !important;
-  }
-
-  .darkMode .bottomNav a,
-  .darkMode .bottomNav button,
-  .darkMode .mobileBottomNav a,
-  .darkMode .mobileBottomNav button,
-  .darkMode .floatingBottomNav a,
-  .darkMode .floatingBottomNav button {
-    color: #fff9f0 !important;
-    opacity: 1 !important;
-  }
-
-  .darkMode .toast,
-  .darkMode .notification,
-  .darkMode .successMessage,
-  .darkMode .verificationNotice,
-  .darkMode .accountNotice {
-    background: #d7b46f !important;
-    color: #1f1510 !important;
-    border-color: rgba(255, 249, 240, 0.18) !important;
-  }
-
-  .darkMode .toast *,
-  .darkMode .notification *,
-  .darkMode .successMessage *,
-  .darkMode .verificationNotice *,
-  .darkMode .accountNotice * {
-    color: #1f1510 !important;
-  }
-
-  .darkMode .topBar,
-  .darkMode .deliveryBar,
-  .darkMode .announcementBar,
-  .darkMode .topAnnouncement {
-    background: #120c08 !important;
-    color: #f7f1e8 !important;
-  }
-
-  .darkMode .topBar *,
-  .darkMode .deliveryBar *,
-  .darkMode .announcementBar *,
-  .darkMode .topAnnouncement * {
-    color: #f7f1e8 !important;
-  }
-
-  .darkMode .stockTag,
-  .darkMode .tag,
-  .darkMode .badge,
-  .darkMode .statusBadge {
-    background: rgba(215, 180, 111, 0.16) !important;
-    color: #f7d992 !important;
-    border-color: rgba(215, 180, 111, 0.38) !important;
-  }
-
-  .darkMode .heartBtn,
-  .darkMode .closeBtn,
-  .darkMode .quantityBtn {
-    background: rgba(255, 249, 240, 0.08) !important;
-    color: #fff9f0 !important;
-    border-color: rgba(215, 180, 111, 0.34) !important;
-  }
-
-  .darkMode .heartBtn.saved {
-    background: #d7b46f !important;
-    color: #1f1510 !important;
-  }
-
-  .darkMode .reveal,
-  .darkMode .reveal.visible {
-    opacity: 1 !important;
-    transform: none !important;
-    transition: none !important;
-  }
-}
-
 `}</style>
+
+      <style>{`
+        /* =========================================================
+           FINAL OVERRIDE — LA GRAZIA CONTRAST + PERFORMANCE FIX
+           Put this AFTER the original App.tsx style block
+           ========================================================= */
+
+        *,
+        *::before,
+        *::after {
+          scroll-behavior: auto !important;
+        }
+
+        .heroVisual img,
+        .productImage img,
+        .reveal,
+        .heroCard,
+        .productCard,
+        .luxuryCard,
+        .accountCard,
+        .trustItem,
+        .section,
+        .modal,
+        .drawer,
+        .cartDrawer,
+        .searchOverlay,
+        .menuPanel {
+          animation: none !important;
+          transition: none !important;
+          will-change: auto !important;
+        }
+
+        .heroVisual img {
+          transform: none !important;
+        }
+
+        .primaryBtn:hover,
+        .secondaryBtn:hover,
+        .productCard:hover,
+        .heroCard:hover,
+        .luxuryCard:hover,
+        .trustItem:hover {
+          transform: none !important;
+        }
+
+        .heroCard,
+        .menuPanel,
+        .modal,
+        .drawer,
+        .cartDrawer,
+        .searchOverlay,
+        .bottomNav,
+        .mobileBottomNav {
+          backdrop-filter: none !important;
+          -webkit-backdrop-filter: none !important;
+        }
+
+        @media (max-width: 768px) {
+          .page:not(.darkMode) {
+            background: #f7f1e8 !important;
+            color: #1f1712 !important;
+          }
+
+          .page:not(.darkMode) .heroCopy,
+          .page:not(.darkMode) .heroCard,
+          .page:not(.darkMode) .productCard,
+          .page:not(.darkMode) .trustItem,
+          .page:not(.darkMode) .luxuryCard,
+          .page:not(.darkMode) .accountCard,
+          .page:not(.darkMode) .signatureCard,
+          .page:not(.darkMode) .signaturePanel,
+          .page:not(.darkMode) .editorialCard {
+            color: #1f1712 !important;
+          }
+
+          .page:not(.darkMode) .heroCopy h2,
+          .page:not(.darkMode) .heroCard strong,
+          .page:not(.darkMode) .sectionTitle,
+          .page:not(.darkMode) .productInfo h4,
+          .page:not(.darkMode) h1,
+          .page:not(.darkMode) h2,
+          .page:not(.darkMode) h3,
+          .page:not(.darkMode) h4 {
+            color: #1f1712 !important;
+            opacity: 1 !important;
+            text-shadow: none !important;
+          }
+
+          .page:not(.darkMode) .heroCopy .description,
+          .page:not(.darkMode) .sectionIntro,
+          .page:not(.darkMode) .heroCard,
+          .page:not(.darkMode) .heroCard strong,
+          .page:not(.darkMode) .trustItem p,
+          .page:not(.darkMode) p {
+            color: #5f4c3f !important;
+            opacity: 1 !important;
+            text-shadow: none !important;
+          }
+
+          .page:not(.darkMode) .eyebrow,
+          .page:not(.darkMode) .heroCard small,
+          .page:not(.darkMode) .category,
+          .page:not(.darkMode) .brandMark p {
+            color: #b08a45 !important;
+            opacity: 1 !important;
+          }
+
+          .page:not(.darkMode) .heroCard,
+          .page:not(.darkMode) .signatureCard,
+          .page:not(.darkMode) .signaturePanel,
+          .page:not(.darkMode) .editorialCard {
+            background: rgba(248, 239, 225, 0.96) !important;
+            border: 1px solid rgba(176, 138, 69, 0.32) !important;
+            box-shadow: 0 14px 36px rgba(44, 31, 24, 0.10) !important;
+          }
+
+          .page:not(.darkMode) .brandMark h1 {
+            color: #1f1712 !important;
+            opacity: 1 !important;
+          }
+        }
+
+        .page.darkMode {
+          background: #160f0b !important;
+          color: #fffaf2 !important;
+        }
+
+        .page.darkMode main,
+        .page.darkMode section {
+          background-color: transparent !important;
+        }
+
+        .page.darkMode .nav,
+        .page.darkMode .topBar {
+          background: #130c08 !important;
+          color: #fffaf2 !important;
+          border-color: rgba(224, 189, 105, 0.18) !important;
+        }
+
+        .page.darkMode .brandMark h1 {
+          color: #fffaf2 !important;
+          opacity: 1 !important;
+        }
+
+        .page.darkMode .brandMark p {
+          color: #e0bd69 !important;
+          opacity: 1 !important;
+        }
+
+        .page.darkMode .heroCopy,
+        .page.darkMode .heroCard,
+        .page.darkMode .productCard,
+        .page.darkMode .trustItem,
+        .page.darkMode .luxuryCard,
+        .page.darkMode .accountCard,
+        .page.darkMode .modal,
+        .page.darkMode .drawer,
+        .page.darkMode .cartDrawer,
+        .page.darkMode .searchOverlay,
+        .page.darkMode .menuPanel,
+        .page.darkMode .signatureCard,
+        .page.darkMode .signaturePanel,
+        .page.darkMode .signatureEdit,
+        .page.darkMode .editorialCard,
+        .page.darkMode .supportCard,
+        .page.darkMode .reviewCard {
+          background: linear-gradient(145deg, #2b1d17 0%, #1f1510 100%) !important;
+          color: #fffaf2 !important;
+          border-color: rgba(224, 189, 105, 0.42) !important;
+          box-shadow: 0 14px 38px rgba(0, 0, 0, 0.22) !important;
+        }
+
+        .page.darkMode h1,
+        .page.darkMode h2,
+        .page.darkMode h3,
+        .page.darkMode h4,
+        .page.darkMode h5,
+        .page.darkMode h6,
+        .page.darkMode .heroCopy h2,
+        .page.darkMode .sectionTitle,
+        .page.darkMode .heroCard strong,
+        .page.darkMode .productInfo h4,
+        .page.darkMode .signatureCard h2,
+        .page.darkMode .signatureCard h3,
+        .page.darkMode .signaturePanel h2,
+        .page.darkMode .signaturePanel h3,
+        .page.darkMode .editorialCard h2,
+        .page.darkMode .editorialCard h3 {
+          color: #fffaf2 !important;
+          opacity: 1 !important;
+          text-shadow: none !important;
+        }
+
+        .page.darkMode p,
+        .page.darkMode span,
+        .page.darkMode li,
+        .page.darkMode label,
+        .page.darkMode .description,
+        .page.darkMode .sectionIntro,
+        .page.darkMode .heroCard strong,
+        .page.darkMode .trustItem p,
+        .page.darkMode .productDescription,
+        .page.darkMode .signatureText,
+        .page.darkMode .signatureCard p,
+        .page.darkMode .signaturePanel p,
+        .page.darkMode .editorialCard p {
+          color: #e8d9c4 !important;
+          opacity: 1 !important;
+          text-shadow: none !important;
+        }
+
+        .page.darkMode .eyebrow,
+        .page.darkMode .heroCard small,
+        .page.darkMode .category,
+        .page.darkMode .price,
+        .page.darkMode .signatureEyebrow,
+        .page.darkMode .signatureCard .eyebrow,
+        .page.darkMode .signaturePanel .eyebrow {
+          color: #e0bd69 !important;
+          opacity: 1 !important;
+        }
+
+        .page.darkMode .trustIcon,
+        .page.darkMode .trustNumber,
+        .page.darkMode .featureNumber,
+        .page.darkMode .benefitNumber,
+        .page.darkMode .numberBadge {
+          background: #e0bd69 !important;
+          color: #2c1f18 !important;
+        }
+
+        .page.darkMode .primaryBtn,
+        .page.darkMode .addBtn,
+        .page.darkMode .checkoutBtn,
+        .page.darkMode .payBtn,
+        .page.darkMode .saveBtn {
+          background: #e0bd69 !important;
+          color: #2c1f18 !important;
+          border-color: #e0bd69 !important;
+        }
+
+        .page.darkMode .secondaryBtn,
+        .page.darkMode .viewBtn,
+        .page.darkMode .outlineBtn,
+        .page.darkMode .findBtn {
+          background: transparent !important;
+          color: #fffaf2 !important;
+          border-color: #e0bd69 !important;
+        }
+
+        .page.darkMode input,
+        .page.darkMode textarea,
+        .page.darkMode select {
+          background: #211711 !important;
+          color: #fffaf2 !important;
+          border-color: rgba(224, 189, 105, 0.42) !important;
+        }
+
+        .page.darkMode input::placeholder,
+        .page.darkMode textarea::placeholder {
+          color: rgba(232, 217, 196, 0.7) !important;
+        }
+
+        @media (max-width: 768px) {
+          .page.darkMode .heroCard,
+          .page.darkMode .signatureCard,
+          .page.darkMode .signaturePanel,
+          .page.darkMode .editorialCard {
+            background: rgba(43, 29, 23, 0.98) !important;
+            border: 1px solid rgba(224, 189, 105, 0.45) !important;
+          }
+
+          .page.darkMode .heroCard small {
+            color: #e0bd69 !important;
+            opacity: 1 !important;
+          }
+
+          .page.darkMode .heroCard strong {
+            color: #fffaf2 !important;
+            opacity: 1 !important;
+            line-height: 1.12 !important;
+          }
+
+          .page.darkMode .trustBar {
+            background: transparent !important;
+          }
+
+          .page.darkMode .trustItem {
+            background: #2b1d17 !important;
+            border: 1px solid rgba(224, 189, 105, 0.42) !important;
+          }
+
+          .page.darkMode .trustItem p {
+            color: #fffaf2 !important;
+            opacity: 1 !important;
+          }
+
+          .page.darkMode .sectionIntro {
+            color: #e8d9c4 !important;
+            opacity: 1 !important;
+          }
+
+          .page.darkMode .bottomNav,
+          .page.darkMode .mobileBottomNav {
+            background: rgba(31, 21, 16, 0.98) !important;
+            border: 1px solid rgba(224, 189, 105, 0.35) !important;
+            backdrop-filter: none !important;
+            -webkit-backdrop-filter: none !important;
+          }
+
+          .page.darkMode .bottomNav a,
+          .page.darkMode .bottomNav button,
+          .page.darkMode .mobileBottomNav a,
+          .page.darkMode .mobileBottomNav button {
+            color: #fffaf2 !important;
+            opacity: 1 !important;
+          }
+
+          .page.darkMode .heroVisual img,
+          .page.darkMode .productImage img {
+            animation: none !important;
+            transform: none !important;
+          }
+        }
+
+        @media (min-width: 769px) {
+          .heroVisual img {
+            animation: none !important;
+          }
+
+          .reveal {
+            opacity: 1 !important;
+            transform: none !important;
+          }
+
+          .productCard:hover,
+          .heroCard:hover,
+          .trustItem:hover,
+          .primaryBtn:hover,
+          .secondaryBtn:hover {
+            transform: none !important;
+          }
+        }
+      `}</style>
 
       <div className="scrollProgress" style={{ width: `${scrollProgress}%` }} />
 
