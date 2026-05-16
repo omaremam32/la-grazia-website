@@ -8682,6 +8682,299 @@ export default function App() {
   }
 }
 
+
+/* =========================================================
+   FINAL BUILT-IN FIX: MOBILE CONTRAST + PERFORMANCE
+   This is inside App.tsx so it overrides the old inline CSS.
+   ========================================================= */
+
+:root {
+  --lg-final-dark: #1f1712;
+  --lg-final-espresso: #2c1f18;
+  --lg-final-brown: #5f4c3f;
+  --lg-final-gold: #b08a45;
+  --lg-final-cream: #f7f1e8;
+  --lg-final-card: #f8efe1;
+  --lg-final-white: #fffaf2;
+}
+
+html,
+body,
+.page {
+  max-width: 100%;
+  overflow-x: hidden !important;
+}
+
+/* Force all key light-mode text to be visible */
+.page:not(.darkMode) .brandMark h1,
+.page:not(.darkMode) .brandMark p,
+.page:not(.darkMode) .heroCopy h2,
+.page:not(.darkMode) .sectionTitle,
+.page:not(.darkMode) .panelTitle,
+.page:not(.darkMode) .productInfo h4,
+.page:not(.darkMode) .modalTitle,
+.page:not(.darkMode) .accountTitle,
+.page:not(.darkMode) .policyTitle,
+.page:not(.darkMode) .miniSectionHead strong {
+  color: var(--lg-final-dark) !important;
+  opacity: 1 !important;
+  text-shadow: none !important;
+  filter: none !important;
+}
+
+.page:not(.darkMode) .heroCopy p.description,
+.page:not(.darkMode) .sectionIntro,
+.page:not(.darkMode) .panelText,
+.page:not(.darkMode) .productInfo p,
+.page:not(.darkMode) .modalInfo p,
+.page:not(.darkMode) .cartItem p,
+.page:not(.darkMode) .emptyState,
+.page:not(.darkMode) .fitNote p,
+.page:not(.darkMode) .supportMessageCard p,
+.page:not(.darkMode) .supportAdminCard p,
+.page:not(.darkMode) .policyModal p,
+.page:not(.darkMode) .policyModal li,
+.page:not(.darkMode) .profileEditPanel p,
+.page:not(.darkMode) .addressBookPanel p {
+  color: var(--lg-final-brown) !important;
+  opacity: 1 !important;
+}
+
+.page:not(.darkMode) .eyebrow,
+.page:not(.darkMode) .category,
+.page:not(.darkMode) .footerTag,
+.page:not(.darkMode) .newsletterStatus,
+.page:not(.darkMode) .storyPoint span,
+.page:not(.darkMode) .accountEyebrow,
+.page:not(.darkMode) .goldText,
+.page:not(.darkMode) .adminNoteField span {
+  color: var(--lg-final-gold) !important;
+  opacity: 1 !important;
+}
+
+/* Mobile specific: make hero and header readable */
+@media (max-width: 700px) {
+  .page:not(.darkMode) .nav {
+    background: rgba(247, 241, 232, 0.98) !important;
+    -webkit-backdrop-filter: none !important;
+    backdrop-filter: none !important;
+  }
+
+  .page:not(.darkMode) .brandMark h1 {
+    color: var(--lg-final-dark) !important;
+    font-weight: 500 !important;
+  }
+
+  .page:not(.darkMode) .brandMark p {
+    color: var(--lg-final-gold) !important;
+  }
+
+  .page:not(.darkMode) .iconBtn,
+  .page:not(.darkMode) .pillBtn,
+  .page:not(.darkMode) .menuTrigger,
+  .page:not(.darkMode) .navActions button {
+    color: var(--lg-final-espresso) !important;
+    border-color: rgba(176, 138, 69, 0.38) !important;
+    background: rgba(255, 249, 240, 0.84) !important;
+  }
+
+  .page:not(.darkMode) .heroCopy {
+    background: linear-gradient(145deg, #f8efe1 0%, #f4e6d1 100%) !important;
+    border-color: rgba(176, 138, 69, 0.30) !important;
+    box-shadow: 0 14px 34px rgba(44, 31, 24, 0.07) !important;
+  }
+
+  .page:not(.darkMode) .heroCopy h2 {
+    color: var(--lg-final-dark) !important;
+    opacity: 1 !important;
+    text-shadow: none !important;
+  }
+
+  .page:not(.darkMode) .heroCopy p.description {
+    color: var(--lg-final-brown) !important;
+    opacity: 1 !important;
+  }
+
+  .page:not(.darkMode) .heroCopy .eyebrow {
+    color: var(--lg-final-gold) !important;
+    opacity: 1 !important;
+  }
+
+  .heroCopy h2 {
+    font-size: clamp(40px, 11.5vw, 58px) !important;
+    line-height: 1.02 !important;
+  }
+
+  .heroCopy p.description {
+    font-size: 16px !important;
+    line-height: 1.78 !important;
+  }
+
+  .heroVisual {
+    min-height: 430px !important;
+  }
+
+  .heroCard {
+    background: rgba(255, 249, 240, 0.96) !important;
+    -webkit-backdrop-filter: none !important;
+    backdrop-filter: none !important;
+  }
+
+  .heroCard small,
+  .heroCard strong,
+  .heroCard span {
+    color: var(--lg-final-dark) !important;
+    opacity: 1 !important;
+  }
+
+  .primaryBtn,
+  .shopBtn,
+  .addBtn,
+  .checkoutBtn,
+  .payBtn,
+  .saveBtn {
+    color: var(--lg-final-white) !important;
+    background: var(--lg-final-espresso) !important;
+    border-color: var(--lg-final-espresso) !important;
+  }
+
+  .secondaryBtn,
+  .outlineBtn,
+  .viewBtn,
+  .findBtn {
+    color: var(--lg-final-espresso) !important;
+    background: rgba(255, 249, 240, 0.82) !important;
+    border-color: var(--lg-final-gold) !important;
+  }
+}
+
+/* Smoothness/performance: reduce heavy effects */
+.reveal {
+  transition: opacity 0.34s ease, transform 0.34s ease !important;
+  will-change: auto !important;
+}
+
+.productCard,
+.heroCopy,
+.heroVisual,
+.heroCard,
+.cleanPanel,
+.menuPanel,
+.modal,
+.drawer,
+.cartDrawer,
+.searchOverlay,
+.accountPage,
+.policyModal,
+.supportFormPanel,
+.supportMessageCard,
+.supportAdminCard {
+  will-change: auto !important;
+}
+
+@media (max-width: 1100px) {
+  .nav,
+  .searchOverlay,
+  .menuPanel,
+  .modal,
+  .cartDrawer,
+  .drawer,
+  .heroCard,
+  .accountPage {
+    -webkit-backdrop-filter: none !important;
+    backdrop-filter: none !important;
+  }
+
+  .heroCopy,
+  .heroVisual,
+  .productCard,
+  .cleanPanel,
+  .modal,
+  .menuPanel,
+  .cartDrawer,
+  .supportFormPanel,
+  .supportMessageCard,
+  .supportAdminCard {
+    box-shadow: 0 14px 34px rgba(44, 31, 24, 0.07) !important;
+  }
+}
+
+@media (max-width: 700px) {
+  .reveal,
+  .reveal.visible {
+    opacity: 1 !important;
+    transform: none !important;
+    transition: none !important;
+  }
+
+  .heroCopy .eyebrow,
+  .heroCopy h2,
+  .heroCopy .description,
+  .heroCopy .actions {
+    opacity: 1 !important;
+    animation: none !important;
+  }
+
+  .heroCopy,
+  .heroVisual,
+  .nav,
+  .topBarTrack {
+    animation: none !important;
+  }
+
+  .productCard:hover,
+  .heroVisual img:hover,
+  .productImage img:hover {
+    transform: none !important;
+  }
+
+  img {
+    content-visibility: auto;
+  }
+}
+
+/* If the browser/device asks for less motion, remove movement fully */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* Make forms readable everywhere */
+input,
+textarea,
+select {
+  color: var(--lg-final-dark) !important;
+}
+
+input::placeholder,
+textarea::placeholder {
+  color: rgba(95, 76, 63, 0.64) !important;
+}
+
+.toast,
+.notification,
+.successMessage,
+.verificationNotice,
+.accountNotice {
+  background: var(--lg-final-espresso) !important;
+  color: var(--lg-final-white) !important;
+  border-color: rgba(176, 138, 69, 0.38) !important;
+}
+
+.toast *,
+.notification *,
+.successMessage *,
+.verificationNotice *,
+.accountNotice * {
+  color: var(--lg-final-white) !important;
+}
+
 `}</style>
 
       <div className="scrollProgress" style={{ width: `${scrollProgress}%` }} />
