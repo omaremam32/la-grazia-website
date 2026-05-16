@@ -8975,6 +8975,260 @@ textarea::placeholder {
   color: var(--lg-final-white) !important;
 }
 
+
+/* =========================================================
+   LA GRAZIA FINAL DARK MOBILE CONTRAST + SMOOTHNESS FIX
+   ========================================================= */
+@media (max-width: 768px) {
+  .darkMode,
+  .darkMode .page,
+  .darkMode body {
+    background: linear-gradient(180deg, #1f1510 0%, #160f0b 100%) !important;
+    color: #fff9f0 !important;
+  }
+
+  .darkMode .heroCard,
+  .darkMode .heroPanel,
+  .darkMode .heroContent,
+  .darkMode .luxuryHeroCard,
+  .darkMode .productCard,
+  .darkMode .luxuryCard,
+  .darkMode .accountCard,
+  .darkMode .policyCard,
+  .darkMode .supportCard,
+  .darkMode .reviewCard,
+  .darkMode .modal,
+  .darkMode .drawer,
+  .darkMode .menuPanel,
+  .darkMode .cartDrawer,
+  .darkMode .searchOverlay,
+  .darkMode .accountPage,
+  .darkMode .productModal,
+  .darkMode .policyModal,
+  .darkMode .cleanPanel,
+  .darkMode .newsletterBox,
+  .darkMode .giftCardBox {
+    background: linear-gradient(145deg, #2c1f18 0%, #1f1510 100%) !important;
+    border-color: rgba(215, 180, 111, 0.32) !important;
+    box-shadow: 0 14px 34px rgba(0, 0, 0, 0.28) !important;
+    color: #fff9f0 !important;
+    -webkit-backdrop-filter: none !important;
+    backdrop-filter: none !important;
+  }
+
+  .darkMode .heroTitle,
+  .darkMode .hero h1,
+  .darkMode .heroCard h1,
+  .darkMode .heroContent h1,
+  .darkMode .heroText h1,
+  .darkMode .heroCopy h1,
+  .darkMode .heroMainTitle,
+  .darkMode .sectionTitle,
+  .darkMode .panelTitle,
+  .darkMode .productInfo h4,
+  .darkMode .accountTitle,
+  .darkMode .modalTitle,
+  .darkMode .policyTitle,
+  .darkMode .pageTitle,
+  .darkMode .brandMark h1,
+  .darkMode .brandLogo,
+  .darkMode .logo,
+  .darkMode .headerLogo,
+  .darkMode .siteLogo,
+  .darkMode h1,
+  .darkMode h2,
+  .darkMode h3,
+  .darkMode h4,
+  .darkMode h5 {
+    color: #fff9f0 !important;
+    opacity: 1 !important;
+    text-shadow: none !important;
+  }
+
+  .darkMode .heroEyebrow,
+  .darkMode .eyebrow,
+  .darkMode .category,
+  .darkMode .subtitle,
+  .darkMode .brandSubtitle,
+  .darkMode .footerTag,
+  .darkMode .goldText,
+  .darkMode .productTag,
+  .darkMode .accountEyebrow,
+  .darkMode .brandMark p {
+    color: #d7b46f !important;
+    opacity: 1 !important;
+  }
+
+  .darkMode .heroDescription,
+  .darkMode .hero p,
+  .darkMode .heroCard p,
+  .darkMode .heroContent p,
+  .darkMode .heroText p,
+  .darkMode .productDescription,
+  .darkMode .accountText,
+  .darkMode .storyText,
+  .darkMode .policyText,
+  .darkMode .modalText,
+  .darkMode .sectionIntro,
+  .darkMode .panelText,
+  .darkMode .price,
+  .darkMode .productInfo p,
+  .darkMode .modalInfo p,
+  .darkMode .cartItem p,
+  .darkMode .emptyState,
+  .darkMode .fitNote p,
+  .darkMode p,
+  .darkMode span,
+  .darkMode td,
+  .darkMode a,
+  .darkMode label,
+  .darkMode li {
+    color: #eadcc8 !important;
+    opacity: 1 !important;
+  }
+
+  .darkMode .nav,
+  .darkMode .header,
+  .darkMode .navbar,
+  .darkMode .mainHeader {
+    background: rgba(31, 21, 16, 0.98) !important;
+    border-color: rgba(215, 180, 111, 0.24) !important;
+    -webkit-backdrop-filter: none !important;
+    backdrop-filter: none !important;
+  }
+
+  .darkMode .nav button,
+  .darkMode .header button,
+  .darkMode .navbar button,
+  .darkMode .mainHeader button,
+  .darkMode .iconBtn,
+  .darkMode .pillBtn {
+    color: #fff9f0 !important;
+    background: rgba(255, 249, 240, 0.08) !important;
+    border-color: rgba(215, 180, 111, 0.38) !important;
+  }
+
+  .darkMode .primaryBtn,
+  .darkMode .shopBtn,
+  .darkMode .addBtn,
+  .darkMode .checkoutBtn,
+  .darkMode .payBtn,
+  .darkMode .saveBtn,
+  .darkMode .confirmBtn,
+  .darkMode button.primary,
+  .darkMode a.primaryBtn {
+    background: #d7b46f !important;
+    color: #1f1510 !important;
+    border-color: #d7b46f !important;
+    box-shadow: none !important;
+  }
+
+  .darkMode .secondaryBtn,
+  .darkMode .outlineBtn,
+  .darkMode .findBtn,
+  .darkMode .viewBtn,
+  .darkMode button.secondary,
+  .darkMode a.secondaryBtn {
+    color: #fff9f0 !important;
+    background: rgba(255, 249, 240, 0.05) !important;
+    border-color: rgba(215, 180, 111, 0.50) !important;
+  }
+
+  .darkMode input,
+  .darkMode textarea,
+  .darkMode select {
+    background: rgba(255, 249, 240, 0.07) !important;
+    color: #fff9f0 !important;
+    border-color: rgba(215, 180, 111, 0.34) !important;
+  }
+
+  .darkMode input::placeholder,
+  .darkMode textarea::placeholder {
+    color: rgba(234, 220, 200, 0.62) !important;
+  }
+
+  .darkMode .bottomNav,
+  .darkMode .mobileBottomNav,
+  .darkMode .floatingBottomNav {
+    background: rgba(22, 15, 11, 0.98) !important;
+    border-color: rgba(215, 180, 111, 0.24) !important;
+    -webkit-backdrop-filter: none !important;
+    backdrop-filter: none !important;
+  }
+
+  .darkMode .bottomNav a,
+  .darkMode .bottomNav button,
+  .darkMode .mobileBottomNav a,
+  .darkMode .mobileBottomNav button,
+  .darkMode .floatingBottomNav a,
+  .darkMode .floatingBottomNav button {
+    color: #fff9f0 !important;
+    opacity: 1 !important;
+  }
+
+  .darkMode .toast,
+  .darkMode .notification,
+  .darkMode .successMessage,
+  .darkMode .verificationNotice,
+  .darkMode .accountNotice {
+    background: #d7b46f !important;
+    color: #1f1510 !important;
+    border-color: rgba(255, 249, 240, 0.18) !important;
+  }
+
+  .darkMode .toast *,
+  .darkMode .notification *,
+  .darkMode .successMessage *,
+  .darkMode .verificationNotice *,
+  .darkMode .accountNotice * {
+    color: #1f1510 !important;
+  }
+
+  .darkMode .topBar,
+  .darkMode .deliveryBar,
+  .darkMode .announcementBar,
+  .darkMode .topAnnouncement {
+    background: #120c08 !important;
+    color: #f7f1e8 !important;
+  }
+
+  .darkMode .topBar *,
+  .darkMode .deliveryBar *,
+  .darkMode .announcementBar *,
+  .darkMode .topAnnouncement * {
+    color: #f7f1e8 !important;
+  }
+
+  .darkMode .stockTag,
+  .darkMode .tag,
+  .darkMode .badge,
+  .darkMode .statusBadge {
+    background: rgba(215, 180, 111, 0.16) !important;
+    color: #f7d992 !important;
+    border-color: rgba(215, 180, 111, 0.38) !important;
+  }
+
+  .darkMode .heartBtn,
+  .darkMode .closeBtn,
+  .darkMode .quantityBtn {
+    background: rgba(255, 249, 240, 0.08) !important;
+    color: #fff9f0 !important;
+    border-color: rgba(215, 180, 111, 0.34) !important;
+  }
+
+  .darkMode .heartBtn.saved {
+    background: #d7b46f !important;
+    color: #1f1510 !important;
+  }
+
+  .darkMode .reveal,
+  .darkMode .reveal.visible {
+    opacity: 1 !important;
+    transform: none !important;
+    transition: none !important;
+  }
+}
+
 `}</style>
 
       <div className="scrollProgress" style={{ width: `${scrollProgress}%` }} />
