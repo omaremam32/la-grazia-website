@@ -9323,6 +9323,410 @@ export default function App() {
       `}</style>
 
 
+
+      <style>{`
+        /* =========================================================
+           LA GRAZIA CINEMATIC TRANSITIONS FINAL LAYER
+           This layer re-enables luxury movement after the performance fixes.
+           ========================================================= */
+
+        :root {
+          --easeLuxury: cubic-bezier(0.16, 1, 0.3, 1);
+          --easeSoft: cubic-bezier(0.22, 1, 0.36, 1);
+          --easeEditorial: cubic-bezier(0.19, 1, 0.22, 1);
+        }
+
+        html {
+          scroll-behavior: smooth !important;
+        }
+
+        .page {
+          animation: pageFadeIn 950ms var(--easeLuxury) both !important;
+        }
+
+        @keyframes pageFadeIn {
+          from { opacity: 0; filter: blur(8px); transform: translateY(10px); }
+          to { opacity: 1; filter: blur(0); transform: translateY(0); }
+        }
+
+        .loader {
+          animation: loaderExit 520ms var(--easeLuxury) 3.75s both !important;
+        }
+
+        .loaderInner h1 {
+          animation: logoReveal 1200ms var(--easeLuxury) both !important;
+        }
+
+        .loaderInner p,
+        .loaderLine {
+          animation: fadeRise 1000ms var(--easeLuxury) 250ms both !important;
+        }
+
+        @keyframes logoReveal {
+          from { opacity: 0; letter-spacing: 0.58em; transform: translateY(18px) scale(0.96); }
+          to { opacity: 1; letter-spacing: 0.38em; transform: translateY(0) scale(1); }
+        }
+
+        @keyframes fadeRise {
+          from { opacity: 0; transform: translateY(18px); }
+          to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes loaderExit {
+          to { opacity: 0; visibility: hidden; transform: scale(1.02); }
+        }
+
+        .nav,
+        .topBar {
+          animation: navSlideDown 780ms var(--easeLuxury) 120ms both !important;
+          transition: background 420ms ease, border-color 420ms ease, box-shadow 420ms ease, transform 420ms var(--easeLuxury) !important;
+        }
+
+        @keyframes navSlideDown {
+          from { opacity: 0; transform: translateY(-28px); }
+          to { opacity: 1; transform: translateY(0); }
+        }
+
+        .brandMark h1,
+        .brandMark p,
+        .navActions,
+        .navLinks {
+          animation: fadeRise 850ms var(--easeLuxury) 260ms both !important;
+        }
+
+        .romaHero,
+        .hero,
+        .heroSection {
+          animation: heroSceneIn 1100ms var(--easeLuxury) 120ms both !important;
+        }
+
+        @keyframes heroSceneIn {
+          from { opacity: 0; transform: translateY(26px); }
+          to { opacity: 1; transform: translateY(0); }
+        }
+
+        .romaHeroBadge,
+        .heroEyebrow,
+        .eyebrow {
+          animation: badgeSweep 900ms var(--easeLuxury) 280ms both !important;
+        }
+
+        @keyframes badgeSweep {
+          from { opacity: 0; transform: translateY(14px) scale(0.96); filter: blur(6px); }
+          to { opacity: 1; transform: translateY(0) scale(1); filter: blur(0); }
+        }
+
+        .romaHeroCopy h2,
+        .heroCopy h2,
+        .heroTitle {
+          animation: titleEditorialIn 1150ms var(--easeEditorial) 360ms both !important;
+          transform-origin: left center;
+        }
+
+        @keyframes titleEditorialIn {
+          from { opacity: 0; transform: translateX(-32px) translateY(18px); filter: blur(10px); letter-spacing: -0.1em; }
+          to { opacity: 1; transform: translateX(0) translateY(0); filter: blur(0); }
+        }
+
+        .romaHeroCopy h2 span,
+        .romaHeroCopy h2 small {
+          transition: color 450ms ease, letter-spacing 650ms var(--easeLuxury), transform 650ms var(--easeLuxury) !important;
+        }
+
+        .romaHeroCopy .description,
+        .heroCopy .description,
+        .heroDescription,
+        .dropMeta,
+        .heroActions {
+          animation: fadeRise 950ms var(--easeLuxury) 560ms both !important;
+        }
+
+        .dropMeta span,
+        .heroActions a,
+        .heroActions button {
+          transition: transform 420ms var(--easeLuxury), background 420ms ease, color 420ms ease, border-color 420ms ease, box-shadow 420ms ease !important;
+        }
+
+        .dropMeta span:hover,
+        .heroActions a:hover,
+        .heroActions button:hover {
+          transform: translateY(-4px) !important;
+          box-shadow: 0 18px 44px rgba(44, 31, 24, 0.14) !important;
+        }
+
+        .romaHeroVisual,
+        .heroVisual {
+          animation: imageFrameIn 1150ms var(--easeLuxury) 520ms both !important;
+          transition: transform 720ms var(--easeLuxury), box-shadow 720ms ease, border-color 520ms ease !important;
+          overflow: hidden;
+        }
+
+        @keyframes imageFrameIn {
+          from { opacity: 0; transform: translateX(36px) scale(0.985); filter: blur(10px); }
+          to { opacity: 1; transform: translateX(0) scale(1); filter: blur(0); }
+        }
+
+        .romaHeroVisual img,
+        .heroVisual img,
+        .productImage img {
+          transition: transform 900ms var(--easeLuxury), filter 600ms ease, opacity 600ms ease !important;
+          animation: none !important;
+        }
+
+        .romaHeroVisual:hover,
+        .heroVisual:hover {
+          transform: translateY(-8px) scale(1.008) !important;
+          box-shadow: 0 34px 90px rgba(44, 31, 24, 0.18) !important;
+        }
+
+        .romaHeroVisual:hover img,
+        .heroVisual:hover img,
+        .productCard:hover .productImage img {
+          transform: scale(1.055) !important;
+        }
+
+        .heroCard,
+        .signatureCard,
+        .signaturePanel,
+        .editorialCard,
+        .luxuryCard,
+        .trustItem,
+        .productCard,
+        .accountCard,
+        .policyCard,
+        .supportMessageCard,
+        .supportAdminCard,
+        .profileInfoCard {
+          transition:
+            transform 520ms var(--easeLuxury),
+            box-shadow 520ms ease,
+            border-color 420ms ease,
+            background 420ms ease,
+            color 420ms ease,
+            opacity 420ms ease !important;
+        }
+
+        .heroCard:hover,
+        .signatureCard:hover,
+        .signaturePanel:hover,
+        .editorialCard:hover,
+        .luxuryCard:hover,
+        .trustItem:hover,
+        .productCard:hover,
+        .accountCard:hover,
+        .policyCard:hover,
+        .supportMessageCard:hover,
+        .supportAdminCard:hover,
+        .profileInfoCard:hover {
+          transform: translateY(-8px) !important;
+          box-shadow: 0 28px 70px rgba(44, 31, 24, 0.14) !important;
+        }
+
+        .reveal {
+          opacity: 0 !important;
+          transform: translateY(28px) scale(0.985) !important;
+          transition: opacity 800ms var(--easeLuxury), transform 800ms var(--easeLuxury), filter 800ms ease !important;
+          filter: blur(4px);
+          will-change: opacity, transform, filter !important;
+        }
+
+        .reveal.visible {
+          opacity: 1 !important;
+          transform: translateY(0) scale(1) !important;
+          filter: blur(0);
+        }
+
+        .productCard:nth-child(2n),
+        .trustItem:nth-child(2n),
+        .luxuryCard:nth-child(2n) {
+          transition-delay: 60ms !important;
+        }
+
+        .productCard:nth-child(3n),
+        .trustItem:nth-child(3n),
+        .luxuryCard:nth-child(3n) {
+          transition-delay: 120ms !important;
+        }
+
+        button,
+        a,
+        .primaryBtn,
+        .secondaryBtn,
+        .viewBtn,
+        .addBtn,
+        .iconBtn,
+        .heartBtn,
+        .signInTab,
+        .profileTab,
+        .filterBtn,
+        .sortBtn,
+        .statusUpdateBtn,
+        .reviewStarBtn {
+          transition:
+            transform 350ms var(--easeLuxury),
+            box-shadow 350ms ease,
+            background 350ms ease,
+            color 350ms ease,
+            border-color 350ms ease,
+            opacity 350ms ease !important;
+        }
+
+        button:hover,
+        a:hover,
+        .primaryBtn:hover,
+        .secondaryBtn:hover,
+        .viewBtn:hover,
+        .addBtn:hover,
+        .iconBtn:hover,
+        .heartBtn:hover,
+        .filterBtn:hover,
+        .sortBtn:hover,
+        .statusUpdateBtn:hover,
+        .reviewStarBtn:hover {
+          transform: translateY(-3px) !important;
+        }
+
+        button:active,
+        a:active,
+        .primaryBtn:active,
+        .secondaryBtn:active,
+        .viewBtn:active,
+        .addBtn:active,
+        .iconBtn:active,
+        .heartBtn:active {
+          transform: translateY(0) scale(0.98) !important;
+        }
+
+        .menuPanel,
+        .cartDrawer,
+        .drawer,
+        .searchOverlay,
+        .accountPage,
+        .productModal,
+        .policyModal,
+        .signInPanel {
+          animation: panelLuxuryIn 520ms var(--easeLuxury) both !important;
+          transition: transform 520ms var(--easeLuxury), opacity 520ms ease, box-shadow 520ms ease !important;
+        }
+
+        @keyframes panelLuxuryIn {
+          from { opacity: 0; transform: translateY(28px) scale(0.97); filter: blur(10px); }
+          to { opacity: 1; transform: translateY(0) scale(1); filter: blur(0); }
+        }
+
+        .menuBackdrop,
+        .cartBackdrop,
+        .searchBackdrop,
+        .signInBackdrop,
+        .modalBackdrop {
+          animation: backdropFadeIn 360ms ease both !important;
+        }
+
+        @keyframes backdropFadeIn {
+          from { opacity: 0; }
+          to { opacity: 1; }
+        }
+
+        .toast {
+          animation: toastSlideIn 520ms var(--easeLuxury) both !important;
+          transition: transform 420ms var(--easeLuxury), opacity 420ms ease !important;
+        }
+
+        @keyframes toastSlideIn {
+          from { opacity: 0; transform: translateY(24px) scale(0.96); filter: blur(8px); }
+          to { opacity: 1; transform: translateY(0) scale(1); filter: blur(0); }
+        }
+
+        .scrollProgress {
+          transition: width 180ms linear, background 420ms ease !important;
+        }
+
+        .topBarText,
+        .tickerTrack,
+        .deliveryTicker {
+          animation: luxuryTicker 22s linear infinite !important;
+          will-change: transform;
+        }
+
+        @keyframes luxuryTicker {
+          from { transform: translateX(0); }
+          to { transform: translateX(-50%); }
+        }
+
+        .page.darkMode .heroCard:hover,
+        .page.darkMode .signatureCard:hover,
+        .page.darkMode .signaturePanel:hover,
+        .page.darkMode .editorialCard:hover,
+        .page.darkMode .luxuryCard:hover,
+        .page.darkMode .trustItem:hover,
+        .page.darkMode .productCard:hover {
+          box-shadow: 0 30px 70px rgba(0, 0, 0, 0.32) !important;
+        }
+
+        @media (max-width: 768px) {
+          .romaHero,
+          .hero,
+          .heroSection {
+            animation-duration: 850ms !important;
+          }
+
+          .romaHeroCopy h2,
+          .heroCopy h2,
+          .heroTitle {
+            animation-duration: 900ms !important;
+          }
+
+          .romaHeroVisual,
+          .heroVisual {
+            animation: mobileImageRise 850ms var(--easeLuxury) 380ms both !important;
+          }
+
+          @keyframes mobileImageRise {
+            from { opacity: 0; transform: translateY(28px) scale(0.98); filter: blur(8px); }
+            to { opacity: 1; transform: translateY(0) scale(1); filter: blur(0); }
+          }
+
+          .reveal {
+            opacity: 0 !important;
+            transform: translateY(22px) !important;
+            filter: blur(3px);
+            transition: opacity 520ms var(--easeLuxury), transform 520ms var(--easeLuxury), filter 520ms ease !important;
+          }
+
+          .reveal.visible {
+            opacity: 1 !important;
+            transform: translateY(0) !important;
+            filter: blur(0);
+          }
+
+          .productCard:hover,
+          .luxuryCard:hover,
+          .trustItem:hover,
+          .heroCard:hover,
+          .romaHeroVisual:hover,
+          .heroVisual:hover {
+            transform: translateY(-4px) !important;
+          }
+
+          .romaHeroVisual:hover img,
+          .heroVisual:hover img,
+          .productCard:hover .productImage img {
+            transform: scale(1.025) !important;
+          }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+          *,
+          *::before,
+          *::after {
+            animation-duration: 0.001ms !important;
+            animation-iteration-count: 1 !important;
+            transition-duration: 0.001ms !important;
+            scroll-behavior: auto !important;
+          }
+        }
+      `}</style>
+
       <div className="scrollProgress" style={{ width: `${scrollProgress}%` }} />
 
       {loading && (
