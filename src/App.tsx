@@ -1036,7 +1036,7 @@ export default function App() {
       : "Hello La Grazia, I want to ask about the new collection.";
 
   useEffect(() => {
-    const timer = window.setTimeout(() => setLoading(false), 4300);
+    const timer = window.setTimeout(() => setLoading(false), 2200);
     return () => window.clearTimeout(timer);
   }, []);
 
@@ -9326,14 +9326,13 @@ export default function App() {
 
       <style>{`
         /* =========================================================
-           LA GRAZIA CINEMATIC TRANSITIONS FINAL LAYER
-           This layer re-enables luxury movement after the performance fixes.
+           LA GRAZIA SOFT LUXURY TRANSITIONS FINAL LAYER
+           Reduced intensity + fixed loading screen contrast.
            ========================================================= */
 
         :root {
-          --easeLuxury: cubic-bezier(0.16, 1, 0.3, 1);
-          --easeSoft: cubic-bezier(0.22, 1, 0.36, 1);
-          --easeEditorial: cubic-bezier(0.19, 1, 0.22, 1);
+          --easeLuxury: cubic-bezier(0.22, 1, 0.36, 1);
+          --easeSoft: cubic-bezier(0.25, 0.8, 0.25, 1);
         }
 
         html {
@@ -9341,49 +9340,74 @@ export default function App() {
         }
 
         .page {
-          animation: pageFadeIn 950ms var(--easeLuxury) both !important;
+          animation: pageSoftIn 420ms ease both !important;
+          transition: background 260ms ease, color 260ms ease !important;
         }
 
-        @keyframes pageFadeIn {
-          from { opacity: 0; filter: blur(8px); transform: translateY(10px); }
-          to { opacity: 1; filter: blur(0); transform: translateY(0); }
+        @keyframes pageSoftIn {
+          from { opacity: 0; }
+          to { opacity: 1; }
         }
 
+        /* Loading screen: shorter, clearer, and readable on desktop/mobile */
         .loader {
-          animation: loaderExit 520ms var(--easeLuxury) 3.75s both !important;
+          background:
+            radial-gradient(circle at center, rgba(176, 138, 69, 0.16), transparent 40%),
+            #f7f1e8 !important;
+          color: #1f1712 !important;
+          animation: loaderExitSoft 280ms ease 1.65s both !important;
         }
 
-        .loaderInner h1 {
-          animation: logoReveal 1200ms var(--easeLuxury) both !important;
+        .loaderInner h1,
+        .loader h1 {
+          color: #1f1712 !important;
+          opacity: 1 !important;
+          letter-spacing: 0.22em !important;
+          animation: logoSoftReveal 620ms var(--easeLuxury) both !important;
+          text-shadow: none !important;
         }
 
         .loaderInner p,
+        .loader p {
+          color: #b08a45 !important;
+          opacity: 1 !important;
+          letter-spacing: 0.22em !important;
+          animation: fadeRiseSoft 620ms var(--easeLuxury) 120ms both !important;
+        }
+
         .loaderLine {
-          animation: fadeRise 1000ms var(--easeLuxury) 250ms both !important;
+          background: linear-gradient(90deg, transparent, #b08a45, transparent) !important;
+          animation: loaderLineSoft 1.15s ease 250ms forwards !important;
         }
 
-        @keyframes logoReveal {
-          from { opacity: 0; letter-spacing: 0.58em; transform: translateY(18px) scale(0.96); }
-          to { opacity: 1; letter-spacing: 0.38em; transform: translateY(0) scale(1); }
-        }
-
-        @keyframes fadeRise {
-          from { opacity: 0; transform: translateY(18px); }
+        @keyframes logoSoftReveal {
+          from { opacity: 0; transform: translateY(10px); }
           to { opacity: 1; transform: translateY(0); }
         }
 
-        @keyframes loaderExit {
-          to { opacity: 0; visibility: hidden; transform: scale(1.02); }
+        @keyframes fadeRiseSoft {
+          from { opacity: 0; transform: translateY(12px); }
+          to { opacity: 1; transform: translateY(0); }
         }
 
+        @keyframes loaderLineSoft {
+          from { width: 0; }
+          to { width: min(360px, 58vw); }
+        }
+
+        @keyframes loaderExitSoft {
+          to { opacity: 0; visibility: hidden; }
+        }
+
+        /* Header and top bar: smooth, not dramatic */
         .nav,
         .topBar {
-          animation: navSlideDown 780ms var(--easeLuxury) 120ms both !important;
-          transition: background 420ms ease, border-color 420ms ease, box-shadow 420ms ease, transform 420ms var(--easeLuxury) !important;
+          animation: softDrop 420ms var(--easeLuxury) 90ms both !important;
+          transition: background 260ms ease, border-color 260ms ease, box-shadow 260ms ease !important;
         }
 
-        @keyframes navSlideDown {
-          from { opacity: 0; transform: translateY(-28px); }
+        @keyframes softDrop {
+          from { opacity: 0; transform: translateY(-12px); }
           to { opacity: 1; transform: translateY(0); }
         }
 
@@ -9391,46 +9415,37 @@ export default function App() {
         .brandMark p,
         .navActions,
         .navLinks {
-          animation: fadeRise 850ms var(--easeLuxury) 260ms both !important;
+          animation: fadeRiseSoft 420ms var(--easeLuxury) 140ms both !important;
         }
 
+        /* Hero: premium motion but calmer */
         .romaHero,
         .hero,
         .heroSection {
-          animation: heroSceneIn 1100ms var(--easeLuxury) 120ms both !important;
+          animation: heroSoftIn 560ms var(--easeLuxury) 120ms both !important;
         }
 
-        @keyframes heroSceneIn {
-          from { opacity: 0; transform: translateY(26px); }
+        @keyframes heroSoftIn {
+          from { opacity: 0; transform: translateY(14px); }
           to { opacity: 1; transform: translateY(0); }
         }
 
         .romaHeroBadge,
         .heroEyebrow,
         .eyebrow {
-          animation: badgeSweep 900ms var(--easeLuxury) 280ms both !important;
-        }
-
-        @keyframes badgeSweep {
-          from { opacity: 0; transform: translateY(14px) scale(0.96); filter: blur(6px); }
-          to { opacity: 1; transform: translateY(0) scale(1); filter: blur(0); }
+          animation: fadeRiseSoft 480ms var(--easeLuxury) 180ms both !important;
         }
 
         .romaHeroCopy h2,
         .heroCopy h2,
         .heroTitle {
-          animation: titleEditorialIn 1150ms var(--easeEditorial) 360ms both !important;
+          animation: titleSoftIn 620ms var(--easeLuxury) 220ms both !important;
           transform-origin: left center;
         }
 
-        @keyframes titleEditorialIn {
-          from { opacity: 0; transform: translateX(-32px) translateY(18px); filter: blur(10px); letter-spacing: -0.1em; }
-          to { opacity: 1; transform: translateX(0) translateY(0); filter: blur(0); }
-        }
-
-        .romaHeroCopy h2 span,
-        .romaHeroCopy h2 small {
-          transition: color 450ms ease, letter-spacing 650ms var(--easeLuxury), transform 650ms var(--easeLuxury) !important;
+        @keyframes titleSoftIn {
+          from { opacity: 0; transform: translateY(16px); }
+          to { opacity: 1; transform: translateY(0); }
         }
 
         .romaHeroCopy .description,
@@ -9438,53 +9453,41 @@ export default function App() {
         .heroDescription,
         .dropMeta,
         .heroActions {
-          animation: fadeRise 950ms var(--easeLuxury) 560ms both !important;
-        }
-
-        .dropMeta span,
-        .heroActions a,
-        .heroActions button {
-          transition: transform 420ms var(--easeLuxury), background 420ms ease, color 420ms ease, border-color 420ms ease, box-shadow 420ms ease !important;
-        }
-
-        .dropMeta span:hover,
-        .heroActions a:hover,
-        .heroActions button:hover {
-          transform: translateY(-4px) !important;
-          box-shadow: 0 18px 44px rgba(44, 31, 24, 0.14) !important;
+          animation: fadeRiseSoft 560ms var(--easeLuxury) 280ms both !important;
         }
 
         .romaHeroVisual,
         .heroVisual {
-          animation: imageFrameIn 1150ms var(--easeLuxury) 520ms both !important;
-          transition: transform 720ms var(--easeLuxury), box-shadow 720ms ease, border-color 520ms ease !important;
+          animation: imageSoftIn 620ms var(--easeLuxury) 260ms both !important;
+          transition: transform 360ms var(--easeLuxury), box-shadow 360ms ease, border-color 280ms ease !important;
           overflow: hidden;
         }
 
-        @keyframes imageFrameIn {
-          from { opacity: 0; transform: translateX(36px) scale(0.985); filter: blur(10px); }
-          to { opacity: 1; transform: translateX(0) scale(1); filter: blur(0); }
+        @keyframes imageSoftIn {
+          from { opacity: 0; transform: translateY(18px) scale(0.995); }
+          to { opacity: 1; transform: translateY(0) scale(1); }
         }
 
         .romaHeroVisual img,
         .heroVisual img,
         .productImage img {
-          transition: transform 900ms var(--easeLuxury), filter 600ms ease, opacity 600ms ease !important;
           animation: none !important;
+          transition: transform 420ms var(--easeLuxury), filter 280ms ease, opacity 280ms ease !important;
         }
 
         .romaHeroVisual:hover,
         .heroVisual:hover {
-          transform: translateY(-8px) scale(1.008) !important;
-          box-shadow: 0 34px 90px rgba(44, 31, 24, 0.18) !important;
+          transform: translateY(-3px) !important;
+          box-shadow: 0 22px 58px rgba(44, 31, 24, 0.12) !important;
         }
 
         .romaHeroVisual:hover img,
         .heroVisual:hover img,
         .productCard:hover .productImage img {
-          transform: scale(1.055) !important;
+          transform: scale(1.018) !important;
         }
 
+        /* Cards and buttons: softer hover transitions */
         .heroCard,
         .signatureCard,
         .signaturePanel,
@@ -9498,12 +9501,12 @@ export default function App() {
         .supportAdminCard,
         .profileInfoCard {
           transition:
-            transform 520ms var(--easeLuxury),
-            box-shadow 520ms ease,
-            border-color 420ms ease,
-            background 420ms ease,
-            color 420ms ease,
-            opacity 420ms ease !important;
+            transform 300ms var(--easeLuxury),
+            box-shadow 300ms ease,
+            border-color 260ms ease,
+            background 260ms ease,
+            color 260ms ease,
+            opacity 260ms ease !important;
         }
 
         .heroCard:hover,
@@ -9518,83 +9521,64 @@ export default function App() {
         .supportMessageCard:hover,
         .supportAdminCard:hover,
         .profileInfoCard:hover {
-          transform: translateY(-8px) !important;
-          box-shadow: 0 28px 70px rgba(44, 31, 24, 0.14) !important;
+          transform: translateY(-3px) !important;
         }
 
-        .reveal {
-          opacity: 0 !important;
-          transform: translateY(28px) scale(0.985) !important;
-          transition: opacity 800ms var(--easeLuxury), transform 800ms var(--easeLuxury), filter 800ms ease !important;
-          filter: blur(4px);
-          will-change: opacity, transform, filter !important;
-        }
-
-        .reveal.visible {
-          opacity: 1 !important;
-          transform: translateY(0) scale(1) !important;
-          filter: blur(0);
-        }
-
-        .productCard:nth-child(2n),
-        .trustItem:nth-child(2n),
-        .luxuryCard:nth-child(2n) {
-          transition-delay: 60ms !important;
-        }
-
-        .productCard:nth-child(3n),
-        .trustItem:nth-child(3n),
-        .luxuryCard:nth-child(3n) {
-          transition-delay: 120ms !important;
-        }
-
-        button,
-        a,
         .primaryBtn,
         .secondaryBtn,
         .viewBtn,
         .addBtn,
+        .checkoutBtn,
+        .payBtn,
+        .saveBtn,
+        .accountPrimary,
+        .accountSecondary,
         .iconBtn,
+        .roundBtn,
         .heartBtn,
-        .signInTab,
-        .profileTab,
         .filterBtn,
-        .sortBtn,
-        .statusUpdateBtn,
-        .reviewStarBtn {
+        .sortButton,
+        .profileTab,
+        .signInTab {
           transition:
-            transform 350ms var(--easeLuxury),
-            box-shadow 350ms ease,
-            background 350ms ease,
-            color 350ms ease,
-            border-color 350ms ease,
-            opacity 350ms ease !important;
+            transform 220ms var(--easeLuxury),
+            background 220ms ease,
+            color 220ms ease,
+            border-color 220ms ease,
+            box-shadow 220ms ease !important;
         }
 
-        button:hover,
-        a:hover,
         .primaryBtn:hover,
         .secondaryBtn:hover,
         .viewBtn:hover,
         .addBtn:hover,
+        .checkoutBtn:hover,
+        .payBtn:hover,
+        .saveBtn:hover,
+        .accountPrimary:hover,
+        .accountSecondary:hover,
         .iconBtn:hover,
+        .roundBtn:hover,
         .heartBtn:hover,
         .filterBtn:hover,
-        .sortBtn:hover,
-        .statusUpdateBtn:hover,
-        .reviewStarBtn:hover {
-          transform: translateY(-3px) !important;
+        .sortButton:hover,
+        .profileTab:hover,
+        .signInTab:hover {
+          transform: translateY(-2px) !important;
         }
 
-        button:active,
-        a:active,
-        .primaryBtn:active,
-        .secondaryBtn:active,
-        .viewBtn:active,
-        .addBtn:active,
-        .iconBtn:active,
-        .heartBtn:active {
-          transform: translateY(0) scale(0.98) !important;
+        /* Scroll reveal: visible but calmer */
+        .reveal {
+          opacity: 0 !important;
+          transform: translateY(14px) !important;
+          filter: none !important;
+          transition: opacity 420ms var(--easeLuxury), transform 420ms var(--easeLuxury) !important;
+        }
+
+        .reveal.visible {
+          opacity: 1 !important;
+          transform: translateY(0) !important;
+          filter: none !important;
         }
 
         .menuPanel,
@@ -9605,13 +9589,13 @@ export default function App() {
         .productModal,
         .policyModal,
         .signInPanel {
-          animation: panelLuxuryIn 520ms var(--easeLuxury) both !important;
-          transition: transform 520ms var(--easeLuxury), opacity 520ms ease, box-shadow 520ms ease !important;
+          animation: panelSoftIn 300ms var(--easeLuxury) both !important;
+          transition: transform 300ms var(--easeLuxury), opacity 300ms ease, box-shadow 300ms ease !important;
         }
 
-        @keyframes panelLuxuryIn {
-          from { opacity: 0; transform: translateY(28px) scale(0.97); filter: blur(10px); }
-          to { opacity: 1; transform: translateY(0) scale(1); filter: blur(0); }
+        @keyframes panelSoftIn {
+          from { opacity: 0; transform: translateY(16px); }
+          to { opacity: 1; transform: translateY(0); }
         }
 
         .menuBackdrop,
@@ -9619,84 +9603,50 @@ export default function App() {
         .searchBackdrop,
         .signInBackdrop,
         .modalBackdrop {
-          animation: backdropFadeIn 360ms ease both !important;
+          animation: backdropSoftFade 220ms ease both !important;
         }
 
-        @keyframes backdropFadeIn {
+        @keyframes backdropSoftFade {
           from { opacity: 0; }
           to { opacity: 1; }
         }
 
         .toast {
-          animation: toastSlideIn 520ms var(--easeLuxury) both !important;
-          transition: transform 420ms var(--easeLuxury), opacity 420ms ease !important;
+          animation: toastSoftIn 300ms var(--easeLuxury) both !important;
+          transition: transform 260ms var(--easeLuxury), opacity 260ms ease !important;
         }
 
-        @keyframes toastSlideIn {
-          from { opacity: 0; transform: translateY(24px) scale(0.96); filter: blur(8px); }
-          to { opacity: 1; transform: translateY(0) scale(1); filter: blur(0); }
+        @keyframes toastSoftIn {
+          from { opacity: 0; transform: translateY(14px); }
+          to { opacity: 1; transform: translateY(0); }
         }
 
         .scrollProgress {
-          transition: width 180ms linear, background 420ms ease !important;
+          transition: width 120ms linear, background 260ms ease !important;
         }
 
         .topBarText,
         .tickerTrack,
         .deliveryTicker {
-          animation: luxuryTicker 22s linear infinite !important;
+          animation: luxuryTickerSoft 34s linear infinite !important;
           will-change: transform;
         }
 
-        @keyframes luxuryTicker {
+        @keyframes luxuryTickerSoft {
           from { transform: translateX(0); }
           to { transform: translateX(-50%); }
-        }
-
-        .page.darkMode .heroCard:hover,
-        .page.darkMode .signatureCard:hover,
-        .page.darkMode .signaturePanel:hover,
-        .page.darkMode .editorialCard:hover,
-        .page.darkMode .luxuryCard:hover,
-        .page.darkMode .trustItem:hover,
-        .page.darkMode .productCard:hover {
-          box-shadow: 0 30px 70px rgba(0, 0, 0, 0.32) !important;
         }
 
         @media (max-width: 768px) {
           .romaHero,
           .hero,
-          .heroSection {
-            animation-duration: 850ms !important;
-          }
-
+          .heroSection,
+          .romaHeroVisual,
+          .heroVisual,
           .romaHeroCopy h2,
           .heroCopy h2,
           .heroTitle {
-            animation-duration: 900ms !important;
-          }
-
-          .romaHeroVisual,
-          .heroVisual {
-            animation: mobileImageRise 850ms var(--easeLuxury) 380ms both !important;
-          }
-
-          @keyframes mobileImageRise {
-            from { opacity: 0; transform: translateY(28px) scale(0.98); filter: blur(8px); }
-            to { opacity: 1; transform: translateY(0) scale(1); filter: blur(0); }
-          }
-
-          .reveal {
-            opacity: 0 !important;
-            transform: translateY(22px) !important;
-            filter: blur(3px);
-            transition: opacity 520ms var(--easeLuxury), transform 520ms var(--easeLuxury), filter 520ms ease !important;
-          }
-
-          .reveal.visible {
-            opacity: 1 !important;
-            transform: translateY(0) !important;
-            filter: blur(0);
+            animation-duration: 480ms !important;
           }
 
           .productCard:hover,
@@ -9705,13 +9655,13 @@ export default function App() {
           .heroCard:hover,
           .romaHeroVisual:hover,
           .heroVisual:hover {
-            transform: translateY(-4px) !important;
+            transform: none !important;
           }
 
           .romaHeroVisual:hover img,
           .heroVisual:hover img,
           .productCard:hover .productImage img {
-            transform: scale(1.025) !important;
+            transform: none !important;
           }
         }
 
