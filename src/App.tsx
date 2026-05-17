@@ -403,6 +403,16 @@ const moodOptions = [
   },
 ];
 
+const dropTheme = {
+  city: "Roma",
+  title: "Roma Drop",
+  subtitle: "New Season Arrivals",
+  note: "Limited Seasonal Pieces",
+  label: "Italian City Drop",
+  description:
+    "A refined Italian-inspired drop built around soft neutrals, tailored silhouettes, statement scarves, and timeless everyday elegance.",
+};
+
 const text = {
   EN: {
     topBar: "Free Cairo delivery for orders above EGP 3,000",
@@ -410,14 +420,13 @@ const text = {
     navBest: "Best Sellers",
     navCollection: "Collection",
     navAbout: "About",
-    heroEyebrow: "Elegance in every day",
-    heroTitle: "The Roma Drop is here.",
-    heroDescription:
-      "Discover a women-only local fashion brand inspired by Italian old-money elegance, soft neutrals, tailored single pieces, statement scarves, and effortless quiet luxury.",
+    heroEyebrow: dropTheme.title.toUpperCase(),
+    heroTitle: dropTheme.title.toUpperCase(),
+    heroDescription: dropTheme.description,
     shopCollection: "Shop Collection",
     findLook: "Find Your Piece",
-    signatureEdit: "The Signature Edit",
-    signatureText: "Tailored pieces, scarves, knitwear, and gold details.",
+    signatureEdit: dropTheme.subtitle.toUpperCase(),
+    signatureText: dropTheme.note,
     trustDelivery: "Cairo Delivery",
     trustExchange: "14-Day Exchange",
     trustStyling: "WhatsApp Styling",
@@ -543,14 +552,14 @@ const text = {
     navBest: "الأكثر مبيعاً",
     navCollection: "المجموعة",
     navAbout: "عن البراند",
-    heroEyebrow: "أناقة في كل يوم",
-    heroTitle: "مجموعة روما وصلت.",
+    heroEyebrow: dropTheme.title.toUpperCase(),
+    heroTitle: dropTheme.title.toUpperCase(),
     heroDescription:
-      "اكتشفي براند محلي نسائي مستوحى من الأناقة الإيطالية الهادئة، الألوان الناعمة، القطع الراقية، السكارف، والرفاهية البسيطة.",
+      "اكتشفي إصدار روما الجديد من لا غراتسيا: قطع محدودة مستوحاة من الأناقة الإيطالية، الألوان الهادئة، القصّات الراقية، والستايل اليومي الفاخر.",
     shopCollection: "تسوقي المجموعة",
     findLook: "اختاري القطعة",
-    signatureEdit: "الاختيار الأساسي",
-    signatureText: "قطع Tailored، سكارف، تريكو، وتفاصيل ذهبية.",
+    signatureEdit: dropTheme.subtitle.toUpperCase(),
+    signatureText: dropTheme.note,
     trustDelivery: "توصيل داخل القاهرة",
     trustExchange: "استبدال خلال ١٤ يوم",
     trustStyling: "تنسيق عبر واتساب",
@@ -9028,6 +9037,292 @@ export default function App() {
         }
       `}</style>
 
+      <style>{`
+        /* =========================================================
+           ROMA DROP — LUXURY HOMEPAGE THEME
+           Future drops: change only dropTheme near the top of App.tsx
+           ========================================================= */
+
+        .romaHero {
+          gap: clamp(26px, 4vw, 54px) !important;
+        }
+
+        .romaHeroCopy {
+          background:
+            radial-gradient(circle at 18% 18%, rgba(176, 138, 69, 0.18), transparent 34%),
+            linear-gradient(145deg, #f8efe1 0%, #efe0cb 55%, #ead8be 100%) !important;
+          border: 1px solid rgba(176, 138, 69, 0.34) !important;
+          box-shadow: 0 24px 70px rgba(44, 31, 24, 0.10) !important;
+        }
+
+        .romaHeroCopy::before {
+          content: "";
+          position: absolute;
+          inset: 20px;
+          border: 1px solid rgba(176, 138, 69, 0.22);
+          border-radius: 28px;
+          pointer-events: none;
+        }
+
+        .romaHeroCopy::after {
+          content: "ROMA" !important;
+          right: -46px !important;
+          bottom: -44px !important;
+          font-size: clamp(130px, 15vw, 260px) !important;
+          letter-spacing: -0.08em;
+          color: rgba(176, 138, 69, 0.095) !important;
+        }
+
+        .dropBadge {
+          width: fit-content;
+          display: inline-flex;
+          align-items: center;
+          gap: 12px;
+          margin-bottom: 22px;
+          padding: 9px 14px;
+          border-radius: 999px;
+          border: 1px solid rgba(176, 138, 69, 0.42);
+          background: rgba(255, 250, 242, 0.58);
+          color: #2c1f18;
+          box-shadow: 0 12px 30px rgba(44, 31, 24, 0.08);
+          opacity: 0;
+          animation: fadeUp 1s cubic-bezier(.16, 1, .3, 1) 0.75s forwards;
+        }
+
+        .dropBadge span {
+          font-size: 11px;
+          letter-spacing: 0.28em;
+          text-transform: uppercase;
+          color: #2c1f18;
+        }
+
+        .dropBadge em {
+          font-style: normal;
+          font-size: 11px;
+          letter-spacing: 0.18em;
+          text-transform: uppercase;
+          color: #b08a45;
+        }
+
+        .romaHeroCopy .eyebrow {
+          margin-bottom: 10px !important;
+          color: #b08a45 !important;
+        }
+
+        .romaHeroCopy h2 {
+          display: grid;
+          gap: 4px;
+          margin: 0 !important;
+          text-transform: uppercase;
+          letter-spacing: 0.02em !important;
+          color: #1f1712 !important;
+        }
+
+        .romaHeroCopy h2 span {
+          font-size: clamp(72px, 8vw, 132px);
+          line-height: 0.82;
+          color: #1f1712 !important;
+        }
+
+        .romaHeroCopy h2 small {
+          font-family: Georgia, "Times New Roman", serif;
+          font-size: clamp(42px, 5.2vw, 92px);
+          line-height: 0.92;
+          font-weight: 400;
+          letter-spacing: 0.18em;
+          color: #b08a45 !important;
+        }
+
+        .romaHeroCopy .description {
+          max-width: 670px !important;
+          color: #5f4c3f !important;
+        }
+
+        .dropMeta {
+          position: relative;
+          z-index: 1;
+          display: flex;
+          flex-wrap: wrap;
+          gap: 10px;
+          margin-top: 26px;
+          opacity: 0;
+          animation: fadeUp 1s cubic-bezier(.16, 1, .3, 1) 1.55s forwards;
+        }
+
+        .dropMeta span {
+          display: inline-flex;
+          align-items: center;
+          min-height: 34px;
+          padding: 8px 12px;
+          border-radius: 999px;
+          border: 1px solid rgba(176, 138, 69, 0.28);
+          background: rgba(255, 250, 242, 0.44);
+          color: #5f4c3f;
+          font-size: 11px;
+          letter-spacing: 0.14em;
+          text-transform: uppercase;
+        }
+
+        .romaHeroVisual {
+          background: #d9c2a1 !important;
+          border: 1px solid rgba(176, 138, 69, 0.28);
+        }
+
+        .romaHeroVisual::before {
+          content: "";
+          position: absolute;
+          inset: 18px;
+          z-index: 2;
+          border: 1px solid rgba(255, 250, 242, 0.34);
+          border-radius: 28px;
+          pointer-events: none;
+        }
+
+        .romaHeroVisual::after {
+          background:
+            linear-gradient(to top, rgba(31, 23, 18, 0.72), rgba(31, 23, 18, 0.14) 48%, transparent 70%) !important;
+        }
+
+        .romaHeroCard {
+          background: rgba(255, 250, 242, 0.18) !important;
+          border-color: rgba(255, 250, 242, 0.38) !important;
+          box-shadow: 0 18px 46px rgba(0, 0, 0, 0.16);
+        }
+
+        .romaHeroCard p {
+          margin: 10px 0 0;
+          color: rgba(255, 250, 242, 0.82) !important;
+          line-height: 1.7;
+          font-size: 13px;
+          letter-spacing: 0.04em;
+        }
+
+        .darkMode .romaHeroCopy {
+          background:
+            radial-gradient(circle at 18% 18%, rgba(224, 189, 105, 0.15), transparent 34%),
+            linear-gradient(145deg, #2b1d17 0%, #1f1510 100%) !important;
+          border-color: rgba(224, 189, 105, 0.36) !important;
+        }
+
+        .darkMode .romaHeroCopy::before {
+          border-color: rgba(224, 189, 105, 0.24);
+        }
+
+        .darkMode .romaHeroCopy::after {
+          color: rgba(224, 189, 105, 0.08) !important;
+        }
+
+        .darkMode .dropBadge,
+        .darkMode .dropMeta span {
+          background: rgba(255, 246, 232, 0.06) !important;
+          border-color: rgba(224, 189, 105, 0.42) !important;
+        }
+
+        .darkMode .dropBadge span,
+        .darkMode .romaHeroCopy h2 span {
+          color: #fffaf2 !important;
+        }
+
+        .darkMode .dropBadge em,
+        .darkMode .romaHeroCopy h2 small,
+        .darkMode .romaHeroCopy .eyebrow {
+          color: #e0bd69 !important;
+        }
+
+        .darkMode .dropMeta span,
+        .darkMode .romaHeroCopy .description {
+          color: #e8d9c4 !important;
+        }
+
+        @media (max-width: 900px) {
+          .romaHero {
+            grid-template-columns: 1fr !important;
+          }
+
+          .romaHeroCopy {
+            min-height: auto !important;
+            padding: 46px 24px 42px !important;
+            border-radius: 30px !important;
+          }
+
+          .romaHeroCopy::before {
+            inset: 12px;
+            border-radius: 22px;
+          }
+
+          .dropBadge {
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 3px;
+            margin-bottom: 18px;
+          }
+
+          .romaHeroCopy h2 span {
+            font-size: clamp(68px, 21vw, 112px);
+          }
+
+          .romaHeroCopy h2 small {
+            font-size: clamp(34px, 13vw, 68px);
+            letter-spacing: 0.14em;
+          }
+
+          .romaHeroCopy .description {
+            font-size: 16px !important;
+            line-height: 1.8 !important;
+            margin-top: 22px !important;
+          }
+
+          .dropMeta {
+            gap: 8px;
+            margin-top: 22px;
+          }
+
+          .dropMeta span {
+            font-size: 10px;
+            padding: 7px 10px;
+          }
+
+          .romaHeroVisual {
+            min-height: 520px !important;
+            border-radius: 30px !important;
+          }
+
+          .romaHeroCard {
+            left: 18px !important;
+            right: 18px !important;
+            bottom: 18px !important;
+            padding: 18px !important;
+          }
+
+          .romaHeroCard strong {
+            font-size: 24px !important;
+          }
+        }
+
+        @media (max-width: 520px) {
+          .romaHero {
+            padding-top: 24px !important;
+          }
+
+          .romaHeroCopy h2 span {
+            font-size: clamp(58px, 22vw, 94px);
+          }
+
+          .romaHeroCopy h2 small {
+            font-size: clamp(30px, 12vw, 54px);
+          }
+
+          .dropMeta {
+            display: grid;
+          }
+
+          .romaHeroVisual {
+            min-height: 440px !important;
+          }
+        }
+      `}</style>
+
+
       <div className="scrollProgress" style={{ width: `${scrollProgress}%` }} />
 
       {loading && (
@@ -10041,11 +10336,25 @@ export default function App() {
           </main>
         ) : (
         <main>
-          <section className="hero">
-            <div className="heroCopy">
-              <p className="eyebrow">{t.heroEyebrow}</p>
-              <h2>{t.heroTitle}</h2>
+          <section className="hero romaHero">
+            <div className="heroCopy romaHeroCopy">
+              <div className="dropBadge" aria-label="Current La Grazia drop">
+                <span>{dropTheme.title.toUpperCase()}</span>
+                <em>{dropTheme.subtitle}</em>
+              </div>
+
+              <p className="eyebrow">{dropTheme.label}</p>
+              <h2>
+                <span>{dropTheme.city}</span>
+                <small>DROP</small>
+              </h2>
               <p className="description">{t.heroDescription}</p>
+
+              <div className="dropMeta">
+                <span>{dropTheme.subtitle}</span>
+                <span>{dropTheme.note}</span>
+                <span>Italian-inspired elegance</span>
+              </div>
 
               <div className="actions">
                 <a className="primaryBtn" href="#collection">{t.shopCollection}</a>
@@ -10053,11 +10362,12 @@ export default function App() {
               </div>
             </div>
 
-            <div className="heroVisual">
-              <img src="/photos/la-grazia-03.jpeg" alt="La Grazia hero piece" />
-              <div className="heroCard">
-                <small>{t.signatureEdit}</small>
-                <strong>{t.signatureText}</strong>
+            <div className="heroVisual romaHeroVisual">
+              <img src="/photos/la-grazia-03.jpeg" alt={`${dropTheme.title} La Grazia hero piece`} />
+              <div className="heroCard romaHeroCard">
+                <small>{dropTheme.subtitle.toUpperCase()}</small>
+                <strong>{dropTheme.note}</strong>
+                <p>Soft neutrals · Tailored silhouettes · Statement scarves</p>
               </div>
             </div>
           </section>
