@@ -1,6 +1,10 @@
 const RESEND_API_KEY = process.env.RESEND_API_KEY;
+const SUPABASE_URL = process.env.VITE_SUPABASE_URL;
+const SUPABASE_SERVICE_ROLE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY;
+
 const FROM_EMAIL =
   process.env.LA_GRAZIA_FROM_EMAIL || "La Grazia <onboarding@resend.dev>";
+
 const ADMIN_EMAIL =
   process.env.LA_GRAZIA_ADMIN_EMAIL || "omaromohamed2003@gmail.com";
 
@@ -11,6 +15,58 @@ function escapeHtml(value = "") {
     .replace(/>/g, "&gt;")
     .replace(/"/g, "&quot;")
     .replace(/'/g, "&#039;");
+}
+
+function normalizeEmail(email = "") {
+  return String(email).trim().toLowerCase();
+}
+
+async function savePrivateListSignup({
+  email,
+  customerName,
+  customerPhone,
+  preferredStyle,
+  language,
+}) {
+  if (!SUPABASE_URL || !SUPABASE_SERVICE_ROLE_KEY) {
+    throw new Error(
+      "Missing Supabase server environment variables. Check VITE_SUPABASE_URL and SUPABASE_SERVICE_ROLE_KEY in Vercel."
+    );
+  }
+
+  const cleanEmail = normalizeEmail(email);
+
+  const response = await fetch(`${SUPABASE_URL}/rest/v1/private_list`, {
+    method: "POST",
+    headers: {
+      apikey: SUPABASE_SERVICE_ROLE_KEY,
+      Authorization: `Bearer ${SUPABASE_SERVICE_ROLE_KEY}`,
+      "Content-Type": "application/json",
+      Prefer: "resolution=merge-duplicates,return=representation",
+    },
+    body: JSON.stringify({
+      email: cleanEmail,
+      customer_name: customerName || null,
+      customer_phone: customerPhone || null,
+      preferred_style: preferredStyle || "Italian elegance",
+      language: language || "EN",
+      source: "website_private_list",
+      updated_at: new Date().toISOString(),
+    }),
+  });
+
+  const data = await response.json().catch(() => null);
+
+  if (!response.ok) {
+    const message =
+      data?.message ||
+      data?.details ||
+      data?.hint ||
+      "Could not save private list signup";
+    throw new Error(message);
+  }
+
+  return data;
 }
 
 function buildCustomerEmail({ customerName, preferredStyle, language }) {
@@ -217,6 +273,10 @@ function buildAdminEmail({ email, customerName, preferredStyle, language }) {
 }
 
 async function sendEmail({ to, subject, html }) {
+  if (!RESEND_API_KEY) {
+    throw new Error("Missing RESEND_API_KEY environment variable");
+  }
+
   const response = await fetch("https://api.resend.com/emails", {
     method: "POST",
     headers: {
@@ -245,21 +305,26 @@ export default async function handler(req, res) {
     return res.status(405).json({ error: "Method not allowed" });
   }
 
-  if (!RESEND_API_KEY) {
-    return res
-      .status(500)
-      .json({ error: "Missing RESEND_API_KEY environment variable" });
-  }
-
   try {
-    const { email, customerName, preferredStyle, language } = req.body || {};
+    const { email, customerName, customerPhone, preferredStyle, language } =
+      req.body || {};
 
-    if (!email || !String(email).includes("@")) {
+    const cleanEmail = normalizeEmail(email);
+
+    if (!cleanEmail || !cleanEmail.includes("@")) {
       return res.status(400).json({ error: "Valid email is required" });
     }
 
+    await savePrivateListSignup({
+      email: cleanEmail,
+      customerName,
+      customerPhone,
+      preferredStyle,
+      language,
+    });
+
     await sendEmail({
-      to: String(email).trim().toLowerCase(),
+      to: cleanEmail,
       subject: "Welcome to the La Grazia Private List",
       html: buildCustomerEmail({ customerName, preferredStyle, language }),
     });
@@ -267,14 +332,23 @@ export default async function handler(req, res) {
     await sendEmail({
       to: ADMIN_EMAIL,
       subject: "New La Grazia Private List Signup",
-      html: buildAdminEmail({ email, customerName, preferredStyle, language }),
+      html: buildAdminEmail({
+        email: cleanEmail,
+        customerName,
+        preferredStyle,
+        language,
+      }),
     });
 
-    return res.status(200).json({ ok: true });
+    return res.status(200).json({
+      ok: true,
+      message: "Private list signup saved and emails sent.",
+    });
   } catch (error) {
-    console.error("Private list email failed:", error);
+    console.error("Private list signup failed:", error);
+
     return res.status(500).json({
-      error: error.message || "Email failed",
+      error: error.message || "Private list signup failed",
     });
   }
 }

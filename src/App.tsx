@@ -2023,52 +2023,8 @@ export default function App() {
     setPrivateListLoading(true);
     setNewsletterStatus("");
 
-    const payload = {
-      email: cleanEmail,
-      customer_name: accountUser?.name || null,
-      customer_phone: accountUser?.phone || null,
-      source: "website_club_section",
-      preferred_style: selectedMood || null,
-      created_at: new Date().toISOString(),
-    };
-
-    if (!supabase) {
-      const subject = encodeURIComponent("New La Grazia Private List Signup");
-      const body = encodeURIComponent(
-        `Hello La Grazia,
-
-Please add this email to the private list:
-${cleanEmail}
-
-Thank you.`
-      );
-
-      window.location.href = `mailto:${BRAND_EMAIL}?subject=${subject}&body=${body}`;
-      setNewsletterStatus(t.emailDone);
-      setPrivateListLoading(false);
-      return;
-    }
-
-    const { error } = await supabase
-      .from("private_list")
-      .upsert(payload, { onConflict: "email" });
-
-    if (error) {
-      console.error(error);
-      setNewsletterStatus(
-        isArabic
-          ? "لم يتم حفظ البريد الآن. تأكدي أن جدول private_list موجود في Supabase."
-          : "Could not save right now. Make sure the private_list table exists in Supabase."
-      );
-      setToast(error.message);
-      setPrivateListLoading(false);
-      return;
-    }
-
-    let emailSent = false;
-
     try {
-      const emailResponse = await fetch("/api/send-private-list-email", {
+      const response = await fetch("/api/send-private-list-email", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -2076,29 +2032,42 @@ Thank you.`
         body: JSON.stringify({
           email: cleanEmail,
           customerName: accountUser?.name || "La Grazia Client",
+          customerPhone: accountUser?.phone || null,
           preferredStyle: selectedMood || "Italian elegance",
           language,
         }),
       });
 
-      emailSent = emailResponse.ok;
-    } catch (emailError) {
-      console.error("Private list email error:", emailError);
-      emailSent = false;
-    }
+      let data: { ok?: boolean; error?: string } = {};
 
-    setNewsletterEmail("");
-    setNewsletterStatus(
-      emailSent
-        ? isArabic
+      try {
+        data = await response.json();
+      } catch {
+        data = {};
+      }
+
+      if (!response.ok || !data.ok) {
+        throw new Error(data.error || "Private list request failed");
+      }
+
+      setNewsletterEmail("");
+      setNewsletterStatus(
+        isArabic
           ? "تم تسجيلك في القائمة الخاصة وتم إرسال رسالة ترحيب فاخرة إلى بريدك الإلكتروني."
           : "You are now on the La Grazia private list. A luxury welcome email has been sent to you."
-        : isArabic
-          ? "تم تسجيلك في القائمة الخاصة. إذا لم تصلك الرسالة الآن، ستظل بياناتك محفوظة لدينا."
-          : "You are now on the La Grazia private list. If the email does not arrive now, your details are still saved."
-    );
-    setToast(isArabic ? "تم الانضمام للقائمة الخاصة" : "Joined the private list");
-    setPrivateListLoading(false);
+      );
+      setToast(isArabic ? "تم الانضمام للقائمة الخاصة" : "Joined the private list");
+    } catch (error) {
+      console.error("Private list signup failed:", error);
+      setNewsletterStatus(
+        isArabic
+          ? "لم يتم حفظ البريد الآن. حاولي مرة أخرى بعد قليل."
+          : "Could not save right now. Please try again in a moment."
+      );
+      setToast(error instanceof Error ? error.message : "Private list request failed");
+    } finally {
+      setPrivateListLoading(false);
+    }
   }
 
   async function handlePayNow() {
