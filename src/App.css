@@ -1,184 +1,507 @@
-.counter {
-  font-size: 16px;
-  padding: 5px 10px;
-  border-radius: 5px;
-  color: var(--accent);
-  background: var(--accent-bg);
-  border: 2px solid transparent;
-  transition: border-color 0.3s;
-  margin-bottom: 24px;
+/* =========================================================
+   LA GRAZIA APP.CSS
+   Clean global styles + restored scroll animations
+   ========================================================= */
 
-  &:hover {
-    border-color: var(--accent-border);
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  margin: 0;
+  min-width: 320px;
+  min-height: 100vh;
+  overflow-x: hidden;
+  font-family:
+    Inter,
+    ui-sans-serif,
+    system-ui,
+    -apple-system,
+    BlinkMacSystemFont,
+    "Segoe UI",
+    sans-serif;
+  background: #f7f1e8;
+  color: #2c1f18;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+}
+
+button,
+input,
+textarea,
+select {
+  font: inherit;
+}
+
+button {
+  cursor: pointer;
+}
+
+img {
+  max-width: 100%;
+  display: block;
+}
+
+a {
+  color: inherit;
+}
+
+/* =========================================================
+   SCROLL REVEAL ANIMATION
+   ========================================================= */
+
+.reveal {
+  opacity: 0;
+  transform: translateY(34px);
+  transition:
+    opacity 0.85s ease,
+    transform 0.85s cubic-bezier(0.22, 1, 0.36, 1);
+  will-change: opacity, transform;
+}
+
+.reveal.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.productCard.reveal {
+  opacity: 0;
+  transform: translateY(38px) scale(0.985);
+}
+
+.productCard.reveal.visible {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+}
+
+/* =========================================================
+   CARD + BUTTON INTERACTIONS
+   ========================================================= */
+
+.heroCard,
+.luxuryCard,
+.productCard,
+.trustItem,
+.accountCard,
+.policyCard,
+.supportCard,
+.reviewCard,
+.sizeCard,
+.giftCard,
+.storyCard {
+  transition:
+    transform 0.45s ease,
+    box-shadow 0.45s ease,
+    border-color 0.45s ease,
+    background 0.45s ease,
+    opacity 0.45s ease;
+}
+
+.productCard:hover,
+.luxuryCard:hover,
+.trustItem:hover,
+.accountCard:hover,
+.policyCard:hover,
+.supportCard:hover,
+.reviewCard:hover,
+.sizeCard:hover,
+.giftCard:hover,
+.storyCard:hover {
+  transform: translateY(-8px);
+}
+
+.primaryBtn,
+.secondaryBtn,
+.addBtn,
+.viewBtn,
+.iconBtn,
+.roundBtn,
+.checkoutBtn,
+.payBtn,
+.saveBtn,
+.confirmBtn,
+.shopBtn,
+.findBtn,
+.outlineBtn,
+.heartBtn,
+.bagBtn,
+.cartBtn,
+.menuBtn,
+.searchBtn,
+.accountBtn {
+  transition:
+    transform 0.25s ease,
+    background 0.25s ease,
+    color 0.25s ease,
+    border-color 0.25s ease,
+    box-shadow 0.25s ease,
+    opacity 0.25s ease;
+}
+
+.primaryBtn:hover,
+.secondaryBtn:hover,
+.addBtn:hover,
+.viewBtn:hover,
+.iconBtn:hover,
+.roundBtn:hover,
+.checkoutBtn:hover,
+.payBtn:hover,
+.saveBtn:hover,
+.confirmBtn:hover,
+.shopBtn:hover,
+.findBtn:hover,
+.outlineBtn:hover,
+.heartBtn:hover,
+.bagBtn:hover,
+.cartBtn:hover,
+.menuBtn:hover,
+.searchBtn:hover,
+.accountBtn:hover {
+  transform: translateY(-2px);
+}
+
+.primaryBtn:active,
+.secondaryBtn:active,
+.addBtn:active,
+.viewBtn:active,
+.iconBtn:active,
+.roundBtn:active,
+.checkoutBtn:active,
+.payBtn:active,
+.saveBtn:active,
+.confirmBtn:active,
+.shopBtn:active,
+.findBtn:active,
+.outlineBtn:active,
+.heartBtn:active,
+.bagBtn:active,
+.cartBtn:active,
+.menuBtn:active,
+.searchBtn:active,
+.accountBtn:active {
+  transform: translateY(0) scale(0.98);
+}
+
+/* =========================================================
+   IMAGE MOTION
+   ========================================================= */
+
+.productImage img,
+.heroVisual img,
+.heroImage img,
+.lookImage img,
+.storyImage img,
+.giftImage img {
+  transition:
+    transform 0.75s cubic-bezier(0.22, 1, 0.36, 1),
+    filter 0.45s ease,
+    opacity 0.45s ease;
+}
+
+.productCard:hover .productImage img {
+  transform: scale(1.045);
+}
+
+.heroVisual img,
+.heroImage img {
+  animation: heroFloat 7s ease-in-out infinite;
+}
+
+@keyframes heroFloat {
+  0%,
+  100% {
+    transform: translateY(0) scale(1);
   }
-  &:focus-visible {
-    outline: 2px solid var(--accent);
-    outline-offset: 2px;
+
+  50% {
+    transform: translateY(-10px) scale(1.015);
   }
 }
 
-.hero {
-  position: relative;
+/* =========================================================
+   PANEL / MODAL / TOAST ANIMATIONS
+   ========================================================= */
 
-  .base,
-  .framework,
-  .vite {
-    inset-inline: 0;
-    margin: 0 auto;
+.menuPanel,
+.cartDrawer,
+.searchOverlay,
+.productModal,
+.signInModal,
+.accountPage,
+.modal,
+.drawer,
+.policyModal,
+.supportModal,
+.sizeModal {
+  animation: softPanelIn 0.45s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+@keyframes softPanelIn {
+  from {
+    opacity: 0;
+    transform: translateY(18px) scale(0.985);
   }
 
-  .base {
-    width: 170px;
-    position: relative;
-    z-index: 0;
-  }
-
-  .framework,
-  .vite {
-    position: absolute;
-  }
-
-  .framework {
-    z-index: 1;
-    top: 34px;
-    height: 28px;
-    transform: perspective(2000px) rotateZ(300deg) rotateX(44deg) rotateY(39deg)
-      scale(1.4);
-  }
-
-  .vite {
-    z-index: 0;
-    top: 107px;
-    height: 26px;
-    width: auto;
-    transform: perspective(2000px) rotateZ(300deg) rotateX(40deg) rotateY(39deg)
-      scale(0.8);
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
   }
 }
 
-#center {
-  display: flex;
-  flex-direction: column;
-  gap: 25px;
-  place-content: center;
-  place-items: center;
-  flex-grow: 1;
+.toast,
+.notification,
+.successMessage,
+.verificationNotice,
+.accountNotice {
+  animation: toastIn 0.45s ease;
+}
 
-  @media (max-width: 1024px) {
-    padding: 32px 20px 24px;
-    gap: 18px;
+@keyframes toastIn {
+  from {
+    opacity: 0;
+    transform: translateY(18px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
   }
 }
 
-#next-steps {
-  display: flex;
-  border-top: 1px solid var(--border);
-  text-align: left;
+/* =========================================================
+   BAG / CART / HEART ANIMATION
+   ========================================================= */
 
-  & > div {
-    flex: 1 1 0;
-    padding: 32px;
-    @media (max-width: 1024px) {
-      padding: 24px 20px;
+.bagIcon,
+.cartIcon,
+.bagBtn svg,
+.cartBtn svg,
+.bagIcon svg,
+.cartIcon svg {
+  transition:
+    transform 0.35s ease,
+    filter 0.35s ease,
+    opacity 0.35s ease;
+}
+
+.bagBtn:hover svg,
+.cartBtn:hover svg,
+.bagIcon:hover,
+.cartIcon:hover {
+  transform: translateY(-2px) rotate(-4deg);
+}
+
+.bagBtn:active svg,
+.cartBtn:active svg {
+  transform: scale(0.92);
+}
+
+.heartBtn {
+  transition:
+    transform 0.25s ease,
+    background 0.25s ease,
+    color 0.25s ease;
+}
+
+.heartBtn:hover {
+  transform: scale(1.12);
+}
+
+.heartBtn.saved {
+  animation: heartPop 0.35s ease;
+}
+
+@keyframes heartPop {
+  0% {
+    transform: scale(1);
+  }
+
+  45% {
+    transform: scale(1.22);
+  }
+
+  100% {
+    transform: scale(1);
+  }
+}
+
+/* =========================================================
+   SMALL TEXT / NAV TRANSITIONS
+   ========================================================= */
+
+.stockTag,
+.productTag,
+.category,
+.price,
+.eyebrow {
+  transition:
+    opacity 0.35s ease,
+    transform 0.35s ease,
+    color 0.35s ease;
+}
+
+.productCard:hover .category,
+.productCard:hover .price {
+  transform: translateY(-1px);
+}
+
+.topBar,
+.deliveryBar,
+.announcementBar {
+  transition:
+    background 0.35s ease,
+    color 0.35s ease,
+    transform 0.35s ease;
+}
+
+.nav,
+.header,
+.navbar,
+.mainHeader {
+  transition:
+    background 0.35s ease,
+    border-color 0.35s ease,
+    box-shadow 0.35s ease;
+}
+
+.bottomNav,
+.mobileBottomNav,
+.floatingBottomNav {
+  transition:
+    transform 0.35s ease,
+    background 0.35s ease,
+    border-color 0.35s ease,
+    opacity 0.35s ease;
+}
+
+/* =========================================================
+   MOBILE ANIMATIONS
+   ========================================================= */
+
+@media (max-width: 768px) {
+  .reveal {
+    opacity: 0;
+    transform: translateY(24px);
+    transition:
+      opacity 0.65s ease,
+      transform 0.65s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  .reveal.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  .productCard.reveal {
+    transform: translateY(26px) scale(0.99);
+  }
+
+  .productCard.reveal.visible {
+    transform: translateY(0) scale(1);
+  }
+
+  .productCard:hover,
+  .luxuryCard:hover,
+  .trustItem:hover,
+  .accountCard:hover,
+  .policyCard:hover,
+  .supportCard:hover,
+  .reviewCard:hover,
+  .sizeCard:hover,
+  .giftCard:hover,
+  .storyCard:hover {
+    transform: none;
+  }
+
+  .primaryBtn:hover,
+  .secondaryBtn:hover,
+  .addBtn:hover,
+  .viewBtn:hover,
+  .iconBtn:hover,
+  .roundBtn:hover,
+  .checkoutBtn:hover,
+  .payBtn:hover,
+  .saveBtn:hover,
+  .confirmBtn:hover,
+  .shopBtn:hover,
+  .findBtn:hover,
+  .outlineBtn:hover,
+  .heartBtn:hover,
+  .bagBtn:hover,
+  .cartBtn:hover,
+  .menuBtn:hover,
+  .searchBtn:hover,
+  .accountBtn:hover {
+    transform: none;
+  }
+
+  .heroVisual img,
+  .heroImage img {
+    animation: heroFloatMobile 6s ease-in-out infinite;
+  }
+
+  .productCard:hover .productImage img {
+    transform: none;
+  }
+
+  @keyframes heroFloatMobile {
+    0%,
+    100% {
+      transform: translateY(0) scale(1);
+    }
+
+    50% {
+      transform: translateY(-6px) scale(1.008);
     }
   }
-
-  .icon {
-    margin-bottom: 16px;
-    width: 22px;
-    height: 22px;
-  }
-
-  @media (max-width: 1024px) {
-    flex-direction: column;
-    text-align: center;
-  }
 }
 
-#docs {
-  border-right: 1px solid var(--border);
+/* =========================================================
+   ACCESSIBILITY
+   ========================================================= */
 
-  @media (max-width: 1024px) {
-    border-right: none;
-    border-bottom: 1px solid var(--border);
-  }
-}
-
-#next-steps ul {
-  list-style: none;
-  padding: 0;
-  display: flex;
-  gap: 8px;
-  margin: 32px 0 0;
-
-  .logo {
-    height: 18px;
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
   }
 
-  a {
-    color: var(--text-h);
-    font-size: 16px;
-    border-radius: 6px;
-    background: var(--social-bg);
-    display: flex;
-    padding: 6px 12px;
-    align-items: center;
-    gap: 8px;
-    text-decoration: none;
-    transition: box-shadow 0.3s;
-
-    &:hover {
-      box-shadow: var(--shadow);
-    }
-    .button-icon {
-      height: 18px;
-      width: 18px;
-    }
-  }
-
-  @media (max-width: 1024px) {
-    margin-top: 20px;
-    flex-wrap: wrap;
-    justify-content: center;
-
-    li {
-      flex: 1 1 calc(50% - 8px);
-    }
-
-    a {
-      width: 100%;
-      justify-content: center;
-      box-sizing: border-box;
-    }
-  }
-}
-
-#spacer {
-  height: 88px;
-  border-top: 1px solid var(--border);
-  @media (max-width: 1024px) {
-    height: 48px;
-  }
-}
-
-.ticks {
-  position: relative;
-  width: 100%;
-
-  &::before,
-  &::after {
-    content: '';
-    position: absolute;
-    top: -4.5px;
-    border: 5px solid transparent;
-  }
-
-  &::before {
-    left: 0;
-    border-left-color: var(--border);
-  }
-  &::after {
-    right: 0;
-    border-right-color: var(--border);
+  .reveal,
+  .reveal.visible,
+  .productCard,
+  .luxuryCard,
+  .trustItem,
+  .accountCard,
+  .policyCard,
+  .supportCard,
+  .reviewCard,
+  .sizeCard,
+  .giftCard,
+  .storyCard,
+  .heroVisual img,
+  .heroImage img,
+  .menuPanel,
+  .cartDrawer,
+  .searchOverlay,
+  .productModal,
+  .signInModal,
+  .accountPage,
+  .modal,
+  .drawer,
+  .policyModal,
+  .supportModal,
+  .sizeModal,
+  .toast,
+  .notification,
+  .successMessage,
+  .verificationNotice,
+  .accountNotice {
+    animation: none !important;
+    transition: none !important;
+    transform: none !important;
   }
 }
