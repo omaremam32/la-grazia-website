@@ -864,6 +864,7 @@ export default function App() {
 
   const [newsletterEmail, setNewsletterEmail] = useState("");
   const [newsletterStatus, setNewsletterStatus] = useState("");
+  const [privateListLoading, setPrivateListLoading] = useState(false);
 
   const [toast, setToast] = useState("");
   const [scrollProgress, setScrollProgress] = useState(0);
@@ -2009,21 +2010,69 @@ export default function App() {
     }
   }
 
-  function handleNewsletterSubmit(event: React.FormEvent<HTMLFormElement>) {
+  async function handleNewsletterSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
 
-    if (!newsletterEmail.includes("@") || !newsletterEmail.includes(".")) {
+    const cleanEmail = newsletterEmail.trim().toLowerCase();
+
+    if (!cleanEmail.includes("@") || !cleanEmail.includes(".")) {
       setNewsletterStatus(t.invalidEmail);
       return;
     }
 
-    const subject = encodeURIComponent("New La Grazia Club Signup");
-    const body = encodeURIComponent(
-      `Hello La Grazia,\n\nPlease add this email to the private list:\n${newsletterEmail}\n\nThank you.`
-    );
+    setPrivateListLoading(true);
+    setNewsletterStatus("");
 
-    window.location.href = `mailto:${BRAND_EMAIL}?subject=${subject}&body=${body}`;
-    setNewsletterStatus(t.emailDone);
+    const payload = {
+      email: cleanEmail,
+      customer_name: accountUser?.name || null,
+      customer_phone: accountUser?.phone || null,
+      source: "website_club_section",
+      preferred_style: selectedMood || null,
+      created_at: new Date().toISOString(),
+    };
+
+    if (!supabase) {
+      const subject = encodeURIComponent("New La Grazia Private List Signup");
+      const body = encodeURIComponent(
+        `Hello La Grazia,
+
+Please add this email to the private list:
+${cleanEmail}
+
+Thank you.`
+      );
+
+      window.location.href = `mailto:${BRAND_EMAIL}?subject=${subject}&body=${body}`;
+      setNewsletterStatus(t.emailDone);
+      setPrivateListLoading(false);
+      return;
+    }
+
+    const { error } = await supabase
+      .from("private_list")
+      .upsert(payload, { onConflict: "email" });
+
+    if (error) {
+      console.error(error);
+      setNewsletterStatus(
+        isArabic
+          ? "لم يتم حفظ البريد الآن. تأكدي أن جدول private_list موجود في Supabase."
+          : "Could not save right now. Make sure the private_list table exists in Supabase."
+      );
+      setToast(error.message);
+      setPrivateListLoading(false);
+      return;
+    }
+
+    setNewsletterEmail("");
+    setNewsletterStatus(
+      isArabic
+        ? "تم تسجيلك في القائمة الخاصة للاطلاع المبكر على الإصدارات الجديدة."
+        : "You are now on the La Grazia private list for early drop access."
+    );
+    setToast(isArabic ? "تم الانضمام للقائمة الخاصة" : "Joined the private list");
+    setPrivateListLoading(false);
   }
 
   async function handlePayNow() {
@@ -9206,6 +9255,97 @@ export default function App() {
           }
         }
 
+
+        /* =========================================================
+           PRIVATE LIST FINAL FIX
+           Makes the La Grazia Club section actually usable and responsive
+           ========================================================= */
+
+        .newsletterBox {
+          overflow: hidden;
+        }
+
+        .privateListForm {
+          width: min(520px, 100%);
+          max-width: 100%;
+          min-width: 0 !important;
+          justify-self: end;
+          display: grid;
+          grid-template-columns: minmax(0, 1fr) auto;
+          align-items: center;
+          gap: 12px;
+        }
+
+        .privateListForm input {
+          width: 100%;
+          min-width: 0;
+          height: 58px;
+          padding: 0 22px;
+          border-radius: 999px;
+          font-size: 15px;
+        }
+
+        .privateListForm button {
+          height: 58px;
+          min-width: 128px;
+          white-space: nowrap;
+          box-shadow: 0 16px 34px rgba(44, 31, 24, 0.12);
+        }
+
+        .privateListForm button:disabled {
+          cursor: wait;
+          opacity: 0.72;
+        }
+
+        .newsletterStatus {
+          display: inline-block;
+          max-width: 100%;
+          margin-top: 18px;
+          padding: 10px 14px;
+          border-radius: 999px;
+          background: rgba(176, 138, 69, 0.10);
+          border: 1px solid rgba(176, 138, 69, 0.22);
+          line-height: 1.55;
+        }
+
+        .darkMode .newsletterStatus {
+          background: rgba(215, 180, 111, 0.12);
+          border-color: rgba(215, 180, 111, 0.26);
+        }
+
+        @media (max-width: 1100px) {
+          .privateListForm {
+            justify-self: stretch;
+            width: 100%;
+          }
+        }
+
+        @media (max-width: 680px) {
+          .newsletterBox {
+            padding: 34px 22px !important;
+            text-align: center;
+          }
+
+          .privateListForm {
+            grid-template-columns: 1fr;
+            gap: 12px;
+          }
+
+          .privateListForm input,
+          .privateListForm button {
+            width: 100%;
+          }
+
+          .privateListForm button {
+            min-width: 0;
+          }
+
+          .newsletterStatus {
+            border-radius: 18px;
+            font-size: 13px;
+          }
+        }
+
       `}</style>
 
       <div className="scrollProgress" style={{ width: `${scrollProgress}%` }} />
@@ -10439,9 +10579,18 @@ export default function App() {
                 {newsletterStatus && <p className="newsletterStatus">{newsletterStatus}</p>}
               </div>
 
-              <form className="emailForm" onSubmit={handleNewsletterSubmit}>
-                <input type="email" value={newsletterEmail} onChange={(event) => setNewsletterEmail(event.target.value)} placeholder={t.emailPlaceholder} />
-                <button type="submit">{t.join}</button>
+              <form className="emailForm privateListForm" onSubmit={handleNewsletterSubmit}>
+                <input
+                  type="email"
+                  value={newsletterEmail}
+                  onChange={(event) => setNewsletterEmail(event.target.value)}
+                  placeholder={t.emailPlaceholder}
+                  aria-label={t.emailPlaceholder}
+                  autoComplete="email"
+                />
+                <button type="submit" disabled={privateListLoading}>
+                  {privateListLoading ? (isArabic ? "جاري الحفظ..." : "Joining...") : t.join}
+                </button>
               </form>
             </div>
           </section>
