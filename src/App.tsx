@@ -1052,42 +1052,35 @@ export default function App() {
   useEffect(() => {
     if (accountPageOpen) return;
 
-    const elements = Array.from(document.querySelectorAll(".reveal"));
+    const elements = Array.from(document.querySelectorAll<HTMLElement>(".reveal"));
+
+    elements.forEach((element, index) => {
+      element.dataset.revealIndex = String(index % 8);
+      element.classList.remove("visible");
+    });
 
     const observer = new IntersectionObserver(
       (entries) => {
-        entries.forEach((entry, index) => {
+        entries.forEach((entry) => {
+          const element = entry.target as HTMLElement;
+          const revealIndex = Number(element.dataset.revealIndex || 0);
+
           if (entry.isIntersecting) {
             window.setTimeout(() => {
-              entry.target.classList.add("visible");
-            }, index * 75);
-            observer.unobserve(entry.target);
+              element.classList.add("visible");
+            }, revealIndex * 55);
+          } else {
+            element.classList.remove("visible");
           }
         });
       },
-      { threshold: 0.1, rootMargin: "0px 0px -8% 0px" }
+      {
+        threshold: 0.14,
+        rootMargin: "0px 0px -10% 0px",
+      }
     );
 
-    elements.forEach((element, index) => {
-      const box = element.getBoundingClientRect();
-      const isAlreadyPassed = box.bottom < 0;
-      const isInFirstView = box.top < window.innerHeight * 0.92;
-
-      if (isAlreadyPassed) {
-        element.classList.add("visible");
-        return;
-      }
-
-      if (isInFirstView) {
-        window.setTimeout(() => {
-          element.classList.add("visible");
-        }, index * 55);
-        return;
-      }
-
-      element.classList.remove("visible");
-      observer.observe(element);
-    });
+    elements.forEach((element) => observer.observe(element));
 
     return () => observer.disconnect();
   }, [language, searchTerm, activeFilter, collectionFilter, sortOption, wishlist.length, accountPageOpen, filteredProducts.length]);
@@ -9026,6 +9019,193 @@ export default function App() {
             transform: none !important;
           }
         }
+
+
+        /* =========================================================
+           RESTORED SCROLL-UP / SCROLL-DOWN ANIMATIONS
+           This lives inside App.tsx so it overrides old CSS correctly.
+           ========================================================= */
+
+        .reveal {
+          opacity: 0 !important;
+          transform: translateY(38px) scale(0.992) !important;
+          transition:
+            opacity 0.85s cubic-bezier(.16, 1, .3, 1),
+            transform 0.85s cubic-bezier(.16, 1, .3, 1),
+            box-shadow 0.35s ease,
+            border-color 0.35s ease,
+            background 0.35s ease !important;
+          will-change: opacity, transform;
+        }
+
+        .reveal.visible {
+          opacity: 1 !important;
+          transform: translateY(0) scale(1) !important;
+        }
+
+        .productCard.reveal {
+          transform: translateY(42px) scale(0.982) !important;
+        }
+
+        .productCard.reveal.visible {
+          transform: translateY(0) scale(1) !important;
+        }
+
+        .heroCard,
+        .productCard,
+        .trustItem,
+        .styleCard,
+        .giftCard,
+        .storyCard,
+        .clubCard,
+        .accountCard,
+        .policyCard,
+        .supportCard,
+        .reviewCard {
+          transition:
+            transform 0.42s ease,
+            box-shadow 0.42s ease,
+            border-color 0.42s ease,
+            background 0.42s ease !important;
+        }
+
+        .productCard:hover,
+        .trustItem:hover,
+        .styleCard:hover,
+        .giftCard:hover,
+        .storyCard:hover,
+        .clubCard:hover {
+          transform: translateY(-7px) !important;
+        }
+
+        .productImage img,
+        .heroVisual img {
+          transition:
+            transform 0.75s cubic-bezier(.16, 1, .3, 1),
+            filter 0.45s ease !important;
+        }
+
+        .productCard:hover .productImage img {
+          transform: scale(1.045) !important;
+        }
+
+        .heroVisual img {
+          animation: laGraziaHeroFloat 7s ease-in-out infinite !important;
+        }
+
+        @keyframes laGraziaHeroFloat {
+          0%, 100% {
+            transform: translateY(0) scale(1);
+          }
+          50% {
+            transform: translateY(-10px) scale(1.012);
+          }
+        }
+
+        .primaryBtn,
+        .secondaryBtn,
+        .addBtn,
+        .viewBtn,
+        .iconBtn,
+        .roundBtn,
+        .heartBtn {
+          transition:
+            transform 0.24s ease,
+            box-shadow 0.24s ease,
+            background 0.24s ease,
+            color 0.24s ease,
+            border-color 0.24s ease !important;
+        }
+
+        .primaryBtn:hover,
+        .secondaryBtn:hover,
+        .addBtn:hover,
+        .viewBtn:hover,
+        .iconBtn:hover,
+        .roundBtn:hover {
+          transform: translateY(-2px) !important;
+        }
+
+        .primaryBtn:active,
+        .secondaryBtn:active,
+        .addBtn:active,
+        .viewBtn:active,
+        .iconBtn:active,
+        .roundBtn:active {
+          transform: scale(0.97) !important;
+        }
+
+        .cartDrawer,
+        .searchOverlay,
+        .menuPanel,
+        .productModal,
+        .authModal,
+        .signInModal,
+        .modal {
+          animation: laGraziaPanelIn 0.42s cubic-bezier(.16, 1, .3, 1) both !important;
+        }
+
+        @keyframes laGraziaPanelIn {
+          from {
+            opacity: 0;
+            transform: translateY(18px) scale(0.985);
+          }
+          to {
+            opacity: 1;
+            transform: translateY(0) scale(1);
+          }
+        }
+
+        .toast {
+          animation: laGraziaToastIn 0.42s ease both !important;
+        }
+
+        @keyframes laGraziaToastIn {
+          from {
+            opacity: 0;
+            transform: translateY(16px);
+          }
+          to {
+            opacity: 1;
+            transform: translateY(0);
+          }
+        }
+
+        @media (max-width: 768px) {
+          .reveal {
+            transform: translateY(26px) scale(0.995) !important;
+            transition:
+              opacity 0.58s ease,
+              transform 0.58s cubic-bezier(.16, 1, .3, 1) !important;
+          }
+
+          .productCard:hover,
+          .trustItem:hover,
+          .styleCard:hover,
+          .giftCard:hover,
+          .storyCard:hover,
+          .clubCard:hover {
+            transform: none !important;
+          }
+
+          .productCard:hover .productImage img {
+            transform: none !important;
+          }
+
+          .heroVisual img {
+            animation: laGraziaHeroFloatMobile 6s ease-in-out infinite !important;
+          }
+
+          @keyframes laGraziaHeroFloatMobile {
+            0%, 100% {
+              transform: translateY(0) scale(1);
+            }
+            50% {
+              transform: translateY(-6px) scale(1.006);
+            }
+          }
+        }
+
       `}</style>
 
       <div className="scrollProgress" style={{ width: `${scrollProgress}%` }} />
