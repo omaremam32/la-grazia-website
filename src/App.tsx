@@ -2065,11 +2065,37 @@ Thank you.`
       return;
     }
 
+    let emailSent = false;
+
+    try {
+      const emailResponse = await fetch("/api/send-private-list-email", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          email: cleanEmail,
+          customerName: accountUser?.name || "La Grazia Client",
+          preferredStyle: selectedMood || "Italian elegance",
+          language,
+        }),
+      });
+
+      emailSent = emailResponse.ok;
+    } catch (emailError) {
+      console.error("Private list email error:", emailError);
+      emailSent = false;
+    }
+
     setNewsletterEmail("");
     setNewsletterStatus(
-      isArabic
-        ? "تم تسجيلك في القائمة الخاصة للاطلاع المبكر على الإصدارات الجديدة."
-        : "You are now on the La Grazia private list for early drop access."
+      emailSent
+        ? isArabic
+          ? "تم تسجيلك في القائمة الخاصة وتم إرسال رسالة ترحيب فاخرة إلى بريدك الإلكتروني."
+          : "You are now on the La Grazia private list. A luxury welcome email has been sent to you."
+        : isArabic
+          ? "تم تسجيلك في القائمة الخاصة. إذا لم تصلك الرسالة الآن، ستظل بياناتك محفوظة لدينا."
+          : "You are now on the La Grazia private list. If the email does not arrive now, your details are still saved."
     );
     setToast(isArabic ? "تم الانضمام للقائمة الخاصة" : "Joined the private list");
     setPrivateListLoading(false);
