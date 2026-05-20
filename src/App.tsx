@@ -10,9 +10,6 @@ type Product = {
   minPrice: number;
   category: string;
   image: string;
-  frontImage?: string;
-  modelImage?: string;
-  backImage?: string;
   tag: string;
   occasion: string;
   colors: string[];
@@ -225,224 +222,136 @@ const emptySupportForm: SupportForm = {
 
 const products: Product[] = [
   {
-    name: "Atelier Wrap Jacket",
-    price: "EGP 2,700 - 3,600",
-    minPrice: 2700,
+    name: "Milano Coastal Jacket",
+    price: "EGP 2,400 - 3,200",
+    minPrice: 2400,
     category: "Jackets",
-    image: "/photos/jacket 1.jpeg",
-    frontImage: "/photos/jacket-1-front.jpeg",
-    modelImage: "/photos/jacket-1-model.jpeg",
-    backImage: "/photos/jacket-1-back.jpeg",
+    image: "/photos/la-grazia-01.jpeg",
     tag: "Signature Jacket",
-    occasion: "Dinner / Events / Elegant Daywear",
-    colors: ["Cream", "Champagne", "Soft Beige"],
-    complete: ["Atelier Drape Top", "Atelier Palazzo Pants", "Cream Silk Scarf", "Gold accessories"],
+    occasion: "Daily Luxury / Evening",
+    colors: ["Cream", "Mocha", "Black"],
+    complete: ["Daily Grazia Top", "Riviera Straight Pant", "La Grazia Silk Scarf", "Gold accessories"],
     description:
-      "A sculpted wrap jacket with an asymmetric front, removable tie belt, soft contrast piping, and signature gold LG hardware. Designed as a refined La Grazia statement jacket with timeless Italian elegance.",
+      "A polished Italian coastal jacket with soft structure, gold LG buttons, refined pockets, and a clean feminine silhouette. Designed to feel luxurious, wearable, and timeless.",
   },
   {
-    name: "Milano Spirit Jacket",
-    price: "EGP 2,500 - 3,400",
-    minPrice: 2500,
+    name: "Portofino Relaxed Jacket",
+    price: "EGP 2,200 - 2,950",
+    minPrice: 2200,
     category: "Jackets",
-    image: "/photos/jacket 2.jpeg",
-    frontImage: "/photos/jacket-2-front.jpeg",
-    modelImage: "/photos/jacket-2-model.jpeg",
-    backImage: "/photos/jacket-2-back.jpeg",
-    tag: "Statement Jacket",
-    occasion: "Weekend / City Walk / Spring Edit",
-    colors: ["Cream Print", "Red Accent", "Botanical Multi"],
-    complete: ["Atelier Soft Polo Top", "Atelier Capri Long Tailored Jorts", "Navy Silk Scarf", "White wide-leg denim"],
+    image: "/photos/la-grazia-02.jpeg",
+    tag: "Relaxed Luxury",
+    occasion: "Spring / Summer Layering",
+    colors: ["Sage", "Champagne", "Navy"],
+    complete: ["Atelier Knit Top", "Amalfi Soft Tailored Jorts", "Coastal Muse Scarf", "Soft sandals"],
     description:
-      "A lightweight Italian-print jacket with floral panels, contrast piping, refined zipper details, and La Grazia embroidery. A youthful statement piece that keeps the brand elegant, feminine, and wearable.",
+      "A lightweight relaxed jacket inspired by Portofino elegance. Soft shoulders, an easy fit, subtle gold details, and a refined coastal feel for effortless styling.",
   },
   {
-    name: "Atelier Soft Polo Top",
-    price: "EGP 1,100 - 1,650",
-    minPrice: 1100,
+    name: "Daily Grazia Top",
+    price: "EGP 950 - 1,450",
+    minPrice: 950,
     category: "Tops",
-    image: "/photos/top 1.jpeg",
-    frontImage: "/photos/top-1-front.jpeg",
-    modelImage: "/photos/top-1-model.jpeg",
-    backImage: "/photos/top-1-back.jpeg",
+    image: "/photos/la-grazia-03.jpeg",
     tag: "Daily Essential",
-    occasion: "Daily Wear / University / Cafe",
-    colors: ["Soft Blue", "Cream", "Ivory", "Sage"],
-    complete: ["Atelier Capri Long Tailored Jorts", "Atelier Palazzo Pants", "Navy Silk Scarf", "Mini leather bag"],
+    occasion: "Everyday Wear / University / Cafe",
+    colors: ["Ivory", "Mocha", "Black", "Dusty Rose"],
+    complete: ["Capri Long Tailored Jorts", "Riviera Straight Pant", "Coastal Muse Scarf", "Gold hoops"],
     description:
-      "A daily wearable soft polo top with a contrast collar, refined gold buttons, a fitted feminine shape, and subtle LG detail. Created to be easy for teenagers and women to wear every day.",
+      "A clean daily wearable top with a modest neckline, soft premium fabric, comfortable fit, and subtle LG detail. Made for teenagers and women to wear every day.",
   },
   {
-    name: "Atelier Drape Top",
-    price: "EGP 1,350 - 1,950",
-    minPrice: 1350,
+    name: "Atelier Knit Top",
+    price: "EGP 1,250 - 1,850",
+    minPrice: 1250,
     category: "Tops",
-    image: "/photos/top 2.jpeg",
-    frontImage: "/photos/top-2-front.jpeg",
-    modelImage: "/photos/top-2-model.jpeg",
-    backImage: "/photos/top-2-back.jpeg",
-    tag: "Soft Luxury",
-    occasion: "Dinner / Brunch / Smart Casual",
-    colors: ["Cream", "Ivory", "Champagne"],
-    complete: ["Atelier Palazzo Pants", "Atelier Wrap Jacket", "Cream Silk Scarf", "Gold hoops"],
+    image: "/photos/la-grazia-04.jpeg",
+    tag: "Elevated Knit",
+    occasion: "Smart Casual / Dinner",
+    colors: ["Cream", "Sage", "Navy", "Dusty Rose"],
+    complete: ["Grazia Flow Tailored Pant", "Milano Coastal Jacket", "La Grazia Silk Scarf", "Mini leather bag"],
     description:
-      "A refined drape top with a soft cowl neckline, gold crest button, cap sleeves, and signature LG monogram. It gives the collection a luxurious feminine top for polished styling.",
+      "A refined knit top with a closed neckline, feminine fit, soft ribbed texture, and quiet luxury detailing. Perfect for pairing with tailored pants or jackets.",
   },
   {
-    name: "Atelier Contrast Collar Top",
-    price: "EGP 1,200 - 1,750",
-    minPrice: 1200,
-    category: "Tops",
-    image: "/photos/top 3.jpeg",
-    frontImage: "/photos/top-3-front.jpeg",
-    modelImage: "/photos/top-3-model.jpeg",
-    backImage: "/photos/top-3-back.jpeg",
-    tag: "Daily Essential",
-    occasion: "Daily Chic / Lunch / University",
-    colors: ["Dusty Blue", "Cream", "Sage", "Black"],
-    complete: ["Atelier Celeste Wrap Pants", "Atelier Riviera Tailored Jorts", "Navy Silk Scarf", "Gold jewelry"],
-    description:
-      "A closed contrast-collar top with a soft structured fit, short sleeves, and signature LG monogram. A youthful elegant piece that still feels premium and easy to style.",
-  },
-  {
-    name: "Atelier Palazzo Pants",
-    price: "EGP 1,900 - 2,650",
-    minPrice: 1900,
+    name: "Grazia Flow Tailored Pant",
+    price: "EGP 1,800 - 2,500",
+    minPrice: 1800,
     category: "Pants",
-    image: "/photos/pants 1.jpeg",
-    frontImage: "/photos/pants-1-front.jpeg",
-    modelImage: "/photos/pants-1-model.jpeg",
-    backImage: "/photos/pants-1-back.jpeg",
+    image: "/photos/la-grazia-05.jpeg",
     tag: "Elegant Tailoring",
-    occasion: "Work / Dinner / City Chic",
-    colors: ["Stone Beige", "Champagne", "Cream", "Black"],
-    complete: ["Atelier Soft Polo Top", "Atelier Wrap Jacket", "Cream Silk Scarf", "Structured mini bag"],
+    occasion: "Dinner / Events / Smart Casual",
+    colors: ["Champagne", "Navy", "Black", "Cream"],
+    complete: ["Atelier Knit Top", "Milano Coastal Jacket", "La Grazia Silk Scarf", "Nude heels"],
     description:
-      "A high-waisted palazzo pant with a fluid wide-leg silhouette, front pleats, premium Italian-inspired fabric, and signature gold LG hardware. Elegant, clean, and timeless.",
+      "A high-waisted wide-leg pant with soft pleats, flowing movement, clean side pockets, and gold waist detail. A luxury feminine trouser inspired by Milanese tailoring.",
   },
   {
-    name: "Atelier Celeste Wrap Pants",
-    price: "EGP 2,000 - 2,750",
-    minPrice: 2000,
+    name: "Riviera Straight Pant",
+    price: "EGP 1,600 - 2,200",
+    minPrice: 1600,
     category: "Pants",
-    image: "/photos/pants 2.jpeg",
-    frontImage: "/photos/pants-2-front.jpeg",
-    modelImage: "/photos/pants-2-model.jpeg",
-    backImage: "/photos/pants-2-back.jpeg",
-    tag: "Elegant Tailoring",
-    occasion: "Events / Dinner / Smart Casual",
-    colors: ["Dusty Blue", "Navy", "Cream", "Champagne"],
-    complete: ["Atelier Contrast Collar Top", "Atelier Wrap Jacket", "Navy Silk Scarf", "Nude heels"],
+    image: "/photos/la-grazia-06.jpeg",
+    tag: "Everyday Tailoring",
+    occasion: "Daily Chic / University / Work",
+    colors: ["Mocha", "Sage", "Black", "Cream"],
+    complete: ["Daily Grazia Top", "Portofino Relaxed Jacket", "Coastal Muse Scarf", "Loafers"],
     description:
-      "A luxury wrap pant with an asymmetric crossover waistband, sculpted draped panel, soft front pleats, and fluid wide-leg movement. A unique La Grazia statement pant.",
+      "A practical straight-leg tailored pant with a high waist, clean front, comfortable fit, and subtle premium finishing. Designed for everyday elegance.",
   },
   {
-    name: "Navy Silk Scarf",
+    name: "La Grazia Silk Scarf",
     price: "EGP 850 - 1,350",
     minPrice: 850,
     category: "Scarves",
-    image: "/photos/scarf 1.png",
-    frontImage: "/photos/scarf-1-front.png",
-    modelImage: "/photos/scarf-1-model.png",
-    backImage: "/photos/scarf-1-back.png",
+    image: "/photos/la-grazia-07.jpeg",
     tag: "Classic Accessory",
     occasion: "Styling / Gift / Occasion",
-    colors: ["Navy", "Midnight Blue", "Dusty Blue", "Ivory Beige", "Charcoal"],
-    complete: ["Atelier Soft Polo Top", "Atelier Wrap Jacket", "Atelier Capri Long Tailored Jorts", "Gold jewelry"],
+    colors: ["Cream/Gold", "Navy/Gold", "Sage/Cream"],
+    complete: ["Daily Grazia Top", "Capri Long Tailored Jorts", "Milano Coastal Jacket", "Gold jewelry"],
     description:
-      "A navy silk-touch scarf with a refined botanical motif, elegant border, and premium La Grazia packaging. Designed for neck styling, hair styling, bag accents, and shoulder draping.",
+      "A classic square scarf with a thin gold border, Italian botanical-inspired print, and subtle LG corner detail. Designed to style around the neck, hair, wrist, or bag.",
   },
   {
-    name: "Cream Silk Scarf",
-    price: "EGP 850 - 1,350",
-    minPrice: 850,
+    name: "Coastal Muse Scarf",
+    price: "EGP 700 - 1,100",
+    minPrice: 700,
     category: "Scarves",
-    image: "/photos/scarf 2.png",
-    frontImage: "/photos/scarf-2-front.png",
-    modelImage: "/photos/scarf-2-model.png",
-    backImage: "/photos/scarf-2-back.png",
-    tag: "Classic Accessory",
-    occasion: "Everyday Styling / Gift / Soft Luxury",
-    colors: ["Cream", "Ivory Beige", "Champagne", "Taupe", "Soft Sand"],
-    complete: ["Atelier Drape Top", "Atelier Palazzo Pants", "Atelier Wrap Jacket", "Mini cream bag"],
+    image: "/photos/la-grazia-08.jpeg",
+    tag: "Soft Styling Piece",
+    occasion: "Everyday Styling",
+    colors: ["Dusty Rose", "Champagne", "Soft Sage", "Mocha"],
+    complete: ["Daily Grazia Top", "Riviera Straight Pant", "Amalfi Soft Tailored Jorts", "Soft gold accessories"],
     description:
-      "A cream silk-touch scarf with soft botanical detailing, delicate neutral borders, and elegant gift packaging. A quiet luxury accessory for everyday feminine styling.",
+      "A smaller lightweight scarf with a softer youthful mood. Easy to style with daily outfits while keeping the La Grazia luxury coastal identity.",
   },
   {
-    name: "Atelier Riviera Tailored Jorts",
-    price: "EGP 1,650 - 2,350",
-    minPrice: 1650,
-    category: "Jorts",
-    image: "/photos/jorts 1.png",
-    frontImage: "/photos/jorts-1-front.png",
-    modelImage: "/photos/jorts-1-model.png",
-    backImage: "/photos/jorts-1-back.png",
-    tag: "Hero Product",
-    occasion: "Summer / Resort / Daily Luxury",
-    colors: ["Cream", "Champagne", "Sage", "Dusty Rose", "Mocha", "Black"],
-    complete: ["Atelier Drape Top", "Milano Spirit Jacket", "Cream Silk Scarf", "Gold sandals"],
-    description:
-      "A high-waisted tailored jort with sculpted pleats, a refined longline length, cuffed hem, premium cotton-linen texture, and signature LG hardware. A luxury reimagining of everyday jorts.",
-  },
-  {
-    name: "Atelier Capri Long Tailored Jorts",
+    name: "Capri Long Tailored Jorts",
     price: "EGP 1,750 - 2,450",
     minPrice: 1750,
     category: "Jorts",
-    image: "/photos/jorts 2.png",
-    frontImage: "/photos/jorts-2-front.png",
-    modelImage: "/photos/jorts-2-model.png",
-    backImage: "/photos/jorts-2-back.png",
+    image: "/photos/la-grazia-09.jpeg",
     tag: "Hero Product",
-    occasion: "Coastal Chic / Summer / Signature Look",
-    colors: ["Cream", "Champagne", "Sage", "Dusty Rose", "Mocha", "Black"],
-    complete: ["Atelier Soft Polo Top", "Atelier Wrap Jacket", "Navy Silk Scarf", "Mini LG bag"],
+    occasion: "Summer / Coastal Chic / Daily Luxury",
+    colors: ["Cream", "Champagne", "Mocha", "Soft Blue Denim"],
+    complete: ["Daily Grazia Top", "La Grazia Silk Scarf", "Milano Coastal Jacket", "Leather sandals"],
     description:
-      "The signature La Grazia long tailored jort. Longer knee-grazing length, high waist, soft pleats, cuffed hem, gold LG hardware, and an embroidered crest detail for timeless Italian coastal elegance.",
+      "The signature La Grazia hero piece. Longer high-waisted tailored jorts with soft pleats, cuffed hem, gold LG button, and subtle embroidered crest detail.",
+  },
+  {
+    name: "Amalfi Soft Tailored Jorts",
+    price: "EGP 1,650 - 2,250",
+    minPrice: 1650,
+    category: "Jorts",
+    image: "/photos/la-grazia-10.jpeg",
+    tag: "Relaxed Jorts",
+    occasion: "Daily Summer Wear",
+    colors: ["Ivory", "Sage", "Light Sand", "Black"],
+    complete: ["Portofino Relaxed Jacket", "Atelier Knit Top", "Coastal Muse Scarf", "Ballet flats"],
+    description:
+      "A softer relaxed version of the long tailored jorts. Comfortable, youthful, elegant, and designed to match the Italian coastal luxury theme.",
   },
 ];
-
-const PRODUCT_FRONT_IMAGES: Record<string, string> = {
-  "Atelier Wrap Jacket": "/photos/jacket-1-front.jpeg",
-  "Milano Spirit Jacket": "/photos/jacket-2-front.jpeg",
-  "Atelier Soft Polo Top": "/photos/top-1-front.jpeg",
-  "Atelier Drape Top": "/photos/top-2-front.jpeg",
-  "Atelier Contrast Collar Top": "/photos/top-3-front.jpeg",
-  "Atelier Palazzo Pants": "/photos/pants-1-front.jpeg",
-  "Atelier Celeste Wrap Pants": "/photos/pants-2-front.jpeg",
-  "Navy Silk Scarf": "/photos/scarf-1-front.jpeg",
-  "Cream Silk Scarf": "/photos/scarf-2-front.jpeg",
-  "Atelier Riviera Tailored Jorts": "/photos/jorts-1-front.jpeg",
-  "Atelier Capri Long Tailored Jorts": "/photos/jorts-2-front.jpeg",
-};
-
-const PRODUCT_MODEL_IMAGES: Record<string, string> = {
-  "Atelier Wrap Jacket": "/photos/jacket-1-model.jpeg",
-  "Milano Spirit Jacket": "/photos/jacket-2-model.jpeg",
-  "Atelier Soft Polo Top": "/photos/top-1-model.jpeg",
-  "Atelier Drape Top": "/photos/top-2-model.jpeg",
-  "Atelier Contrast Collar Top": "/photos/top-3-model.jpeg",
-  "Atelier Palazzo Pants": "/photos/pants-1-model.jpeg",
-  "Atelier Celeste Wrap Pants": "/photos/pants-2-model.jpeg",
-  "Navy Silk Scarf": "/photos/scarf-1-model.jpeg",
-  "Cream Silk Scarf": "/photos/scarf-2-model.jpeg",
-  "Atelier Riviera Tailored Jorts": "/photos/jorts-1-model.jpeg",
-  "Atelier Capri Long Tailored Jorts": "/photos/jorts-2-model.jpeg",
-};
-
-const PRODUCT_BACK_IMAGES: Record<string, string> = {
-  "Atelier Wrap Jacket": "/photos/jacket-1-back.jpeg",
-  "Milano Spirit Jacket": "/photos/jacket-2-back.jpeg",
-  "Atelier Soft Polo Top": "/photos/top-1-back.jpeg",
-  "Atelier Drape Top": "/photos/top-2-back.jpeg",
-  "Atelier Contrast Collar Top": "/photos/top-3-back.jpeg",
-  "Atelier Palazzo Pants": "/photos/pants-1-back.jpeg",
-  "Atelier Celeste Wrap Pants": "/photos/pants-2-back.jpeg",
-  "Navy Silk Scarf": "/photos/scarf-1-back.jpeg",
-  "Cream Silk Scarf": "/photos/scarf-2-back.jpeg",
-  "Atelier Riviera Tailored Jorts": "/photos/jorts-1-back.jpeg",
-  "Atelier Capri Long Tailored Jorts": "/photos/jorts-2-back.jpeg",
-};
 
 const sizeChart = [
   ["XS", "78 - 82 cm", "60 - 64 cm", "86 - 90 cm", "34 EU / 24-25"],
@@ -452,46 +361,45 @@ const sizeChart = [
   ["XL", "99 - 105 cm", "81 - 88 cm", "107 - 114 cm", "42 EU / 32-33"],
 ];
 
-const stockLevels = [5, 4, 10, 7, 8, 6, 5, 9, 9, 4, 5];
+const stockLevels = [6, 5, 10, 8, 6, 7, 9, 8, 4, 5];
 
 const modelInfo = [
-  "Height 170 cm · Wearing S · Sculpted wrap fit",
-  "Height 168 cm · Wearing S · Relaxed statement fit",
+  "Height 170 cm · Wearing S · Soft structured fit",
+  "Height 168 cm · Wearing S · Relaxed coastal fit",
   "Height 169 cm · Wearing S · True to size",
-  "Height 170 cm · Wearing S · Soft draped fit",
-  "Height 169 cm · Wearing S · Soft structured fit",
-  "Height 172 cm · Wearing M · Fluid wide-leg fit",
-  "Height 171 cm · Wearing S · Draped wrap fit",
-  "70 x 70 cm · Square scarf · Silk-touch finish",
-  "70 x 70 cm · Square scarf · Silk-touch finish",
-  "Height 170 cm · Wearing S · Long tailored fit",
+  "Height 171 cm · Wearing S · Soft knit fit",
+  "Height 172 cm · Wearing M · Flowing wide-leg fit",
+  "Height 170 cm · Wearing S · Straight tailored fit",
+  "90 x 90 cm · Square scarf · Silk-touch finish",
+  "65 x 65 cm · Mini scarf · Easy daily styling",
   "Height 170 cm · Wearing S · Longer tailored fit",
+  "Height 168 cm · Wearing S · Relaxed longer fit",
 ];
 
 const moodOptions = [
   {
     mood: "Coastal Atelier",
-    result: "Atelier Capri Long Tailored Jorts",
-    textEN: "Long tailored jorts, a refined daily top, gold details, and a clean Italian coastal mood.",
-    textAR: "جورتس طويل Tailored مع توب راقٍ وتفاصيل ذهبية ولمسة ساحلية إيطالية.",
+    result: "Capri Long Tailored Jorts",
+    textEN: "Long tailored jorts, an ivory daily top, gold details, and a clean Italian coastal mood.",
+    textAR: "جورتس طويل Tailored مع توب عاجي وتفاصيل ذهبية ولمسة ساحلية إيطالية.",
   },
   {
     mood: "Daily Chic",
-    result: "Atelier Soft Polo Top",
-    textEN: "A daily wearable polo top styled with soft tailoring and quiet luxury accessories.",
-    textAR: "توب بولو يومي مع Tailoring ناعم وإكسسوارات فاخرة بهدوء.",
+    result: "Daily Grazia Top",
+    textEN: "A simple daily wearable top styled with soft tailoring and quiet luxury accessories.",
+    textAR: "توب يومي بسيط مع Tailoring ناعم وإكسسوارات فاخرة بهدوء.",
   },
   {
     mood: "Soft Tailoring",
-    result: "Atelier Celeste Wrap Pants",
-    textEN: "A sculptural wrap pant for dinners, events, and polished feminine looks.",
-    textAR: "بنطلون Wrap راقٍ مناسب للعشاء والمناسبات واللوك الأنثوي الراقي.",
+    result: "Grazia Flow Tailored Pant",
+    textEN: "Flowing wide-leg tailoring for dinners, events, and polished feminine looks.",
+    textAR: "بنطلون واسع وانسيابي مناسب للعشاء والمناسبات واللوك الأنثوي الراقي.",
   },
   {
     mood: "Italian Muse",
-    result: "Navy Silk Scarf",
-    textEN: "A navy silk scarf that finishes the outfit with refined Italian elegance.",
-    textAR: "سكارف كحلي يكمّل اللوك بأناقة إيطالية راقية.",
+    result: "La Grazia Silk Scarf",
+    textEN: "A cream and gold scarf that finishes the outfit with refined Italian elegance.",
+    textAR: "سكارف كريمي وذهبي يكمّل اللوك بأناقة إيطالية راقية.",
   },
 ];
 
@@ -503,13 +411,13 @@ const text = {
     navCollection: "Collection",
     navAbout: "About",
     heroEyebrow: "Luxury Italian coastal elegance",
-    heroTitle: "The La Grazia Atelier Collection.",
+    heroTitle: "The Coastal Atelier Collection.",
     heroDescription:
-      "Discover La Grazia Milano: wrap jackets, daily tops, sculptural pants, silk scarves, and longer tailored jorts inspired by Italian coastal luxury, timeless feminine tailoring, soft neutrals, and gold details.",
+      "Discover La Grazia Milano: jackets, tops, pants, scarves, and longer tailored jorts inspired by Italian coastal luxury, timeless feminine tailoring, soft neutrals, and gold details.",
     shopCollection: "Shop Collection",
     findLook: "Find Your Piece",
     signatureEdit: "The Signature Edit",
-    signatureText: "Wrap jackets, daily tops, sculptural pants, scarves, and signature long tailored jorts.",
+    signatureText: "Jackets, tops, pants, scarves, and signature long tailored jorts.",
     trustDelivery: "Cairo Delivery",
     trustExchange: "14-Day Exchange",
     trustStyling: "WhatsApp Styling",
@@ -520,7 +428,7 @@ const text = {
     viewAll: "View All",
     wardrobeEyebrow: "New Arrivals",
     wardrobeTitle: "The Coastal Atelier Wardrobe",
-    wardrobeIntro: "Browse the official 11-piece collection: two jackets, three tops, two pants, two scarves, and two jorts.",
+    wardrobeIntro: "Browse the locked 10-piece collection: two jackets, two tops, two pants, two scarves, and two jorts.",
     searchPlaceholder: "Search jackets, tops, pants, scarves, jorts...",
     searchResults: "Search Results",
     featured: "La Grazia Selection",
@@ -653,7 +561,7 @@ const text = {
     viewAll: "شاهدي الكل",
     wardrobeEyebrow: "وصل حديثاً",
     wardrobeTitle: "خزانة Coastal Atelier",
-    wardrobeIntro: "تصفحي المجموعة الرسمية: جاكيتان، ثلاث توبس، بنطلونان، سكارفان، وجورتسان.",
+    wardrobeIntro: "تصفحي المجموعة الرسمية: قطعتان من كل فئة، جاكيتات، توبس، بنطلونات، سكارف، وجورتس.",
     searchPlaceholder: "ابحثي عن جاكيت، توب، بنطلون، سكارف، أو جورتس...",
     searchResults: "نتائج البحث",
     featured: "اختيارات لا غراتسيا",
@@ -768,13 +676,6 @@ function createWhatsAppLink(message: string) {
   return `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(message)}`;
 }
 
-function getProductImageByView(product: Product, view: "front" | "model" | "back") {
-  if (view === "front") return product.frontImage || product.image;
-  if (view === "model" && product.modelImage) return product.modelImage;
-  if (view === "back" && product.backImage) return product.backImage;
-  return product.frontImage || product.image;
-}
-
 function getProductIndex(productName: string) {
   return Math.max(0, products.findIndex((product) => product.name === productName));
 }
@@ -849,83 +750,11 @@ function ProductCard({
   language: Lang;
 }) {
   const t = text[language];
-  const [imageView, setImageView] = useState<"front" | "model" | "back">("front");
-  const [manualImageView, setManualImageView] = useState(false);
-  const cardImage = getProductImageByView(product, imageView);
-
-  const imageViews = [
-    { key: "front" as const, label: "Front", available: Boolean(product.frontImage || product.image) },
-    { key: "model" as const, label: "Model", available: Boolean(product.modelImage) },
-    { key: "back" as const, label: "Back", available: Boolean(product.backImage) },
-  ].filter((view) => view.available);
 
   return (
     <article className="productCard reveal">
-      <div
-        className="productImage"
-        style={{ position: "relative" }}
-        onClick={() => onOpen(product)}
-        onPointerEnter={() => {
-          if (!manualImageView && product.modelImage) setImageView("model");
-        }}
-        onPointerLeave={() => {
-          setManualImageView(false);
-          setImageView("front");
-        }}
-      >
-        <img
-          src={cardImage}
-          alt={product.name}
-          loading="lazy"
-          onError={(event) => {
-            if (event.currentTarget.src !== new URL(product.image, window.location.origin).href) {
-              event.currentTarget.src = product.image;
-            }
-          }}
-        />
-        <div
-          className="productImageSwitcher"
-          style={{
-            position: "absolute",
-            left: 12,
-            bottom: 12,
-            zIndex: 4,
-            display: "flex",
-            gap: 6,
-            padding: 4,
-            borderRadius: 999,
-            background: "rgba(255, 255, 255, 0.82)",
-            backdropFilter: "blur(10px)",
-            boxShadow: "0 10px 26px rgba(0, 0, 0, 0.12)",
-          }}
-          onClick={(event) => event.stopPropagation()}
-          onPointerEnter={(event) => event.stopPropagation()}
-        >
-          {imageViews.map((view) => (
-            <button
-              key={view.key}
-              type="button"
-              className={imageView === view.key ? "imageSwitchBtn active" : "imageSwitchBtn"}
-              style={{
-                border: "1px solid rgba(176, 140, 78, 0.45)",
-                borderRadius: 999,
-                padding: "5px 9px",
-                fontSize: 11,
-                letterSpacing: "0.04em",
-                color: imageView === view.key ? "#ffffff" : "#6f5735",
-                background: imageView === view.key ? "#b08c4e" : "rgba(255, 255, 255, 0.72)",
-                cursor: "pointer",
-              }}
-              onClick={(event) => {
-                event.stopPropagation();
-                setManualImageView(true);
-                setImageView(view.key);
-              }}
-            >
-              {view.label}
-            </button>
-          ))}
-        </div>
+      <div className="productImage" onClick={() => onOpen(product)}>
+        <img src={product.image} alt={product.name} loading="lazy" />
         <span className="stockTag">
           {t.only} {getStock(product.name)} {t.left}
         </span>
@@ -963,7 +792,6 @@ function ProductCard({
 
 export default function App() {
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
-  const [selectedImageView, setSelectedImageView] = useState<"front" | "model" | "back">("front");
   const [selectedSize, setSelectedSize] = useState("M");
   const [selectedColor, setSelectedColor] = useState("Cream");
   const [quantity, setQuantity] = useState(1);
@@ -1074,10 +902,10 @@ export default function App() {
   }, [addresses]);
 
   const bestSellers = displayProducts.filter((product) =>
-    ["Atelier Capri Long Tailored Jorts", "Atelier Soft Polo Top", "Atelier Wrap Jacket", "Navy Silk Scarf"].includes(product.name)
+    ["Capri Long Tailored Jorts", "Daily Grazia Top", "Milano Coastal Jacket", "La Grazia Silk Scarf"].includes(product.name)
   );
 
-  const filters = ["All", "Hero Product", "Daily Essential", "Signature Jacket", "Elegant Tailoring", "Classic Accessory", "Soft Luxury", "Statement Jacket"];
+  const filters = ["All", "Hero Product", "Daily Essential", "Signature Jacket", "Elegant Tailoring", "Classic Accessory"];
 
   const filterLabels: Record<string, string> = {
     All: isArabic ? "الكل" : "All",
@@ -1086,8 +914,6 @@ export default function App() {
     "Signature Jacket": isArabic ? "جاكيت أساسي" : "Signature Jacket",
     "Elegant Tailoring": isArabic ? "Tailoring راقٍ" : "Elegant Tailoring",
     "Classic Accessory": isArabic ? "إكسسوار كلاسيكي" : "Classic Accessory",
-    "Soft Luxury": isArabic ? "رفاهية ناعمة" : "Soft Luxury",
-    "Statement Jacket": isArabic ? "جاكيت Statement" : "Statement Jacket",
   };
 
   const collectionMenuItems = [
@@ -1373,9 +1199,6 @@ export default function App() {
       minPrice: Number(row.min_price || 0),
       category: row.category,
       image: row.image,
-      frontImage: PRODUCT_FRONT_IMAGES[row.name],
-      modelImage: PRODUCT_MODEL_IMAGES[row.name],
-      backImage: PRODUCT_BACK_IMAGES[row.name],
       tag: row.tag || "New Arrival",
       occasion: row.occasion || "Everyday Chic",
       colors: row.colors && row.colors.length > 0 ? row.colors : ["Cream"],
@@ -2088,7 +1911,6 @@ export default function App() {
 
   function openProduct(product: Product) {
     setSelectedProduct(product);
-    setSelectedImageView("front");
     setSelectedSize("M");
     setSelectedColor(product.colors[0]);
     setQuantity(1);
@@ -10542,8 +10364,8 @@ export default function App() {
             </div>
 
             <div className="heroVisual">
-              <img src="/photos/hero-piece.png" alt="La Grazia hero piece" />
-              <div className="heroImage">
+              <img src="/photos/la-grazia-03.jpeg" alt="La Grazia hero piece" />
+              <div className="heroCard">
                 <small>{t.signatureEdit}</small>
                 <strong>{t.signatureText}</strong>
               </div>
@@ -10863,59 +10685,8 @@ export default function App() {
           <button className="closeBtn" onClick={() => { setSelectedProduct(null); setItemSizeChartOpen(false); }}>×</button>
 
           <div className="modal" onClick={(event) => event.stopPropagation()}>
-            <div className="modalImage" style={{ position: "relative" }}>
-              <img
-                src={getProductImageByView(selectedProduct, selectedImageView)}
-                alt={selectedProduct.name}
-                onError={(event) => {
-                  if (event.currentTarget.src !== new URL(selectedProduct.image, window.location.origin).href) {
-                    event.currentTarget.src = selectedProduct.image;
-                  }
-                }}
-              />
-              <div
-                className="modalImageSwitcher"
-                style={{
-                  position: "absolute",
-                  left: 18,
-                  bottom: 18,
-                  zIndex: 4,
-                  display: "flex",
-                  gap: 8,
-                  padding: 5,
-                  borderRadius: 999,
-                  background: "rgba(255, 255, 255, 0.84)",
-                  backdropFilter: "blur(10px)",
-                  boxShadow: "0 12px 28px rgba(0, 0, 0, 0.14)",
-                }}
-              >
-                {[
-                  { key: "front" as const, label: "Front", available: Boolean(selectedProduct.frontImage || selectedProduct.image) },
-                  { key: "model" as const, label: "Model", available: Boolean(selectedProduct.modelImage) },
-                  { key: "back" as const, label: "Back", available: Boolean(selectedProduct.backImage) },
-                ]
-                  .filter((view) => view.available)
-                  .map((view) => (
-                    <button
-                      key={view.key}
-                      type="button"
-                      className={selectedImageView === view.key ? "imageSwitchBtn active" : "imageSwitchBtn"}
-                      style={{
-                        border: "1px solid rgba(176, 140, 78, 0.45)",
-                        borderRadius: 999,
-                        padding: "7px 12px",
-                        fontSize: 12,
-                        letterSpacing: "0.05em",
-                        color: selectedImageView === view.key ? "#ffffff" : "#6f5735",
-                        background: selectedImageView === view.key ? "#b08c4e" : "rgba(255, 255, 255, 0.72)",
-                        cursor: "pointer",
-                      }}
-                      onClick={() => setSelectedImageView(view.key)}
-                    >
-                      {view.label}
-                    </button>
-                  ))}
-              </div>
+            <div className="modalImage">
+              <img src={selectedProduct.image} alt={selectedProduct.name} />
             </div>
 
             <div className="modalInfo">
