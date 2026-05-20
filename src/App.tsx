@@ -10542,7 +10542,7 @@ export default function App() {
             </div>
 
             <div className="heroVisual">
-              <img src="/photos/hero-piece.jpeg" alt="La Grazia hero piece" />
+              <img src="/photos/hero-piece.png" alt="La Grazia hero piece" />
               <div className="heroImage">
                 <small>{t.signatureEdit}</small>
                 <strong>{t.signatureText}</strong>
