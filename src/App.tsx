@@ -10,6 +10,8 @@ type Product = {
   minPrice: number;
   category: string;
   image: string;
+  modelImage?: string;
+  backImage?: string;
   tag: string;
   occasion: string;
   colors: string[];
@@ -227,6 +229,8 @@ const products: Product[] = [
     minPrice: 2700,
     category: "Jackets",
     image: "/photos/jacket 1.jpeg",
+    modelImage: "/photos/jacket-1-model.jpeg",
+    backImage: "/photos/jacket-1-back.jpeg",
     tag: "Signature Jacket",
     occasion: "Dinner / Events / Elegant Daywear",
     colors: ["Cream", "Champagne", "Soft Beige"],
@@ -240,6 +244,8 @@ const products: Product[] = [
     minPrice: 2500,
     category: "Jackets",
     image: "/photos/jacket 2.jpeg",
+    modelImage: "/photos/jacket-2-model.jpeg",
+    backImage: "/photos/jacket-2-back.jpeg",
     tag: "Statement Jacket",
     occasion: "Weekend / City Walk / Spring Edit",
     colors: ["Cream Print", "Red Accent", "Botanical Multi"],
@@ -253,6 +259,8 @@ const products: Product[] = [
     minPrice: 1100,
     category: "Tops",
     image: "/photos/top 1.jpeg",
+    modelImage: "/photos/top-1-model.jpeg",
+    backImage: "/photos/top-1-back.jpeg",
     tag: "Daily Essential",
     occasion: "Daily Wear / University / Cafe",
     colors: ["Soft Blue", "Cream", "Ivory", "Sage"],
@@ -266,6 +274,8 @@ const products: Product[] = [
     minPrice: 1350,
     category: "Tops",
     image: "/photos/top 2.jpeg",
+    modelImage: "/photos/top-2-model.jpeg",
+    backImage: "/photos/top-2-back.jpeg",
     tag: "Soft Luxury",
     occasion: "Dinner / Brunch / Smart Casual",
     colors: ["Cream", "Ivory", "Champagne"],
@@ -279,6 +289,8 @@ const products: Product[] = [
     minPrice: 1200,
     category: "Tops",
     image: "/photos/top 3.jpeg",
+    modelImage: "/photos/top-3-model.jpeg",
+    backImage: "/photos/top-3-back.jpeg",
     tag: "Daily Essential",
     occasion: "Daily Chic / Lunch / University",
     colors: ["Dusty Blue", "Cream", "Sage", "Black"],
@@ -292,6 +304,8 @@ const products: Product[] = [
     minPrice: 1900,
     category: "Pants",
     image: "/photos/pants 1.jpeg",
+    modelImage: "/photos/pants-1-model.jpeg",
+    backImage: "/photos/pants-1-back.jpeg",
     tag: "Elegant Tailoring",
     occasion: "Work / Dinner / City Chic",
     colors: ["Stone Beige", "Champagne", "Cream", "Black"],
@@ -305,6 +319,8 @@ const products: Product[] = [
     minPrice: 2000,
     category: "Pants",
     image: "/photos/pants 2.jpeg",
+    modelImage: "/photos/pants-2-model.jpeg",
+    backImage: "/photos/pants-2-back.jpeg",
     tag: "Elegant Tailoring",
     occasion: "Events / Dinner / Smart Casual",
     colors: ["Dusty Blue", "Navy", "Cream", "Champagne"],
@@ -318,6 +334,8 @@ const products: Product[] = [
     minPrice: 850,
     category: "Scarves",
     image: "/photos/scarf 1.jpeg",
+    modelImage: "/photos/scarf-1-model.jpeg",
+    backImage: "/photos/scarf-1-back.jpeg",
     tag: "Classic Accessory",
     occasion: "Styling / Gift / Occasion",
     colors: ["Navy", "Midnight Blue", "Dusty Blue", "Ivory Beige", "Charcoal"],
@@ -331,6 +349,8 @@ const products: Product[] = [
     minPrice: 850,
     category: "Scarves",
     image: "/photos/scarf 2.jpeg",
+    modelImage: "/photos/scarf-2-model.jpeg",
+    backImage: "/photos/scarf-2-back.jpeg",
     tag: "Classic Accessory",
     occasion: "Everyday Styling / Gift / Soft Luxury",
     colors: ["Cream", "Ivory Beige", "Champagne", "Taupe", "Soft Sand"],
@@ -344,6 +364,8 @@ const products: Product[] = [
     minPrice: 1650,
     category: "Jorts",
     image: "/photos/jorts 1.png",
+    modelImage: "/photos/jorts-1-model.jpeg",
+    backImage: "/photos/jorts-1-back.jpeg",
     tag: "Hero Product",
     occasion: "Summer / Resort / Daily Luxury",
     colors: ["Cream", "Champagne", "Sage", "Dusty Rose", "Mocha", "Black"],
@@ -357,6 +379,8 @@ const products: Product[] = [
     minPrice: 1750,
     category: "Jorts",
     image: "/photos/jorts 2.png",
+    modelImage: "/photos/jorts-2-model.jpeg",
+    backImage: "/photos/jorts-2-back.jpeg",
     tag: "Hero Product",
     occasion: "Coastal Chic / Summer / Signature Look",
     colors: ["Cream", "Champagne", "Sage", "Dusty Rose", "Mocha", "Black"],
@@ -365,6 +389,34 @@ const products: Product[] = [
       "The signature La Grazia long tailored jort. Longer knee-grazing length, high waist, soft pleats, cuffed hem, gold LG hardware, and an embroidered crest detail for timeless Italian coastal elegance.",
   },
 ];
+
+const PRODUCT_MODEL_IMAGES: Record<string, string> = {
+  "Atelier Wrap Jacket": "/photos/jacket-1-model.jpeg",
+  "Milano Spirit Jacket": "/photos/jacket-2-model.jpeg",
+  "Atelier Soft Polo Top": "/photos/top-1-model.jpeg",
+  "Atelier Drape Top": "/photos/top-2-model.jpeg",
+  "Atelier Contrast Collar Top": "/photos/top-3-model.jpeg",
+  "Atelier Palazzo Pants": "/photos/pants-1-model.jpeg",
+  "Atelier Celeste Wrap Pants": "/photos/pants-2-model.jpeg",
+  "Navy Silk Scarf": "/photos/scarf-1-model.jpeg",
+  "Cream Silk Scarf": "/photos/scarf-2-model.jpeg",
+  "Atelier Riviera Tailored Jorts": "/photos/jorts-1-model.jpeg",
+  "Atelier Capri Long Tailored Jorts": "/photos/jorts-2-model.jpeg",
+};
+
+const PRODUCT_BACK_IMAGES: Record<string, string> = {
+  "Atelier Wrap Jacket": "/photos/jacket-1-back.jpeg",
+  "Milano Spirit Jacket": "/photos/jacket-2-back.jpeg",
+  "Atelier Soft Polo Top": "/photos/top-1-back.jpeg",
+  "Atelier Drape Top": "/photos/top-2-back.jpeg",
+  "Atelier Contrast Collar Top": "/photos/top-3-back.jpeg",
+  "Atelier Palazzo Pants": "/photos/pants-1-back.jpeg",
+  "Atelier Celeste Wrap Pants": "/photos/pants-2-back.jpeg",
+  "Navy Silk Scarf": "/photos/scarf-1-back.jpeg",
+  "Cream Silk Scarf": "/photos/scarf-2-back.jpeg",
+  "Atelier Riviera Tailored Jorts": "/photos/jorts-1-back.jpeg",
+  "Atelier Capri Long Tailored Jorts": "/photos/jorts-2-back.jpeg",
+};
 
 const sizeChart = [
   ["XS", "78 - 82 cm", "60 - 64 cm", "86 - 90 cm", "34 EU / 24-25"],
@@ -690,6 +742,12 @@ function createWhatsAppLink(message: string) {
   return `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(message)}`;
 }
 
+function getProductImageByView(product: Product, view: "front" | "model" | "back") {
+  if (view === "model" && product.modelImage) return product.modelImage;
+  if (view === "back" && product.backImage) return product.backImage;
+  return product.image;
+}
+
 function getProductIndex(productName: string) {
   return Math.max(0, products.findIndex((product) => product.name === productName));
 }
@@ -764,11 +822,69 @@ function ProductCard({
   language: Lang;
 }) {
   const t = text[language];
+  const [imageView, setImageView] = useState<"front" | "model" | "back">("front");
+  const cardImage =
+    imageView === "model" && product.modelImage
+      ? product.modelImage
+      : imageView === "back" && product.backImage
+        ? product.backImage
+        : product.image;
+
+  const imageViews = [
+    { key: "front" as const, label: "Front", available: Boolean(product.image) },
+    { key: "model" as const, label: "Model", available: Boolean(product.modelImage) },
+    { key: "back" as const, label: "Back", available: Boolean(product.backImage) },
+  ].filter((view) => view.available);
 
   return (
     <article className="productCard reveal">
-      <div className="productImage" onClick={() => onOpen(product)}>
-        <img src={product.image} alt={product.name} loading="lazy" />
+      <div
+        className="productImage"
+        style={{ position: "relative" }}
+        onClick={() => onOpen(product)}
+        onPointerEnter={() => product.modelImage && setImageView("model")}
+        onPointerLeave={() => setImageView("front")}
+      >
+        <img src={cardImage} alt={product.name} loading="lazy" />
+        <div
+          className="productImageSwitcher"
+          style={{
+            position: "absolute",
+            left: 12,
+            bottom: 12,
+            zIndex: 4,
+            display: "flex",
+            gap: 6,
+            padding: 4,
+            borderRadius: 999,
+            background: "rgba(255, 255, 255, 0.82)",
+            backdropFilter: "blur(10px)",
+            boxShadow: "0 10px 26px rgba(0, 0, 0, 0.12)",
+          }}
+          onClick={(event) => event.stopPropagation()}
+          onPointerEnter={(event) => event.stopPropagation()}
+        >
+          {imageViews.map((view) => (
+            <button
+              key={view.key}
+              type="button"
+              className={imageView === view.key ? "imageSwitchBtn active" : "imageSwitchBtn"}
+              style={{
+                border: "1px solid rgba(176, 140, 78, 0.45)",
+                borderRadius: 999,
+                padding: "5px 9px",
+                fontSize: 11,
+                letterSpacing: "0.04em",
+                color: imageView === view.key ? "#ffffff" : "#6f5735",
+                background: imageView === view.key ? "#b08c4e" : "rgba(255, 255, 255, 0.72)",
+                cursor: "pointer",
+              }}
+              onClick={() => setImageView(view.key)}
+            >
+              {view.label}
+            </button>
+          ))}
+        </div>
         <span className="stockTag">
           {t.only} {getStock(product.name)} {t.left}
         </span>
@@ -806,6 +922,7 @@ function ProductCard({
 
 export default function App() {
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
+  const [selectedImageView, setSelectedImageView] = useState<"front" | "model" | "back">("front");
   const [selectedSize, setSelectedSize] = useState("M");
   const [selectedColor, setSelectedColor] = useState("Cream");
   const [quantity, setQuantity] = useState(1);
@@ -1215,6 +1332,8 @@ export default function App() {
       minPrice: Number(row.min_price || 0),
       category: row.category,
       image: row.image,
+      modelImage: PRODUCT_MODEL_IMAGES[row.name],
+      backImage: PRODUCT_BACK_IMAGES[row.name],
       tag: row.tag || "New Arrival",
       occasion: row.occasion || "Everyday Chic",
       colors: row.colors && row.colors.length > 0 ? row.colors : ["Cream"],
@@ -1927,6 +2046,7 @@ export default function App() {
 
   function openProduct(product: Product) {
     setSelectedProduct(product);
+    setSelectedImageView("front");
     setSelectedSize("M");
     setSelectedColor(product.colors[0]);
     setQuantity(1);
@@ -10701,8 +10821,51 @@ export default function App() {
           <button className="closeBtn" onClick={() => { setSelectedProduct(null); setItemSizeChartOpen(false); }}>×</button>
 
           <div className="modal" onClick={(event) => event.stopPropagation()}>
-            <div className="modalImage">
-              <img src={selectedProduct.image} alt={selectedProduct.name} />
+            <div className="modalImage" style={{ position: "relative" }}>
+              <img src={getProductImageByView(selectedProduct, selectedImageView)} alt={selectedProduct.name} />
+              <div
+                className="modalImageSwitcher"
+                style={{
+                  position: "absolute",
+                  left: 18,
+                  bottom: 18,
+                  zIndex: 4,
+                  display: "flex",
+                  gap: 8,
+                  padding: 5,
+                  borderRadius: 999,
+                  background: "rgba(255, 255, 255, 0.84)",
+                  backdropFilter: "blur(10px)",
+                  boxShadow: "0 12px 28px rgba(0, 0, 0, 0.14)",
+                }}
+              >
+                {[
+                  { key: "front" as const, label: "Front", available: Boolean(selectedProduct.image) },
+                  { key: "model" as const, label: "Model", available: Boolean(selectedProduct.modelImage) },
+                  { key: "back" as const, label: "Back", available: Boolean(selectedProduct.backImage) },
+                ]
+                  .filter((view) => view.available)
+                  .map((view) => (
+                    <button
+                      key={view.key}
+                      type="button"
+                      className={selectedImageView === view.key ? "imageSwitchBtn active" : "imageSwitchBtn"}
+                      style={{
+                        border: "1px solid rgba(176, 140, 78, 0.45)",
+                        borderRadius: 999,
+                        padding: "7px 12px",
+                        fontSize: 12,
+                        letterSpacing: "0.05em",
+                        color: selectedImageView === view.key ? "#ffffff" : "#6f5735",
+                        background: selectedImageView === view.key ? "#b08c4e" : "rgba(255, 255, 255, 0.72)",
+                        cursor: "pointer",
+                      }}
+                      onClick={() => setSelectedImageView(view.key)}
+                    >
+                      {view.label}
+                    </button>
+                  ))}
+              </div>
             </div>
 
             <div className="modalInfo">
