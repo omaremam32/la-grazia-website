@@ -10,6 +10,7 @@ type Product = {
   minPrice: number;
   category: string;
   image: string;
+  frontImage?: string;
   modelImage?: string;
   backImage?: string;
   tag: string;
@@ -229,6 +230,7 @@ const products: Product[] = [
     minPrice: 2700,
     category: "Jackets",
     image: "/photos/jacket 1.jpeg",
+    frontImage: "/photos/jacket-1-front.jpeg",
     modelImage: "/photos/jacket-1-model.jpeg",
     backImage: "/photos/jacket-1-back.jpeg",
     tag: "Signature Jacket",
@@ -244,6 +246,7 @@ const products: Product[] = [
     minPrice: 2500,
     category: "Jackets",
     image: "/photos/jacket 2.jpeg",
+    frontImage: "/photos/jacket-2-front.jpeg",
     modelImage: "/photos/jacket-2-model.jpeg",
     backImage: "/photos/jacket-2-back.jpeg",
     tag: "Statement Jacket",
@@ -259,6 +262,7 @@ const products: Product[] = [
     minPrice: 1100,
     category: "Tops",
     image: "/photos/top 1.jpeg",
+    frontImage: "/photos/top-1-front.jpeg",
     modelImage: "/photos/top-1-model.jpeg",
     backImage: "/photos/top-1-back.jpeg",
     tag: "Daily Essential",
@@ -274,6 +278,7 @@ const products: Product[] = [
     minPrice: 1350,
     category: "Tops",
     image: "/photos/top 2.jpeg",
+    frontImage: "/photos/top-2-front.jpeg",
     modelImage: "/photos/top-2-model.jpeg",
     backImage: "/photos/top-2-back.jpeg",
     tag: "Soft Luxury",
@@ -289,6 +294,7 @@ const products: Product[] = [
     minPrice: 1200,
     category: "Tops",
     image: "/photos/top 3.jpeg",
+    frontImage: "/photos/top-3-front.jpeg",
     modelImage: "/photos/top-3-model.jpeg",
     backImage: "/photos/top-3-back.jpeg",
     tag: "Daily Essential",
@@ -304,6 +310,7 @@ const products: Product[] = [
     minPrice: 1900,
     category: "Pants",
     image: "/photos/pants 1.jpeg",
+    frontImage: "/photos/pants-1-front.jpeg",
     modelImage: "/photos/pants-1-model.jpeg",
     backImage: "/photos/pants-1-back.jpeg",
     tag: "Elegant Tailoring",
@@ -319,6 +326,7 @@ const products: Product[] = [
     minPrice: 2000,
     category: "Pants",
     image: "/photos/pants 2.jpeg",
+    frontImage: "/photos/pants-2-front.jpeg",
     modelImage: "/photos/pants-2-model.jpeg",
     backImage: "/photos/pants-2-back.jpeg",
     tag: "Elegant Tailoring",
@@ -334,6 +342,7 @@ const products: Product[] = [
     minPrice: 850,
     category: "Scarves",
     image: "/photos/scarf 1.jpeg",
+    frontImage: "/photos/scarf-1-front.jpeg",
     modelImage: "/photos/scarf-1-model.jpeg",
     backImage: "/photos/scarf-1-back.jpeg",
     tag: "Classic Accessory",
@@ -349,6 +358,7 @@ const products: Product[] = [
     minPrice: 850,
     category: "Scarves",
     image: "/photos/scarf 2.jpeg",
+    frontImage: "/photos/scarf-2-front.jpeg",
     modelImage: "/photos/scarf-2-model.jpeg",
     backImage: "/photos/scarf-2-back.jpeg",
     tag: "Classic Accessory",
@@ -364,6 +374,7 @@ const products: Product[] = [
     minPrice: 1650,
     category: "Jorts",
     image: "/photos/jorts 1.png",
+    frontImage: "/photos/jorts-1-front.jpeg",
     modelImage: "/photos/jorts-1-model.jpeg",
     backImage: "/photos/jorts-1-back.jpeg",
     tag: "Hero Product",
@@ -379,6 +390,7 @@ const products: Product[] = [
     minPrice: 1750,
     category: "Jorts",
     image: "/photos/jorts 2.png",
+    frontImage: "/photos/jorts-2-front.jpeg",
     modelImage: "/photos/jorts-2-model.jpeg",
     backImage: "/photos/jorts-2-back.jpeg",
     tag: "Hero Product",
@@ -389,6 +401,20 @@ const products: Product[] = [
       "The signature La Grazia long tailored jort. Longer knee-grazing length, high waist, soft pleats, cuffed hem, gold LG hardware, and an embroidered crest detail for timeless Italian coastal elegance.",
   },
 ];
+
+const PRODUCT_FRONT_IMAGES: Record<string, string> = {
+  "Atelier Wrap Jacket": "/photos/jacket-1-front.jpeg",
+  "Milano Spirit Jacket": "/photos/jacket-2-front.jpeg",
+  "Atelier Soft Polo Top": "/photos/top-1-front.jpeg",
+  "Atelier Drape Top": "/photos/top-2-front.jpeg",
+  "Atelier Contrast Collar Top": "/photos/top-3-front.jpeg",
+  "Atelier Palazzo Pants": "/photos/pants-1-front.jpeg",
+  "Atelier Celeste Wrap Pants": "/photos/pants-2-front.jpeg",
+  "Navy Silk Scarf": "/photos/scarf-1-front.jpeg",
+  "Cream Silk Scarf": "/photos/scarf-2-front.jpeg",
+  "Atelier Riviera Tailored Jorts": "/photos/jorts-1-front.jpeg",
+  "Atelier Capri Long Tailored Jorts": "/photos/jorts-2-front.jpeg",
+};
 
 const PRODUCT_MODEL_IMAGES: Record<string, string> = {
   "Atelier Wrap Jacket": "/photos/jacket-1-model.jpeg",
@@ -743,9 +769,10 @@ function createWhatsAppLink(message: string) {
 }
 
 function getProductImageByView(product: Product, view: "front" | "model" | "back") {
+  if (view === "front") return product.frontImage || product.image;
   if (view === "model" && product.modelImage) return product.modelImage;
   if (view === "back" && product.backImage) return product.backImage;
-  return product.image;
+  return product.frontImage || product.image;
 }
 
 function getProductIndex(productName: string) {
@@ -823,15 +850,11 @@ function ProductCard({
 }) {
   const t = text[language];
   const [imageView, setImageView] = useState<"front" | "model" | "back">("front");
-  const cardImage =
-    imageView === "model" && product.modelImage
-      ? product.modelImage
-      : imageView === "back" && product.backImage
-        ? product.backImage
-        : product.image;
+  const [manualImageView, setManualImageView] = useState(false);
+  const cardImage = getProductImageByView(product, imageView);
 
   const imageViews = [
-    { key: "front" as const, label: "Front", available: Boolean(product.image) },
+    { key: "front" as const, label: "Front", available: Boolean(product.frontImage || product.image) },
     { key: "model" as const, label: "Model", available: Boolean(product.modelImage) },
     { key: "back" as const, label: "Back", available: Boolean(product.backImage) },
   ].filter((view) => view.available);
@@ -842,10 +865,24 @@ function ProductCard({
         className="productImage"
         style={{ position: "relative" }}
         onClick={() => onOpen(product)}
-        onPointerEnter={() => product.modelImage && setImageView("model")}
-        onPointerLeave={() => setImageView("front")}
+        onPointerEnter={() => {
+          if (!manualImageView && product.modelImage) setImageView("model");
+        }}
+        onPointerLeave={() => {
+          setManualImageView(false);
+          setImageView("front");
+        }}
       >
-        <img src={cardImage} alt={product.name} loading="lazy" />
+        <img
+          src={cardImage}
+          alt={product.name}
+          loading="lazy"
+          onError={(event) => {
+            if (event.currentTarget.src !== new URL(product.image, window.location.origin).href) {
+              event.currentTarget.src = product.image;
+            }
+          }}
+        />
         <div
           className="productImageSwitcher"
           style={{
@@ -879,7 +916,11 @@ function ProductCard({
                 background: imageView === view.key ? "#b08c4e" : "rgba(255, 255, 255, 0.72)",
                 cursor: "pointer",
               }}
-              onClick={() => setImageView(view.key)}
+              onClick={(event) => {
+                event.stopPropagation();
+                setManualImageView(true);
+                setImageView(view.key);
+              }}
             >
               {view.label}
             </button>
@@ -1332,6 +1373,7 @@ export default function App() {
       minPrice: Number(row.min_price || 0),
       category: row.category,
       image: row.image,
+      frontImage: PRODUCT_FRONT_IMAGES[row.name],
       modelImage: PRODUCT_MODEL_IMAGES[row.name],
       backImage: PRODUCT_BACK_IMAGES[row.name],
       tag: row.tag || "New Arrival",
@@ -10822,7 +10864,15 @@ export default function App() {
 
           <div className="modal" onClick={(event) => event.stopPropagation()}>
             <div className="modalImage" style={{ position: "relative" }}>
-              <img src={getProductImageByView(selectedProduct, selectedImageView)} alt={selectedProduct.name} />
+              <img
+                src={getProductImageByView(selectedProduct, selectedImageView)}
+                alt={selectedProduct.name}
+                onError={(event) => {
+                  if (event.currentTarget.src !== new URL(selectedProduct.image, window.location.origin).href) {
+                    event.currentTarget.src = selectedProduct.image;
+                  }
+                }}
+              />
               <div
                 className="modalImageSwitcher"
                 style={{
@@ -10840,7 +10890,7 @@ export default function App() {
                 }}
               >
                 {[
-                  { key: "front" as const, label: "Front", available: Boolean(selectedProduct.image) },
+                  { key: "front" as const, label: "Front", available: Boolean(selectedProduct.frontImage || selectedProduct.image) },
                   { key: "model" as const, label: "Model", available: Boolean(selectedProduct.modelImage) },
                   { key: "back" as const, label: "Back", available: Boolean(selectedProduct.backImage) },
                 ]
