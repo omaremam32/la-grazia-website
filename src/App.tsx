@@ -202,12 +202,12 @@ const emptyProductForm: ProductForm = {
   name: "",
   price: "EGP 0",
   minPrice: "0",
-  category: "",
+  category: "Tops",
   image: "/photos/la-grazia-01.jpeg",
   tag: "New Arrival",
   occasion: "Everyday Chic",
-  colors: "Cream, White",
-  complete: "Gold earrings, Mini bag",
+  colors: "Cream, Champagne",
+  complete: "Capri Long Tailored Jorts, La Grazia Silk Scarf",
   description: "",
   isActive: true,
   sortOrder: "0",
@@ -222,134 +222,134 @@ const emptySupportForm: SupportForm = {
 
 const products: Product[] = [
   {
-    name: "Milano Cream Palazzo Trouser",
-    price: "EGP 1,900 - 2,400",
-    minPrice: 1900,
-    category: "Wide-Leg Trouser",
-    image: "/photos/la-grazia-01.jpeg",
-    tag: "Best Seller",
-    occasion: "Work / University",
-    colors: ["Cream", "Ivory", "Warm Beige"],
-    complete: ["Black fitted top", "Silk scarf", "Gold belt", "Mini leather bag"],
-    description:
-      "A high-waisted cream palazzo trouser with a clean wide-leg silhouette, designed to create an elegant Italian old-money look.",
-  },
-  {
-    name: "Roma Plaid Palazzo Trouser",
-    price: "EGP 2,100 - 2,700",
-    minPrice: 2100,
-    category: "Statement Trouser",
-    image: "/photos/la-grazia-02.jpeg",
-    tag: "New Arrival",
-    occasion: "Brunch / City Walk",
-    colors: ["Plaid", "Taupe", "Charcoal"],
-    complete: ["Black tank top", "Classic belt", "Leather sunglasses", "Loafers"],
-    description:
-      "A luxury plaid palazzo trouser with a polished city feel, made for confident daytime styling and effortless Rome street elegance.",
-  },
-  {
-    name: "Vaticano Printed Silk Scarf",
-    price: "EGP 950 - 1,450",
-    minPrice: 950,
-    category: "Silk Scarf",
-    image: "/photos/la-grazia-03.jpeg",
-    tag: "Signature Look",
-    occasion: "Travel / Day Out",
-    colors: ["Caramel Print", "Cream", "Espresso"],
-    complete: ["White fitted top", "Cream trousers", "Gold watch", "Mini shoulder bag"],
-    description:
-      "A statement printed silk scarf inspired by Italian travel styling, created to elevate simple outfits with a timeless feminine finish.",
-  },
-  {
-    name: "Torino Blue Oxford Shirt",
-    price: "EGP 1,850 - 2,500",
-    minPrice: 1850,
-    category: "Striped Shirt",
-    image: "/photos/la-grazia-04.jpeg",
-    tag: "Limited Drop",
-    occasion: "Everyday Chic",
-    colors: ["Blue Stripe", "Sky Blue", "White"],
-    complete: ["Dark denim", "Navy knit", "Gold hoops", "Structured handbag"],
-    description:
-      "A crisp blue striped oxford shirt with relaxed tailoring, perfect for a premium everyday look with soft Italian coastal energy.",
-  },
-  {
-    name: "Capri Navy Knit Vest",
-    price: "EGP 1,700 - 2,300",
-    minPrice: 1700,
-    category: "Knit Vest",
-    image: "/photos/la-grazia-05.jpeg",
-    tag: "Summer Edit",
-    occasion: "Cafe / Weekend",
-    colors: ["Navy", "Cream", "Soft Blue"],
-    complete: ["Striped shirt", "Wide-leg denim", "Brown handbag", "Gold earrings"],
-    description:
-      "A navy knit vest layered with classic shirting energy, designed for a clean, polished, and relaxed Italian casual look.",
-  },
-  {
-    name: "Bianca Off-Shoulder Knit",
-    price: "EGP 2,200 - 2,900",
-    minPrice: 2200,
-    category: "Off-Shoulder Knit",
-    image: "/photos/la-grazia-06.jpeg",
-    tag: "Soft Luxury",
-    occasion: "Dinner / Evening",
-    colors: ["White", "Cream", "Champagne"],
-    complete: ["Wide-leg trousers", "Pearl earrings", "Cream clutch", "Nude heels"],
-    description:
-      "A soft off-shoulder knit with a feminine neckline, designed for quiet luxury dinners, elegant evenings, and polished soft dressing.",
-  },
-  {
-    name: "Capri Grey Cropped Cardigan",
-    price: "EGP 1,600 - 2,200",
-    minPrice: 1600,
-    category: "Cropped Cardigan",
-    image: "/photos/la-grazia-07.jpeg",
-    tag: "Casual Edit",
-    occasion: "Everyday / Coffee Run",
-    colors: ["Grey", "Ivory", "Soft Denim"],
-    complete: ["White fitted top", "Straight jeans", "Mini bag", "Ballet flats"],
-    description:
-      "A cropped grey cardigan with a relaxed old-money mood, made for easy everyday styling while still feeling polished and feminine.",
-  },
-  {
-    name: "Parisian Bouclé Jacket",
+    name: "Milano Coastal Jacket",
     price: "EGP 2,400 - 3,200",
     minPrice: 2400,
-    category: "Bouclé Jacket",
+    category: "Jackets",
+    image: "/photos/la-grazia-01.jpeg",
+    tag: "Signature Jacket",
+    occasion: "Daily Luxury / Evening",
+    colors: ["Cream", "Mocha", "Black"],
+    complete: ["Daily Grazia Top", "Riviera Straight Pant", "La Grazia Silk Scarf", "Gold accessories"],
+    description:
+      "A polished Italian coastal jacket with soft structure, gold LG buttons, refined pockets, and a clean feminine silhouette. Designed to feel luxurious, wearable, and timeless.",
+  },
+  {
+    name: "Portofino Relaxed Jacket",
+    price: "EGP 2,200 - 2,950",
+    minPrice: 2200,
+    category: "Jackets",
+    image: "/photos/la-grazia-02.jpeg",
+    tag: "Relaxed Luxury",
+    occasion: "Spring / Summer Layering",
+    colors: ["Sage", "Champagne", "Navy"],
+    complete: ["Atelier Knit Top", "Amalfi Soft Tailored Jorts", "Coastal Muse Scarf", "Soft sandals"],
+    description:
+      "A lightweight relaxed jacket inspired by Portofino elegance. Soft shoulders, an easy fit, subtle gold details, and a refined coastal feel for effortless styling.",
+  },
+  {
+    name: "Daily Grazia Top",
+    price: "EGP 950 - 1,450",
+    minPrice: 950,
+    category: "Tops",
+    image: "/photos/la-grazia-03.jpeg",
+    tag: "Daily Essential",
+    occasion: "Everyday Wear / University / Cafe",
+    colors: ["Ivory", "Mocha", "Black", "Dusty Rose"],
+    complete: ["Capri Long Tailored Jorts", "Riviera Straight Pant", "Coastal Muse Scarf", "Gold hoops"],
+    description:
+      "A clean daily wearable top with a modest neckline, soft premium fabric, comfortable fit, and subtle LG detail. Made for teenagers and women to wear every day.",
+  },
+  {
+    name: "Atelier Knit Top",
+    price: "EGP 1,250 - 1,850",
+    minPrice: 1250,
+    category: "Tops",
+    image: "/photos/la-grazia-04.jpeg",
+    tag: "Elevated Knit",
+    occasion: "Smart Casual / Dinner",
+    colors: ["Cream", "Sage", "Navy", "Dusty Rose"],
+    complete: ["Grazia Flow Tailored Pant", "Milano Coastal Jacket", "La Grazia Silk Scarf", "Mini leather bag"],
+    description:
+      "A refined knit top with a closed neckline, feminine fit, soft ribbed texture, and quiet luxury detailing. Perfect for pairing with tailored pants or jackets.",
+  },
+  {
+    name: "Grazia Flow Tailored Pant",
+    price: "EGP 1,800 - 2,500",
+    minPrice: 1800,
+    category: "Pants",
+    image: "/photos/la-grazia-05.jpeg",
+    tag: "Elegant Tailoring",
+    occasion: "Dinner / Events / Smart Casual",
+    colors: ["Champagne", "Navy", "Black", "Cream"],
+    complete: ["Atelier Knit Top", "Milano Coastal Jacket", "La Grazia Silk Scarf", "Nude heels"],
+    description:
+      "A high-waisted wide-leg pant with soft pleats, flowing movement, clean side pockets, and gold waist detail. A luxury feminine trouser inspired by Milanese tailoring.",
+  },
+  {
+    name: "Riviera Straight Pant",
+    price: "EGP 1,600 - 2,200",
+    minPrice: 1600,
+    category: "Pants",
+    image: "/photos/la-grazia-06.jpeg",
+    tag: "Everyday Tailoring",
+    occasion: "Daily Chic / University / Work",
+    colors: ["Mocha", "Sage", "Black", "Cream"],
+    complete: ["Daily Grazia Top", "Portofino Relaxed Jacket", "Coastal Muse Scarf", "Loafers"],
+    description:
+      "A practical straight-leg tailored pant with a high waist, clean front, comfortable fit, and subtle premium finishing. Designed for everyday elegance.",
+  },
+  {
+    name: "La Grazia Silk Scarf",
+    price: "EGP 850 - 1,350",
+    minPrice: 850,
+    category: "Scarves",
+    image: "/photos/la-grazia-07.jpeg",
+    tag: "Classic Accessory",
+    occasion: "Styling / Gift / Occasion",
+    colors: ["Cream/Gold", "Navy/Gold", "Sage/Cream"],
+    complete: ["Daily Grazia Top", "Capri Long Tailored Jorts", "Milano Coastal Jacket", "Gold jewelry"],
+    description:
+      "A classic square scarf with a thin gold border, Italian botanical-inspired print, and subtle LG corner detail. Designed to style around the neck, hair, wrist, or bag.",
+  },
+  {
+    name: "Coastal Muse Scarf",
+    price: "EGP 700 - 1,100",
+    minPrice: 700,
+    category: "Scarves",
     image: "/photos/la-grazia-08.jpeg",
-    tag: "Premium Piece",
-    occasion: "Dinner / Events",
-    colors: ["Beige", "Cream", "Gold Detail"],
-    complete: ["Cream top", "Tailored trousers", "Gold earrings", "Structured mini bag"],
+    tag: "Soft Styling Piece",
+    occasion: "Everyday Styling",
+    colors: ["Dusty Rose", "Champagne", "Soft Sage", "Mocha"],
+    complete: ["Daily Grazia Top", "Riviera Straight Pant", "Amalfi Soft Tailored Jorts", "Soft gold accessories"],
     description:
-      "A textured beige bouclé jacket with gold-detail elegance, created as the statement piece for a refined Parisian-inspired wardrobe.",
+      "A smaller lightweight scarf with a softer youthful mood. Easy to style with daily outfits while keeping the La Grazia luxury coastal identity.",
   },
   {
-    name: "Caffè Crema Corset Top",
-    price: "EGP 1,900 - 2,600",
-    minPrice: 1900,
-    category: "Structured Top",
+    name: "Capri Long Tailored Jorts",
+    price: "EGP 1,750 - 2,450",
+    minPrice: 1750,
+    category: "Jorts",
     image: "/photos/la-grazia-09.jpeg",
-    tag: "Cafe Edit",
-    occasion: "Cafe / Weekend",
-    colors: ["Cream", "Ivory", "Warm Beige"],
-    complete: ["Blue denim", "Brown belt", "Gold necklace", "Coffee-tone bag"],
+    tag: "Hero Product",
+    occasion: "Summer / Coastal Chic / Daily Luxury",
+    colors: ["Cream", "Champagne", "Mocha", "Soft Blue Denim"],
+    complete: ["Daily Grazia Top", "La Grazia Silk Scarf", "Milano Coastal Jacket", "Leather sandals"],
     description:
-      "A cream structured corset-inspired top, designed to make denim looks feel instantly elevated, feminine, and polished.",
+      "The signature La Grazia hero piece. Longer high-waisted tailored jorts with soft pleats, cuffed hem, gold LG button, and subtle embroidered crest detail.",
   },
   {
-    name: "Firenze Cream Tailored Vest",
-    price: "EGP 2,100 - 2,850",
-    minPrice: 2100,
-    category: "Tailored Vest",
+    name: "Amalfi Soft Tailored Jorts",
+    price: "EGP 1,650 - 2,250",
+    minPrice: 1650,
+    category: "Jorts",
     image: "/photos/la-grazia-10.jpeg",
-    tag: "Resort Edit",
-    occasion: "Vacation / Brunch",
-    colors: ["Cream", "Sand", "White"],
-    complete: ["Linen trousers", "Gold bangles", "Woven bag", "Soft sandals"],
+    tag: "Relaxed Jorts",
+    occasion: "Daily Summer Wear",
+    colors: ["Ivory", "Sage", "Light Sand", "Black"],
+    complete: ["Portofino Relaxed Jacket", "Atelier Knit Top", "Coastal Muse Scarf", "Ballet flats"],
     description:
-      "A cream tailored vest with resort-luxury energy, perfect for brunch, summer travel, and clean Italian-inspired styling.",
+      "A softer relaxed version of the long tailored jorts. Comfortable, youthful, elegant, and designed to match the Italian coastal luxury theme.",
   },
 ];
 
@@ -361,45 +361,45 @@ const sizeChart = [
   ["XL", "99 - 105 cm", "81 - 88 cm", "107 - 114 cm", "42 EU / 32-33"],
 ];
 
-const stockLevels = [4, 7, 3, 5, 6, 2, 8, 3, 5, 4];
+const stockLevels = [6, 5, 10, 8, 6, 7, 9, 8, 4, 5];
 
 const modelInfo = [
-  "Height 170 cm · Wearing S · True to size",
-  "Height 168 cm · Wearing S · Relaxed trouser fit",
-  "Height 172 cm · Wearing M · True to size",
-  "Height 169 cm · Wearing S · Slightly relaxed",
-  "Height 171 cm · Wearing S · True to size",
-  "Height 167 cm · Wearing S · Soft stretch fit",
-  "Height 166 cm · Wearing S · Relaxed casual fit",
-  "Height 173 cm · Wearing M · Structured fit",
-  "Height 170 cm · Wearing S · True to size",
-  "Height 169 cm · Wearing S · Relaxed resort fit",
+  "Height 170 cm · Wearing S · Soft structured fit",
+  "Height 168 cm · Wearing S · Relaxed coastal fit",
+  "Height 169 cm · Wearing S · True to size",
+  "Height 171 cm · Wearing S · Soft knit fit",
+  "Height 172 cm · Wearing M · Flowing wide-leg fit",
+  "Height 170 cm · Wearing S · Straight tailored fit",
+  "90 x 90 cm · Square scarf · Silk-touch finish",
+  "65 x 65 cm · Mini scarf · Easy daily styling",
+  "Height 170 cm · Wearing S · Longer tailored fit",
+  "Height 168 cm · Wearing S · Relaxed longer fit",
 ];
 
 const moodOptions = [
   {
-    mood: "Old Money",
-    result: "Vaticano Printed Silk Scarf",
-    textEN: "Refined scarf styling, neutral trousers, and a timeless Italian travel mood.",
-    textAR: "تنسيق سكارف راقٍ مع بنطلون هادئ ولمسة إيطالية كلاسيكية.",
+    mood: "Coastal Atelier",
+    result: "Capri Long Tailored Jorts",
+    textEN: "Long tailored jorts, an ivory daily top, gold details, and a clean Italian coastal mood.",
+    textAR: "جورتس طويل Tailored مع توب عاجي وتفاصيل ذهبية ولمسة ساحلية إيطالية.",
   },
   {
-    mood: "City Chic",
-    result: "Roma Plaid Palazzo Trouser",
-    textEN: "A clean city look with tailored trousers and a confident everyday silhouette.",
-    textAR: "لوك مدينة بسيط وراقي مع بنطلون tailored وشكل يومي واثق.",
+    mood: "Daily Chic",
+    result: "Daily Grazia Top",
+    textEN: "A simple daily wearable top styled with soft tailoring and quiet luxury accessories.",
+    textAR: "توب يومي بسيط مع Tailoring ناعم وإكسسوارات فاخرة بهدوء.",
   },
   {
-    mood: "Soft Luxury",
-    result: "Bianca Off-Shoulder Knit",
-    textEN: "A feminine cream look for dinner, events, and soft elegant moments.",
-    textAR: "لوك كريمي ناعم وأنثوي مناسب للعشاء والمناسبات الهادئة.",
+    mood: "Soft Tailoring",
+    result: "Grazia Flow Tailored Pant",
+    textEN: "Flowing wide-leg tailoring for dinners, events, and polished feminine looks.",
+    textAR: "بنطلون واسع وانسيابي مناسب للعشاء والمناسبات واللوك الأنثوي الراقي.",
   },
   {
-    mood: "Summer Muse",
-    result: "Capri Navy Knit Vest",
-    textEN: "A clean layered navy knit look for cafés, weekends, and soft casual elegance.",
-    textAR: "لوك تريكو كحلي بسيط مناسب للكافيهات والويك إند والأناقة اليومية.",
+    mood: "Italian Muse",
+    result: "La Grazia Silk Scarf",
+    textEN: "A cream and gold scarf that finishes the outfit with refined Italian elegance.",
+    textAR: "سكارف كريمي وذهبي يكمّل اللوك بأناقة إيطالية راقية.",
   },
 ];
 
@@ -410,26 +410,26 @@ const text = {
     navBest: "Best Sellers",
     navCollection: "Collection",
     navAbout: "About",
-    heroEyebrow: "Elegance in every day",
-    heroTitle: "The Roma Drop is here.",
+    heroEyebrow: "Luxury Italian coastal elegance",
+    heroTitle: "The Coastal Atelier Collection.",
     heroDescription:
-      "Discover a women-only local fashion brand inspired by Italian old-money elegance, soft neutrals, tailored single pieces, statement scarves, and effortless quiet luxury.",
+      "Discover La Grazia Milano: jackets, tops, pants, scarves, and longer tailored jorts inspired by Italian coastal luxury, timeless feminine tailoring, soft neutrals, and gold details.",
     shopCollection: "Shop Collection",
     findLook: "Find Your Piece",
     signatureEdit: "The Signature Edit",
-    signatureText: "Tailored pieces, scarves, knitwear, and gold details.",
+    signatureText: "Jackets, tops, pants, scarves, and signature long tailored jorts.",
     trustDelivery: "Cairo Delivery",
     trustExchange: "14-Day Exchange",
     trustStyling: "WhatsApp Styling",
     trustDrops: "Limited Drops",
     mostLoved: "Most Loved",
     bestTitle: "Best Sellers",
-    bestIntro: "A curated selection of La Grazia’s most loved Italian-inspired luxury pieces.",
+    bestIntro: "A curated selection from the official La Grazia Milano Coastal Atelier Collection.",
     viewAll: "View All",
     wardrobeEyebrow: "New Arrivals",
-    wardrobeTitle: "The La Grazia Wardrobe",
-    wardrobeIntro: "Browse single luxury pieces with search, filters, and clean product cards.",
-    searchPlaceholder: "Search trousers, scarves, knitwear, jackets...",
+    wardrobeTitle: "The Coastal Atelier Wardrobe",
+    wardrobeIntro: "Browse the locked 10-piece collection: two jackets, two tops, two pants, two scarves, and two jorts.",
+    searchPlaceholder: "Search jackets, tops, pants, scarves, jorts...",
     searchResults: "Search Results",
     featured: "La Grazia Selection",
     priceLow: "Price: Low to High",
@@ -461,11 +461,11 @@ const text = {
     brandStory: "Brand Story",
     storyTitle: "Made for women who dress softly, confidently, and timelessly.",
     storyText:
-      "La Grazia blends Italian old-money style with everyday wearability: clean tailoring, warm neutrals, elegant silhouettes, and pieces that make a woman look expensive without trying too hard.",
-    tailoredFits: "Tailored Fits",
+      "La Grazia blends Italian coastal luxury with everyday wearability: clean tailoring, soft neutrals, gold hardware, elegant silhouettes, and pieces that make teenagers and women look polished without trying too hard.",
+    tailoredFits: "Soft Tailoring",
     neutralPalette: "Neutral Palette",
-    scarfStyling: "Scarf Styling",
-    goldDetails: "Gold Details",
+    scarfStyling: "Silk Scarves",
+    goldDetails: "Gold LG Details",
     club: "La Grazia Club",
     clubTitle: "Join the private list.",
     clubText: "Receive first access to new drops, styling edits, and limited local releases.",
@@ -535,7 +535,7 @@ const text = {
     toastAdded: "Added to La Grazia Bag",
     toastSaved: "Saved to your pieces",
     toastRemoved: "Removed from saved pieces",
-    loadingLine: "Preparing your Italian wardrobe",
+    loadingLine: "Preparing your Coastal Atelier wardrobe",
   },
   AR: {
     topBar: "توصيل مجاني داخل القاهرة للطلبات فوق ٣٠٠٠ جنيه",
@@ -543,26 +543,26 @@ const text = {
     navBest: "الأكثر مبيعاً",
     navCollection: "المجموعة",
     navAbout: "عن البراند",
-    heroEyebrow: "أناقة في كل يوم",
-    heroTitle: "مجموعة روما وصلت.",
+    heroEyebrow: "أناقة إيطالية ساحلية فاخرة",
+    heroTitle: "مجموعة Coastal Atelier وصلت.",
     heroDescription:
-      "اكتشفي براند محلي نسائي مستوحى من الأناقة الإيطالية الهادئة، الألوان الناعمة، القطع الراقية، السكارف، والرفاهية البسيطة.",
+      "اكتشفي لا غراتسيا ميلانو: جاكيتات، توبس، بنطلونات، سكارف، وجورتس طويل Tailored مستوحى من الفخامة الإيطالية الساحلية، الألوان الهادئة، والتفاصيل الذهبية.",
     shopCollection: "تسوقي المجموعة",
     findLook: "اختاري القطعة",
     signatureEdit: "الاختيار الأساسي",
-    signatureText: "قطع Tailored، سكارف، تريكو، وتفاصيل ذهبية.",
+    signatureText: "جاكيتات، توبس، بنطلونات، سكارف، وجورتس طويل بتفاصيل ذهبية.",
     trustDelivery: "توصيل داخل القاهرة",
     trustExchange: "استبدال خلال ١٤ يوم",
     trustStyling: "تنسيق عبر واتساب",
     trustDrops: "إصدارات محدودة",
     mostLoved: "الأكثر حباً",
     bestTitle: "الأكثر مبيعاً",
-    bestIntro: "اختيار من أكثر قطع لا غراتسيا حباً بطابع إيطالي راقٍ.",
+    bestIntro: "اختيار من مجموعة لا غراتسيا ميلانو الرسمية بطابع إيطالي ساحلي راقٍ.",
     viewAll: "شاهدي الكل",
     wardrobeEyebrow: "وصل حديثاً",
-    wardrobeTitle: "خزانة لا غراتسيا",
-    wardrobeIntro: "تصفحي قطع لا غراتسيا الفاخرة من خلال البحث والفلاتر بطريقة بسيطة ومنظمة.",
-    searchPlaceholder: "ابحثي عن بنطلون، سكارف، تريكو، أو جاكيت...",
+    wardrobeTitle: "خزانة Coastal Atelier",
+    wardrobeIntro: "تصفحي المجموعة الرسمية: قطعتان من كل فئة، جاكيتات، توبس، بنطلونات، سكارف، وجورتس.",
+    searchPlaceholder: "ابحثي عن جاكيت، توب، بنطلون، سكارف، أو جورتس...",
     searchResults: "نتائج البحث",
     featured: "اختيارات لا غراتسيا",
     priceLow: "السعر من الأقل للأعلى",
@@ -594,11 +594,11 @@ const text = {
     brandStory: "قصة البراند",
     storyTitle: "مصممة للمرأة التي تحب الأناقة الهادئة والثقة والستايل الخالد.",
     storyText:
-      "لا غراتسيا تمزج بين الستايل الإيطالي القديم والارتداء اليومي: قصّات نظيفة، ألوان دافئة، تفاصيل أنيقة، وقطع تجعل المرأة تبدو فاخرة بدون مبالغة.",
-    tailoredFits: "قصّات Tailored",
+      "لا غراتسيا تمزج بين الفخامة الإيطالية الساحلية والارتداء اليومي: قصّات نظيفة، ألوان هادئة، تفاصيل LG ذهبية، وقطع تجعل البنات والسيدات يبدون أنيقات بدون مبالغة.",
+    tailoredFits: "Tailoring ناعم",
     neutralPalette: "ألوان هادئة",
-    scarfStyling: "تنسيق السكارف",
-    goldDetails: "تفاصيل ذهبية",
+    scarfStyling: "سكارف حرير",
+    goldDetails: "تفاصيل LG ذهبية",
     club: "نادي لا غراتسيا",
     clubTitle: "انضمي إلى القائمة الخاصة.",
     clubText: "احصلي على وصول مبكر للـ drops الجديدة، أفكار تنسيق، وإصدارات محلية محدودة.",
@@ -668,7 +668,7 @@ const text = {
     toastAdded: "تمت الإضافة إلى شنطة لا غراتسيا",
     toastSaved: "تم حفظ القطعة",
     toastRemoved: "تم حذف القطعة من المحفوظات",
-    loadingLine: "نجهز لك خزانة إيطالية راقية",
+    loadingLine: "نجهز لك خزانة Coastal Atelier راقية",
   },
 };
 
@@ -858,7 +858,7 @@ export default function App() {
   const [sortOption, setSortOption] = useState("Featured");
   const [sortDropdownOpen, setSortDropdownOpen] = useState(false);
 
-  const [selectedMood, setSelectedMood] = useState("Old Money");
+  const [selectedMood, setSelectedMood] = useState("Coastal Atelier");
   const [darkMode, setDarkMode] = useState(false);
   const [language, setLanguage] = useState<Lang>("EN");
 
@@ -902,24 +902,26 @@ export default function App() {
   }, [addresses]);
 
   const bestSellers = displayProducts.filter((product) =>
-    ["Milano Cream Palazzo Trouser", "Vaticano Printed Silk Scarf", "Bianca Off-Shoulder Knit", "Firenze Cream Tailored Vest"].includes(product.name)
+    ["Capri Long Tailored Jorts", "Daily Grazia Top", "Milano Coastal Jacket", "La Grazia Silk Scarf"].includes(product.name)
   );
 
-  const filters = ["All", "Best Seller", "Signature Look", "Summer Edit", "Soft Luxury", "Premium Piece"];
+  const filters = ["All", "Hero Product", "Daily Essential", "Signature Jacket", "Elegant Tailoring", "Classic Accessory"];
 
   const filterLabels: Record<string, string> = {
     All: isArabic ? "الكل" : "All",
-    "Best Seller": isArabic ? "الأكثر مبيعاً" : "Best Seller",
-    "Signature Look": isArabic ? "قطعة أساسية" : "Signature Look",
-    "Summer Edit": isArabic ? "اختيارات الصيف" : "Summer Edit",
-    "Soft Luxury": isArabic ? "رفاهية ناعمة" : "Soft Luxury",
-    "Premium Piece": isArabic ? "قطع فاخرة" : "Premium Piece",
+    "Hero Product": isArabic ? "القطعة الأساسية" : "Hero Product",
+    "Daily Essential": isArabic ? "يومي وأساسي" : "Daily Essential",
+    "Signature Jacket": isArabic ? "جاكيت أساسي" : "Signature Jacket",
+    "Elegant Tailoring": isArabic ? "Tailoring راقٍ" : "Elegant Tailoring",
+    "Classic Accessory": isArabic ? "إكسسوار كلاسيكي" : "Classic Accessory",
   };
 
   const collectionMenuItems = [
+    { key: "Jackets", label: isArabic ? "جاكيتات" : "Jackets" },
     { key: "Tops", label: isArabic ? "توبس" : "Tops" },
     { key: "Pants", label: isArabic ? "بنطلونات" : "Pants" },
-    { key: "Coats", label: isArabic ? "كوتس وجاكيتات" : "Coats" },
+    { key: "Scarves", label: isArabic ? "سكارف" : "Scarves" },
+    { key: "Jorts", label: isArabic ? "جورتس" : "Jorts" },
   ];
 
   const sortOptions = [
@@ -940,21 +942,8 @@ export default function App() {
   }, [approvedProductReviews]);
 
   function productMatchesCollection(product: Product, collection: string) {
-    const textValue = `${product.name} ${product.category}`.toLowerCase();
-
-    if (collection === "Tops") {
-      return textValue.includes("top") || textValue.includes("knit") || textValue.includes("shirt") || textValue.includes("vest") || textValue.includes("cardigan");
-    }
-
-    if (collection === "Pants") {
-      return textValue.includes("trouser") || textValue.includes("palazzo") || textValue.includes("pants");
-    }
-
-    if (collection === "Coats") {
-      return textValue.includes("jacket") || textValue.includes("coat") || textValue.includes("bouclé") || textValue.includes("cardigan");
-    }
-
-    return true;
+    if (collection === "All") return true;
+    return product.category === collection;
   }
 
   function openCollectionGroup(group: string) {
@@ -1240,7 +1229,13 @@ export default function App() {
     }
 
     if (data && data.length > 0) {
-      setDisplayProducts((data as ProductRow[]).map(mapProductRow));
+      const mappedProducts = (data as ProductRow[]).map(mapProductRow);
+      const officialNames = new Set(products.map((product) => product.name.toLowerCase()));
+      const officialStoreProducts = mappedProducts.filter((product) =>
+        officialNames.has(product.name.toLowerCase())
+      );
+
+      setDisplayProducts(officialStoreProducts.length >= products.length ? officialStoreProducts : products);
     } else {
       setDisplayProducts(products);
     }
