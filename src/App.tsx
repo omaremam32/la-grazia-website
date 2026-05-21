@@ -9899,6 +9899,175 @@ export default function App() {
           }
         }
 
+        /* =========================================================
+           MOBILE ONLY FIX — PRODUCT CARD FRONT / MODEL / BACK
+           This block only changes the mobile product card layout.
+           It does not change product data, photo paths, Supabase, or image loading.
+           ========================================================= */
+        @media (max-width: 640px) {
+          .productGrid {
+            grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+            gap: 12px !important;
+          }
+
+          .productCard {
+            min-width: 0 !important;
+            border-radius: 22px !important;
+            overflow: hidden !important;
+          }
+
+          .productImage {
+            height: clamp(210px, 48vw, 270px) !important;
+            min-height: 0 !important;
+            aspect-ratio: 3 / 4 !important;
+            border-radius: 20px !important;
+            overflow: hidden !important;
+          }
+
+          .productImage img {
+            width: 100% !important;
+            height: 100% !important;
+            object-fit: cover !important;
+            object-position: center center !important;
+          }
+
+          .productInfo {
+            padding: 11px 10px 12px !important;
+            gap: 10px !important;
+          }
+
+          .productInfo .category,
+          .productInfo p.category {
+            font-size: 9px !important;
+            letter-spacing: 0.12em !important;
+            line-height: 1.2 !important;
+            margin-bottom: 4px !important;
+          }
+
+          .productInfo h4 {
+            font-size: 12.5px !important;
+            line-height: 1.22 !important;
+            min-height: 31px !important;
+            margin: 0 0 5px !important;
+          }
+
+          .productInfo .price,
+          .productInfo p.price {
+            font-size: 11px !important;
+            line-height: 1.2 !important;
+          }
+
+          .cardActions {
+            display: grid !important;
+            grid-template-columns: 1fr 1fr !important;
+            gap: 6px !important;
+          }
+
+          .cardActions button,
+          .viewBtn,
+          .addBtn {
+            min-height: 32px !important;
+            padding: 8px 6px !important;
+            font-size: 10.5px !important;
+            border-radius: 999px !important;
+            white-space: nowrap !important;
+          }
+
+          .productImageSwitcher {
+            left: 50% !important;
+            right: auto !important;
+            bottom: 8px !important;
+            transform: translateX(-50%) !important;
+            z-index: 6 !important;
+            gap: 3px !important;
+            padding: 3px !important;
+            border-radius: 999px !important;
+            max-width: calc(100% - 18px) !important;
+            background: rgba(255, 255, 255, 0.9) !important;
+            border: 1px solid rgba(176, 140, 78, 0.22) !important;
+            box-shadow: 0 8px 20px rgba(42, 28, 18, 0.14) !important;
+            backdrop-filter: blur(10px) !important;
+            -webkit-backdrop-filter: blur(10px) !important;
+          }
+
+          .productImageSwitcher .imageSwitchBtn {
+            width: 24px !important;
+            min-width: 24px !important;
+            height: 24px !important;
+            min-height: 24px !important;
+            padding: 0 !important;
+            border-radius: 999px !important;
+            font-size: 0 !important;
+            line-height: 0 !important;
+            letter-spacing: 0 !important;
+            display: grid !important;
+            place-items: center !important;
+            overflow: hidden !important;
+            color: transparent !important;
+          }
+
+          .productImageSwitcher .imageSwitchBtn::after {
+            display: block !important;
+            font-size: 10.5px !important;
+            line-height: 1 !important;
+            font-weight: 800 !important;
+            letter-spacing: 0.02em !important;
+            color: #6f5735 !important;
+          }
+
+          .productImageSwitcher .imageSwitchBtn:nth-child(1)::after {
+            content: "F";
+          }
+
+          .productImageSwitcher .imageSwitchBtn:nth-child(2)::after {
+            content: "M";
+          }
+
+          .productImageSwitcher .imageSwitchBtn:nth-child(3)::after {
+            content: "B";
+          }
+
+          .productImageSwitcher .imageSwitchBtn.active::after {
+            color: #ffffff !important;
+          }
+
+          .stockTag {
+            display: none !important;
+          }
+
+          .heartBtn {
+            top: 8px !important;
+            right: 8px !important;
+            width: 30px !important;
+            height: 30px !important;
+            min-width: 30px !important;
+            min-height: 30px !important;
+            font-size: 14px !important;
+          }
+        }
+
+        @media (max-width: 380px) {
+          .productGrid {
+            gap: 10px !important;
+          }
+
+          .productImage {
+            height: clamp(190px, 49vw, 240px) !important;
+          }
+
+          .productInfo h4 {
+            font-size: 11.8px !important;
+          }
+
+          .cardActions button,
+          .viewBtn,
+          .addBtn {
+            font-size: 10px !important;
+            padding: 7px 4px !important;
+          }
+        }
+
+
       `}</style>
 
       <div className="scrollProgress" style={{ width: `${scrollProgress}%` }} />
