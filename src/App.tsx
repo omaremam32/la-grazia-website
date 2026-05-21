@@ -194,6 +194,10 @@ const supabase =
     ? createClient(SUPABASE_URL, SUPABASE_ANON_KEY)
     : null;
 
+if (typeof window !== "undefined" && "scrollRestoration" in window.history) {
+  window.history.scrollRestoration = "manual";
+}
+
 const emptyAddressForm: AddressForm = {
   label: "Home",
   fullName: "",
@@ -1121,6 +1125,45 @@ export default function App() {
 
   const isArabic = language === "AR";
   const t = text[language];
+
+  useEffect(() => {
+    if ("scrollRestoration" in window.history) {
+      window.history.scrollRestoration = "manual";
+    }
+
+    const scrollToPageTop = () => {
+      window.scrollTo({ top: 0, left: 0, behavior: "auto" });
+      document.documentElement.scrollTop = 0;
+      document.body.scrollTop = 0;
+    };
+
+    scrollToPageTop();
+
+    const initialScrollTimer = window.setTimeout(scrollToPageTop, 80);
+
+    const handleBeforeUnload = () => {
+      if ("scrollRestoration" in window.history) {
+        window.history.scrollRestoration = "manual";
+      }
+
+      window.scrollTo(0, 0);
+    };
+
+    const handlePageShow = (event: PageTransitionEvent) => {
+      if (event.persisted) {
+        scrollToPageTop();
+      }
+    };
+
+    window.addEventListener("beforeunload", handleBeforeUnload);
+    window.addEventListener("pageshow", handlePageShow);
+
+    return () => {
+      window.clearTimeout(initialScrollTimer);
+      window.removeEventListener("beforeunload", handleBeforeUnload);
+      window.removeEventListener("pageshow", handlePageShow);
+    };
+  }, []);
 
   const accountInitials = useMemo(() => {
     if (!accountUser) return "";
