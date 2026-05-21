@@ -9591,6 +9591,271 @@ export default function App() {
           }
         }
 
+
+        /* =========================================================
+           FINAL MODAL PHOTO FIT + IPAD CONTRAST FIX
+           1) Product popup images now fit inside the luxury template.
+           2) Tablet/iPad text contrast is strengthened so nothing disappears.
+           ========================================================= */
+
+        .modal {
+          width: min(92vw, 980px) !important;
+          max-height: min(86vh, 860px) !important;
+          grid-template-columns: minmax(300px, 0.95fr) minmax(330px, 1.05fr) !important;
+          background: #fff9f0 !important;
+        }
+
+        .modalImage {
+          min-height: 0 !important;
+          height: min(86vh, 860px) !important;
+          max-height: min(86vh, 860px) !important;
+          background: linear-gradient(135deg, #f6ecdd 0%, #ead7bb 100%) !important;
+          display: flex !important;
+          align-items: center !important;
+          justify-content: center !important;
+          overflow: hidden !important;
+        }
+
+        .modalImage img {
+          width: 100% !important;
+          height: 100% !important;
+          max-width: 100% !important;
+          max-height: 100% !important;
+          object-fit: contain !important;
+          object-position: center center !important;
+          display: block !important;
+        }
+
+        .modalInfo {
+          max-height: min(86vh, 860px) !important;
+          background: #fff9f0 !important;
+          color: #2f2119 !important;
+        }
+
+        .modalInfo h3,
+        .modalInfo p,
+        .modalInfo strong,
+        .modalInfo label,
+        .modalInfo .eyebrow,
+        .modalInfo .modalSizeHeader,
+        .modalInfo .modalSizeHeader p,
+        .modalInfo .modalFitNotes p {
+          color: #2f2119 !important;
+        }
+
+        .modalInfo p,
+        .modalInfo .modalSizeHeader p,
+        .modalInfo .modalFitNotes p {
+          color: #6f5a4a !important;
+        }
+
+        .modalImageSwitcher {
+          background: rgba(255, 255, 255, 0.94) !important;
+          border: 1px solid rgba(176, 138, 69, 0.22) !important;
+        }
+
+        .imageSwitchBtn {
+          color: #5f4736 !important;
+          background: rgba(255, 255, 255, 0.92) !important;
+        }
+
+        .imageSwitchBtn.active {
+          color: #ffffff !important;
+          background: #b88a3b !important;
+        }
+
+        .darkMode .modal,
+        .darkMode .modalInfo {
+          background: #201711 !important;
+          color: #f8ead6 !important;
+        }
+
+        .darkMode .modalImage {
+          background: linear-gradient(135deg, #2b2119 0%, #46321e 100%) !important;
+        }
+
+        .darkMode .modalInfo h3,
+        .darkMode .modalInfo strong,
+        .darkMode .modalInfo label,
+        .darkMode .modalInfo .eyebrow {
+          color: #fff4df !important;
+        }
+
+        .darkMode .modalInfo p,
+        .darkMode .modalInfo .modalSizeHeader p,
+        .darkMode .modalInfo .modalFitNotes p {
+          color: #e5d1b8 !important;
+        }
+
+        @media (min-width: 768px) and (max-width: 1180px) {
+          .page:not(.darkMode),
+          .page:not(.darkMode) main,
+          .page:not(.darkMode) section {
+            color: #2f2119 !important;
+          }
+
+          .page:not(.darkMode) .heroCopy,
+          .page:not(.darkMode) .heroCopy h1,
+          .page:not(.darkMode) .heroCopy h2,
+          .page:not(.darkMode) .heroCopy p,
+          .page:not(.darkMode) .sectionHeader,
+          .page:not(.darkMode) .sectionHeader h2,
+          .page:not(.darkMode) .sectionHeader p,
+          .page:not(.darkMode) .styleFinder,
+          .page:not(.darkMode) .styleFinder h2,
+          .page:not(.darkMode) .styleFinder p,
+          .page:not(.darkMode) .productInfo,
+          .page:not(.darkMode) .productInfo h3,
+          .page:not(.darkMode) .productInfo p,
+          .page:not(.darkMode) .storyCard,
+          .page:not(.darkMode) .storyCard h3,
+          .page:not(.darkMode) .storyCard p,
+          .page:not(.darkMode) .clubCard,
+          .page:not(.darkMode) .clubCard h3,
+          .page:not(.darkMode) .clubCard p,
+          .page:not(.darkMode) .trustItem,
+          .page:not(.darkMode) .trustItem h3,
+          .page:not(.darkMode) .trustItem p {
+            color: #2f2119 !important;
+            text-shadow: none !important;
+          }
+
+          .page:not(.darkMode) .eyebrow,
+          .page:not(.darkMode) .kicker,
+          .page:not(.darkMode) .sectionKicker,
+          .page:not(.darkMode) .productCategory,
+          .page:not(.darkMode) .productPrice,
+          .page:not(.darkMode) .muted,
+          .page:not(.darkMode) .smallText,
+          .page:not(.darkMode) .styleFinder span,
+          .page:not(.darkMode) .productInfo span {
+            color: #8a6330 !important;
+            opacity: 1 !important;
+          }
+
+          .page:not(.darkMode) .heroCard,
+          .page:not(.darkMode) .heroPanel,
+          .page:not(.darkMode) .productCard,
+          .page:not(.darkMode) .styleCard,
+          .page:not(.darkMode) .storyCard,
+          .page:not(.darkMode) .clubCard,
+          .page:not(.darkMode) .trustItem,
+          .page:not(.darkMode) .newsletterBox {
+            background: rgba(255, 249, 240, 0.97) !important;
+            border-color: rgba(176, 138, 69, 0.28) !important;
+          }
+
+          .page:not(.darkMode) .primaryBtn,
+          .page:not(.darkMode) .secondaryBtn,
+          .page:not(.darkMode) .viewBtn,
+          .page:not(.darkMode) .addBtn,
+          .page:not(.darkMode) .roundBtn,
+          .page:not(.darkMode) .iconBtn {
+            color: #2f2119 !important;
+            border-color: rgba(88, 55, 31, 0.28) !important;
+          }
+
+          .page:not(.darkMode) .primaryBtn,
+          .page:not(.darkMode) .addBtn,
+          .page:not(.darkMode) .active,
+          .page:not(.darkMode) .imageSwitchBtn.active {
+            color: #ffffff !important;
+          }
+
+          .page.darkMode,
+          .page.darkMode main,
+          .page.darkMode section {
+            color: #fff4df !important;
+          }
+
+          .page.darkMode .heroCopy,
+          .page.darkMode .heroCopy h1,
+          .page.darkMode .heroCopy h2,
+          .page.darkMode .sectionHeader h2,
+          .page.darkMode .productInfo h3,
+          .page.darkMode .styleFinder h2,
+          .page.darkMode .storyCard h3,
+          .page.darkMode .clubCard h3,
+          .page.darkMode .trustItem h3 {
+            color: #fff4df !important;
+          }
+
+          .page.darkMode .heroCopy p,
+          .page.darkMode .sectionHeader p,
+          .page.darkMode .productInfo p,
+          .page.darkMode .styleFinder p,
+          .page.darkMode .storyCard p,
+          .page.darkMode .clubCard p,
+          .page.darkMode .trustItem p {
+            color: #e8d6bd !important;
+            opacity: 1 !important;
+          }
+
+          .page.darkMode .eyebrow,
+          .page.darkMode .kicker,
+          .page.darkMode .sectionKicker,
+          .page.darkMode .productCategory,
+          .page.darkMode .productPrice,
+          .page.darkMode .muted,
+          .page.darkMode .smallText {
+            color: #e0b66d !important;
+            opacity: 1 !important;
+          }
+
+          .page.darkMode .heroCard,
+          .page.darkMode .heroPanel,
+          .page.darkMode .productCard,
+          .page.darkMode .styleCard,
+          .page.darkMode .storyCard,
+          .page.darkMode .clubCard,
+          .page.darkMode .trustItem,
+          .page.darkMode .newsletterBox {
+            background: rgba(32, 23, 17, 0.96) !important;
+            border-color: rgba(224, 182, 109, 0.28) !important;
+          }
+        }
+
+        @media (min-width: 701px) and (max-width: 1024px) {
+          .modalBackdrop {
+            padding: 18px !important;
+          }
+
+          .modal {
+            width: min(94vw, 860px) !important;
+            max-height: 88vh !important;
+            grid-template-columns: 0.92fr 1.08fr !important;
+          }
+
+          .modalImage {
+            height: 88vh !important;
+            max-height: 88vh !important;
+          }
+
+          .modalInfo {
+            max-height: 88vh !important;
+            padding: 28px 24px !important;
+          }
+        }
+
+        @media (max-width: 700px) {
+          .modal {
+            width: min(94vw, 430px) !important;
+            max-height: 92vh !important;
+            grid-template-columns: 1fr !important;
+            overflow-y: auto !important;
+          }
+
+          .modalImage {
+            height: min(56vh, 520px) !important;
+            max-height: min(56vh, 520px) !important;
+            border-radius: 30px 30px 0 0 !important;
+          }
+
+          .modalInfo {
+            max-height: none !important;
+          }
+        }
+
       `}</style>
 
       <div className="scrollProgress" style={{ width: `${scrollProgress}%` }} />
