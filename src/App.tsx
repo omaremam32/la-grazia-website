@@ -939,10 +939,31 @@ function ProductCard({
   const [imageView, setImageView] = useState<"front" | "model" | "back">("front");
   const [manualImageView, setManualImageView] = useState(false);
 
+  const frontImageSources = useMemo(() => getProductImageSources(product, "front"), [product]);
+  const modelImageSources = useMemo(() => getProductImageSources(product, "model"), [product]);
+  const backImageSources = useMemo(() => getProductImageSources(product, "back"), [product]);
+
+  const activeImageSources =
+    imageView === "model"
+      ? modelImageSources
+      : imageView === "back"
+        ? backImageSources
+        : frontImageSources;
+
+  useEffect(() => {
+    const preloadSources = [...modelImageSources, ...backImageSources];
+
+    preloadSources.forEach((source) => {
+      const image = new Image();
+      image.decoding = "async";
+      image.src = source;
+    });
+  }, [modelImageSources, backImageSources]);
+
   const imageViews = [
-    { key: "front" as const, label: "Front", available: getProductImageSources(product, "front").length > 0 },
-    { key: "model" as const, label: "Model", available: getProductImageSources(product, "model").length > 0 },
-    { key: "back" as const, label: "Back", available: getProductImageSources(product, "back").length > 0 },
+    { key: "front" as const, label: "Front", available: frontImageSources.length > 0 },
+    { key: "model" as const, label: "Model", available: modelImageSources.length > 0 },
+    { key: "back" as const, label: "Back", available: backImageSources.length > 0 },
   ].filter((view) => view.available);
 
   return (
@@ -952,7 +973,7 @@ function ProductCard({
         style={{ position: "relative" }}
         onClick={() => onOpen(product)}
         onPointerEnter={() => {
-          if (!manualImageView && product.modelImage) setImageView("model");
+          if (!manualImageView && modelImageSources.length > 0) setImageView("model");
         }}
         onPointerLeave={() => {
           setManualImageView(false);
@@ -960,7 +981,7 @@ function ProductCard({
         }}
       >
         <SmartImage
-          sources={getProductImageSources(product, imageView)}
+          sources={activeImageSources}
           alt={product.name}
           loading="lazy"
         />
@@ -3416,7 +3437,7 @@ export default function App() {
           object-fit: cover;
           object-position: top center;
           display: block;
-          transition: transform 0.75s ease, filter 0.75s ease;
+          transition: transform 0.28s ease, filter 0.28s ease;
         }
 
         .productCard:hover .productImage img {
