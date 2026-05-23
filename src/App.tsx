@@ -1,4 +1,5 @@
 import React, { useEffect, useMemo, useState } from "react";
+import { Analytics } from "@vercel/analytics/react";
 import { createClient, type Session } from "@supabase/supabase-js";
 
 type Lang = "EN" | "AR";
@@ -11666,6 +11667,7 @@ export default function App() {
           </div>
         </div>
       )}
+      <Analytics />
     </>
   );
 }
