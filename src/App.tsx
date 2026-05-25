@@ -278,8 +278,8 @@ const emptySupportForm: SupportForm = {
 const products: Product[] = [
   {
     name: "Atelier Wrap Jacket",
-    price: "EGP 2,700 - 3,600",
-    minPrice: 2700,
+    price: "EGP 2200",
+    minPrice: 2200,
     category: "Jackets",
     image: "/photos/jacket-1-front.jpeg",
     frontImage: "/photos/jacket-1-front.jpeg",
@@ -294,7 +294,7 @@ const products: Product[] = [
   },
   {
     name: "Milano Spirit Jacket",
-    price: "EGP 2,500 - 3,400",
+    price: "EGP 2,500",
     minPrice: 2500,
     category: "Jackets",
     image: "/photos/jacket-2-front.jpeg",
@@ -310,7 +310,7 @@ const products: Product[] = [
   },
   {
     name: "Atelier Soft Polo Top",
-    price: "EGP 1,100 - 1,650",
+    price: "EGP 1,100",
     minPrice: 1100,
     category: "Tops",
     image: "/photos/top-1-front.jpeg",
@@ -326,8 +326,8 @@ const products: Product[] = [
   },
   {
     name: "Atelier Drape Top",
-    price: "EGP 1,350 - 1,950",
-    minPrice: 1350,
+    price: "EGP 1199",
+    minPrice: 1199,
     category: "Tops",
     image: "/photos/top-2-front.jpeg",
     frontImage: "/photos/top-2-front.jpeg",
@@ -342,8 +342,8 @@ const products: Product[] = [
   },
   {
     name: "Atelier Contrast Collar Top",
-    price: "EGP 1,200 - 1,750",
-    minPrice: 1200,
+    price: "EGP 1100",
+    minPrice: 1100,
     category: "Tops",
     image: "/photos/top-3-front.jpeg",
     frontImage: "/photos/top-3-front.jpeg",
@@ -358,8 +358,8 @@ const products: Product[] = [
   },
   {
     name: "Atelier Palazzo Pants",
-    price: "EGP 1,900 - 2,650",
-    minPrice: 1900,
+    price: "EGP 1499",
+    minPrice: 1499,
     category: "Pants",
     image: "/photos/pants-1-front.jpeg",
     frontImage: "/photos/pants-1-front.jpeg",
@@ -374,8 +374,8 @@ const products: Product[] = [
   },
   {
     name: "Atelier Celeste Wrap Pants",
-    price: "EGP 2,000 - 2,750",
-    minPrice: 2000,
+    price: "EGP 1599",
+    minPrice: 1599,
     category: "Pants",
     image: "/photos/pants-2-front.jpeg",
     frontImage: "/photos/pants-2-front.jpeg",
@@ -390,8 +390,8 @@ const products: Product[] = [
   },
   {
     name: "Atelier Low-Waist Linen Pants",
-    price: "EGP 6,450",
-    minPrice: 6450,
+    price: "EGP 1450",
+    minPrice: 1450,
     category: "Pants",
     image: "/photos/low-waisted-linen-pants-front.png",
     frontImage: "/photos/low-waisted-linen-pants-front.png",
@@ -406,8 +406,8 @@ const products: Product[] = [
   },
   {
     name: "Navy Silk Scarf",
-    price: "EGP 850 - 1,350",
-    minPrice: 850,
+    price: "EGP 669",
+    minPrice: 669,
     category: "Scarves",
     image: "/photos/scarf-1-front.png",
     frontImage: "/photos/scarf-1-front.png",
@@ -422,8 +422,8 @@ const products: Product[] = [
   },
   {
     name: "Cream Silk Scarf",
-    price: "EGP 850 - 1,350",
-    minPrice: 850,
+    price: "EGP 669",
+    minPrice: 669,
     category: "Scarves",
     image: "/photos/scarf-2-front.png",
     frontImage: "/photos/scarf-2-front.png",
@@ -438,8 +438,8 @@ const products: Product[] = [
   },
   {
     name: "Atelier Riviera Tailored Jorts",
-    price: "EGP 1,650 - 2,350",
-    minPrice: 1650,
+    price: "EGP 1350",
+    minPrice: 1350,
     category: "Jorts",
     image: "/photos/jorts-1-front.png",
     frontImage: "/photos/jorts-1-front.png",
@@ -454,8 +454,8 @@ const products: Product[] = [
   },
   {
     name: "Atelier Capri Long Tailored Jorts",
-    price: "EGP 1,750 - 2,450",
-    minPrice: 1750,
+    price: "EGP 1350",
+    minPrice: 1350,
     category: "Jorts",
     image: "/photos/jorts-2-front.png",
     frontImage: "/photos/jorts-2-front.png",
