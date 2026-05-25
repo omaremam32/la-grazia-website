@@ -191,8 +191,6 @@ const ADMIN_EMAILS = ["omaromohamed2003@gmail.com", "yazedhani28@gmail.com"].map
   email.trim().toLowerCase()
 );
 
-const SUPABASE_STORAGE_KEY = "la-grazia-auth-session";
-
 function isAdminEmail(email?: string | null) {
   return ADMIN_EMAILS.includes(String(email || "").trim().toLowerCase());
 }
@@ -204,11 +202,9 @@ const supabase =
   SUPABASE_URL && SUPABASE_ANON_KEY
     ? createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
         auth: {
-          storageKey: SUPABASE_STORAGE_KEY,
           persistSession: true,
           autoRefreshToken: true,
           detectSessionInUrl: true,
-          flowType: "pkce",
           storage: typeof window !== "undefined" ? window.localStorage : undefined,
         },
       })
@@ -216,6 +212,23 @@ const supabase =
 
 if (typeof window !== "undefined" && "scrollRestoration" in window.history) {
   window.history.scrollRestoration = "manual";
+}
+
+function clearSupabaseAuthStorage() {
+  if (typeof window === "undefined") return;
+
+  [window.localStorage, window.sessionStorage].forEach((storage) => {
+    Object.keys(storage).forEach((key) => {
+      const lowerKey = key.toLowerCase();
+      if (
+        key.startsWith("sb-") ||
+        lowerKey.includes("supabase") ||
+        lowerKey.includes("la-grazia-auth")
+      ) {
+        storage.removeItem(key);
+      }
+    });
+  });
 }
 
 const emptyAddressForm: AddressForm = {
@@ -2781,8 +2794,19 @@ export default function App() {
           return;
         }
 
-        if (data.session) {
-          await handleSupabaseSession(data.session);
+        if (data.session?.access_token && data.session?.refresh_token) {
+          const { data: confirmedSession, error: setSessionError } = await supabase.auth.setSession({
+            access_token: data.session.access_token,
+            refresh_token: data.session.refresh_token,
+          });
+
+          if (setSessionError) {
+            console.error("Could not persist Supabase session:", setSessionError);
+            setToast(setSessionError.message);
+            return;
+          }
+
+          await handleSupabaseSession(confirmedSession.session || data.session);
         }
 
         setVerificationNotice("");
@@ -2801,10 +2825,7 @@ export default function App() {
       await supabase.auth.signOut();
     }
 
-    if (typeof window !== "undefined") {
-      window.localStorage.removeItem(SUPABASE_STORAGE_KEY);
-      window.sessionStorage.removeItem(SUPABASE_STORAGE_KEY);
-    }
+    clearSupabaseAuthStorage();
 
     setAccountUser(null);
     setAccountForm({ name: "", email: "", phone: "", password: "" });
