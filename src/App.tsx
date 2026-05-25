@@ -191,6 +191,12 @@ const ADMIN_EMAILS = ["omaromohamed2003@gmail.com", "yazedhani28@gmail.com"].map
   email.trim().toLowerCase()
 );
 
+const SUPABASE_STORAGE_KEY = "la-grazia-auth-session";
+
+function isAdminEmail(email?: string | null) {
+  return ADMIN_EMAILS.includes(String(email || "").trim().toLowerCase());
+}
+
 const SUPABASE_URL = import.meta.env.VITE_SUPABASE_URL as string | undefined;
 const SUPABASE_ANON_KEY = import.meta.env.VITE_SUPABASE_ANON_KEY as string | undefined;
 
@@ -198,9 +204,11 @@ const supabase =
   SUPABASE_URL && SUPABASE_ANON_KEY
     ? createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
         auth: {
+          storageKey: SUPABASE_STORAGE_KEY,
           persistSession: true,
           autoRefreshToken: true,
           detectSessionInUrl: true,
+          flowType: "pkce",
           storage: typeof window !== "undefined" ? window.localStorage : undefined,
         },
       })
@@ -1229,9 +1237,7 @@ export default function App() {
   }, [accountUser]);
 
   const canAccessAdmin = useMemo(() => {
-    const email = (accountUser?.email || "").trim().toLowerCase();
-
-    return Boolean(accountUser?.isAdmin || ADMIN_EMAILS.includes(email));
+    return Boolean(accountUser?.isAdmin || isAdminEmail(accountUser?.email));
   }, [accountUser]);
 
   const defaultAddress = useMemo(() => {
@@ -1457,15 +1463,27 @@ export default function App() {
   useEffect(() => {
     if (!supabase) return;
 
-    supabase.auth.getSession().then(({ data }) => {
+    let isMounted = true;
+
+    supabase.auth.getSession().then(({ data, error }) => {
+      if (!isMounted) return;
+
+      if (error) {
+        console.error("Supabase session restore failed:", error);
+      }
+
       handleSupabaseSession(data.session);
     });
 
     const { data } = supabase.auth.onAuthStateChange((_event, nextSession) => {
+      if (!isMounted) return;
       handleSupabaseSession(nextSession);
     });
 
-    return () => data.subscription.unsubscribe();
+    return () => {
+      isMounted = false;
+      data.subscription.unsubscribe();
+    };
   }, []);
 
   async function handleSupabaseSession(nextSession: Session | null) {
@@ -1524,7 +1542,7 @@ export default function App() {
     fetchUserAddresses(user.id);
     fetchUserWishlist(user.id);
     const email = String(profile?.email || user.email || "").trim().toLowerCase();
-    if (Boolean(profile?.is_admin) || ADMIN_EMAILS.includes(email)) {
+    if (Boolean(profile?.is_admin) || isAdminEmail(email)) {
       fetchAdminOrders();
       fetchAdminProducts();
     }
@@ -1712,18 +1730,23 @@ export default function App() {
     setProductSaving(true);
 
     try {
-      const { data: userData, error: userError } = await supabase.auth.getUser();
-      const authUser = userData.user;
+      const { data: sessionData, error: sessionError } = await supabase.auth.getSession();
+      const activeSession = sessionData.session || session;
+      const authUser = activeSession?.user;
       const authEmail = (authUser?.email || "").trim().toLowerCase();
 
-      if (userError || !authUser) {
-        console.error("Admin auth check failed:", userError);
+      if (sessionError || !authUser) {
+        console.error("Admin auth check failed:", sessionError);
+        setAccountUser(null);
+        setSession(null);
+        setAuthMode("signIn");
+        setSignInOpen(true);
         setToast(isArabic ? "سجلي الدخول مرة أخرى كأدمن." : "Please sign in again as an admin.");
         setProductSaving(false);
         return;
       }
 
-      if (!ADMIN_EMAILS.includes(authEmail)) {
+      if (!isAdminEmail(authEmail)) {
         setToast(isArabic ? "هذا الحساب ليس أدمن." : "This account is not allowed to add products.");
         setProductSaving(false);
         return;
@@ -2751,11 +2774,15 @@ export default function App() {
         setVerificationNotice("");
         setToast(t.accountCreated);
       } else {
-        const { error } = await supabase.auth.signInWithPassword({ email, password });
+        const { data, error } = await supabase.auth.signInWithPassword({ email, password });
 
         if (error) {
           setToast(error.message);
           return;
+        }
+
+        if (data.session) {
+          await handleSupabaseSession(data.session);
         }
 
         setVerificationNotice("");
@@ -2772,6 +2799,11 @@ export default function App() {
   async function handleSignOut() {
     if (supabase) {
       await supabase.auth.signOut();
+    }
+
+    if (typeof window !== "undefined") {
+      window.localStorage.removeItem(SUPABASE_STORAGE_KEY);
+      window.sessionStorage.removeItem(SUPABASE_STORAGE_KEY);
     }
 
     setAccountUser(null);
