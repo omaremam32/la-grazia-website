@@ -213,6 +213,9 @@ function clearOldSupabaseAuthStorage() {
   removeMatchingKeys(window.sessionStorage);
 }
 
+if (typeof window !== "undefined" && !window.localStorage.getItem(LAGRAZIA_AUTH_STORAGE_KEY)) {
+  clearOldSupabaseAuthStorage();
+}
 
 const SUPABASE_URL = import.meta.env.VITE_SUPABASE_URL as string | undefined;
 const SUPABASE_ANON_KEY = import.meta.env.VITE_SUPABASE_ANON_KEY as string | undefined;
@@ -221,9 +224,11 @@ const supabase =
   SUPABASE_URL && SUPABASE_ANON_KEY
     ? createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
         auth: {
+          storageKey: LAGRAZIA_AUTH_STORAGE_KEY,
           persistSession: true,
-          autoRefreshToken: true,
-          detectSessionInUrl: false,
+          autoRefreshToken: false,
+          detectSessionInUrl: true,
+          flowType: "pkce",
           storage: typeof window !== "undefined" ? window.localStorage : undefined,
         },
       })
@@ -388,10 +393,10 @@ const products: Product[] = [
     price: "EGP 6,450",
     minPrice: 6450,
     category: "Pants",
-    image: "/photos/pants-1-front.jpeg",
-    frontImage: "/photos/pants-1-front.jpeg",
-    modelImage: "/photos/pants-1-model.jpeg",
-    backImage: "/photos/pants-1-back.jpeg",
+    image: "/photos/low-waisted-linen-pants.png",
+    frontImage: "/photos/low-waisted-linen-pants.png",
+    modelImage: "/photos/low-waisted-linen-pants.png",
+    backImage: "/photos/low-waisted-linen-pants.png",
     tag: "New Arrival",
     occasion: "Everyday Chic",
     colors: ["Ivory Beige", "Oatmeal", "Champagne Sand", "Mocha", "Black"],
@@ -473,7 +478,7 @@ const PRODUCT_FRONT_IMAGES: Record<string, string> = {
   "Atelier Contrast Collar Top": "/photos/top-3-front.jpeg",
   "Atelier Palazzo Pants": "/photos/pants-1-front.jpeg",
   "Atelier Celeste Wrap Pants": "/photos/pants-2-front.jpeg",
-  "Atelier Low-Waist Linen Pants": "/photos/pants-1-front.jpeg",
+  "Atelier Low-Waist Linen Pants": "/photos/low-waisted-linen-pants.png",
   "Navy Silk Scarf": "/photos/scarf-1-front.png",
   "Cream Silk Scarf": "/photos/scarf-2-front.png",
   "Atelier Riviera Tailored Jorts": "/photos/jorts-1-front.png",
@@ -487,7 +492,7 @@ const PRODUCT_MODEL_IMAGES: Record<string, string> = {
   "Atelier Contrast Collar Top": "/photos/top-3-model.jpeg",
   "Atelier Palazzo Pants": "/photos/pants-1-model.jpeg",
   "Atelier Celeste Wrap Pants": "/photos/pants-2-model.jpeg",
-  "Atelier Low-Waist Linen Pants": "/photos/pants-1-model.jpeg",
+  "Atelier Low-Waist Linen Pants": "/photos/low-waisted-linen-pants.png",
   "Navy Silk Scarf": "/photos/scarf-1-model.png",
   "Cream Silk Scarf": "/photos/scarf-2-model.png",
   "Atelier Riviera Tailored Jorts": "/photos/jorts-1-model.png",
@@ -501,7 +506,7 @@ const PRODUCT_BACK_IMAGES: Record<string, string> = {
   "Atelier Contrast Collar Top": "/photos/top-3-back.jpeg",
   "Atelier Palazzo Pants": "/photos/pants-1-back.jpeg",
   "Atelier Celeste Wrap Pants": "/photos/pants-2-back.jpeg",
-  "Atelier Low-Waist Linen Pants": "/photos/pants-1-back.jpeg",
+  "Atelier Low-Waist Linen Pants": "/photos/low-waisted-linen-pants.png",
   "Navy Silk Scarf": "/photos/scarf-1-back.png",
   "Cream Silk Scarf": "/photos/scarf-2-back.png",
   "Atelier Riviera Tailored Jorts": "/photos/jorts-1-back.png",
@@ -2810,7 +2815,10 @@ export default function App() {
             updated_at: new Date().toISOString(),
           });
 
-          await handleSupabaseSession(data.session);
+          await supabase.auth.setSession({
+            access_token: data.session.access_token,
+            refresh_token: data.session.refresh_token,
+          });
         }
 
         if (!data.session) {
@@ -2824,6 +2832,8 @@ export default function App() {
         setVerificationNotice("");
         setToast(t.accountCreated);
       } else {
+        clearOldSupabaseAuthStorage();
+
         const { data, error } = await supabase.auth.signInWithPassword({ email, password });
 
         if (error) {
@@ -2832,11 +2842,22 @@ export default function App() {
         }
 
         if (!data.session) {
-          setToast(isArabic ? "تم تسجيل الدخول لكن الجلسة لم تحفظ. جربي تسجيل الدخول مرة أخرى بعد دقيقة." : "Signed in, but the session was not saved. Try signing in again after a minute.");
+          setToast(isArabic ? "تم تسجيل الدخول ولكن لم يتم حفظ الجلسة. انتظري دقيقة ثم جربي مرة أخرى." : "Signed in, but the session was not saved. Wait a minute, then try again.");
           return;
         }
 
-        await handleSupabaseSession(data.session);
+        const { data: savedSessionData, error: saveSessionError } = await supabase.auth.setSession({
+          access_token: data.session.access_token,
+          refresh_token: data.session.refresh_token,
+        });
+
+        if (saveSessionError || !savedSessionData.session) {
+          console.error("Supabase session save failed:", saveSessionError);
+          setToast(isArabic ? "تم تسجيل الدخول لكن الجلسة لم تحفظ. امسحي بيانات الموقع وجربي مرة أخرى." : "Signed in, but the session could not be saved. Clear site data and try again.");
+          return;
+        }
+
+        await handleSupabaseSession(savedSessionData.session);
         setVerificationNotice("");
         setToast(t.signedInWelcome);
       }
