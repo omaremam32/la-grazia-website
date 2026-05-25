@@ -278,8 +278,8 @@ const emptySupportForm: SupportForm = {
 const products: Product[] = [
   {
     name: "Atelier Wrap Jacket",
-    price: "EGP 2200",
-    minPrice: 2200,
+    price: "EGP 2,700 - 3,600",
+    minPrice: 2700,
     category: "Jackets",
     image: "/photos/jacket-1-front.jpeg",
     frontImage: "/photos/jacket-1-front.jpeg",
@@ -294,7 +294,7 @@ const products: Product[] = [
   },
   {
     name: "Milano Spirit Jacket",
-    price: "EGP 2,500",
+    price: "EGP 2,500 - 3,400",
     minPrice: 2500,
     category: "Jackets",
     image: "/photos/jacket-2-front.jpeg",
@@ -310,7 +310,7 @@ const products: Product[] = [
   },
   {
     name: "Atelier Soft Polo Top",
-    price: "EGP 1,100",
+    price: "EGP 1,100 - 1,650",
     minPrice: 1100,
     category: "Tops",
     image: "/photos/top-1-front.jpeg",
@@ -319,15 +319,15 @@ const products: Product[] = [
     backImage: "/photos/top-1-back.jpeg",
     tag: "Daily Essential",
     occasion: "Daily Wear / University / Cafe",
-    colors: ["Sage"],
+    colors: ["Soft Blue", "Cream", "Ivory", "Sage"],
     complete: ["Atelier Capri Long Tailored Jorts", "Atelier Palazzo Pants", "Navy Silk Scarf", "Mini leather bag"],
     description:
       "A daily wearable soft polo top with a contrast collar, refined gold buttons, a fitted feminine shape, and subtle LG detail. Created to be easy for teenagers and women to wear every day.",
   },
   {
     name: "Atelier Drape Top",
-    price: "EGP 1199",
-    minPrice: 1199,
+    price: "EGP 1,350 - 1,950",
+    minPrice: 1350,
     category: "Tops",
     image: "/photos/top-2-front.jpeg",
     frontImage: "/photos/top-2-front.jpeg",
@@ -335,15 +335,15 @@ const products: Product[] = [
     backImage: "/photos/top-2-back.jpeg",
     tag: "Soft Luxury",
     occasion: "Dinner / Brunch / Smart Casual",
-    colors: ["Champagne"],
+    colors: ["Cream", "Ivory", "Champagne"],
     complete: ["Atelier Palazzo Pants", "Atelier Wrap Jacket", "Cream Silk Scarf", "Gold hoops"],
     description:
       "A refined drape top with a soft cowl neckline, gold crest button, cap sleeves, and signature LG monogram. It gives the collection a luxurious feminine top for polished styling.",
   },
   {
     name: "Atelier Contrast Collar Top",
-    price: "EGP 1100",
-    minPrice: 1100,
+    price: "EGP 1,200 - 1,750",
+    minPrice: 1200,
     category: "Tops",
     image: "/photos/top-3-front.jpeg",
     frontImage: "/photos/top-3-front.jpeg",
@@ -351,15 +351,15 @@ const products: Product[] = [
     backImage: "/photos/top-3-back.jpeg",
     tag: "Daily Essential",
     occasion: "Daily Chic / Lunch / University",
-    colors: ["Dusty Blue"],
+    colors: ["Dusty Blue", "Cream", "Sage", "Black"],
     complete: ["Atelier Celeste Wrap Pants", "Atelier Riviera Tailored Jorts", "Navy Silk Scarf", "Gold jewelry"],
     description:
       "A closed contrast-collar top with a soft structured fit, short sleeves, and signature LG monogram. A youthful elegant piece that still feels premium and easy to style.",
   },
   {
     name: "Atelier Palazzo Pants",
-    price: "EGP 1499",
-    minPrice: 1499,
+    price: "EGP 1,900 - 2,650",
+    minPrice: 1900,
     category: "Pants",
     image: "/photos/pants-1-front.jpeg",
     frontImage: "/photos/pants-1-front.jpeg",
@@ -367,15 +367,15 @@ const products: Product[] = [
     backImage: "/photos/pants-1-back.jpeg",
     tag: "Elegant Tailoring",
     occasion: "Work / Dinner / City Chic",
-    colors: ["Stone Beige"],
+    colors: ["Stone Beige", "Champagne", "Cream", "Black"],
     complete: ["Atelier Soft Polo Top", "Atelier Wrap Jacket", "Cream Silk Scarf", "Structured mini bag"],
     description:
       "A high-waisted palazzo pant with a fluid wide-leg silhouette, front pleats, premium Italian-inspired fabric, and signature gold LG hardware. Elegant, clean, and timeless.",
   },
   {
     name: "Atelier Celeste Wrap Pants",
-    price: "EGP 1599",
-    minPrice: 1599,
+    price: "EGP 2,000 - 2,750",
+    minPrice: 2000,
     category: "Pants",
     image: "/photos/pants-2-front.jpeg",
     frontImage: "/photos/pants-2-front.jpeg",
@@ -383,15 +383,15 @@ const products: Product[] = [
     backImage: "/photos/pants-2-back.jpeg",
     tag: "Elegant Tailoring",
     occasion: "Events / Dinner / Smart Casual",
-    colors: ["Navy"],
+    colors: ["Dusty Blue", "Navy", "Cream", "Champagne"],
     complete: ["Atelier Contrast Collar Top", "Atelier Wrap Jacket", "Navy Silk Scarf", "Nude heels"],
     description:
       "A luxury wrap pant with an asymmetric crossover waistband, sculpted draped panel, soft front pleats, and fluid wide-leg movement. A unique La Grazia statement pant.",
   },
   {
     name: "Atelier Low-Waist Linen Pants",
-    price: "EGP 1450",
-    minPrice: 1450,
+    price: "EGP 6,450",
+    minPrice: 6450,
     category: "Pants",
     image: "/photos/low-waisted-linen-pants-front.png",
     frontImage: "/photos/low-waisted-linen-pants-front.png",
@@ -399,15 +399,15 @@ const products: Product[] = [
     backImage: "/photos/low-waisted-linen-pants-back.png",
     tag: "New Arrival",
     occasion: "Everyday Chic",
-    colors: ["Champagne Sand"],
+    colors: ["Ivory Beige", "Oatmeal", "Champagne Sand", "Mocha", "Black"],
     complete: ["Atelier Soft Polo Top", "Cream Silk Scarf", "Atelier Wrap Jacket"],
     description:
       "The Atelier Low-Waist Linen Pants are crafted from a breathable premium linen blend with a relaxed wide-leg silhouette, soft front pleats, and a refined low-waist fit finished with signature gold LG hardware. Designed to pair perfectly with La Grazia Milano polo tops, scarves, and tailored jackets.",
   },
   {
     name: "Navy Silk Scarf",
-    price: "EGP 669",
-    minPrice: 669,
+    price: "EGP 850 - 1,350",
+    minPrice: 850,
     category: "Scarves",
     image: "/photos/scarf-1-front.png",
     frontImage: "/photos/scarf-1-front.png",
@@ -415,15 +415,15 @@ const products: Product[] = [
     backImage: "/photos/scarf-1-back.png",
     tag: "Classic Accessory",
     occasion: "Styling / Gift / Occasion",
-    colors: ["Navy"],
+    colors: ["Navy", "Midnight Blue", "Dusty Blue", "Ivory Beige", "Charcoal"],
     complete: ["Atelier Soft Polo Top", "Atelier Wrap Jacket", "Atelier Capri Long Tailored Jorts", "Gold jewelry"],
     description:
       "A navy silk-touch scarf with a refined botanical motif, elegant border, and premium La Grazia packaging. Designed for neck styling, hair styling, bag accents, and shoulder draping.",
   },
   {
     name: "Cream Silk Scarf",
-    price: "EGP 669",
-    minPrice: 669,
+    price: "EGP 850 - 1,350",
+    minPrice: 850,
     category: "Scarves",
     image: "/photos/scarf-2-front.png",
     frontImage: "/photos/scarf-2-front.png",
@@ -431,15 +431,15 @@ const products: Product[] = [
     backImage: "/photos/scarf-2-back.png",
     tag: "Classic Accessory",
     occasion: "Everyday Styling / Gift / Soft Luxury",
-    colors: ["Cream"],
+    colors: ["Cream", "Ivory Beige", "Champagne", "Taupe", "Soft Sand"],
     complete: ["Atelier Drape Top", "Atelier Palazzo Pants", "Atelier Wrap Jacket", "Mini cream bag"],
     description:
       "A cream silk-touch scarf with soft botanical detailing, delicate neutral borders, and elegant gift packaging. A quiet luxury accessory for everyday feminine styling.",
   },
   {
     name: "Atelier Riviera Tailored Jorts",
-    price: "EGP 1350",
-    minPrice: 1350,
+    price: "EGP 1,650 - 2,350",
+    minPrice: 1650,
     category: "Jorts",
     image: "/photos/jorts-1-front.png",
     frontImage: "/photos/jorts-1-front.png",
@@ -447,15 +447,15 @@ const products: Product[] = [
     backImage: "/photos/jorts-1-back.png",
     tag: "Hero Product",
     occasion: "Summer / Resort / Daily Luxury",
-    colors: ["Mocha"],
+    colors: ["Cream", "Champagne", "Sage", "Dusty Rose", "Mocha", "Black"],
     complete: ["Atelier Drape Top", "Milano Spirit Jacket", "Cream Silk Scarf", "Gold sandals"],
     description:
       "A high-waisted tailored jort with sculpted pleats, a refined longline length, cuffed hem, premium cotton-linen texture, and signature LG hardware. A luxury reimagining of everyday jorts.",
   },
   {
     name: "Atelier Capri Long Tailored Jorts",
-    price: "EGP 1350",
-    minPrice: 1350,
+    price: "EGP 1,750 - 2,450",
+    minPrice: 1750,
     category: "Jorts",
     image: "/photos/jorts-2-front.png",
     frontImage: "/photos/jorts-2-front.png",
@@ -463,7 +463,7 @@ const products: Product[] = [
     backImage: "/photos/jorts-2-back.png",
     tag: "Hero Product",
     occasion: "Coastal Chic / Summer / Signature Look",
-    colors: ["Cream"],
+    colors: ["Cream", "Champagne", "Sage", "Dusty Rose", "Mocha", "Black"],
     complete: ["Atelier Soft Polo Top", "Atelier Wrap Jacket", "Navy Silk Scarf", "Mini LG bag"],
     description:
       "The signature La Grazia long tailored jort. Longer knee-grazing length, high waist, soft pleats, cuffed hem, gold LG hardware, and an embroidered crest detail for timeless Italian coastal elegance.",
@@ -1026,7 +1026,7 @@ function ProductCard({
   return (
     <article className="productCard reveal">
       <div
-        className="productImage"
+        className={`productImage ${product.name === "Atelier Low-Waist Linen Pants" && imageView !== "model" ? "linenPantsProductImage" : ""}`}
         style={{ position: "relative" }}
         onClick={() => onOpen(product)}
         onPointerEnter={() => {
@@ -3668,6 +3668,23 @@ export default function App() {
         .productCard:hover .productImage img {
           transform: scale(1.07);
           filter: saturate(1.04) contrast(1.02);
+        }
+
+        .productImage.linenPantsProductImage {
+          background: #f8f1e8;
+        }
+
+        .productImage.linenPantsProductImage img {
+          object-fit: contain;
+          object-position: center center;
+          padding: 18px;
+          box-sizing: border-box;
+          transform: none;
+        }
+
+        .productCard:hover .productImage.linenPantsProductImage img {
+          transform: none;
+          filter: saturate(1.03) contrast(1.02);
         }
 
         .stockTag {
@@ -10175,6 +10192,18 @@ export default function App() {
             height: 100% !important;
             object-fit: cover !important;
             object-position: center center !important;
+          }
+
+          .productImage.linenPantsProductImage {
+            height: clamp(280px, 62vw, 360px) !important;
+            aspect-ratio: 4 / 5 !important;
+            background: #f8f1e8 !important;
+          }
+
+          .productImage.linenPantsProductImage img {
+            object-fit: contain !important;
+            object-position: center center !important;
+            padding: 8px !important;
           }
 
           .productInfo {
