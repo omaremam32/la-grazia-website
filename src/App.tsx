@@ -361,6 +361,22 @@ const products: Product[] = [
       "A luxury wrap pant with an asymmetric crossover waistband, sculpted draped panel, soft front pleats, and fluid wide-leg movement. A unique La Grazia statement pant.",
   },
   {
+    name: "Atelier Low-Waist Linen Pants",
+    price: "EGP 6,450",
+    minPrice: 6450,
+    category: "Pants",
+    image: "/photos/pants-1-front.jpeg",
+    frontImage: "/photos/pants-1-front.jpeg",
+    modelImage: "/photos/pants-1-model.jpeg",
+    backImage: "/photos/pants-1-back.jpeg",
+    tag: "New Arrival",
+    occasion: "Everyday Chic",
+    colors: ["Ivory Beige", "Oatmeal", "Champagne Sand", "Mocha", "Black"],
+    complete: ["Atelier Soft Polo Top", "Cream Silk Scarf", "Atelier Wrap Jacket"],
+    description:
+      "The Atelier Low-Waist Linen Pants are crafted from a breathable premium linen blend with a relaxed wide-leg silhouette, soft front pleats, and a refined low-waist fit finished with signature gold LG hardware. Designed to pair perfectly with La Grazia Milano polo tops, scarves, and tailored jackets.",
+  },
+  {
     name: "Navy Silk Scarf",
     price: "EGP 850 - 1,350",
     minPrice: 850,
@@ -434,11 +450,11 @@ const PRODUCT_FRONT_IMAGES: Record<string, string> = {
   "Atelier Contrast Collar Top": "/photos/top-3-front.jpeg",
   "Atelier Palazzo Pants": "/photos/pants-1-front.jpeg",
   "Atelier Celeste Wrap Pants": "/photos/pants-2-front.jpeg",
+  "Atelier Low-Waist Linen Pants": "/photos/pants-1-front.jpeg",
   "Navy Silk Scarf": "/photos/scarf-1-front.png",
   "Cream Silk Scarf": "/photos/scarf-2-front.png",
   "Atelier Riviera Tailored Jorts": "/photos/jorts-1-front.png",
-  "Atelier Capri Long Tailored Jorts": "/photos/jorts-2-front.png",
-};
+  "Atelier Capri Long Tailored Jorts": "/photos/jorts-2-front.png",};
 
 const PRODUCT_MODEL_IMAGES: Record<string, string> = {
   "Atelier Wrap Jacket": "/photos/jacket-1-model.jpeg",
@@ -448,11 +464,11 @@ const PRODUCT_MODEL_IMAGES: Record<string, string> = {
   "Atelier Contrast Collar Top": "/photos/top-3-model.jpeg",
   "Atelier Palazzo Pants": "/photos/pants-1-model.jpeg",
   "Atelier Celeste Wrap Pants": "/photos/pants-2-model.jpeg",
+  "Atelier Low-Waist Linen Pants": "/photos/pants-1-model.jpeg",
   "Navy Silk Scarf": "/photos/scarf-1-model.png",
   "Cream Silk Scarf": "/photos/scarf-2-model.png",
   "Atelier Riviera Tailored Jorts": "/photos/jorts-1-model.png",
-  "Atelier Capri Long Tailored Jorts": "/photos/jorts-2-model.png",
-};
+  "Atelier Capri Long Tailored Jorts": "/photos/jorts-2-model.png",};
 
 const PRODUCT_BACK_IMAGES: Record<string, string> = {
   "Atelier Wrap Jacket": "/photos/jacket-1-back.jpeg",
@@ -462,11 +478,11 @@ const PRODUCT_BACK_IMAGES: Record<string, string> = {
   "Atelier Contrast Collar Top": "/photos/top-3-back.jpeg",
   "Atelier Palazzo Pants": "/photos/pants-1-back.jpeg",
   "Atelier Celeste Wrap Pants": "/photos/pants-2-back.jpeg",
+  "Atelier Low-Waist Linen Pants": "/photos/pants-1-back.jpeg",
   "Navy Silk Scarf": "/photos/scarf-1-back.png",
   "Cream Silk Scarf": "/photos/scarf-2-back.png",
   "Atelier Riviera Tailored Jorts": "/photos/jorts-1-back.png",
-  "Atelier Capri Long Tailored Jorts": "/photos/jorts-2-back.png",
-};
+  "Atelier Capri Long Tailored Jorts": "/photos/jorts-2-back.png",};
 
 
 type ProductImageView = "front" | "model" | "back";
@@ -558,7 +574,7 @@ const sizeChart = [
   ["XL", "99 - 105 cm", "81 - 88 cm", "107 - 114 cm", "42 EU / 32-33"],
 ];
 
-const stockLevels = [5, 4, 10, 7, 8, 6, 5, 9, 9, 4, 5];
+const stockLevels = [5, 4, 10, 7, 8, 6, 5, 6, 9, 9, 4, 5];
 
 const modelInfo = [
   "Height 170 cm · Wearing S · Sculpted wrap fit",
@@ -568,6 +584,7 @@ const modelInfo = [
   "Height 169 cm · Wearing S · Soft structured fit",
   "Height 172 cm · Wearing M · Fluid wide-leg fit",
   "Height 171 cm · Wearing S · Draped wrap fit",
+  "Height 170 cm · Wearing S · Low-waist relaxed linen fit",
   "70 x 70 cm · Square scarf · Silk-touch finish",
   "70 x 70 cm · Square scarf · Silk-touch finish",
   "Height 170 cm · Wearing S · Long tailored fit",
@@ -626,7 +643,7 @@ const text = {
     viewAll: "View All",
     wardrobeEyebrow: "New Arrivals",
     wardrobeTitle: "The Coastal Atelier Wardrobe",
-    wardrobeIntro: "Browse the official 11-piece collection: two jackets, three tops, two pants, two scarves, and two jorts.",
+    wardrobeIntro: "Browse the official 12-piece collection: two jackets, three tops, three pants, two scarves, and two jorts.",
     searchPlaceholder: "Search jackets, tops, pants, scarves, jorts...",
     searchResults: "Search Results",
     featured: "La Grazia Selection",
@@ -759,7 +776,7 @@ const text = {
     viewAll: "شاهدي الكل",
     wardrobeEyebrow: "وصل حديثاً",
     wardrobeTitle: "خزانة Coastal Atelier",
-    wardrobeIntro: "تصفحي المجموعة الرسمية: جاكيتان، ثلاث توبس، بنطلونان، سكارفان، وجورتسان.",
+    wardrobeIntro: "تصفحي المجموعة الرسمية: جاكيتان، ثلاث توبس، ثلاثة بنطلونات، سكارفان، وجورتسان.",
     searchPlaceholder: "ابحثي عن جاكيت، توب، بنطلون، سكارف، أو جورتس...",
     searchResults: "نتائج البحث",
     featured: "اختيارات لا غراتسيا",
@@ -1225,10 +1242,11 @@ export default function App() {
     ["Atelier Capri Long Tailored Jorts", "Atelier Soft Polo Top", "Atelier Wrap Jacket", "Navy Silk Scarf"].includes(product.name)
   );
 
-  const filters = ["All", "Hero Product", "Daily Essential", "Signature Jacket", "Elegant Tailoring", "Classic Accessory", "Soft Luxury", "Statement Jacket"];
+  const filters = ["All", "New Arrival", "Hero Product", "Daily Essential", "Signature Jacket", "Elegant Tailoring", "Classic Accessory", "Soft Luxury", "Statement Jacket"];
 
   const filterLabels: Record<string, string> = {
     All: isArabic ? "الكل" : "All",
+    "New Arrival": isArabic ? "وصل حديثاً" : "New Arrival",
     "Hero Product": isArabic ? "القطعة الأساسية" : "Hero Product",
     "Daily Essential": isArabic ? "يومي وأساسي" : "Daily Essential",
     "Signature Jacket": isArabic ? "جاكيت أساسي" : "Signature Jacket",
@@ -1555,12 +1573,7 @@ export default function App() {
 
     if (data && data.length > 0) {
       const mappedProducts = (data as ProductRow[]).map(mapProductRow);
-      const officialNames = new Set(products.map((product) => product.name.toLowerCase()));
-      const officialStoreProducts = mappedProducts.filter((product) =>
-        officialNames.has(product.name.toLowerCase())
-      );
-
-      setDisplayProducts(officialStoreProducts.length >= products.length ? officialStoreProducts : products);
+      setDisplayProducts(mappedProducts);
     } else {
       setDisplayProducts(products);
     }
