@@ -1571,12 +1571,50 @@ export default function App() {
       return;
     }
 
-    if (data && data.length > 0) {
-      const mappedProducts = (data as ProductRow[]).map(mapProductRow);
-      setDisplayProducts(mappedProducts);
-    } else {
+    if (!data || data.length === 0) {
       setDisplayProducts(products);
+      return;
     }
+
+    const hiddenDatabaseProductNames = new Set([
+      "milano cream palazzo trouser",
+      "roma plaid palazzo trouser",
+      "vaticano printed silk scarf",
+      "torino blue oxford shirt",
+    ]);
+
+    const fallbackByName = new Map(
+      products.map((product) => [normalizeProductNameForImages(product.name), product])
+    );
+
+    const mappedDatabaseProducts = (data as ProductRow[])
+      .map(mapProductRow)
+      .filter((product) => !hiddenDatabaseProductNames.has(normalizeProductNameForImages(product.name)));
+
+    const databaseByName = new Map(
+      mappedDatabaseProducts.map((product) => [normalizeProductNameForImages(product.name), product])
+    );
+
+    const mergedProducts = products.map((fallbackProduct) => {
+      const databaseProduct = databaseByName.get(normalizeProductNameForImages(fallbackProduct.name));
+
+      if (!databaseProduct) return fallbackProduct;
+
+      return {
+        ...fallbackProduct,
+        ...databaseProduct,
+        image: databaseProduct.image || fallbackProduct.image,
+        frontImage: databaseProduct.frontImage || fallbackProduct.frontImage || databaseProduct.image || fallbackProduct.image,
+        modelImage: databaseProduct.modelImage || fallbackProduct.modelImage || databaseProduct.image || fallbackProduct.image,
+        backImage: databaseProduct.backImage || fallbackProduct.backImage || databaseProduct.image || fallbackProduct.image,
+      };
+    });
+
+    const extraDatabaseProducts = mappedDatabaseProducts.filter(
+      (product) => !fallbackByName.has(normalizeProductNameForImages(product.name))
+    );
+
+    setDisplayProducts([...mergedProducts, ...extraDatabaseProducts]);
   }
 
   async function fetchAdminProducts() {
