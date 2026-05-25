@@ -187,12 +187,23 @@ type SupportForm = {
 const WHATSAPP_NUMBER = "201101900086";
 const BRAND_EMAIL = "omaromohamed2003@gmail.com";
 
+const ADMIN_EMAILS = ["omaromohamed2003@gmail.com", "yazedhani28@gmail.com"].map((email) =>
+  email.trim().toLowerCase()
+);
+
 const SUPABASE_URL = import.meta.env.VITE_SUPABASE_URL as string | undefined;
 const SUPABASE_ANON_KEY = import.meta.env.VITE_SUPABASE_ANON_KEY as string | undefined;
 
 const supabase =
   SUPABASE_URL && SUPABASE_ANON_KEY
-    ? createClient(SUPABASE_URL, SUPABASE_ANON_KEY)
+    ? createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
+        auth: {
+          persistSession: true,
+          autoRefreshToken: true,
+          detectSessionInUrl: true,
+          storage: typeof window !== "undefined" ? window.localStorage : undefined,
+        },
+      })
     : null;
 
 if (typeof window !== "undefined" && "scrollRestoration" in window.history) {
@@ -1202,13 +1213,8 @@ export default function App() {
 
   const canAccessAdmin = useMemo(() => {
     const email = (accountUser?.email || "").trim().toLowerCase();
-    const brandEmail = BRAND_EMAIL.trim().toLowerCase();
 
-    return Boolean(
-      accountUser?.isAdmin ||
-      email === brandEmail ||
-      email === "omaromohamed2003@gmail.com"
-    );
+    return Boolean(accountUser?.isAdmin || ADMIN_EMAILS.includes(email));
   }, [accountUser]);
 
   const defaultAddress = useMemo(() => {
@@ -1500,7 +1506,7 @@ export default function App() {
     fetchUserAddresses(user.id);
     fetchUserWishlist(user.id);
     const email = String(profile?.email || user.email || "").trim().toLowerCase();
-    if (Boolean(profile?.is_admin) || email === BRAND_EMAIL.toLowerCase() || email === "omaromohamed2003@gmail.com") {
+    if (Boolean(profile?.is_admin) || ADMIN_EMAILS.includes(email)) {
       fetchAdminOrders();
       fetchAdminProducts();
     }
@@ -1614,7 +1620,10 @@ export default function App() {
   async function saveProduct(event?: React.FormEvent<HTMLFormElement>) {
     event?.preventDefault();
 
-    if (!supabase || !canAccessAdmin) return;
+    if (!supabase) {
+      setToast(isArabic ? "Supabase غير متصل." : "Supabase is not connected.");
+      return;
+    }
 
     if (!productForm.name.trim() || !productForm.category.trim() || !productForm.image.trim()) {
       setToast(isArabic ? "اكتبي اسم المنتج والتصنيف والصورة." : "Add product name, category, and image.");
@@ -1623,40 +1632,60 @@ export default function App() {
 
     setProductSaving(true);
 
-    const payload = {
-      name: productForm.name.trim(),
-      price: productForm.price.trim() || "EGP 0",
-      min_price: Number(productForm.minPrice || 0),
-      category: productForm.category.trim(),
-      image: productForm.image.trim(),
-      tag: productForm.tag.trim() || "New Arrival",
-      occasion: productForm.occasion.trim() || "Everyday Chic",
-      colors: splitListValue(productForm.colors),
-      complete: splitListValue(productForm.complete),
-      description: productForm.description.trim(),
-      is_active: productForm.isActive,
-      sort_order: Number(productForm.sortOrder || 0),
-      updated_at: new Date().toISOString(),
-    };
+    try {
+      const { data: userData, error: userError } = await supabase.auth.getUser();
+      const authUser = userData.user;
+      const authEmail = (authUser?.email || "").trim().toLowerCase();
 
-    const query = editingProductId
-      ? supabase.from("products").update(payload).eq("id", editingProductId)
-      : supabase.from("products").insert(payload);
+      if (userError || !authUser) {
+        console.error("Admin auth check failed:", userError);
+        setToast(isArabic ? "سجلي الدخول مرة أخرى كأدمن." : "Please sign in again as an admin.");
+        setProductSaving(false);
+        return;
+      }
 
-    const { error } = await query;
+      if (!ADMIN_EMAILS.includes(authEmail)) {
+        setToast(isArabic ? "هذا الحساب ليس أدمن." : "This account is not allowed to add products.");
+        setProductSaving(false);
+        return;
+      }
 
-    if (error) {
-      console.error(error);
-      setToast(error.message);
+      const payload = {
+        name: productForm.name.trim(),
+        price: productForm.price.trim() || "EGP 0",
+        min_price: Number(productForm.minPrice || 0),
+        category: productForm.category.trim(),
+        image: productForm.image.trim(),
+        tag: productForm.tag.trim() || "New Arrival",
+        occasion: productForm.occasion.trim() || "Everyday Chic",
+        colors: splitListValue(productForm.colors),
+        complete: splitListValue(productForm.complete),
+        description: productForm.description.trim(),
+        is_active: productForm.isActive,
+        sort_order: Number(productForm.sortOrder || 0),
+        updated_at: new Date().toISOString(),
+      };
+
+      const query = editingProductId
+        ? supabase.from("products").update(payload).eq("id", editingProductId)
+        : supabase.from("products").insert(payload);
+
+      const { error } = await query;
+
+      if (error) {
+        console.error("Save product error:", error);
+        setToast(error.message);
+        setProductSaving(false);
+        return;
+      }
+
+      await fetchStoreProducts();
+      await fetchAdminProducts();
+      resetProductForm();
+      setToast(isArabic ? "تم حفظ المنتج" : "Product saved");
+    } finally {
       setProductSaving(false);
-      return;
     }
-
-    await fetchStoreProducts();
-    await fetchAdminProducts();
-    resetProductForm();
-    setToast(isArabic ? "تم حفظ المنتج" : "Product saved");
-    setProductSaving(false);
   }
 
   async function toggleProductActive(product: ProductRow) {
