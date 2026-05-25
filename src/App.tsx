@@ -1571,28 +1571,14 @@ export default function App() {
       return;
     }
 
-    if (!data || data.length === 0) {
-      setDisplayProducts(products);
-      return;
-    }
-
-    const hiddenDatabaseProductNames = new Set([
-      "milano cream palazzo trouser",
-      "roma plaid palazzo trouser",
-      "vaticano printed silk scarf",
-      "torino blue oxford shirt",
-    ]);
-
-    const fallbackByName = new Map(
-      products.map((product) => [normalizeProductNameForImages(product.name), product])
+    const officialNames = new Set(
+      products.map((product) => normalizeProductNameForImages(product.name))
     );
 
-    const mappedDatabaseProducts = (data as ProductRow[])
-      .map(mapProductRow)
-      .filter((product) => !hiddenDatabaseProductNames.has(normalizeProductNameForImages(product.name)));
-
     const databaseByName = new Map(
-      mappedDatabaseProducts.map((product) => [normalizeProductNameForImages(product.name), product])
+      ((data || []) as ProductRow[])
+        .filter((row) => officialNames.has(normalizeProductNameForImages(row.name)))
+        .map((row) => [normalizeProductNameForImages(row.name), mapProductRow(row)])
     );
 
     const mergedProducts = products.map((fallbackProduct) => {
@@ -1603,18 +1589,36 @@ export default function App() {
       return {
         ...fallbackProduct,
         ...databaseProduct,
-        image: databaseProduct.image || fallbackProduct.image,
-        frontImage: databaseProduct.frontImage || fallbackProduct.frontImage || databaseProduct.image || fallbackProduct.image,
-        modelImage: databaseProduct.modelImage || fallbackProduct.modelImage || databaseProduct.image || fallbackProduct.image,
-        backImage: databaseProduct.backImage || fallbackProduct.backImage || databaseProduct.image || fallbackProduct.image,
+        image: getMappedProductImage(fallbackProduct.name, "front") || databaseProduct.image || fallbackProduct.image,
+        frontImage: getMappedProductImage(fallbackProduct.name, "front") || databaseProduct.frontImage || fallbackProduct.frontImage || databaseProduct.image || fallbackProduct.image,
+        modelImage: getMappedProductImage(fallbackProduct.name, "model") || databaseProduct.modelImage || fallbackProduct.modelImage || databaseProduct.image || fallbackProduct.image,
+        backImage: getMappedProductImage(fallbackProduct.name, "back") || databaseProduct.backImage || fallbackProduct.backImage || databaseProduct.image || fallbackProduct.image,
       };
     });
 
-    const extraDatabaseProducts = mappedDatabaseProducts.filter(
-      (product) => !fallbackByName.has(normalizeProductNameForImages(product.name))
-    );
+    setDisplayProducts(mergedProducts);
+  }
 
-    setDisplayProducts([...mergedProducts, ...extraDatabaseProducts]);
+  function mapOfficialProductToRow(product: Product, index: number): ProductRow {
+    return {
+      id: product.id || `official-fallback-${index}-${normalizeProductNameForImages(product.name).replace(/[^a-z0-9]+/g, "-")}`,
+      name: product.name,
+      price: product.price,
+      min_price: product.minPrice,
+      category: product.category,
+      image: product.image,
+      tag: product.tag,
+      occasion: product.occasion,
+      colors: product.colors,
+      complete: product.complete,
+      description: product.description,
+      is_active: product.isActive ?? true,
+      sort_order: product.sortOrder ?? index + 1,
+    };
+  }
+
+  function isOfficialFallbackProductId(productId: string) {
+    return productId.startsWith("official-fallback-");
   }
 
   async function fetchAdminProducts() {
@@ -1632,7 +1636,31 @@ export default function App() {
       console.error(error);
       setToast(error.message);
     } else {
-      setAdminProducts((data || []) as ProductRow[]);
+      const officialNames = new Set(
+        products.map((product) => normalizeProductNameForImages(product.name))
+      );
+
+      const databaseRowsByName = new Map(
+        ((data || []) as ProductRow[])
+          .filter((row) => officialNames.has(normalizeProductNameForImages(row.name)))
+          .map((row) => [normalizeProductNameForImages(row.name), row])
+      );
+
+      const mergedAdminProducts = products.map((fallbackProduct, index) => {
+        const databaseRow = databaseRowsByName.get(normalizeProductNameForImages(fallbackProduct.name));
+        const fallbackRow = mapOfficialProductToRow(fallbackProduct, index);
+
+        if (!databaseRow) return fallbackRow;
+
+        return {
+          ...fallbackRow,
+          ...databaseRow,
+          image: getMappedProductImage(fallbackProduct.name, "front") || databaseRow.image || fallbackRow.image,
+          sort_order: databaseRow.sort_order ?? fallbackRow.sort_order,
+        };
+      });
+
+      setAdminProducts(mergedAdminProducts);
     }
 
     setAdminProductsLoading(false);
@@ -1646,7 +1674,7 @@ export default function App() {
   }
 
   function startEditProduct(product: ProductRow) {
-    setEditingProductId(product.id);
+    setEditingProductId(isOfficialFallbackProductId(product.id) ? null : product.id);
     setProductForm({
       name: product.name || "",
       price: product.price || "",
@@ -1742,6 +1770,12 @@ export default function App() {
   async function toggleProductActive(product: ProductRow) {
     if (!supabase || !canAccessAdmin) return;
 
+    if (isOfficialFallbackProductId(product.id)) {
+      setToast(isArabic ? "احفظي المنتج في قاعدة البيانات أولاً." : "Save this product first before hiding it.");
+      startEditProduct(product);
+      return;
+    }
+
     const { error } = await supabase
       .from("products")
       .update({ is_active: !product.is_active, updated_at: new Date().toISOString() })
@@ -1759,6 +1793,11 @@ export default function App() {
 
   async function deleteProduct(productId: string) {
     if (!supabase || !canAccessAdmin) return;
+
+    if (isOfficialFallbackProductId(productId)) {
+      setToast(isArabic ? "هذه قطعة أساسية في المجموعة ولا يمكن حذفها من النسخة الاحتياطية." : "This is an official collection fallback item. Save it to the database before deleting.");
+      return;
+    }
 
     const confirmed = window.confirm(isArabic ? "هل تريد حذف هذا المنتج؟" : "Delete this product?");
     if (!confirmed) return;
