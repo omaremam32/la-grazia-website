@@ -205,10 +205,11 @@ const supabase =
           persistSession: true,
           autoRefreshToken: true,
           detectSessionInUrl: true,
-          storage: typeof window !== "undefined" ? window.localStorage : undefined,
         },
       })
     : null;
+
+const AUTH_BACKUP_KEY = "la-grazia-auth-backup-v3";
 
 if (typeof window !== "undefined" && "scrollRestoration" in window.history) {
   window.history.scrollRestoration = "manual";
@@ -229,6 +230,48 @@ function clearSupabaseAuthStorage() {
       }
     });
   });
+}
+
+function saveAuthBackup(nextSession: Session | null) {
+  if (typeof window === "undefined") return;
+
+  if (!nextSession?.access_token || !nextSession?.refresh_token) {
+    window.localStorage.removeItem(AUTH_BACKUP_KEY);
+    return;
+  }
+
+  window.localStorage.setItem(
+    AUTH_BACKUP_KEY,
+    JSON.stringify({
+      access_token: nextSession.access_token,
+      refresh_token: nextSession.refresh_token,
+      expires_at: nextSession.expires_at || 0,
+      user_email: nextSession.user?.email || "",
+    })
+  );
+}
+
+function getAuthBackup() {
+  if (typeof window === "undefined") return null;
+
+  try {
+    const raw = window.localStorage.getItem(AUTH_BACKUP_KEY);
+    if (!raw) return null;
+
+    const parsed = JSON.parse(raw) as { access_token?: string; refresh_token?: string; expires_at?: number; user_email?: string };
+
+    if (!parsed.access_token || !parsed.refresh_token) return null;
+
+    return parsed;
+  } catch {
+    window.localStorage.removeItem(AUTH_BACKUP_KEY);
+    return null;
+  }
+}
+
+function isRateLimitError(error: unknown) {
+  const message = error instanceof Error ? error.message : String(error || "");
+  return message.toLowerCase().includes("rate limit") || message.includes("429");
 }
 
 const emptyAddressForm: AddressForm = {
@@ -1478,18 +1521,63 @@ export default function App() {
 
     let isMounted = true;
 
-    supabase.auth.getSession().then(({ data, error }) => {
-      if (!isMounted) return;
+    async function restoreSession() {
+      try {
+        const { data, error } = await supabase!.auth.getSession();
 
-      if (error) {
-        console.error("Supabase session restore failed:", error);
+        if (!isMounted) return;
+
+        if (error) {
+          console.error("Supabase session restore failed:", error);
+
+          if (isRateLimitError(error)) {
+            setToast(isArabic ? "انتظري دقائق قبل محاولة تسجيل الدخول مرة أخرى." : "Please wait a few minutes before signing in again.");
+          }
+        }
+
+        if (data.session) {
+          saveAuthBackup(data.session);
+          await handleSupabaseSession(data.session);
+          return;
+        }
+
+        const backup = getAuthBackup();
+
+        if (backup?.access_token && backup?.refresh_token) {
+          const { data: restoredData, error: restoredError } = await supabase!.auth.setSession({
+            access_token: backup.access_token,
+            refresh_token: backup.refresh_token,
+          });
+
+          if (!isMounted) return;
+
+          if (restoredError) {
+            console.error("Backup session restore failed:", restoredError);
+
+            if (!isRateLimitError(restoredError)) {
+              saveAuthBackup(null);
+              await handleSupabaseSession(null);
+            }
+
+            return;
+          }
+
+          saveAuthBackup(restoredData.session);
+          await handleSupabaseSession(restoredData.session);
+          return;
+        }
+
+        await handleSupabaseSession(null);
+      } catch (error) {
+        console.error("Unexpected auth restore error:", error);
       }
+    }
 
-      handleSupabaseSession(data.session);
-    });
+    restoreSession();
 
     const { data } = supabase.auth.onAuthStateChange((_event, nextSession) => {
       if (!isMounted) return;
+      saveAuthBackup(nextSession);
       handleSupabaseSession(nextSession);
     });
 
@@ -1497,9 +1585,10 @@ export default function App() {
       isMounted = false;
       data.subscription.unsubscribe();
     };
-  }, []);
+  }, [isArabic]);
 
   async function handleSupabaseSession(nextSession: Session | null) {
+    saveAuthBackup(nextSession);
     setSession(nextSession);
 
     if (!nextSession?.user || !supabase) {
@@ -1743,13 +1832,37 @@ export default function App() {
     setProductSaving(true);
 
     try {
-      const { data: sessionData, error: sessionError } = await supabase.auth.getSession();
-      const activeSession = sessionData.session || session;
+      let activeSession = session;
+
+      if (!activeSession) {
+        const { data: sessionData, error: sessionError } = await supabase!.auth.getSession();
+
+        if (sessionError) {
+          console.error("Admin auth check failed:", sessionError);
+
+          if (isRateLimitError(sessionError)) {
+            setToast(isArabic ? "انتظري دقائق قبل المحاولة مرة أخرى." : "Please wait a few minutes before trying again.");
+          } else {
+            setAuthMode("signIn");
+            setSignInOpen(true);
+            setToast(isArabic ? "سجلي الدخول مرة أخرى كأدمن." : "Please sign in again as an admin.");
+          }
+
+          setProductSaving(false);
+          return;
+        }
+
+        activeSession = sessionData.session;
+        if (activeSession) {
+          saveAuthBackup(activeSession);
+          await handleSupabaseSession(activeSession);
+        }
+      }
+
       const authUser = activeSession?.user;
       const authEmail = (authUser?.email || "").trim().toLowerCase();
 
-      if (sessionError || !authUser) {
-        console.error("Admin auth check failed:", sessionError);
+      if (!authUser) {
         setAccountUser(null);
         setSession(null);
         setAuthMode("signIn");
@@ -2767,6 +2880,7 @@ export default function App() {
         }
 
         if (data.session && data.user) {
+          saveAuthBackup(data.session);
           await supabase.from("profiles").upsert({
             id: data.user.id,
             full_name: fullName,
@@ -2787,27 +2901,26 @@ export default function App() {
         setVerificationNotice("");
         setToast(t.accountCreated);
       } else {
+        clearSupabaseAuthStorage();
+
         const { data, error } = await supabase.auth.signInWithPassword({ email, password });
 
         if (error) {
-          setToast(error.message);
+          if (isRateLimitError(error)) {
+            setToast(isArabic ? "تم الوصول للحد الأقصى للمحاولات. انتظري 10 دقائق ثم جربي مرة واحدة." : "Request rate limit reached. Wait 10 minutes, then try once.");
+          } else {
+            setToast(error.message);
+          }
           return;
         }
 
-        if (data.session?.access_token && data.session?.refresh_token) {
-          const { data: confirmedSession, error: setSessionError } = await supabase.auth.setSession({
-            access_token: data.session.access_token,
-            refresh_token: data.session.refresh_token,
-          });
-
-          if (setSessionError) {
-            console.error("Could not persist Supabase session:", setSessionError);
-            setToast(setSessionError.message);
-            return;
-          }
-
-          await handleSupabaseSession(confirmedSession.session || data.session);
+        if (!data.session) {
+          setToast(isArabic ? "لم يتم حفظ جلسة الدخول. حاولي مرة أخرى بعد دقائق." : "The login session was not saved. Try again in a few minutes.");
+          return;
         }
+
+        saveAuthBackup(data.session);
+        await handleSupabaseSession(data.session);
 
         setVerificationNotice("");
         setToast(t.signedInWelcome);
