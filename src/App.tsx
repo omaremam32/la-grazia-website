@@ -191,6 +191,32 @@ const ADMIN_EMAILS = ["omaromohamed2003@gmail.com", "yazedhani28@gmail.com"].map
   email.trim().toLowerCase()
 );
 
+const LAGRAZIA_AUTH_STORAGE_KEY = "lagrazia-supabase-auth-v4";
+
+function clearOldSupabaseAuthStorage() {
+  if (typeof window === "undefined") return;
+
+  const removeMatchingKeys = (storage: Storage) => {
+    Object.keys(storage).forEach((key) => {
+      const normalizedKey = key.toLowerCase();
+
+      if (
+        key !== LAGRAZIA_AUTH_STORAGE_KEY &&
+        (key.startsWith("sb-") || normalizedKey.includes("supabase"))
+      ) {
+        storage.removeItem(key);
+      }
+    });
+  };
+
+  removeMatchingKeys(window.localStorage);
+  removeMatchingKeys(window.sessionStorage);
+}
+
+if (typeof window !== "undefined" && !window.localStorage.getItem(LAGRAZIA_AUTH_STORAGE_KEY)) {
+  clearOldSupabaseAuthStorage();
+}
+
 const SUPABASE_URL = import.meta.env.VITE_SUPABASE_URL as string | undefined;
 const SUPABASE_ANON_KEY = import.meta.env.VITE_SUPABASE_ANON_KEY as string | undefined;
 
@@ -198,9 +224,11 @@ const supabase =
   SUPABASE_URL && SUPABASE_ANON_KEY
     ? createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
         auth: {
+          storageKey: LAGRAZIA_AUTH_STORAGE_KEY,
           persistSession: true,
-          autoRefreshToken: true,
+          autoRefreshToken: false,
           detectSessionInUrl: true,
+          flowType: "pkce",
           storage: typeof window !== "undefined" ? window.localStorage : undefined,
         },
       })
@@ -2786,6 +2814,11 @@ export default function App() {
             phone,
             updated_at: new Date().toISOString(),
           });
+
+          await supabase.auth.setSession({
+            access_token: data.session.access_token,
+            refresh_token: data.session.refresh_token,
+          });
         }
 
         if (!data.session) {
@@ -2799,6 +2832,8 @@ export default function App() {
         setVerificationNotice("");
         setToast(t.accountCreated);
       } else {
+        clearOldSupabaseAuthStorage();
+
         const { data, error } = await supabase.auth.signInWithPassword({ email, password });
 
         if (error) {
@@ -2811,7 +2846,18 @@ export default function App() {
           return;
         }
 
-        await handleSupabaseSession(data.session);
+        const { data: savedSessionData, error: saveSessionError } = await supabase.auth.setSession({
+          access_token: data.session.access_token,
+          refresh_token: data.session.refresh_token,
+        });
+
+        if (saveSessionError || !savedSessionData.session) {
+          console.error("Supabase session save failed:", saveSessionError);
+          setToast(isArabic ? "تم تسجيل الدخول لكن الجلسة لم تحفظ. امسحي بيانات الموقع وجربي مرة أخرى." : "Signed in, but the session could not be saved. Clear site data and try again.");
+          return;
+        }
+
+        await handleSupabaseSession(savedSessionData.session);
         setVerificationNotice("");
         setToast(t.signedInWelcome);
       }
@@ -2826,6 +2872,11 @@ export default function App() {
   async function handleSignOut() {
     if (supabase) {
       await supabase.auth.signOut();
+    }
+
+    if (typeof window !== "undefined") {
+      window.localStorage.removeItem(LAGRAZIA_AUTH_STORAGE_KEY);
+      clearOldSupabaseAuthStorage();
     }
 
     setAccountUser(null);
