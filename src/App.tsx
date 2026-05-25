@@ -213,9 +213,6 @@ function clearOldSupabaseAuthStorage() {
   removeMatchingKeys(window.sessionStorage);
 }
 
-if (typeof window !== "undefined" && !window.localStorage.getItem(LAGRAZIA_AUTH_STORAGE_KEY)) {
-  clearOldSupabaseAuthStorage();
-}
 
 const SUPABASE_URL = import.meta.env.VITE_SUPABASE_URL as string | undefined;
 const SUPABASE_ANON_KEY = import.meta.env.VITE_SUPABASE_ANON_KEY as string | undefined;
@@ -224,11 +221,9 @@ const supabase =
   SUPABASE_URL && SUPABASE_ANON_KEY
     ? createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
         auth: {
-          storageKey: LAGRAZIA_AUTH_STORAGE_KEY,
           persistSession: true,
-          autoRefreshToken: false,
-          detectSessionInUrl: true,
-          flowType: "pkce",
+          autoRefreshToken: true,
+          detectSessionInUrl: false,
           storage: typeof window !== "undefined" ? window.localStorage : undefined,
         },
       })
@@ -2815,10 +2810,7 @@ export default function App() {
             updated_at: new Date().toISOString(),
           });
 
-          await supabase.auth.setSession({
-            access_token: data.session.access_token,
-            refresh_token: data.session.refresh_token,
-          });
+          await handleSupabaseSession(data.session);
         }
 
         if (!data.session) {
@@ -2832,8 +2824,6 @@ export default function App() {
         setVerificationNotice("");
         setToast(t.accountCreated);
       } else {
-        clearOldSupabaseAuthStorage();
-
         const { data, error } = await supabase.auth.signInWithPassword({ email, password });
 
         if (error) {
@@ -2842,22 +2832,11 @@ export default function App() {
         }
 
         if (!data.session) {
-          setToast(isArabic ? "تم تسجيل الدخول ولكن لم يتم حفظ الجلسة. انتظري دقيقة ثم جربي مرة أخرى." : "Signed in, but the session was not saved. Wait a minute, then try again.");
+          setToast(isArabic ? "تم تسجيل الدخول لكن الجلسة لم تحفظ. جربي تسجيل الدخول مرة أخرى بعد دقيقة." : "Signed in, but the session was not saved. Try signing in again after a minute.");
           return;
         }
 
-        const { data: savedSessionData, error: saveSessionError } = await supabase.auth.setSession({
-          access_token: data.session.access_token,
-          refresh_token: data.session.refresh_token,
-        });
-
-        if (saveSessionError || !savedSessionData.session) {
-          console.error("Supabase session save failed:", saveSessionError);
-          setToast(isArabic ? "تم تسجيل الدخول لكن الجلسة لم تحفظ. امسحي بيانات الموقع وجربي مرة أخرى." : "Signed in, but the session could not be saved. Clear site data and try again.");
-          return;
-        }
-
-        await handleSupabaseSession(savedSessionData.session);
+        await handleSupabaseSession(data.session);
         setVerificationNotice("");
         setToast(t.signedInWelcome);
       }
