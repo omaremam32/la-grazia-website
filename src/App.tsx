@@ -319,7 +319,7 @@ const products: Product[] = [
     backImage: "/photos/top-1-back.jpeg",
     tag: "Daily Essential",
     occasion: "Daily Wear / University / Cafe",
-    colors: ["Soft Blue", "Cream", "Ivory", "Sage"],
+    colors: ["Sage"],
     complete: ["Atelier Capri Long Tailored Jorts", "Atelier Palazzo Pants", "Navy Silk Scarf", "Mini leather bag"],
     description:
       "A daily wearable soft polo top with a contrast collar, refined gold buttons, a fitted feminine shape, and subtle LG detail. Created to be easy for teenagers and women to wear every day.",
@@ -335,7 +335,7 @@ const products: Product[] = [
     backImage: "/photos/top-2-back.jpeg",
     tag: "Soft Luxury",
     occasion: "Dinner / Brunch / Smart Casual",
-    colors: ["Cream", "Ivory", "Champagne"],
+    colors: ["Champagne"],
     complete: ["Atelier Palazzo Pants", "Atelier Wrap Jacket", "Cream Silk Scarf", "Gold hoops"],
     description:
       "A refined drape top with a soft cowl neckline, gold crest button, cap sleeves, and signature LG monogram. It gives the collection a luxurious feminine top for polished styling.",
@@ -351,7 +351,7 @@ const products: Product[] = [
     backImage: "/photos/top-3-back.jpeg",
     tag: "Daily Essential",
     occasion: "Daily Chic / Lunch / University",
-    colors: ["Dusty Blue", "Cream", "Sage", "Black"],
+    colors: ["Dusty Blue"],
     complete: ["Atelier Celeste Wrap Pants", "Atelier Riviera Tailored Jorts", "Navy Silk Scarf", "Gold jewelry"],
     description:
       "A closed contrast-collar top with a soft structured fit, short sleeves, and signature LG monogram. A youthful elegant piece that still feels premium and easy to style.",
@@ -367,7 +367,7 @@ const products: Product[] = [
     backImage: "/photos/pants-1-back.jpeg",
     tag: "Elegant Tailoring",
     occasion: "Work / Dinner / City Chic",
-    colors: ["Stone Beige", "Champagne", "Cream", "Black"],
+    colors: ["Stone Beige"],
     complete: ["Atelier Soft Polo Top", "Atelier Wrap Jacket", "Cream Silk Scarf", "Structured mini bag"],
     description:
       "A high-waisted palazzo pant with a fluid wide-leg silhouette, front pleats, premium Italian-inspired fabric, and signature gold LG hardware. Elegant, clean, and timeless.",
@@ -383,7 +383,7 @@ const products: Product[] = [
     backImage: "/photos/pants-2-back.jpeg",
     tag: "Elegant Tailoring",
     occasion: "Events / Dinner / Smart Casual",
-    colors: ["Dusty Blue", "Navy", "Cream", "Champagne"],
+    colors: ["Navy"],
     complete: ["Atelier Contrast Collar Top", "Atelier Wrap Jacket", "Navy Silk Scarf", "Nude heels"],
     description:
       "A luxury wrap pant with an asymmetric crossover waistband, sculpted draped panel, soft front pleats, and fluid wide-leg movement. A unique La Grazia statement pant.",
@@ -399,7 +399,7 @@ const products: Product[] = [
     backImage: "/photos/low-waisted-linen-pants-back.png",
     tag: "New Arrival",
     occasion: "Everyday Chic",
-    colors: ["Ivory Beige", "Oatmeal", "Champagne Sand", "Mocha", "Black"],
+    colors: ["Champagne Sand"],
     complete: ["Atelier Soft Polo Top", "Cream Silk Scarf", "Atelier Wrap Jacket"],
     description:
       "The Atelier Low-Waist Linen Pants are crafted from a breathable premium linen blend with a relaxed wide-leg silhouette, soft front pleats, and a refined low-waist fit finished with signature gold LG hardware. Designed to pair perfectly with La Grazia Milano polo tops, scarves, and tailored jackets.",
@@ -415,7 +415,7 @@ const products: Product[] = [
     backImage: "/photos/scarf-1-back.png",
     tag: "Classic Accessory",
     occasion: "Styling / Gift / Occasion",
-    colors: ["Navy", "Midnight Blue", "Dusty Blue", "Ivory Beige", "Charcoal"],
+    colors: ["Navy"],
     complete: ["Atelier Soft Polo Top", "Atelier Wrap Jacket", "Atelier Capri Long Tailored Jorts", "Gold jewelry"],
     description:
       "A navy silk-touch scarf with a refined botanical motif, elegant border, and premium La Grazia packaging. Designed for neck styling, hair styling, bag accents, and shoulder draping.",
@@ -431,7 +431,7 @@ const products: Product[] = [
     backImage: "/photos/scarf-2-back.png",
     tag: "Classic Accessory",
     occasion: "Everyday Styling / Gift / Soft Luxury",
-    colors: ["Cream", "Ivory Beige", "Champagne", "Taupe", "Soft Sand"],
+    colors: ["Cream"],
     complete: ["Atelier Drape Top", "Atelier Palazzo Pants", "Atelier Wrap Jacket", "Mini cream bag"],
     description:
       "A cream silk-touch scarf with soft botanical detailing, delicate neutral borders, and elegant gift packaging. A quiet luxury accessory for everyday feminine styling.",
@@ -447,7 +447,7 @@ const products: Product[] = [
     backImage: "/photos/jorts-1-back.png",
     tag: "Hero Product",
     occasion: "Summer / Resort / Daily Luxury",
-    colors: ["Cream", "Champagne", "Sage", "Dusty Rose", "Mocha", "Black"],
+    colors: ["Mocha"],
     complete: ["Atelier Drape Top", "Milano Spirit Jacket", "Cream Silk Scarf", "Gold sandals"],
     description:
       "A high-waisted tailored jort with sculpted pleats, a refined longline length, cuffed hem, premium cotton-linen texture, and signature LG hardware. A luxury reimagining of everyday jorts.",
@@ -463,7 +463,7 @@ const products: Product[] = [
     backImage: "/photos/jorts-2-back.png",
     tag: "Hero Product",
     occasion: "Coastal Chic / Summer / Signature Look",
-    colors: ["Cream", "Champagne", "Sage", "Dusty Rose", "Mocha", "Black"],
+    colors: ["Cream"],
     complete: ["Atelier Soft Polo Top", "Atelier Wrap Jacket", "Navy Silk Scarf", "Mini LG bag"],
     description:
       "The signature La Grazia long tailored jort. Longer knee-grazing length, high waist, soft pleats, cuffed hem, gold LG hardware, and an embroidered crest detail for timeless Italian coastal elegance.",
