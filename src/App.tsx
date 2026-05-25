@@ -191,10 +191,6 @@ const ADMIN_EMAILS = ["omaromohamed2003@gmail.com", "yazedhani28@gmail.com"].map
   email.trim().toLowerCase()
 );
 
-function isAdminEmail(email?: string | null) {
-  return ADMIN_EMAILS.includes(String(email || "").trim().toLowerCase());
-}
-
 const SUPABASE_URL = import.meta.env.VITE_SUPABASE_URL as string | undefined;
 const SUPABASE_ANON_KEY = import.meta.env.VITE_SUPABASE_ANON_KEY as string | undefined;
 
@@ -205,73 +201,13 @@ const supabase =
           persistSession: true,
           autoRefreshToken: true,
           detectSessionInUrl: true,
+          storage: typeof window !== "undefined" ? window.localStorage : undefined,
         },
       })
     : null;
 
-const AUTH_BACKUP_KEY = "la-grazia-auth-backup-v3";
-
 if (typeof window !== "undefined" && "scrollRestoration" in window.history) {
   window.history.scrollRestoration = "manual";
-}
-
-function clearSupabaseAuthStorage() {
-  if (typeof window === "undefined") return;
-
-  [window.localStorage, window.sessionStorage].forEach((storage) => {
-    Object.keys(storage).forEach((key) => {
-      const lowerKey = key.toLowerCase();
-      if (
-        key.startsWith("sb-") ||
-        lowerKey.includes("supabase") ||
-        lowerKey.includes("la-grazia-auth")
-      ) {
-        storage.removeItem(key);
-      }
-    });
-  });
-}
-
-function saveAuthBackup(nextSession: Session | null) {
-  if (typeof window === "undefined") return;
-
-  if (!nextSession?.access_token || !nextSession?.refresh_token) {
-    window.localStorage.removeItem(AUTH_BACKUP_KEY);
-    return;
-  }
-
-  window.localStorage.setItem(
-    AUTH_BACKUP_KEY,
-    JSON.stringify({
-      access_token: nextSession.access_token,
-      refresh_token: nextSession.refresh_token,
-      expires_at: nextSession.expires_at || 0,
-      user_email: nextSession.user?.email || "",
-    })
-  );
-}
-
-function getAuthBackup() {
-  if (typeof window === "undefined") return null;
-
-  try {
-    const raw = window.localStorage.getItem(AUTH_BACKUP_KEY);
-    if (!raw) return null;
-
-    const parsed = JSON.parse(raw) as { access_token?: string; refresh_token?: string; expires_at?: number; user_email?: string };
-
-    if (!parsed.access_token || !parsed.refresh_token) return null;
-
-    return parsed;
-  } catch {
-    window.localStorage.removeItem(AUTH_BACKUP_KEY);
-    return null;
-  }
-}
-
-function isRateLimitError(error: unknown) {
-  const message = error instanceof Error ? error.message : String(error || "");
-  return message.toLowerCase().includes("rate limit") || message.includes("429");
 }
 
 const emptyAddressForm: AddressForm = {
@@ -1293,7 +1229,9 @@ export default function App() {
   }, [accountUser]);
 
   const canAccessAdmin = useMemo(() => {
-    return Boolean(accountUser?.isAdmin || isAdminEmail(accountUser?.email));
+    const email = (accountUser?.email || "").trim().toLowerCase();
+
+    return Boolean(accountUser?.isAdmin || ADMIN_EMAILS.includes(email));
   }, [accountUser]);
 
   const defaultAddress = useMemo(() => {
@@ -1519,76 +1457,46 @@ export default function App() {
   useEffect(() => {
     if (!supabase) return;
 
-    let isMounted = true;
+    let cancelled = false;
 
-    async function restoreSession() {
+    async function loadSavedSession() {
       try {
         const { data, error } = await supabase!.auth.getSession();
 
-        if (!isMounted) return;
+        if (cancelled) return;
 
         if (error) {
           console.error("Supabase session restore failed:", error);
-
-          if (isRateLimitError(error)) {
-            setToast(isArabic ? "انتظري دقائق قبل محاولة تسجيل الدخول مرة أخرى." : "Please wait a few minutes before signing in again.");
-          }
-        }
-
-        if (data.session) {
-          saveAuthBackup(data.session);
-          await handleSupabaseSession(data.session);
+          await handleSupabaseSession(null);
           return;
         }
 
-        const backup = getAuthBackup();
-
-        if (backup?.access_token && backup?.refresh_token) {
-          const { data: restoredData, error: restoredError } = await supabase!.auth.setSession({
-            access_token: backup.access_token,
-            refresh_token: backup.refresh_token,
-          });
-
-          if (!isMounted) return;
-
-          if (restoredError) {
-            console.error("Backup session restore failed:", restoredError);
-
-            if (!isRateLimitError(restoredError)) {
-              saveAuthBackup(null);
-              await handleSupabaseSession(null);
-            }
-
-            return;
-          }
-
-          saveAuthBackup(restoredData.session);
-          await handleSupabaseSession(restoredData.session);
-          return;
-        }
-
-        await handleSupabaseSession(null);
+        await handleSupabaseSession(data.session);
       } catch (error) {
-        console.error("Unexpected auth restore error:", error);
+        console.error("Unexpected Supabase session restore error:", error);
+        if (!cancelled) await handleSupabaseSession(null);
       }
     }
 
-    restoreSession();
+    loadSavedSession();
 
     const { data } = supabase.auth.onAuthStateChange((_event, nextSession) => {
-      if (!isMounted) return;
-      saveAuthBackup(nextSession);
-      handleSupabaseSession(nextSession);
+      if (cancelled) return;
+
+      window.setTimeout(() => {
+        if (!cancelled) {
+          void handleSupabaseSession(nextSession);
+        }
+      }, 0);
     });
 
     return () => {
-      isMounted = false;
+      cancelled = true;
       data.subscription.unsubscribe();
     };
-  }, [isArabic]);
+  }, []);
 
   async function handleSupabaseSession(nextSession: Session | null) {
-    saveAuthBackup(nextSession);
     setSession(nextSession);
 
     if (!nextSession?.user || !supabase) {
@@ -1644,7 +1552,7 @@ export default function App() {
     fetchUserAddresses(user.id);
     fetchUserWishlist(user.id);
     const email = String(profile?.email || user.email || "").trim().toLowerCase();
-    if (Boolean(profile?.is_admin) || isAdminEmail(email)) {
+    if (Boolean(profile?.is_admin) || ADMIN_EMAILS.includes(email)) {
       fetchAdminOrders();
       fetchAdminProducts();
     }
@@ -1816,6 +1724,25 @@ export default function App() {
     setProductForm(emptyProductForm);
   }
 
+  async function getActiveSupabaseSession() {
+    if (!supabase) return null;
+
+    if (session?.user) return session;
+
+    const { data, error } = await supabase.auth.getSession();
+
+    if (error) {
+      console.error("Supabase active session check failed:", error);
+      return null;
+    }
+
+    if (data.session) {
+      await handleSupabaseSession(data.session);
+    }
+
+    return data.session;
+  }
+
   async function saveProduct(event?: React.FormEvent<HTMLFormElement>) {
     event?.preventDefault();
 
@@ -1832,39 +1759,11 @@ export default function App() {
     setProductSaving(true);
 
     try {
-      let activeSession = session;
-
-      if (!activeSession) {
-        const { data: sessionData, error: sessionError } = await supabase!.auth.getSession();
-
-        if (sessionError) {
-          console.error("Admin auth check failed:", sessionError);
-
-          if (isRateLimitError(sessionError)) {
-            setToast(isArabic ? "انتظري دقائق قبل المحاولة مرة أخرى." : "Please wait a few minutes before trying again.");
-          } else {
-            setAuthMode("signIn");
-            setSignInOpen(true);
-            setToast(isArabic ? "سجلي الدخول مرة أخرى كأدمن." : "Please sign in again as an admin.");
-          }
-
-          setProductSaving(false);
-          return;
-        }
-
-        activeSession = sessionData.session;
-        if (activeSession) {
-          saveAuthBackup(activeSession);
-          await handleSupabaseSession(activeSession);
-        }
-      }
-
-      const authUser = activeSession?.user;
+      const activeSession = await getActiveSupabaseSession();
+      const authUser = activeSession?.user || null;
       const authEmail = (authUser?.email || "").trim().toLowerCase();
 
       if (!authUser) {
-        setAccountUser(null);
-        setSession(null);
         setAuthMode("signIn");
         setSignInOpen(true);
         setToast(isArabic ? "سجلي الدخول مرة أخرى كأدمن." : "Please sign in again as an admin.");
@@ -1872,7 +1771,7 @@ export default function App() {
         return;
       }
 
-      if (!isAdminEmail(authEmail)) {
+      if (!ADMIN_EMAILS.includes(authEmail)) {
         setToast(isArabic ? "هذا الحساب ليس أدمن." : "This account is not allowed to add products.");
         setProductSaving(false);
         return;
@@ -2880,7 +2779,6 @@ export default function App() {
         }
 
         if (data.session && data.user) {
-          saveAuthBackup(data.session);
           await supabase.from("profiles").upsert({
             id: data.user.id,
             full_name: fullName,
@@ -2901,27 +2799,19 @@ export default function App() {
         setVerificationNotice("");
         setToast(t.accountCreated);
       } else {
-        clearSupabaseAuthStorage();
-
         const { data, error } = await supabase.auth.signInWithPassword({ email, password });
 
         if (error) {
-          if (isRateLimitError(error)) {
-            setToast(isArabic ? "تم الوصول للحد الأقصى للمحاولات. انتظري 10 دقائق ثم جربي مرة واحدة." : "Request rate limit reached. Wait 10 minutes, then try once.");
-          } else {
-            setToast(error.message);
-          }
+          setToast(error.message);
           return;
         }
 
         if (!data.session) {
-          setToast(isArabic ? "لم يتم حفظ جلسة الدخول. حاولي مرة أخرى بعد دقائق." : "The login session was not saved. Try again in a few minutes.");
+          setToast(isArabic ? "تم تسجيل الدخول ولكن لم يتم حفظ الجلسة. انتظري دقيقة ثم جربي مرة أخرى." : "Signed in, but the session was not saved. Wait a minute, then try again.");
           return;
         }
 
-        saveAuthBackup(data.session);
         await handleSupabaseSession(data.session);
-
         setVerificationNotice("");
         setToast(t.signedInWelcome);
       }
@@ -2937,8 +2827,6 @@ export default function App() {
     if (supabase) {
       await supabase.auth.signOut();
     }
-
-    clearSupabaseAuthStorage();
 
     setAccountUser(null);
     setAccountForm({ name: "", email: "", phone: "", password: "" });
