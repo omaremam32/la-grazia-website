@@ -10343,6 +10343,310 @@ export default function App() {
         }
 
 
+        /* =========================================================
+           IPAD / TABLET VISUAL FIXES
+           Fixes light-mode contrast, hero overlay readability,
+           section headings, newsletter, footer, and fixed bottom nav
+           on iPad Safari / tablet widths.
+           ========================================================= */
+        @media (min-width: 701px) and (max-width: 1366px) {
+          html,
+          body,
+          #root {
+            background: #f7f1e8 !important;
+            overflow-x: hidden !important;
+          }
+
+          .page:not(.darkMode) {
+            background: #f7f1e8 !important;
+            color: #241a14 !important;
+          }
+
+          .page:not(.darkMode) .nav,
+          .page:not(.darkMode) .navInner {
+            background: rgba(255, 249, 240, 0.96) !important;
+            border-color: rgba(176, 138, 69, 0.22) !important;
+          }
+
+          .page:not(.darkMode) .brandMark h1,
+          .page:not(.darkMode) .brandMark p,
+          .page:not(.darkMode) .navAction,
+          .page:not(.darkMode) .navIcon,
+          .page:not(.darkMode) .languageBtn,
+          .page:not(.darkMode) .themeBtn,
+          .page:not(.darkMode) .menuBtn,
+          .page:not(.darkMode) .signInBtn {
+            opacity: 1 !important;
+            text-shadow: none !important;
+          }
+
+          .page:not(.darkMode) .brandMark h1 {
+            color: #1f1712 !important;
+          }
+
+          .page:not(.darkMode) .brandMark p,
+          .page:not(.darkMode) .eyebrow,
+          .page:not(.darkMode) .category,
+          .page:not(.darkMode) .footerTag,
+          .page:not(.darkMode) .newsletterStatus,
+          .page:not(.darkMode) .storyPoint span {
+            color: #b08a45 !important;
+          }
+
+          .page:not(.darkMode) h1,
+          .page:not(.darkMode) h2,
+          .page:not(.darkMode) h3,
+          .page:not(.darkMode) h4,
+          .page:not(.darkMode) h5,
+          .page:not(.darkMode) h6,
+          .page:not(.darkMode) .heroCopy h2,
+          .page:not(.darkMode) .sectionTitle,
+          .page:not(.darkMode) .panelTitle,
+          .page:not(.darkMode) .footerLogo,
+          .page:not(.darkMode) .productInfo h4,
+          .page:not(.darkMode) .moodCardContent h4,
+          .page:not(.darkMode) .storyPoint p,
+          .page:not(.darkMode) .luxGiftCard h3 {
+            color: #241a14 !important;
+            opacity: 1 !important;
+            text-shadow: none !important;
+          }
+
+          .page:not(.darkMode) p,
+          .page:not(.darkMode) span,
+          .page:not(.darkMode) li,
+          .page:not(.darkMode) label,
+          .page:not(.darkMode) .description,
+          .page:not(.darkMode) .sectionIntro,
+          .page:not(.darkMode) .panelText,
+          .page:not(.darkMode) .price,
+          .page:not(.darkMode) .footerLinks a,
+          .page:not(.darkMode) .trustItem p,
+          .page:not(.darkMode) .newsletterBox p,
+          .page:not(.darkMode) .cleanPanel p {
+            color: #5f4c3e !important;
+            opacity: 1 !important;
+            text-shadow: none !important;
+          }
+
+          .page:not(.darkMode) .heroCard {
+            background: rgba(255, 249, 240, 0.94) !important;
+            border: 1px solid rgba(176, 138, 69, 0.34) !important;
+            color: #241a14 !important;
+            box-shadow: 0 18px 40px rgba(36, 26, 20, 0.14) !important;
+            -webkit-backdrop-filter: none !important;
+            backdrop-filter: none !important;
+          }
+
+          .page:not(.darkMode) .heroCard small {
+            color: #b08a45 !important;
+            opacity: 1 !important;
+          }
+
+          .page:not(.darkMode) .heroCard strong {
+            color: #241a14 !important;
+            opacity: 1 !important;
+            text-shadow: none !important;
+          }
+
+          .page:not(.darkMode) .cleanPanel,
+          .page:not(.darkMode) .newsletterBox,
+          .page:not(.darkMode) .giftCardBox,
+          .page:not(.darkMode) .trustItem,
+          .page:not(.darkMode) .productCard,
+          .page:not(.darkMode) .moodCard,
+          .page:not(.darkMode) .storyPoint,
+          .page:not(.darkMode) .luxGiftCard {
+            background: rgba(255, 249, 240, 0.96) !important;
+            border-color: rgba(176, 138, 69, 0.24) !important;
+            color: #241a14 !important;
+          }
+
+          .page:not(.darkMode) .newsletterBox input,
+          .page:not(.darkMode) .emailForm input,
+          .page:not(.darkMode) .searchBox {
+            background: rgba(255, 249, 240, 0.98) !important;
+            color: #241a14 !important;
+            border-color: rgba(176, 138, 69, 0.32) !important;
+          }
+
+          .page:not(.darkMode) .newsletterBox input::placeholder,
+          .page:not(.darkMode) .emailForm input::placeholder,
+          .page:not(.darkMode) .searchBox::placeholder {
+            color: rgba(95, 76, 62, 0.72) !important;
+            opacity: 1 !important;
+          }
+
+          .page:not(.darkMode) .primaryBtn,
+          .page:not(.darkMode) .emailForm button,
+          .page:not(.darkMode) .mobileBottom,
+          .page:not(.darkMode) .mobileBottom a,
+          .page:not(.darkMode) .mobileBottom button {
+            background: #2c1f18 !important;
+            color: #fff9f0 !important;
+            border-color: #2c1f18 !important;
+          }
+
+          .page:not(.darkMode) .secondaryBtn,
+          .page:not(.darkMode) .viewBtn,
+          .page:not(.darkMode) .filterBtn,
+          .page:not(.darkMode) .luxurySortButton {
+            color: #241a14 !important;
+            border-color: rgba(176, 138, 69, 0.38) !important;
+          }
+
+          .hero {
+            min-height: auto !important;
+          }
+
+          .heroCopy,
+          .heroVisual {
+            min-height: clamp(520px, 58vh, 760px) !important;
+          }
+
+          .heroVisual img {
+            object-position: center center !important;
+          }
+
+          .section {
+            padding-top: clamp(64px, 7vw, 92px) !important;
+            padding-bottom: clamp(64px, 7vw, 92px) !important;
+          }
+
+          .sectionHead {
+            align-items: center !important;
+          }
+
+          .sectionTitle,
+          .panelTitle {
+            line-height: 1.08 !important;
+          }
+
+          .storyGrid,
+          .cleanPanel,
+          .newsletterBox,
+          .giftCardBox {
+            max-width: 100% !important;
+          }
+
+          .footer {
+            padding-bottom: 104px !important;
+          }
+
+          main {
+            padding-bottom: 24px !important;
+          }
+        }
+
+        @media (min-width: 701px) and (max-width: 1024px) {
+          .navInner {
+            padding-left: 18px !important;
+            padding-right: 18px !important;
+          }
+
+          .hero {
+            grid-template-columns: 1fr !important;
+            padding-left: 20px !important;
+            padding-right: 20px !important;
+            gap: 22px !important;
+          }
+
+          .heroCopy {
+            min-height: auto !important;
+            padding: clamp(40px, 6vw, 64px) !important;
+          }
+
+          .heroCopy h2 {
+            font-size: clamp(54px, 8vw, 82px) !important;
+          }
+
+          .heroVisual {
+            min-height: clamp(560px, 70vh, 760px) !important;
+          }
+
+          .trustBar {
+            grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+            padding-left: 20px !important;
+            padding-right: 20px !important;
+          }
+
+          .section {
+            padding-left: 20px !important;
+            padding-right: 20px !important;
+          }
+
+          .productGrid {
+            grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+            gap: 18px !important;
+          }
+
+          .productImage {
+            height: clamp(330px, 42vw, 480px) !important;
+          }
+
+          .storyGrid,
+          .giftCardBox,
+          .cleanPanel {
+            grid-template-columns: 1fr !important;
+          }
+
+          .newsletterBox {
+            padding: 44px 36px !important;
+          }
+
+          .emailForm,
+          .privateListForm {
+            grid-template-columns: 1fr auto !important;
+            gap: 14px !important;
+          }
+        }
+
+        @media (min-width: 1025px) and (max-width: 1366px) {
+          .navInner {
+            padding-left: 34px !important;
+            padding-right: 34px !important;
+          }
+
+          .hero {
+            padding-left: 34px !important;
+            padding-right: 34px !important;
+            grid-template-columns: minmax(390px, 0.9fr) minmax(480px, 1.1fr) !important;
+            gap: 28px !important;
+          }
+
+          .heroCopy h2 {
+            font-size: clamp(64px, 6.4vw, 92px) !important;
+          }
+
+          .section,
+          .trustBar {
+            padding-left: 34px !important;
+            padding-right: 34px !important;
+          }
+
+          .productGrid {
+            grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
+            gap: 22px !important;
+          }
+        }
+
+        @supports (-webkit-touch-callout: none) {
+          @media (min-width: 701px) and (max-width: 1366px) {
+            .page:not(.darkMode) .sectionTitle,
+            .page:not(.darkMode) .panelTitle,
+            .page:not(.darkMode) .brandMark h1,
+            .page:not(.darkMode) .heroCard strong {
+              -webkit-text-fill-color: #241a14 !important;
+            }
+
+            .page:not(.darkMode) .eyebrow,
+            .page:not(.darkMode) .brandMark p {
+              -webkit-text-fill-color: #b08a45 !important;
+            }
+          }
+        }
+
+
       `}</style>
 
       <div className="scrollProgress" style={{ width: `${scrollProgress}%` }} />
