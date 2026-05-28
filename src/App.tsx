@@ -1078,7 +1078,6 @@ function ProductCard({
           alt={product.name}
           loading="lazy"
         />
-        <span className="preOrderBadge">{t.preOrderBadge}</span>
         <div
           className="productImageSwitcher"
           style={{
