@@ -317,7 +317,7 @@ const products: Product[] = [
     backImage: "/photos/jacket-1-back.jpeg",
     tag: "Signature Jacket",
     occasion: "Dinner / Events / Elegant Daywear",
-    colors: ["Cream", "Champagne", "Soft Beige"],
+    colors: ["Cream"],
     complete: ["Atelier Drape Top", "Atelier Palazzo Pants", "La Grazia Silk Scarf", "Gold accessories"],
     description:
       "A sculpted wrap jacket with an asymmetric front, removable tie belt, soft contrast piping, and signature gold LG hardware. Designed as a refined La Grazia statement jacket with timeless Italian elegance.",
@@ -333,7 +333,7 @@ const products: Product[] = [
     backImage: "/photos/jacket-2-back.jpeg",
     tag: "Statement Jacket",
     occasion: "Weekend / City Walk / Spring Edit",
-    colors: ["Cream Print", "Red Accent", "Botanical Multi"],
+    colors: ["Cream Print"],
     complete: ["Atelier Soft Polo Top", "Atelier Capri Long Tailored Jorts", "La Grazia Silk Scarf", "White wide-leg denim"],
     description:
       "A lightweight Italian-print jacket with floral panels, contrast piping, refined zipper details, and La Grazia embroidery. A youthful statement piece that keeps the brand elegant, feminine, and wearable.",
@@ -349,7 +349,7 @@ const products: Product[] = [
     backImage: "/photos/top-1-back.jpeg",
     tag: "Daily Essential",
     occasion: "Daily Wear / University / Cafe",
-    colors: ["Soft Blue", "Cream", "Ivory", "Sage"],
+    colors: ["Soft Blue"],
     complete: ["Atelier Capri Long Tailored Jorts", "Atelier Palazzo Pants", "La Grazia Silk Scarf", "Mini leather bag"],
     description:
       "A daily wearable soft polo top with a contrast collar, refined gold buttons, a fitted feminine shape, and subtle LG detail. Created to be easy for teenagers and women to wear every day.",
@@ -365,7 +365,7 @@ const products: Product[] = [
     backImage: "/photos/top-2-back.jpeg",
     tag: "Soft Luxury",
     occasion: "Dinner / Brunch / Smart Casual",
-    colors: ["Cream", "Ivory", "Champagne"],
+    colors: ["Cream"],
     complete: ["Atelier Palazzo Pants", "Atelier Wrap Jacket", "La Grazia Silk Scarf", "Gold hoops"],
     description:
       "A refined drape top with a soft cowl neckline, gold crest button, cap sleeves, and signature LG monogram. It gives the collection a luxurious feminine top for polished styling.",
@@ -381,7 +381,7 @@ const products: Product[] = [
     backImage: "/photos/top-3-back.jpeg",
     tag: "Daily Essential",
     occasion: "Daily Chic / Lunch / University",
-    colors: ["Dusty Blue", "Cream", "Sage", "Black"],
+    colors: ["Dusty Blue"],
     complete: ["Atelier Celeste Wrap Pants", "Atelier Riviera Tailored Jorts", "La Grazia Silk Scarf", "Gold jewelry"],
     description:
       "A closed contrast-collar top with a soft structured fit, short sleeves, and signature LG monogram. A youthful elegant piece that still feels premium and easy to style.",
@@ -397,7 +397,7 @@ const products: Product[] = [
     backImage: "/photos/pants-1-back.jpeg",
     tag: "Elegant Tailoring",
     occasion: "Work / Dinner / City Chic",
-    colors: ["Stone Beige", "Champagne", "Cream", "Black"],
+    colors: ["Stone Beige"],
     complete: ["Atelier Soft Polo Top", "Atelier Wrap Jacket", "La Grazia Silk Scarf", "Structured mini bag"],
     description:
       "A high-waisted palazzo pant with a fluid wide-leg silhouette, front pleats, premium Italian-inspired fabric, and signature gold LG hardware. Elegant, clean, and timeless.",
@@ -413,7 +413,7 @@ const products: Product[] = [
     backImage: "/photos/pants-2-back.jpeg",
     tag: "Elegant Tailoring",
     occasion: "Events / Dinner / Smart Casual",
-    colors: ["Dusty Blue", "Navy", "Cream", "Champagne"],
+    colors: ["Dusty Blue"],
     complete: ["Atelier Contrast Collar Top", "Atelier Wrap Jacket", "La Grazia Silk Scarf", "Nude heels"],
     description:
       "A luxury wrap pant with an asymmetric crossover waistband, sculpted draped panel, soft front pleats, and fluid wide-leg movement. A unique La Grazia statement pant.",
@@ -429,7 +429,7 @@ const products: Product[] = [
     backImage: "/photos/low-waisted-linen-pants-back.png",
     tag: "New Arrival",
     occasion: "Everyday Chic",
-    colors: ["Ivory Beige", "Oatmeal", "Champagne Sand", "Mocha", "Black"],
+    colors: ["Ivory Beige"],
     complete: ["Atelier Soft Polo Top", "La Grazia Silk Scarf", "Atelier Wrap Jacket"],
     description:
       "The Atelier Low-Waist Linen Pants are crafted from a breathable premium linen blend with a relaxed wide-leg silhouette, soft front pleats, and a refined low-waist fit finished with signature gold LG hardware. Designed to pair perfectly with La Grazia Milano polo tops, scarves, and tailored jackets.",
@@ -461,7 +461,7 @@ const products: Product[] = [
     backImage: "/photos/jorts-1-back.png",
     tag: "Hero Product",
     occasion: "Summer / Resort / Daily Luxury",
-    colors: ["Cream", "Champagne", "Sage", "Dusty Rose", "Mocha", "Black"],
+    colors: ["Cream"],
     complete: ["Atelier Drape Top", "Milano Spirit Jacket", "La Grazia Silk Scarf", "Gold sandals"],
     description:
       "A high-waisted tailored jort with sculpted pleats, a refined longline length, cuffed hem, premium cotton-linen texture, and signature LG hardware. A luxury reimagining of everyday jorts.",
@@ -477,7 +477,7 @@ const products: Product[] = [
     backImage: "/photos/jorts-2-back.png",
     tag: "Hero Product",
     occasion: "Coastal Chic / Summer / Signature Look",
-    colors: ["Cream", "Champagne", "Sage", "Dusty Rose", "Mocha", "Black"],
+    colors: ["Cream"],
     complete: ["Atelier Soft Polo Top", "Atelier Wrap Jacket", "La Grazia Silk Scarf", "Mini LG bag"],
     description:
       "The signature La Grazia long tailored jort. Longer knee-grazing length, high waist, soft pleats, cuffed hem, gold LG hardware, and an embroidered crest detail for timeless Italian coastal elegance.",
@@ -577,11 +577,39 @@ function getScarfColorImage(productName: string, view: ProductImageView, color?:
   return SCARF_COLOR_IMAGES[normalizeScarfColor(color)]?.[view];
 }
 
+const OFFICIAL_PRODUCT_COLOR_OPTIONS: Record<string, string[]> = {
+  "atelier wrap jacket": ["Cream"],
+  "milano spirit jacket": ["Cream Print"],
+  "atelier soft polo top": ["Soft Blue"],
+  "atelier drape top": ["Cream"],
+  "atelier contrast collar top": ["Dusty Blue"],
+  "atelier palazzo pants": ["Stone Beige"],
+  "atelier celeste wrap pants": ["Dusty Blue"],
+  "atelier low-waist linen pants": ["Ivory Beige"],
+  "la grazia silk scarf": ["Navy", "Cream"],
+  "atelier riviera tailored jorts": ["Cream"],
+  "atelier capri long tailored jorts": ["Cream"],
+};
+
+function getOfficialColorOptions(productName: string) {
+  return OFFICIAL_PRODUCT_COLOR_OPTIONS[normalizeProductNameForImages(productName)];
+}
+
 function withOfficialColorOptions(product: Product): Product {
-  if (!isLaGraziaSilkScarf(product.name)) return product;
+  const officialColors = getOfficialColorOptions(product.name);
+
+  if (!officialColors) return product;
+
+  if (!isLaGraziaSilkScarf(product.name)) {
+    return {
+      ...product,
+      colors: officialColors,
+    };
+  }
+
   return {
     ...product,
-    colors: ["Navy", "Cream"],
+    colors: officialColors,
     image: "/photos/scarf-1-front.png",
     frontImage: "/photos/scarf-1-front.png",
     modelImage: "/photos/scarf-1-model.png",
@@ -1428,10 +1456,10 @@ export default function App() {
   const lineBreak = String.fromCharCode(10);
 
   const orderLines = cart
-    .map(
-      (item, index) =>
-        `${index + 1}. ${item.product.name} - ${item.product.price} - Size: ${item.size} - Color: ${item.color} - Qty: ${item.quantity}`
-    )
+    .map((item, index) => {
+      const sizeText = isLaGraziaSilkScarf(item.product.name) ? "" : ` - Size: ${item.size}`;
+      return `${index + 1}. ${item.product.name} - ${item.product.price}${sizeText} - Color: ${item.color} - Qty: ${item.quantity}`;
+    })
     .join(lineBreak);
 
   const cartMessage =
@@ -2498,7 +2526,7 @@ export default function App() {
   function openProduct(product: Product) {
     setSelectedProduct(product);
     setSelectedImageView("front");
-    setSelectedSize("M");
+    setSelectedSize(isLaGraziaSilkScarf(product.name) ? "One Size" : "M");
     setSelectedColor(product.colors[0]);
     setQuantity(1);
     setItemSizeChartOpen(false);
@@ -12250,7 +12278,7 @@ export default function App() {
                   <div>
                     <h4>{item.product.name}</h4>
                     <p>{item.product.price}</p>
-                    <p>Size: {item.size}</p>
+                    {!isLaGraziaSilkScarf(item.product.name) && <p>Size: {item.size}</p>}
                     <p>Color: {item.color}</p>
                     <div className="cartQtyControls">
                       <button
@@ -12357,63 +12385,67 @@ export default function App() {
               <p><strong>{t.stock}</strong> {t.only} {getStock(selectedProduct.name)} {t.piecesLeft}</p>
               <p><strong>{t.model}</strong> {getModelInfo(selectedProduct.name)}</p>
 
-              <div className="modalSizeHeader">
-                <p><strong>{t.chooseSize}</strong></p>
-                <button
-                  type="button"
-                  className={itemSizeChartOpen ? "inlineSizeToggle open" : "inlineSizeToggle"}
-                  onClick={() => setItemSizeChartOpen((current) => !current)}
-                >
-                  <span>{t.fitGuide}</span>
-                  <span className="inlineSizeArrow" aria-hidden="true"></span>
-                </button>
-              </div>
-              <div className="buttonList compactSizeButtons">
-                {["XS", "S", "M", "L", "XL"].map((size) => (
-                  <button key={size} className={selectedSize === size ? "sizeBtn selected" : "sizeBtn"} onClick={() => setSelectedSize(size)}>
-                    {size}
-                  </button>
-                ))}
-              </div>
+              {!isLaGraziaSilkScarf(selectedProduct.name) && (
+                <>
+                  <div className="modalSizeHeader">
+                    <p><strong>{t.chooseSize}</strong></p>
+                    <button
+                      type="button"
+                      className={itemSizeChartOpen ? "inlineSizeToggle open" : "inlineSizeToggle"}
+                      onClick={() => setItemSizeChartOpen((current) => !current)}
+                    >
+                      <span>{t.fitGuide}</span>
+                      <span className="inlineSizeArrow" aria-hidden="true"></span>
+                    </button>
+                  </div>
+                  <div className="buttonList compactSizeButtons">
+                    {["XS", "S", "M", "L", "XL"].map((size) => (
+                      <button key={size} className={selectedSize === size ? "sizeBtn selected" : "sizeBtn"} onClick={() => setSelectedSize(size)}>
+                        {size}
+                      </button>
+                    ))}
+                  </div>
 
-              {itemSizeChartOpen && (
-                <div className="modalSizeChart">
-                  <div className="modalSizeTableWrap">
-                    <table className="modalSizeTable">
-                      <thead>
-                        <tr>
-                          <th>{t.size}</th>
-                          <th>{t.bust}</th>
-                          <th>{t.waist}</th>
-                          <th>{t.hips}</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        {sizeChart.map((row) => (
-                          <tr key={row[0]}>
-                            <td>{row[0]}</td>
-                            <td>{row[1]}</td>
-                            <td>{row[2]}</td>
-                            <td>{row[3]}</td>
-                          </tr>
-                        ))}
-                      </tbody>
-                    </table>
-                  </div>
-                  <div className="modalFitNotes">
-                    <p><strong>{t.trousers}</strong> {t.trousersText}</p>
-                    <p><strong>{t.knitTops}</strong> {t.knitText}</p>
-                    <p><strong>{t.jackets}</strong> {t.jacketsText}</p>
-                  </div>
-                  <a
-                    className="modalSizeHelp"
-                    href={createWhatsAppLink("Hello La Grazia, I need help choosing my size. Can I send my measurements?")}
-                    target="_blank"
-                    rel="noreferrer"
-                  >
-                    {t.askSize}
-                  </a>
-                </div>
+                  {itemSizeChartOpen && (
+                    <div className="modalSizeChart">
+                      <div className="modalSizeTableWrap">
+                        <table className="modalSizeTable">
+                          <thead>
+                            <tr>
+                              <th>{t.size}</th>
+                              <th>{t.bust}</th>
+                              <th>{t.waist}</th>
+                              <th>{t.hips}</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            {sizeChart.map((row) => (
+                              <tr key={row[0]}>
+                                <td>{row[0]}</td>
+                                <td>{row[1]}</td>
+                                <td>{row[2]}</td>
+                                <td>{row[3]}</td>
+                              </tr>
+                            ))}
+                          </tbody>
+                        </table>
+                      </div>
+                      <div className="modalFitNotes">
+                        <p><strong>{t.trousers}</strong> {t.trousersText}</p>
+                        <p><strong>{t.knitTops}</strong> {t.knitText}</p>
+                        <p><strong>{t.jackets}</strong> {t.jacketsText}</p>
+                      </div>
+                      <a
+                        className="modalSizeHelp"
+                        href={createWhatsAppLink("Hello La Grazia, I need help choosing my size. Can I send my measurements?")}
+                        target="_blank"
+                        rel="noreferrer"
+                      >
+                        {t.askSize}
+                      </a>
+                    </div>
+                  )}
+                </>
               )}
 
               <p><strong>{t.chooseColor}</strong></p>
@@ -12504,14 +12536,26 @@ export default function App() {
                 </form>
               </div>
 
-              <button className="secondaryBtn" onClick={() => addToCart(selectedProduct, selectedSize, selectedColor, quantity)}>
+              <button
+                className="secondaryBtn"
+                onClick={() =>
+                  addToCart(
+                    selectedProduct,
+                    isLaGraziaSilkScarf(selectedProduct.name) ? "One Size" : selectedSize,
+                    selectedColor,
+                    quantity
+                  )
+                }
+              >
                 {t.addBag}
               </button>
 
               <a
                 className="primaryBtn"
                 href={createWhatsAppLink(
-                  `Hello La Grazia, I would like to pre-order ${selectedProduct.name}. Size: ${selectedSize}. Color: ${selectedColor}. Quantity: ${quantity}. Price range: ${selectedProduct.price}. I understand this is a pre-order until the countdown finishes and the collection officially launches. Please send me pre-order and delivery details.`
+                  isLaGraziaSilkScarf(selectedProduct.name)
+                    ? `Hello La Grazia, I would like to pre-order ${selectedProduct.name}. Color: ${selectedColor}. Quantity: ${quantity}. Price range: ${selectedProduct.price}. I understand this is a pre-order until the countdown finishes and the collection officially launches. Please send me pre-order and delivery details.`
+                    : `Hello La Grazia, I would like to pre-order ${selectedProduct.name}. Size: ${selectedSize}. Color: ${selectedColor}. Quantity: ${quantity}. Price range: ${selectedProduct.price}. I understand this is a pre-order until the countdown finishes and the collection officially launches. Please send me pre-order and delivery details.`
                 )}
                 target="_blank"
                 rel="noreferrer"
