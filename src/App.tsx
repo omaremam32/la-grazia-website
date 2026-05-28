@@ -1062,7 +1062,7 @@ function ProductCard({
   return (
     <article className="productCard reveal">
       <div
-        className={`productImage ${product.name === "Atelier Low-Waist Linen Pants" && imageView !== "model" ? "linenPantsProductImage" : ""}`}
+        className="productImage"
         style={{ position: "relative" }}
         onClick={() => onOpen(product)}
         onPointerEnter={() => {
