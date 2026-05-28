@@ -445,10 +445,10 @@ const products: Product[] = [
     backImage: "/photos/scarf-1-back.png",
     tag: "Classic Accessory",
     occasion: "Styling / Gift / Soft Luxury",
-    colors: ["Navy", "Cream", "Midnight Blue", "Dusty Blue", "Ivory Beige", "Champagne", "Taupe", "Soft Sand", "Charcoal"],
+    colors: ["Navy", "Cream"],
     complete: ["Atelier Soft Polo Top", "Atelier Wrap Jacket", "Atelier Capri Long Tailored Jorts", "Atelier Drape Top"],
     description:
-      "A silk-touch scarf available in multiple refined La Grazia colorways, finished with an elegant botanical motif, premium border detailing, and luxury packaging. Designed for neck styling, hair styling, bag accents, and shoulder draping.",
+      "A silk-touch scarf available in two refined La Grazia colorways: Navy and Cream. Finished with an elegant botanical motif, premium border detailing, and luxury packaging. Designed for neck styling, hair styling, bag accents, and shoulder draping.",
   },
   {
     name: "Atelier Riviera Tailored Jorts",
@@ -548,6 +548,47 @@ function getMappedProductImage(productName: string, view: ProductImageView) {
   return PRODUCT_BACK_IMAGES_NORMALIZED[normalizedName];
 }
 
+const SCARF_COLOR_IMAGES: Record<string, Record<ProductImageView, string>> = {
+  navy: {
+    front: "/photos/scarf-1-front.png",
+    model: "/photos/scarf-1-model.png",
+    back: "/photos/scarf-1-back.png",
+  },
+  cream: {
+    front: "/photos/scarf-2-front.png",
+    model: "/photos/scarf-2-model.png",
+    back: "/photos/scarf-2-back.png",
+  },
+};
+
+function isLaGraziaSilkScarf(productName: string) {
+  return normalizeProductNameForImages(productName) === "la grazia silk scarf";
+}
+
+function normalizeScarfColor(color?: string | null) {
+  const normalizedColor = (color || "").trim().toLowerCase();
+
+  if (normalizedColor.includes("cream") || normalizedColor.includes("creamy")) return "cream";
+  return "navy";
+}
+
+function getScarfColorImage(productName: string, view: ProductImageView, color?: string | null) {
+  if (!isLaGraziaSilkScarf(productName)) return undefined;
+  return SCARF_COLOR_IMAGES[normalizeScarfColor(color)]?.[view];
+}
+
+function withOfficialColorOptions(product: Product): Product {
+  if (!isLaGraziaSilkScarf(product.name)) return product;
+  return {
+    ...product,
+    colors: ["Navy", "Cream"],
+    image: "/photos/scarf-1-front.png",
+    frontImage: "/photos/scarf-1-front.png",
+    modelImage: "/photos/scarf-1-model.png",
+    backImage: "/photos/scarf-1-back.png",
+  };
+}
+
 function getDeclaredProductImage(product: ProductImageInput, view: ProductImageView) {
   if (view === "front") return product.frontImage || product.image;
   if (view === "model") return product.modelImage || product.frontImage || product.image;
@@ -562,11 +603,13 @@ function uniqueImageSources(sources: Array<string | undefined | null>) {
   return Array.from(new Set(cleaned));
 }
 
-function getProductImageSources(product: ProductImageInput, view: ProductImageView) {
+function getProductImageSources(product: ProductImageInput, view: ProductImageView, color?: string | null) {
   return uniqueImageSources([
+    getScarfColorImage(product.name, view, color),
     getMappedProductImage(product.name, view),
     getDeclaredProductImage(product, view),
     product.image,
+    getScarfColorImage(product.name, "front", color),
     getMappedProductImage(product.name, "front"),
     getDeclaredProductImage(product, "front"),
   ]);
@@ -1617,7 +1660,7 @@ export default function App() {
 
 
   function mapProductRow(row: ProductRow): Product {
-    return {
+    return withOfficialColorOptions({
       id: row.id,
       name: row.name,
       price: row.price,
@@ -1634,12 +1677,12 @@ export default function App() {
       description: row.description || "",
       isActive: Boolean(row.is_active),
       sortOrder: Number(row.sort_order || 0),
-    };
+    });
   }
 
   async function fetchStoreProducts() {
     if (!supabase) {
-      setDisplayProducts(products);
+      setDisplayProducts(products.map(withOfficialColorOptions));
       return;
     }
 
@@ -1652,7 +1695,7 @@ export default function App() {
 
     if (error) {
       console.error(error);
-      setDisplayProducts(products);
+      setDisplayProducts(products.map(withOfficialColorOptions));
       return;
     }
 
@@ -1669,16 +1712,16 @@ export default function App() {
     const mergedProducts = products.map((fallbackProduct) => {
       const databaseProduct = databaseByName.get(normalizeProductNameForImages(fallbackProduct.name));
 
-      if (!databaseProduct) return fallbackProduct;
+      if (!databaseProduct) return withOfficialColorOptions(fallbackProduct);
 
-      return {
+      return withOfficialColorOptions({
         ...fallbackProduct,
         ...databaseProduct,
         image: getMappedProductImage(fallbackProduct.name, "front") || databaseProduct.image || fallbackProduct.image,
         frontImage: getMappedProductImage(fallbackProduct.name, "front") || databaseProduct.frontImage || fallbackProduct.frontImage || databaseProduct.image || fallbackProduct.image,
         modelImage: getMappedProductImage(fallbackProduct.name, "model") || databaseProduct.modelImage || fallbackProduct.modelImage || databaseProduct.image || fallbackProduct.image,
         backImage: getMappedProductImage(fallbackProduct.name, "back") || databaseProduct.backImage || fallbackProduct.backImage || databaseProduct.image || fallbackProduct.image,
-      };
+      });
     });
 
     setDisplayProducts(mergedProducts);
@@ -12203,7 +12246,7 @@ export default function App() {
             <div className="cartItems">
               {cart.map((item, index) => (
                 <div className="cartItem" key={`${item.product.name}-${index}`}>
-                  <SmartImage sources={getProductImageSources(item.product, "front")} alt={item.product.name} loading="lazy" />
+                  <SmartImage sources={getProductImageSources(item.product, "front", item.color)} alt={item.product.name} loading="lazy" />
                   <div>
                     <h4>{item.product.name}</h4>
                     <p>{item.product.price}</p>
@@ -12254,7 +12297,7 @@ export default function App() {
           <div className="modal" onClick={(event) => event.stopPropagation()}>
             <div className="modalImage" style={{ position: "relative" }}>
               <SmartImage
-                sources={getProductImageSources(selectedProduct, selectedImageView)}
+                sources={getProductImageSources(selectedProduct, selectedImageView, selectedColor)}
                 alt={selectedProduct.name}
                 loading="eager"
               />
@@ -12275,9 +12318,9 @@ export default function App() {
                 }}
               >
                 {[
-                  { key: "front" as const, label: "Front", available: getProductImageSources(selectedProduct, "front").length > 0 },
-                  { key: "model" as const, label: "Model", available: getProductImageSources(selectedProduct, "model").length > 0 },
-                  { key: "back" as const, label: "Back", available: getProductImageSources(selectedProduct, "back").length > 0 },
+                  { key: "front" as const, label: "Front", available: getProductImageSources(selectedProduct, "front", selectedColor).length > 0 },
+                  { key: "model" as const, label: "Model", available: getProductImageSources(selectedProduct, "model", selectedColor).length > 0 },
+                  { key: "back" as const, label: "Back", available: getProductImageSources(selectedProduct, "back", selectedColor).length > 0 },
                 ]
                   .filter((view) => view.available)
                   .map((view) => (
@@ -12376,7 +12419,14 @@ export default function App() {
               <p><strong>{t.chooseColor}</strong></p>
               <div className="buttonList">
                 {selectedProduct.colors.map((color) => (
-                  <button key={color} className={selectedColor === color ? "colorBtn selected" : "colorBtn"} onClick={() => setSelectedColor(color)}>
+                  <button
+                    key={color}
+                    className={selectedColor === color ? "colorBtn selected" : "colorBtn"}
+                    onClick={() => {
+                      setSelectedColor(color);
+                      if (isLaGraziaSilkScarf(selectedProduct.name)) setSelectedImageView("front");
+                    }}
+                  >
                     {color}
                   </button>
                 ))}
