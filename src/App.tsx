@@ -222,7 +222,7 @@ const ADMIN_EMAILS = ["omaromohamed2003@gmail.com", "yazedhani28@gmail.com"].map
 );
 
 const LAGRAZIA_AUTH_STORAGE_KEY = "lagrazia-supabase-auth-v4";
-const LAGRAZIA_OFFER_STORAGE_KEY = "lagrazia-private-offer-v1";
+const LAGRAZIA_OFFER_STORAGE_KEY = "lagrazia-private-offer-v3";
 
 function clearOldSupabaseAuthStorage() {
   if (typeof window === "undefined") return;
@@ -1451,6 +1451,12 @@ export default function App() {
   const moodProduct = displayProducts.find((product) => product.name === moodResult.result) || displayProducts[0] || products[0];
 
   const lineBreak = String.fromCharCode(10);
+  const savedPrivateOfferEmail = getSavedOfferEmail();
+  const activePrivateOfferEmail = offerEmail.trim().toLowerCase() || savedPrivateOfferEmail || newsletterEmail.trim().toLowerCase();
+  const privateOfferActive = Boolean(activePrivateOfferEmail && activePrivateOfferEmail.includes("@"));
+  const cartSubtotal = cart.reduce((total, item) => total + item.product.minPrice * item.quantity, 0);
+  const cartDiscount = privateOfferActive ? Math.round(cartSubtotal * 0.10) : 0;
+  const cartTotalAfterDiscount = Math.max(0, cartSubtotal - cartDiscount);
 
   function formatLuxuryPreOrderItem(item: CartItem, index: number) {
     const sizeLine = isLaGraziaSilkScarf(item.product.name) ? "" : `${lineBreak}Size: ${item.size}`;
@@ -1510,7 +1516,7 @@ export default function App() {
 
     const timer = window.setTimeout(() => {
       setOfferPopupOpen(true);
-    }, 2200);
+    }, 5200);
 
     return () => window.clearTimeout(timer);
   }, []);
@@ -2792,10 +2798,8 @@ export default function App() {
         console.error("Private offer email failed:", error);
       });
 
-      setOfferStatus(isArabic ? "تم تسجيل بريدك في قائمة لا غراتسيا الخاصة." : "Your private access has been saved. Use code GRAZIA10 for 10% off your first pre-order.");
-      setToast(isArabic ? "تم حفظ بريدك للقائمة الخاصة" : "Private access saved");
-
-      window.setTimeout(() => closeOfferPopup(false), 700);
+      setOfferStatus(isArabic ? "تم تسجيل بريدك في قائمة لا غراتسيا الخاصة. كودك: GRAZIA10" : "Your private access has been saved. Code GRAZIA10 is now applied for 10% off your first pre-order.");
+      setToast(isArabic ? "تم تفعيل خصم ١٠٪" : "10% private offer applied");
     } finally {
       setOfferSubmitting(false);
     }
@@ -2822,14 +2826,21 @@ export default function App() {
     try {
       setPaymentLoading(true);
 
-      const paymentItems = cart.map((item) => ({
-        name: item.product.name,
-        price: item.product.minPrice,
-        quantity: item.quantity,
-        description: isLaGraziaSilkScarf(item.product.name) ? `${item.product.name} - Color: ${item.color}` : `${item.product.name} - Size: ${item.size} - Color: ${item.color}`,
-      }));
+      const hasPrivateOfferDiscount = Boolean(guestEmail && guestEmail.includes("@"));
+      const paymentItems = cart.map((item) => {
+        const unitPrice = hasPrivateOfferDiscount ? Math.max(1, Math.round(item.product.minPrice * 0.90)) : item.product.minPrice;
 
-      const totalAmount = cart.reduce((total, item) => total + item.product.minPrice * item.quantity, 0);
+        return {
+          name: item.product.name,
+          price: unitPrice,
+          quantity: item.quantity,
+          description: isLaGraziaSilkScarf(item.product.name)
+            ? `${item.product.name} - Color: ${item.color}${hasPrivateOfferDiscount ? " - GRAZIA10 applied" : ""}`
+            : `${item.product.name} - Size: ${item.size} - Color: ${item.color}${hasPrivateOfferDiscount ? " - GRAZIA10 applied" : ""}`,
+        };
+      });
+
+      const totalAmount = paymentItems.reduce((total, item) => total + item.price * item.quantity, 0);
       const deliveryAddress = defaultAddress;
       const checkoutName = deliveryAddress?.full_name || accountUser?.name || "La Grazia Client";
       const nameParts = checkoutName.trim().split(" ").filter(Boolean);
@@ -2913,17 +2924,21 @@ export default function App() {
           .single();
 
         if (!orderError && orderData?.id) {
-          const orderItems = cart.map((item) => ({
-            order_id: orderData.id,
-            user_id: checkoutUserId,
-            product_name: item.product.name,
-            product_image: item.product.image,
-            size: isLaGraziaSilkScarf(item.product.name) ? null : item.size,
-            color: item.color,
-            quantity: item.quantity,
-            unit_price: item.product.minPrice,
-            total_price: item.product.minPrice * item.quantity,
-          }));
+          const orderItems = cart.map((item) => {
+            const unitPrice = hasPrivateOfferDiscount ? Math.max(1, Math.round(item.product.minPrice * 0.90)) : item.product.minPrice;
+
+            return {
+              order_id: orderData.id,
+              user_id: checkoutUserId,
+              product_name: item.product.name,
+              product_image: item.product.image,
+              size: isLaGraziaSilkScarf(item.product.name) ? null : item.size,
+              color: item.color,
+              quantity: item.quantity,
+              unit_price: unitPrice,
+              total_price: unitPrice * item.quantity,
+            };
+          });
 
           await supabase.from("order_items").insert(orderItems);
 
@@ -11254,6 +11269,293 @@ export default function App() {
           }
         }
 
+        /* Final mobile + private-offer fixes */
+        .offerCodeBox {
+          margin: 14px auto 0;
+          width: min(320px, 100%);
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          gap: 14px;
+          padding: 12px 16px;
+          border-radius: 16px;
+          border: 1px solid rgba(176, 138, 69, 0.28);
+          background: rgba(239, 219, 187, 0.34);
+          color: #2f2118;
+        }
+
+        .offerCodeBox span {
+          font-size: 11px;
+          letter-spacing: 0.18em;
+          text-transform: uppercase;
+          color: #8b6f38;
+        }
+
+        .offerCodeBox strong {
+          font-size: 15px;
+          letter-spacing: 0.18em;
+        }
+
+        .darkMode .offerCodeBox {
+          background: rgba(255, 249, 240, 0.08);
+          color: #fff8ef;
+          border-color: rgba(215, 180, 111, 0.28);
+        }
+
+        .cartSummaryBox {
+          display: grid;
+          gap: 8px;
+          padding: 14px 16px;
+          border-radius: 20px;
+          border: 1px solid rgba(176, 138, 69, 0.22);
+          background: rgba(255, 249, 240, 0.64);
+          color: #4b392c;
+        }
+
+        .cartSummaryBox div {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          gap: 14px;
+          font-size: 13px;
+        }
+
+        .cartSummaryBox span {
+          color: #7a604d;
+        }
+
+        .cartSummaryBox strong {
+          font-weight: 700;
+          color: #2c1f18;
+        }
+
+        .cartSummaryBox .discountRow strong,
+        .cartSummaryBox .discountRow span {
+          color: #a67f35;
+        }
+
+        .cartSummaryBox .totalRow {
+          padding-top: 8px;
+          border-top: 1px solid rgba(176, 138, 69, 0.16);
+          font-size: 14px;
+        }
+
+        .darkMode .cartSummaryBox {
+          background: rgba(255, 249, 240, 0.07);
+          border-color: rgba(215, 180, 111, 0.26);
+          color: #fff8ef;
+        }
+
+        .darkMode .cartSummaryBox span { color: #e4d0b7; }
+        .darkMode .cartSummaryBox strong { color: #fff8ef; }
+
+        @keyframes laGraziaToastIn {
+          from {
+            opacity: 0;
+            transform: translateX(-50%) translateY(16px);
+          }
+          to {
+            opacity: 1;
+            transform: translateX(-50%) translateY(0);
+          }
+        }
+
+        .toast {
+          left: 50% !important;
+          transform: translateX(-50%) !important;
+          width: max-content !important;
+          max-width: calc(100vw - 34px) !important;
+          text-align: center !important;
+          white-space: normal !important;
+        }
+
+        @media (max-width: 700px) {
+          .offerBackdrop {
+            z-index: 180 !important;
+            padding: 16px !important;
+            align-items: center !important;
+          }
+
+          .offerPanel {
+            width: 100% !important;
+            max-height: calc(100vh - 48px) !important;
+            overflow-y: auto !important;
+            padding: 32px 18px 24px !important;
+            border-radius: 28px !important;
+          }
+
+          .offerLogo {
+            margin-bottom: 16px !important;
+          }
+
+          .offerLogo span {
+            font-size: 28px !important;
+          }
+
+          .offerPanel h3 {
+            font-size: 20px !important;
+            line-height: 1.22 !important;
+          }
+
+          .offerPanel p {
+            font-size: 13px !important;
+            line-height: 1.58 !important;
+            margin-bottom: 16px !important;
+          }
+
+          .offerForm input,
+          .offerForm button {
+            min-height: 52px !important;
+            border-radius: 18px !important;
+          }
+
+          .actions {
+            display: grid !important;
+            grid-template-columns: 1fr !important;
+            gap: 12px !important;
+            width: 100% !important;
+            max-width: 100% !important;
+          }
+
+          .actions a,
+          .actions button {
+            width: 100% !important;
+            max-width: 100% !important;
+            justify-content: center !important;
+            text-align: center !important;
+            white-space: normal !important;
+          }
+
+          .launchCountdown {
+            width: 100% !important;
+            max-width: 100% !important;
+            padding: 14px !important;
+            margin-top: 18px !important;
+            overflow: hidden !important;
+          }
+
+          .launchCountdownHeader {
+            flex-direction: column !important;
+            align-items: flex-start !important;
+            gap: 6px !important;
+          }
+
+          .launchCountdownHeader span {
+            font-size: 10px !important;
+            letter-spacing: 0.2em !important;
+          }
+
+          .countdownUnit {
+            padding: 12px 8px !important;
+            border-radius: 18px !important;
+          }
+
+          .countdownUnit strong {
+            font-size: 32px !important;
+          }
+
+          .countdownUnit span {
+            font-size: 9px !important;
+            letter-spacing: 0.16em !important;
+          }
+
+          .cartDrawer {
+            left: 14px !important;
+            right: 14px !important;
+            top: 92px !important;
+            bottom: calc(104px + env(safe-area-inset-bottom)) !important;
+            width: auto !important;
+            max-height: none !important;
+            overflow-y: auto !important;
+            padding: 18px !important;
+            border-radius: 30px !important;
+            gap: 14px !important;
+            z-index: 95 !important;
+          }
+
+          .cartHeader {
+            align-items: flex-start !important;
+          }
+
+          .cartHeader h3 {
+            font-size: clamp(30px, 9vw, 42px) !important;
+            line-height: 0.92 !important;
+            letter-spacing: -0.035em !important;
+          }
+
+          .cartItems {
+            gap: 12px !important;
+            overflow: visible !important;
+          }
+
+          .cartItem {
+            grid-template-columns: 72px 1fr !important;
+            gap: 12px !important;
+            align-items: center !important;
+            padding-bottom: 12px !important;
+          }
+
+          .cartItem img {
+            width: 72px !important;
+            height: 92px !important;
+            border-radius: 16px !important;
+          }
+
+          .cartItem h4 {
+            font-size: 18px !important;
+            line-height: 1.05 !important;
+          }
+
+          .cartItem p {
+            font-size: 12px !important;
+            margin: 4px 0 !important;
+          }
+
+          .cartQtyControls {
+            margin: 7px 0 5px !important;
+          }
+
+          .cartPreOrderNote,
+          .cartSummaryBox {
+            border-radius: 18px !important;
+            padding: 12px 13px !important;
+            font-size: 12px !important;
+          }
+
+          .checkoutBtn {
+            min-height: 58px !important;
+            border-radius: 999px !important;
+            font-size: 11px !important;
+            letter-spacing: 0.16em !important;
+            padding: 0 14px !important;
+          }
+
+          .toast {
+            bottom: calc(98px + env(safe-area-inset-bottom)) !important;
+            padding: 12px 16px !important;
+            font-size: 11px !important;
+            letter-spacing: 0.06em !important;
+            line-height: 1.45 !important;
+          }
+        }
+
+        @media (max-width: 390px) {
+          .cartDrawer {
+            left: 10px !important;
+            right: 10px !important;
+            padding: 16px !important;
+          }
+
+          .cartHeader h3 {
+            font-size: 31px !important;
+          }
+
+          .checkoutBtn {
+            font-size: 10px !important;
+          }
+        }
+
+
       `}</style>
 
       <div className="scrollProgress" style={{ width: `${scrollProgress}%` }} />
@@ -11303,6 +11605,11 @@ export default function App() {
             </form>
 
             {offerStatus && <span className="offerStatus">{offerStatus}</span>}
+
+            <div className="offerCodeBox" aria-label="Private offer code">
+              <span>{isArabic ? "كود الخصم" : "Private code"}</span>
+              <strong>GRAZIA10</strong>
+            </div>
 
             <button className="offerNoThanks" onClick={() => closeOfferPopup(true)}>
               {isArabic ? "ليس الآن" : "No thanks"}
@@ -12655,6 +12962,14 @@ export default function App() {
                   </div>
                 </div>
               ))}
+            </div>
+          )}
+
+          {cart.length > 0 && (
+            <div className="cartSummaryBox">
+              <div><span>{isArabic ? "الإجمالي قبل الخصم" : "Subtotal"}</span><strong>EGP {cartSubtotal.toLocaleString()}</strong></div>
+              {privateOfferActive && <div className="discountRow"><span>{isArabic ? "خصم GRAZIA10" : "GRAZIA10 private offer"}</span><strong>- EGP {cartDiscount.toLocaleString()}</strong></div>}
+              <div className="totalRow"><span>{isArabic ? "الإجمالي" : "Pre-order total"}</span><strong>EGP {cartTotalAfterDiscount.toLocaleString()}</strong></div>
             </div>
           )}
 
