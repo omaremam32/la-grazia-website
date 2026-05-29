@@ -2686,7 +2686,9 @@ export default function App() {
       return;
     }
 
-    if (!session?.user || !accountUser) {
+    const activeSession = await getActiveSupabaseSession();
+
+    if (!activeSession?.user || !accountUser) {
       setAuthMode("signIn");
       setSignInOpen(true);
       setToast(isArabic ? "سجلي الدخول أولاً لحفظ الحجز المسبق ومتابعته." : "Please sign in first to save and track your pre-order.");
@@ -2765,7 +2767,7 @@ export default function App() {
         const { data: orderData, error: orderError } = await supabase
           .from("orders")
           .insert({
-            user_id: session.user.id,
+            user_id: activeSession.user.id,
             order_reference: orderReference,
             total_amount: totalAmount,
             currency: "EGP",
@@ -2789,7 +2791,7 @@ export default function App() {
         if (!orderError && orderData?.id) {
           const orderItems = cart.map((item) => ({
             order_id: orderData.id,
-            user_id: session.user.id,
+            user_id: activeSession.user.id,
             product_name: item.product.name,
             product_image: item.product.image,
             size: item.size,
@@ -2847,7 +2849,7 @@ export default function App() {
             console.error("Pre-order confirmation email failed:", emailError);
           }
 
-          fetchUserOrders(session.user.id);
+          fetchUserOrders(activeSession.user.id);
         } else {
           console.error(orderError);
         }
