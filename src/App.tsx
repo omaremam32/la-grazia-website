@@ -1455,26 +1455,43 @@ export default function App() {
 
   const lineBreak = String.fromCharCode(10);
 
-  const orderLines = cart
-    .map((item, index) => {
-      const sizeText = isLaGraziaSilkScarf(item.product.name) ? "" : ` - Size: ${item.size}`;
-      return `${index + 1}. ${item.product.name} - ${item.product.price}${sizeText} - Color: ${item.color} - Qty: ${item.quantity}`;
-    })
-    .join(lineBreak);
+  function formatLuxuryPreOrderItem(item: CartItem, index: number) {
+    const sizeLine = isLaGraziaSilkScarf(item.product.name) ? "" : `${lineBreak}Size: ${item.size}`;
+
+    return `${index + 1}. ${item.product.name} — ${item.product.price}${sizeLine}${lineBreak}Color: ${item.color}${lineBreak}Quantity: ${item.quantity}`;
+  }
+
+  function createLuxuryPreOrderMessage(items: CartItem[]) {
+    const itemWord = items.length === 1 ? "piece" : "pieces";
+    const selectedWord = items.length === 1 ? "piece" : "pieces";
+    const luxuryOrderLines = items
+      .map((item, index) => formatLuxuryPreOrderItem(item, index))
+      .join(`${lineBreak}${lineBreak}`);
+
+    return (
+      "Hello La Grazia Milano," +
+      lineBreak +
+      lineBreak +
+      `I would love to reserve the following ${itemWord} from the upcoming La Grazia Atelier Collection:` +
+      lineBreak +
+      lineBreak +
+      luxuryOrderLines +
+      lineBreak +
+      lineBreak +
+      "I understand that all orders placed before the official launch are treated as pre-orders, and that my reservation will be confirmed once the countdown ends and the collection officially goes live." +
+      lineBreak +
+      lineBreak +
+      `Kindly assist me with the pre-order confirmation, expected delivery details, and the next steps to secure my selected ${selectedWord}.` +
+      lineBreak +
+      lineBreak +
+      "Thank you."
+    );
+  }
 
   const cartMessage =
     cart.length > 0
-      ? "Hello La Grazia, I would like to pre-order:" +
-        lineBreak +
-        lineBreak +
-        orderLines +
-        lineBreak +
-        lineBreak +
-        "I understand that all orders placed before launch are pre-orders until the countdown finishes and the collection officially launches." +
-        lineBreak +
-        lineBreak +
-        "Please send me pre-order and delivery details."
-      : "Hello La Grazia, I want to ask about pre-ordering the new collection.";
+      ? createLuxuryPreOrderMessage(cart)
+      : "Hello La Grazia Milano, I would love to ask about reserving a piece from the upcoming La Grazia Atelier Collection.";
 
   useEffect(() => {
     const timer = window.setTimeout(() => setLoading(false), 4300);
@@ -12557,9 +12574,14 @@ export default function App() {
               <a
                 className="primaryBtn"
                 href={createWhatsAppLink(
-                  isLaGraziaSilkScarf(selectedProduct.name)
-                    ? `Hello La Grazia, I would like to pre-order ${selectedProduct.name}. Color: ${selectedColor}. Quantity: ${quantity}. Price range: ${selectedProduct.price}. I understand this is a pre-order until the countdown finishes and the collection officially launches. Please send me pre-order and delivery details.`
-                    : `Hello La Grazia, I would like to pre-order ${selectedProduct.name}. Size: ${selectedSize}. Color: ${selectedColor}. Quantity: ${quantity}. Price range: ${selectedProduct.price}. I understand this is a pre-order until the countdown finishes and the collection officially launches. Please send me pre-order and delivery details.`
+                  createLuxuryPreOrderMessage([
+                    {
+                      product: selectedProduct,
+                      size: isLaGraziaSilkScarf(selectedProduct.name) ? "One Size" : selectedSize,
+                      color: selectedColor,
+                      quantity,
+                    },
+                  ])
                 )}
                 target="_blank"
                 rel="noreferrer"
