@@ -256,7 +256,7 @@ const supabase =
         auth: {
           storageKey: LAGRAZIA_AUTH_STORAGE_KEY,
           persistSession: true,
-          autoRefreshToken: false,
+          autoRefreshToken: true,
           detectSessionInUrl: true,
           flowType: "pkce",
           storage: typeof window !== "undefined" ? window.localStorage : undefined,
@@ -2688,12 +2688,14 @@ export default function App() {
 
     const activeSession = await getActiveSupabaseSession();
 
-    if (!activeSession?.user || !accountUser) {
+    if (!accountUser) {
       setAuthMode("signIn");
       setSignInOpen(true);
       setToast(isArabic ? "سجلي الدخول أولاً لحفظ الحجز المسبق ومتابعته." : "Please sign in first to save and track your pre-order.");
       return;
     }
+
+    const checkoutUserId = activeSession?.user?.id || accountUser.id;
 
     try {
       setPaymentLoading(true);
@@ -2702,7 +2704,7 @@ export default function App() {
         name: item.product.name,
         price: item.product.minPrice,
         quantity: item.quantity,
-        description: `${item.product.name} - Size: ${item.size} - Color: ${item.color}`,
+        description: isLaGraziaSilkScarf(item.product.name) ? `${item.product.name} - Color: ${item.color}` : `${item.product.name} - Size: ${item.size} - Color: ${item.color}`,
       }));
 
       const totalAmount = cart.reduce((total, item) => total + item.product.minPrice * item.quantity, 0);
@@ -2767,7 +2769,7 @@ export default function App() {
         const { data: orderData, error: orderError } = await supabase
           .from("orders")
           .insert({
-            user_id: activeSession.user.id,
+            user_id: checkoutUserId,
             order_reference: orderReference,
             total_amount: totalAmount,
             currency: "EGP",
@@ -2791,10 +2793,10 @@ export default function App() {
         if (!orderError && orderData?.id) {
           const orderItems = cart.map((item) => ({
             order_id: orderData.id,
-            user_id: activeSession.user.id,
+            user_id: checkoutUserId,
             product_name: item.product.name,
             product_image: item.product.image,
-            size: item.size,
+            size: isLaGraziaSilkScarf(item.product.name) ? null : item.size,
             color: item.color,
             quantity: item.quantity,
             unit_price: item.product.minPrice,
@@ -2849,7 +2851,7 @@ export default function App() {
             console.error("Pre-order confirmation email failed:", emailError);
           }
 
-          fetchUserOrders(activeSession.user.id);
+          fetchUserOrders(checkoutUserId);
         } else {
           console.error(orderError);
         }
