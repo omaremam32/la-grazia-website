@@ -222,6 +222,7 @@ const ADMIN_EMAILS = ["omaromohamed2003@gmail.com", "yazedhani28@gmail.com"].map
 );
 
 const LAGRAZIA_AUTH_STORAGE_KEY = "lagrazia-supabase-auth-v4";
+const LAGRAZIA_OFFER_STORAGE_KEY = "lagrazia-private-offer-v1";
 
 function clearOldSupabaseAuthStorage() {
   if (typeof window === "undefined") return;
@@ -1046,14 +1047,6 @@ function MenuIcon() {
   );
 }
 
-function UserIcon() {
-  return (
-    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-      <path d="M20 21a8 8 0 0 0-16 0" />
-      <circle cx="12" cy="8" r="4" />
-    </svg>
-  );
-}
 
 function WhatsAppIcon() {
   return (
@@ -1284,6 +1277,10 @@ export default function App() {
   const [newsletterEmail, setNewsletterEmail] = useState("");
   const [newsletterStatus, setNewsletterStatus] = useState("");
   const [privateListLoading, setPrivateListLoading] = useState(false);
+  const [offerPopupOpen, setOfferPopupOpen] = useState(false);
+  const [offerEmail, setOfferEmail] = useState("");
+  const [offerStatus, setOfferStatus] = useState("");
+  const [offerSubmitting, setOfferSubmitting] = useState(false);
 
   const [toast, setToast] = useState("");
   const [scrollProgress, setScrollProgress] = useState(0);
@@ -1495,6 +1492,26 @@ export default function App() {
 
   useEffect(() => {
     const timer = window.setTimeout(() => setLoading(false), 4300);
+    return () => window.clearTimeout(timer);
+  }, []);
+
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+
+    const savedOfferEmail = window.localStorage.getItem(LAGRAZIA_OFFER_STORAGE_KEY) || "";
+
+    if (savedOfferEmail && savedOfferEmail.includes("@")) {
+      setOfferEmail(savedOfferEmail);
+      return;
+    }
+
+    const dismissed = window.localStorage.getItem(`${LAGRAZIA_OFFER_STORAGE_KEY}-dismissed`);
+    if (dismissed) return;
+
+    const timer = window.setTimeout(() => {
+      setOfferPopupOpen(true);
+    }, 2200);
+
     return () => window.clearTimeout(timer);
   }, []);
 
@@ -2697,6 +2714,68 @@ export default function App() {
     }
   }
 
+
+  function getSavedOfferEmail() {
+    if (typeof window === "undefined") return "";
+
+    const savedOfferEmail = window.localStorage.getItem(LAGRAZIA_OFFER_STORAGE_KEY) || "";
+    return savedOfferEmail.includes("@") ? savedOfferEmail : "";
+  }
+
+  function closeOfferPopup(dismiss = true) {
+    setOfferPopupOpen(false);
+
+    if (dismiss && typeof window !== "undefined") {
+      window.localStorage.setItem(`${LAGRAZIA_OFFER_STORAGE_KEY}-dismissed`, "true");
+    }
+  }
+
+  async function handleOfferSubmit(event: React.FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+
+    const cleanEmail = offerEmail.trim().toLowerCase();
+
+    if (!cleanEmail.includes("@") || !cleanEmail.includes(".")) {
+      setOfferStatus(isArabic ? "من فضلك اكتبي بريد إلكتروني صحيح." : "Please enter a valid email address.");
+      return;
+    }
+
+    setOfferSubmitting(true);
+    setOfferStatus("");
+
+    try {
+      if (typeof window !== "undefined") {
+        window.localStorage.setItem(LAGRAZIA_OFFER_STORAGE_KEY, cleanEmail);
+        window.localStorage.setItem(`${LAGRAZIA_OFFER_STORAGE_KEY}-dismissed`, "true");
+      }
+
+      setNewsletterEmail(cleanEmail);
+
+      await fetch("/api/send-private-list-email", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          email: cleanEmail,
+          customerName: accountUser?.name || "La Grazia Client",
+          customerPhone: accountUser?.phone || null,
+          preferredStyle: selectedMood || "Italian elegance",
+          language,
+        }),
+      }).catch((error) => {
+        console.error("Private offer email failed:", error);
+      });
+
+      setOfferStatus(isArabic ? "تم تسجيل بريدك في قائمة لا غراتسيا الخاصة." : "Your private access has been saved.");
+      setToast(isArabic ? "تم حفظ بريدك للقائمة الخاصة" : "Private access saved");
+
+      window.setTimeout(() => closeOfferPopup(false), 700);
+    } finally {
+      setOfferSubmitting(false);
+    }
+  }
+
   async function handlePayNow() {
     if (cart.length === 0) {
       setToast(t.emptyBag);
@@ -2704,15 +2783,16 @@ export default function App() {
     }
 
     const activeSession = await getActiveSupabaseSession();
+    const guestEmail = offerEmail.trim().toLowerCase() || getSavedOfferEmail() || newsletterEmail.trim().toLowerCase();
 
-    if (!accountUser) {
-      setAuthMode("signIn");
-      setSignInOpen(true);
-      setToast(isArabic ? "سجلي الدخول أولاً لحفظ الحجز المسبق ومتابعته." : "Please sign in first to save and track your pre-order.");
+    if (!accountUser && (!guestEmail || !guestEmail.includes("@"))) {
+      setOfferPopupOpen(true);
+      setOfferStatus(isArabic ? "اكتبي بريدك للحصول على الوصول الخاص وإكمال الحجز المسبق." : "Add your email to receive private access and continue your pre-order.");
+      setToast(isArabic ? "اكتبي بريدك لإكمال الحجز المسبق." : "Add your email to continue the pre-order.");
       return;
     }
 
-    const checkoutUserId = activeSession?.user?.id || accountUser.id;
+    const checkoutUserId = activeSession?.user?.id || accountUser?.id || null;
 
     try {
       setPaymentLoading(true);
@@ -2726,16 +2806,16 @@ export default function App() {
 
       const totalAmount = cart.reduce((total, item) => total + item.product.minPrice * item.quantity, 0);
       const deliveryAddress = defaultAddress;
-      const checkoutName = deliveryAddress?.full_name || accountUser.name;
+      const checkoutName = deliveryAddress?.full_name || accountUser?.name || "La Grazia Client";
       const nameParts = checkoutName.trim().split(" ").filter(Boolean);
       const firstName = nameParts[0] || "La";
       const lastName = nameParts.slice(1).join(" ") || "Grazia";
-      const checkoutPhone = deliveryAddress?.phone || accountUser.phone || `+${WHATSAPP_NUMBER}`;
-      const checkoutCity = deliveryAddress?.city || accountUser.city || "Cairo";
-      const checkoutStreet = [deliveryAddress?.area, deliveryAddress?.street, accountUser.addressLine].filter(Boolean).join(" - ") || "Cairo";
-      const checkoutBuilding = deliveryAddress?.building || accountUser.building || "1";
-      const checkoutFloor = deliveryAddress?.floor || accountUser.floor || "1";
-      const checkoutApartment = deliveryAddress?.apartment || accountUser.apartment || "1";
+      const checkoutPhone = deliveryAddress?.phone || accountUser?.phone || `+${WHATSAPP_NUMBER}`;
+      const checkoutCity = deliveryAddress?.city || accountUser?.city || "Cairo";
+      const checkoutStreet = [deliveryAddress?.area, deliveryAddress?.street, accountUser?.addressLine].filter(Boolean).join(" - ") || "Cairo";
+      const checkoutBuilding = deliveryAddress?.building || accountUser?.building || "1";
+      const checkoutFloor = deliveryAddress?.floor || accountUser?.floor || "1";
+      const checkoutApartment = deliveryAddress?.apartment || accountUser?.apartment || "1";
 
       const response = await fetch("/api/create-paymob-payment", {
         method: "POST",
@@ -2747,7 +2827,7 @@ export default function App() {
           customer: {
             firstName,
             lastName,
-            email: accountUser.email || BRAND_EMAIL,
+            email: accountUser?.email || guestEmail || BRAND_EMAIL,
             phone: checkoutPhone,
             city: checkoutCity,
             street: checkoutStreet,
@@ -2780,7 +2860,7 @@ export default function App() {
         return;
       }
 
-      if (supabase) {
+      if (supabase && checkoutUserId) {
         const orderReference = data.orderReference || `LG-${Date.now()}`;
 
         const { data: orderData, error: orderError } = await supabase
@@ -2794,15 +2874,15 @@ export default function App() {
             order_status: "Pending Payment",
             paymob_checkout_url: checkoutUrl,
             customer_name: checkoutName,
-            customer_email: accountUser.email,
+            customer_email: accountUser?.email || guestEmail || BRAND_EMAIL,
             customer_phone: checkoutPhone,
             delivery_city: checkoutCity,
-            delivery_area: deliveryAddress?.area || accountUser.area || "",
+            delivery_area: deliveryAddress?.area || accountUser?.area || "",
             delivery_street: checkoutStreet,
             delivery_building: checkoutBuilding,
             delivery_floor: checkoutFloor,
             delivery_apartment: checkoutApartment,
-            delivery_notes: deliveryAddress?.delivery_notes || accountUser.deliveryNotes || "",
+            delivery_notes: deliveryAddress?.delivery_notes || accountUser?.deliveryNotes || "",
           })
           .select("id")
           .single();
@@ -2841,17 +2921,17 @@ export default function App() {
                 },
                 customer: {
                   name: checkoutName,
-                  email: accountUser.email,
+                  email: accountUser?.email || guestEmail || BRAND_EMAIL,
                   phone: checkoutPhone,
                 },
                 address: {
                   city: checkoutCity,
-                  area: deliveryAddress?.area || accountUser.area || "",
+                  area: deliveryAddress?.area || accountUser?.area || "",
                   street: checkoutStreet,
                   building: checkoutBuilding,
                   floor: checkoutFloor,
                   apartment: checkoutApartment,
-                  notes: deliveryAddress?.delivery_notes || accountUser.deliveryNotes || "",
+                  notes: deliveryAddress?.delivery_notes || accountUser?.deliveryNotes || "",
                 },
                 items: orderItems.map((item) => ({
                   productName: item.product_name,
@@ -2868,7 +2948,7 @@ export default function App() {
             console.error("Pre-order confirmation email failed:", emailError);
           }
 
-          fetchUserOrders(checkoutUserId);
+          if (checkoutUserId) fetchUserOrders(checkoutUserId);
         } else {
           console.error(orderError);
         }
@@ -10968,6 +11048,177 @@ export default function App() {
         }
 
 
+
+
+        .offerBackdrop {
+          position: fixed;
+          inset: 0;
+          z-index: 90;
+          display: grid;
+          place-items: center;
+          padding: 22px;
+          background: rgba(35, 27, 21, 0.48);
+          backdrop-filter: blur(9px);
+        }
+
+        .offerPanel {
+          position: relative;
+          width: min(720px, calc(100vw - 32px));
+          padding: clamp(34px, 5vw, 54px) clamp(22px, 5vw, 62px);
+          border-radius: 18px;
+          background: #fffaf1;
+          border: 1px solid rgba(194, 160, 98, 0.28);
+          box-shadow: 0 32px 95px rgba(36, 25, 17, 0.34);
+          text-align: center;
+          color: #281d18;
+        }
+
+        .darkMode .offerPanel {
+          background: #1f1712;
+          border-color: rgba(226, 195, 139, 0.26);
+          color: #fff8ef;
+        }
+
+        .offerClose {
+          position: absolute;
+          top: 18px;
+          right: 22px;
+          border: 0;
+          background: transparent;
+          color: #b08c4e;
+          font-size: 34px;
+          line-height: 1;
+          cursor: pointer;
+          font-family: Georgia, serif;
+        }
+
+        .offerLogo {
+          display: inline-flex;
+          flex-direction: column;
+          gap: 4px;
+          margin-bottom: 24px;
+          color: #caa46a;
+          letter-spacing: 0.22em;
+        }
+
+        .offerLogo span {
+          font-family: Georgia, 'Times New Roman', serif;
+          font-size: clamp(26px, 4vw, 39px);
+          letter-spacing: 0.18em;
+        }
+
+        .offerLogo small {
+          font-size: 10px;
+          letter-spacing: 0.42em;
+        }
+
+        .offerPanel h3 {
+          margin: 0 0 8px;
+          font-size: clamp(24px, 4vw, 34px);
+          line-height: 1.1;
+          text-transform: uppercase;
+          letter-spacing: 0.08em;
+          color: #d0ab6b;
+        }
+
+        .offerPanel p {
+          margin: 0 auto 24px;
+          max-width: 520px;
+          color: #6f5b4d;
+          font-size: 15px;
+          line-height: 1.7;
+        }
+
+        .darkMode .offerPanel p {
+          color: #e8d6bd;
+        }
+
+        .offerForm {
+          display: grid;
+          gap: 14px;
+          width: 100%;
+        }
+
+        .offerForm input {
+          width: 100%;
+          min-height: 58px;
+          border-radius: 16px;
+          border: 1px solid rgba(194, 160, 98, 0.26);
+          background: rgba(255, 255, 255, 0.72);
+          color: #2f2118;
+          padding: 0 24px;
+          font-size: 15px;
+          outline: none;
+        }
+
+        .darkMode .offerForm input {
+          background: rgba(255, 250, 241, 0.08);
+          color: #fff8ef;
+        }
+
+        .offerForm input:focus {
+          border-color: #b08c4e;
+          box-shadow: 0 0 0 4px rgba(176, 140, 78, 0.12);
+        }
+
+        .offerForm button {
+          width: 100%;
+          min-height: 58px;
+          border: 0;
+          border-radius: 16px;
+          background: linear-gradient(135deg, #d7bc8b, #b08c4e);
+          color: #fffaf1;
+          font-weight: 800;
+          letter-spacing: 0.14em;
+          text-transform: uppercase;
+          cursor: pointer;
+          box-shadow: 0 18px 45px rgba(176, 140, 78, 0.24);
+        }
+
+        .offerForm button:disabled {
+          opacity: 0.65;
+          cursor: wait;
+        }
+
+        .offerStatus {
+          display: block;
+          margin-top: 14px;
+          color: #8b6f38;
+          font-size: 13px;
+          line-height: 1.5;
+        }
+
+        .offerNoThanks {
+          margin-top: 18px;
+          border: 0;
+          background: transparent;
+          color: #3b2b20;
+          text-decoration: underline;
+          cursor: pointer;
+          font-size: 14px;
+        }
+
+        .darkMode .offerNoThanks {
+          color: #fff8ef;
+        }
+
+        @media (max-width: 640px) {
+          .offerPanel {
+            padding: 34px 20px 30px;
+            border-radius: 22px;
+          }
+
+          .offerPanel h3 {
+            font-size: 21px;
+            letter-spacing: 0.06em;
+          }
+
+          .offerForm input,
+          .offerForm button {
+            min-height: 54px;
+          }
+        }
+
       `}</style>
 
       <div className="scrollProgress" style={{ width: `${scrollProgress}%` }} />
@@ -10983,6 +11234,47 @@ export default function App() {
       )}
 
       {toast && <div className="toast">{toast}</div>}
+
+      {offerPopupOpen && (
+        <div className="offerBackdrop" onClick={() => closeOfferPopup(true)}>
+          <div className="offerPanel" onClick={(event) => event.stopPropagation()}>
+            <button className="offerClose" onClick={() => closeOfferPopup(true)} aria-label="Close private offer">
+              ×
+            </button>
+
+            <div className="offerLogo">
+              <span>LA GRAZIA</span>
+              <small>MILANO</small>
+            </div>
+
+            <h3>{isArabic ? "احصلي على وصول خاص قبل الإطلاق" : "Get 10% off your first pre-order"}</h3>
+            <p>{isArabic ? "انضمي إلى القائمة الخاصة واحصلي على وصول مبكر للقطع قبل الإطلاق الرسمي." : "Join the private La Grazia list and unlock early access before the official launch."}</p>
+
+            <form className="offerForm" onSubmit={handleOfferSubmit}>
+              <input
+                type="email"
+                value={offerEmail}
+                onChange={(event) => {
+                  setOfferEmail(event.target.value);
+                  setOfferStatus("");
+                }}
+                placeholder={isArabic ? "اكتبي بريدك الإلكتروني" : "Enter your email address"}
+                autoComplete="email"
+              />
+
+              <button type="submit" disabled={offerSubmitting}>
+                {offerSubmitting ? (isArabic ? "جاري الحفظ..." : "Saving...") : (isArabic ? "احصلي على الوصول الخاص" : "Claim private access")}
+              </button>
+            </form>
+
+            {offerStatus && <span className="offerStatus">{offerStatus}</span>}
+
+            <button className="offerNoThanks" onClick={() => closeOfferPopup(true)}>
+              {isArabic ? "ليس الآن" : "No thanks"}
+            </button>
+          </div>
+        </div>
+      )}
 
       {signInOpen && (
         <div className="signInBackdrop" onClick={() => setSignInOpen(false)}>
@@ -11354,18 +11646,18 @@ export default function App() {
                     setCartOpen(false);
                     window.scrollTo({ top: 0, behavior: "smooth" });
                   } else {
-                    setAuthMode("signIn");
-                    setSignInOpen(true);
+                    setOfferPopupOpen(true);
+                    setOfferStatus("");
                   }
                 }}
-                aria-label={accountUser ? t.myAccount : t.signIn}
+                aria-label={accountUser ? t.myAccount : (isArabic ? "القائمة الخاصة" : "Private list")}
               >
                 <span className="accountShortName">
                   <span className="accountAvatar" aria-hidden="true">
-                    {accountUser ? accountInitials : <UserIcon />}
+                    {accountUser ? accountInitials : "VIP"}
                   </span>
                   <span className="accountDesktopLabel">
-                    {accountUser ? t.myAccount : t.signIn}
+                    {accountUser ? t.myAccount : (isArabic ? "خاص" : "VIP")}
                   </span>
                 </span>
               </button>
