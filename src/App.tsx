@@ -3311,7 +3311,7 @@ export default function App() {
           display: flex;
           width: max-content;
           align-items: center;
-          animation: topBarMarquee 22s linear infinite;
+          animation: topBarMarquee 36s linear infinite;
           will-change: transform;
         }
 
@@ -6913,7 +6913,7 @@ export default function App() {
           }
 
           .topBarTrack {
-            animation-duration: 18s;
+            animation-duration: 30s;
           }
 
           .topBarItem {
