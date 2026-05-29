@@ -810,8 +810,8 @@ const text = {
     myAccount: "My Account",
     signInTitle: "La Grazia Account",
     signUpTitle: "Create Your Account",
-    signInText: "Sign in to save your details, speed up checkout, and receive private drop access.",
-    signUpText: "Create a La Grazia account to save your details, track your bag faster, and receive private drop access.",
+    signInText: "Sign in to access your Orders and Profile pages, save your details, and receive private drop access.",
+    signUpText: "Create a La Grazia account to unlock your Orders and Profile pages, save your details, and receive private drop access.",
     fullName: "Full name",
     phoneNumber: "Phone number",
     signInEmail: "Email address",
@@ -1505,7 +1505,7 @@ export default function App() {
       return;
     }
 
-    const dismissed = window.localStorage.getItem(`${LAGRAZIA_OFFER_STORAGE_KEY}-dismissed`);
+    const dismissed = window.sessionStorage.getItem(`${LAGRAZIA_OFFER_STORAGE_KEY}-dismissed`);
     if (dismissed) return;
 
     const timer = window.setTimeout(() => {
@@ -1657,6 +1657,31 @@ export default function App() {
       data.subscription.unsubscribe();
     };
   }, []);
+
+  useEffect(() => {
+    const openAccountFromHash = () => {
+      if (typeof window === "undefined") return;
+
+      const wantsAccount = window.location.hash.toLowerCase().includes("account");
+      if (!wantsAccount) return;
+
+      if (accountUser) {
+        setAccountPageOpen(true);
+        setAccountView("orders");
+        setSignInOpen(false);
+        fetchUserOrders(accountUser.id);
+        window.setTimeout(() => window.scrollTo({ top: 0, behavior: "smooth" }), 80);
+      } else {
+        setAuthMode("signIn");
+        setSignInOpen(true);
+      }
+    };
+
+    openAccountFromHash();
+    window.addEventListener("hashchange", openAccountFromHash);
+
+    return () => window.removeEventListener("hashchange", openAccountFromHash);
+  }, [accountUser]);
 
   async function handleSupabaseSession(nextSession: Session | null) {
     setSession(nextSession);
@@ -2726,7 +2751,7 @@ export default function App() {
     setOfferPopupOpen(false);
 
     if (dismiss && typeof window !== "undefined") {
-      window.localStorage.setItem(`${LAGRAZIA_OFFER_STORAGE_KEY}-dismissed`, "true");
+      window.sessionStorage.setItem(`${LAGRAZIA_OFFER_STORAGE_KEY}-dismissed`, "true");
     }
   }
 
@@ -2746,7 +2771,7 @@ export default function App() {
     try {
       if (typeof window !== "undefined") {
         window.localStorage.setItem(LAGRAZIA_OFFER_STORAGE_KEY, cleanEmail);
-        window.localStorage.setItem(`${LAGRAZIA_OFFER_STORAGE_KEY}-dismissed`, "true");
+        window.sessionStorage.setItem(`${LAGRAZIA_OFFER_STORAGE_KEY}-dismissed`, "true");
       }
 
       setNewsletterEmail(cleanEmail);
@@ -2767,7 +2792,7 @@ export default function App() {
         console.error("Private offer email failed:", error);
       });
 
-      setOfferStatus(isArabic ? "تم تسجيل بريدك في قائمة لا غراتسيا الخاصة." : "Your private access has been saved.");
+      setOfferStatus(isArabic ? "تم تسجيل بريدك في قائمة لا غراتسيا الخاصة." : "Your private access has been saved. Use code GRAZIA10 for 10% off your first pre-order.");
       setToast(isArabic ? "تم حفظ بريدك للقائمة الخاصة" : "Private access saved");
 
       window.setTimeout(() => closeOfferPopup(false), 700);
@@ -3016,10 +3041,17 @@ export default function App() {
             updated_at: new Date().toISOString(),
           });
 
-          await supabase.auth.setSession({
+          const { data: savedSignUpSessionData } = await supabase.auth.setSession({
             access_token: data.session.access_token,
             refresh_token: data.session.refresh_token,
           });
+
+          if (savedSignUpSessionData.session) {
+            await handleSupabaseSession(savedSignUpSessionData.session);
+            setAccountView("profile");
+            setAccountPageOpen(true);
+            window.setTimeout(() => window.scrollTo({ top: 0, behavior: "smooth" }), 80);
+          }
         }
 
         if (!data.session) {
@@ -3060,6 +3092,9 @@ export default function App() {
 
         await handleSupabaseSession(savedSessionData.session);
         setVerificationNotice("");
+        setAccountView("orders");
+        setAccountPageOpen(true);
+        window.setTimeout(() => window.scrollTo({ top: 0, behavior: "smooth" }), 80);
         setToast(t.signedInWelcome);
       }
 
@@ -11248,7 +11283,7 @@ export default function App() {
             </div>
 
             <h3>{isArabic ? "احصلي على وصول خاص قبل الإطلاق" : "Get 10% off your first pre-order"}</h3>
-            <p>{isArabic ? "انضمي إلى القائمة الخاصة واحصلي على وصول مبكر للقطع قبل الإطلاق الرسمي." : "Join the private La Grazia list and unlock early access before the official launch."}</p>
+            <p>{isArabic ? "انضمي إلى القائمة الخاصة واحصلي على وصول مبكر للقطع قبل الإطلاق الرسمي." : "Join the private La Grazia list and unlock early access before the official launch. Your first pre-order receives 10% off with code GRAZIA10."}</p>
 
             <form className="offerForm" onSubmit={handleOfferSubmit}>
               <input
@@ -11263,7 +11298,7 @@ export default function App() {
               />
 
               <button type="submit" disabled={offerSubmitting}>
-                {offerSubmitting ? (isArabic ? "جاري الحفظ..." : "Saving...") : (isArabic ? "احصلي على الوصول الخاص" : "Claim private access")}
+                {offerSubmitting ? (isArabic ? "جاري الحفظ..." : "Saving...") : (isArabic ? "احصلي على الوصول الخاص" : "Claim offer")}
               </button>
             </form>
 
@@ -11646,18 +11681,22 @@ export default function App() {
                     setCartOpen(false);
                     window.scrollTo({ top: 0, behavior: "smooth" });
                   } else {
-                    setOfferPopupOpen(true);
-                    setOfferStatus("");
+                    setAuthMode("signIn");
+                    setVerificationNotice("");
+                    setSignInOpen(true);
+                    setMenuOpen(false);
+                    setSearchOpen(false);
+                    setCartOpen(false);
                   }
                 }}
-                aria-label={accountUser ? t.myAccount : (isArabic ? "القائمة الخاصة" : "Private list")}
+                aria-label={accountUser ? t.myAccount : (isArabic ? "الحساب" : "Account")}
               >
                 <span className="accountShortName">
                   <span className="accountAvatar" aria-hidden="true">
-                    {accountUser ? accountInitials : "VIP"}
+                    {accountUser ? accountInitials : "AC"}
                   </span>
                   <span className="accountDesktopLabel">
-                    {accountUser ? t.myAccount : (isArabic ? "خاص" : "VIP")}
+                    {accountUser ? t.myAccount : (isArabic ? "الحساب" : "Account")}
                   </span>
                 </span>
               </button>
