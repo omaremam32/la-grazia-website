@@ -1632,6 +1632,21 @@ export default function App() {
   }, []);
 
   useEffect(() => {
+    if (typeof document === "undefined") return;
+
+    const shouldLockPage = searchOpen || offerPopupOpen;
+    const previousOverflow = document.body.style.overflow;
+
+    if (shouldLockPage) {
+      document.body.style.overflow = "hidden";
+    }
+
+    return () => {
+      document.body.style.overflow = previousOverflow;
+    };
+  }, [searchOpen, offerPopupOpen]);
+
+  useEffect(() => {
     if (!supabase) return;
 
     let cancelled = false;
@@ -11565,6 +11580,403 @@ export default function App() {
         }
 
 
+        /* =========================================================
+           FINAL FIX — LUXURY PRIVATE ACCESS POPUP + MOBILE SEARCH
+           ========================================================= */
+        .offerBackdrop {
+          z-index: 260 !important;
+          padding: clamp(14px, 4vw, 26px) !important;
+          background:
+            radial-gradient(circle at 50% 8%, rgba(215, 180, 111, 0.18), transparent 42%),
+            rgba(31, 23, 17, 0.62) !important;
+          backdrop-filter: blur(18px) saturate(1.05) !important;
+          -webkit-backdrop-filter: blur(18px) saturate(1.05) !important;
+        }
+
+        .offerPanel {
+          width: min(560px, calc(100vw - 32px)) !important;
+          overflow: hidden !important;
+          border-radius: 34px !important;
+          padding: clamp(38px, 5vw, 54px) clamp(24px, 5vw, 52px) clamp(28px, 4vw, 42px) !important;
+          background:
+            linear-gradient(180deg, rgba(255, 252, 246, 0.98) 0%, rgba(249, 241, 229, 0.98) 100%) !important;
+          border: 1px solid rgba(178, 139, 74, 0.34) !important;
+          box-shadow:
+            0 38px 90px rgba(26, 18, 13, 0.42),
+            inset 0 1px 0 rgba(255, 255, 255, 0.78) !important;
+        }
+
+        .offerPanel::before {
+          content: "";
+          position: absolute;
+          inset: 12px;
+          border-radius: 24px;
+          border: 1px solid rgba(178, 139, 74, 0.18);
+          pointer-events: none;
+        }
+
+        .offerClose {
+          top: 18px !important;
+          right: 22px !important;
+          width: 38px !important;
+          height: 38px !important;
+          border-radius: 999px !important;
+          display: grid !important;
+          place-items: center !important;
+          color: #9a7438 !important;
+          background: rgba(255, 249, 240, 0.72) !important;
+          border: 1px solid rgba(178, 139, 74, 0.20) !important;
+          font-size: 26px !important;
+          line-height: 1 !important;
+          z-index: 2 !important;
+        }
+
+        .offerLogo {
+          position: relative !important;
+          margin-bottom: 18px !important;
+          color: #b78f52 !important;
+        }
+
+        .offerLogo::after {
+          content: "";
+          display: block;
+          width: 54px;
+          height: 1px;
+          margin: 13px auto 0;
+          background: linear-gradient(90deg, transparent, rgba(178, 139, 74, 0.8), transparent);
+        }
+
+        .offerLogo span {
+          font-size: clamp(27px, 5.5vw, 38px) !important;
+          letter-spacing: 0.20em !important;
+          font-weight: 500 !important;
+        }
+
+        .offerLogo small {
+          letter-spacing: 0.46em !important;
+          opacity: 0.86 !important;
+        }
+
+        .offerEyebrow {
+          margin: 0 0 12px !important;
+          color: #ad8546 !important;
+          font-size: 10px !important;
+          letter-spacing: 0.28em !important;
+          line-height: 1.6 !important;
+          text-transform: uppercase !important;
+          font-weight: 700 !important;
+        }
+
+        .offerPanel h3 {
+          max-width: 420px !important;
+          margin: 0 auto 12px !important;
+          font-family: Georgia, "Times New Roman", serif !important;
+          font-size: clamp(28px, 5vw, 42px) !important;
+          font-weight: 500 !important;
+          line-height: 1.05 !important;
+          letter-spacing: -0.02em !important;
+          text-transform: none !important;
+          color: #2b1e16 !important;
+        }
+
+        .offerPanel p:not(.offerEyebrow) {
+          max-width: 460px !important;
+          margin: 0 auto 22px !important;
+          color: #725a46 !important;
+          font-size: 14.5px !important;
+          line-height: 1.72 !important;
+        }
+
+        .offerForm {
+          gap: 12px !important;
+        }
+
+        .offerForm input {
+          min-height: 58px !important;
+          border-radius: 999px !important;
+          background: rgba(255, 255, 255, 0.76) !important;
+          border-color: rgba(178, 139, 74, 0.28) !important;
+          box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.78) !important;
+          text-align: center !important;
+          color: #2b1e16 !important;
+        }
+
+        .offerForm input::placeholder {
+          color: rgba(74, 56, 43, 0.45) !important;
+        }
+
+        .offerForm button {
+          min-height: 58px !important;
+          border-radius: 999px !important;
+          background: linear-gradient(135deg, #241711 0%, #5f442f 52%, #b28b4a 100%) !important;
+          color: #fff8ec !important;
+          border: 1px solid rgba(215, 180, 111, 0.58) !important;
+          box-shadow: 0 16px 38px rgba(66, 43, 26, 0.24) !important;
+          letter-spacing: 0.18em !important;
+        }
+
+        .offerCodeBox {
+          width: min(360px, 100%) !important;
+          margin-top: 16px !important;
+          padding: 14px 18px !important;
+          border-radius: 999px !important;
+          background:
+            linear-gradient(180deg, rgba(255, 250, 243, 0.92), rgba(244, 232, 211, 0.72)) !important;
+          border: 1px solid rgba(178, 139, 74, 0.26) !important;
+          box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.70) !important;
+        }
+
+        .offerCodeBox span {
+          color: #8e6b35 !important;
+          font-size: 10px !important;
+          letter-spacing: 0.22em !important;
+        }
+
+        .offerCodeBox strong {
+          color: #2b1e16 !important;
+          font-size: 16px !important;
+          letter-spacing: 0.22em !important;
+        }
+
+        .offerNoThanks {
+          margin-top: 18px !important;
+          color: #5b4636 !important;
+          font-size: 13px !important;
+          text-decoration: none !important;
+          border-bottom: 1px solid rgba(91, 70, 54, 0.45) !important;
+          padding-bottom: 3px !important;
+        }
+
+        .darkMode .offerPanel {
+          background: linear-gradient(180deg, #241913 0%, #17100c 100%) !important;
+          color: #fff8ef !important;
+        }
+
+        .darkMode .offerPanel h3,
+        .darkMode .offerCodeBox strong {
+          color: #fff8ef !important;
+        }
+
+        .darkMode .offerPanel p:not(.offerEyebrow) {
+          color: #e7d4bd !important;
+        }
+
+        .darkMode .offerForm input {
+          background: rgba(255, 249, 240, 0.08) !important;
+          color: #fff8ef !important;
+        }
+
+        .darkMode .offerCodeBox {
+          background: rgba(255, 249, 240, 0.07) !important;
+        }
+
+        .darkMode .offerNoThanks {
+          color: #fff8ef !important;
+          border-bottom-color: rgba(255, 248, 239, 0.44) !important;
+        }
+
+        .searchOverlay {
+          background: #f7f1e8 !important;
+          backdrop-filter: none !important;
+          -webkit-backdrop-filter: none !important;
+          color: #2c1f18 !important;
+          overscroll-behavior: contain !important;
+        }
+
+        .darkMode .searchOverlay {
+          background: #211713 !important;
+          color: #fff9f0 !important;
+        }
+
+        .searchOverlayTop {
+          position: sticky !important;
+          top: 0 !important;
+          z-index: 8 !important;
+          background: #fff9f0 !important;
+          border-bottom: 1px solid rgba(176, 138, 69, 0.22) !important;
+          box-shadow: 0 10px 28px rgba(36, 26, 20, 0.08) !important;
+        }
+
+        .darkMode .searchOverlayTop {
+          background: #2c1f18 !important;
+        }
+
+        .searchOverlayContent {
+          background: #f7f1e8 !important;
+        }
+
+        .darkMode .searchOverlayContent {
+          background: #211713 !important;
+        }
+
+        @media (max-width: 700px) {
+          .offerPanel {
+            width: 100% !important;
+            max-height: calc(100svh - 34px) !important;
+            padding: 34px 18px 24px !important;
+            border-radius: 30px !important;
+          }
+
+          .offerPanel::before {
+            inset: 9px !important;
+            border-radius: 23px !important;
+          }
+
+          .offerClose {
+            top: 15px !important;
+            right: 16px !important;
+            width: 34px !important;
+            height: 34px !important;
+            font-size: 24px !important;
+          }
+
+          .offerLogo {
+            margin-bottom: 14px !important;
+          }
+
+          .offerLogo span {
+            font-size: 27px !important;
+            letter-spacing: 0.16em !important;
+          }
+
+          .offerPanel h3 {
+            max-width: 320px !important;
+            font-size: 27px !important;
+            line-height: 1.05 !important;
+          }
+
+          .offerPanel p:not(.offerEyebrow) {
+            font-size: 13.2px !important;
+            line-height: 1.58 !important;
+            margin-bottom: 16px !important;
+          }
+
+          .offerForm input,
+          .offerForm button {
+            min-height: 52px !important;
+          }
+
+          .offerCodeBox {
+            padding: 13px 16px !important;
+          }
+
+          .searchOverlay {
+            z-index: 245 !important;
+            background: #f7f1e8 !important;
+            padding-bottom: env(safe-area-inset-bottom) !important;
+          }
+
+          .searchOverlayTop {
+            min-height: 76px !important;
+            grid-template-columns: 28px 1fr 42px !important;
+            padding: 10px 14px !important;
+            gap: 10px !important;
+          }
+
+          .searchOverlayTop input {
+            font-family: Georgia, "Times New Roman", serif !important;
+            font-size: 19px !important;
+            line-height: 1.15 !important;
+            letter-spacing: 0.01em !important;
+          }
+
+          .searchCloseBtn {
+            width: 42px !important;
+            height: 42px !important;
+            font-size: 28px !important;
+            background: #fffaf3 !important;
+          }
+
+          .searchOverlayContent {
+            width: 100% !important;
+            min-height: calc(100svh - 76px) !important;
+            padding: 20px 16px calc(150px + env(safe-area-inset-bottom)) !important;
+            background: #f7f1e8 !important;
+          }
+
+          .searchOverlayContent .sectionHead {
+            display: block !important;
+            margin: 0 0 16px !important;
+            padding: 18px 14px !important;
+            border-radius: 24px !important;
+            background: #fff9f0 !important;
+            border: 1px solid rgba(176, 138, 69, 0.18) !important;
+            box-shadow: 0 10px 28px rgba(36, 26, 20, 0.06) !important;
+            text-align: center !important;
+          }
+
+          .searchOverlayContent .eyebrow {
+            margin: 0 0 8px !important;
+            color: #aa833f !important;
+            -webkit-text-fill-color: #aa833f !important;
+            font-size: 10px !important;
+            letter-spacing: 0.22em !important;
+          }
+
+          .searchOverlayContent .sectionTitle {
+            color: #2c1f18 !important;
+            -webkit-text-fill-color: #2c1f18 !important;
+            font-size: clamp(25px, 7.2vw, 34px) !important;
+            line-height: 1.04 !important;
+            letter-spacing: -0.03em !important;
+            opacity: 1 !important;
+            word-break: break-word !important;
+          }
+
+          .searchQuickLinks {
+            justify-content: center !important;
+            gap: 10px !important;
+            margin: 0 !important;
+          }
+
+          .searchQuickLinks button {
+            min-height: 43px !important;
+            padding: 11px 15px !important;
+            background: #fff9f0 !important;
+            color: #2c1f18 !important;
+            border: 1px solid rgba(176, 138, 69, 0.24) !important;
+            box-shadow: 0 6px 18px rgba(36, 26, 20, 0.04) !important;
+            font-size: 10.5px !important;
+            letter-spacing: 0.12em !important;
+          }
+
+          .searchResultsGrid {
+            grid-template-columns: 1fr !important;
+            gap: 14px !important;
+            margin-top: 18px !important;
+          }
+
+          .searchResultCard {
+            background: #fff9f0 !important;
+            border-color: rgba(176, 138, 69, 0.18) !important;
+            border-radius: 22px !important;
+            box-shadow: 0 10px 28px rgba(36, 26, 20, 0.07) !important;
+          }
+
+          .searchResultCard img {
+            height: 300px !important;
+          }
+
+          .darkMode .searchOverlay,
+          .darkMode .searchOverlayContent {
+            background: #211713 !important;
+          }
+
+          .darkMode .searchOverlayContent .sectionHead,
+          .darkMode .searchQuickLinks button,
+          .darkMode .searchResultCard,
+          .darkMode .searchCloseBtn {
+            background: #2c1f18 !important;
+            color: #fff9f0 !important;
+          }
+
+          .darkMode .searchOverlayContent .sectionTitle {
+            color: #fff9f0 !important;
+            -webkit-text-fill-color: #fff9f0 !important;
+          }
+        }
+
+
       `}</style>
 
       <div className="scrollProgress" style={{ width: `${scrollProgress}%` }} />
@@ -11593,8 +12005,9 @@ export default function App() {
               <small>MILANO</small>
             </div>
 
-            <h3>{isArabic ? "احصلي على وصول خاص قبل الإطلاق" : "Get 10% off your first pre-order"}</h3>
-            <p>{isArabic ? "انضمي إلى القائمة الخاصة واحصلي على وصول مبكر للقطع قبل الإطلاق الرسمي." : "Join the private La Grazia list and unlock early access before the official launch. Your first pre-order receives 10% off with code GRAZIA10."}</p>
+            <p className="offerEyebrow">{isArabic ? "وصول خاص قبل الإطلاق" : "Private Atelier Access"}</p>
+            <h3>{isArabic ? "امتياز خاص لأول حجز مسبق" : "A private first pre-order privilege"}</h3>
+            <p>{isArabic ? "انضمي إلى قائمة لا غراتسيا الخاصة واحصلي على وصول مبكر قبل الإطلاق، مع امتياز 10% على أول حجز مسبق باستخدام كود GRAZIA10." : "Join the La Grazia private list for early access before the official launch, with a discreet 10% privilege on your first pre-order using code GRAZIA10."}</p>
 
             <form className="offerForm" onSubmit={handleOfferSubmit}>
               <input
@@ -11609,19 +12022,19 @@ export default function App() {
               />
 
               <button type="submit" disabled={offerSubmitting}>
-                {offerSubmitting ? (isArabic ? "جاري الحفظ..." : "Saving...") : (isArabic ? "احصلي على الوصول الخاص" : "Claim offer")}
+                {offerSubmitting ? (isArabic ? "جاري الحفظ..." : "Saving...") : (isArabic ? "فتح الوصول الخاص" : "Unlock private access")}
               </button>
             </form>
 
             {offerStatus && <span className="offerStatus">{offerStatus}</span>}
 
             <div className="offerCodeBox" aria-label="Private offer code">
-              <span>{isArabic ? "كود الخصم" : "Private code"}</span>
+              <span>{isArabic ? "كود الامتياز" : "Atelier code"}</span>
               <strong>GRAZIA10</strong>
             </div>
 
             <button className="offerNoThanks" onClick={() => closeOfferPopup(true)}>
-              {isArabic ? "ليس الآن" : "No thanks"}
+              {isArabic ? "المتابعة الآن" : "Continue browsing"}
             </button>
           </div>
         </div>
