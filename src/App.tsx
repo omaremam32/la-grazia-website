@@ -12260,6 +12260,78 @@ export default function App() {
         }
 
 
+        /* =========================================================
+           LUXURY PRODUCT POPUP SCROLLBAR FIX
+           Keeps product popup scrolling, but removes the heavy browser scrollbar.
+           ========================================================= */
+
+        .modal,
+        .modalInfo {
+          scrollbar-width: thin !important;
+          scrollbar-color: rgba(184, 138, 59, 0.46) transparent !important;
+          scrollbar-gutter: auto !important;
+        }
+
+        .modal::-webkit-scrollbar,
+        .modalInfo::-webkit-scrollbar {
+          width: 5px !important;
+          height: 5px !important;
+        }
+
+        .modal::-webkit-scrollbar-track,
+        .modalInfo::-webkit-scrollbar-track {
+          background: transparent !important;
+          margin: 22px 0 !important;
+        }
+
+        .modal::-webkit-scrollbar-thumb,
+        .modalInfo::-webkit-scrollbar-thumb {
+          background: linear-gradient(180deg, rgba(215, 180, 111, 0.58), rgba(92, 62, 38, 0.42)) !important;
+          border-radius: 999px !important;
+          border: 1px solid rgba(255, 249, 240, 0.76) !important;
+          background-clip: padding-box !important;
+        }
+
+        .modal::-webkit-scrollbar-thumb:hover,
+        .modalInfo::-webkit-scrollbar-thumb:hover {
+          background: linear-gradient(180deg, rgba(215, 180, 111, 0.82), rgba(92, 62, 38, 0.62)) !important;
+        }
+
+        .modal::-webkit-scrollbar-corner,
+        .modalInfo::-webkit-scrollbar-corner {
+          background: transparent !important;
+        }
+
+        .darkMode .modal,
+        .darkMode .modalInfo {
+          scrollbar-color: rgba(215, 180, 111, 0.55) transparent !important;
+        }
+
+        .darkMode .modal::-webkit-scrollbar-thumb,
+        .darkMode .modalInfo::-webkit-scrollbar-thumb {
+          background: linear-gradient(180deg, rgba(224, 182, 109, 0.70), rgba(255, 244, 223, 0.22)) !important;
+          border-color: rgba(32, 23, 17, 0.78) !important;
+        }
+
+        @media (max-width: 700px) {
+          .modal,
+          .modalInfo {
+            scrollbar-width: thin !important;
+          }
+
+          .modal::-webkit-scrollbar,
+          .modalInfo::-webkit-scrollbar {
+            width: 3px !important;
+            height: 3px !important;
+          }
+
+          .modal::-webkit-scrollbar-track,
+          .modalInfo::-webkit-scrollbar-track {
+            margin: 18px 0 !important;
+          }
+        }
+
+
       `}</style>
 
       <div className="scrollProgress" style={{ width: `${scrollProgress}%` }} />
