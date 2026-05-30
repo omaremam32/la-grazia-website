@@ -1684,19 +1684,54 @@ export default function App() {
   }, []);
 
   useEffect(() => {
-    if (typeof document === "undefined") return;
+    if (typeof window === "undefined" || typeof document === "undefined") return;
 
-    const shouldLockPage = searchOpen || offerPopupOpen;
-    const previousOverflow = document.body.style.overflow;
+    const shouldLockPage = Boolean(selectedProduct) || searchOpen || offerPopupOpen;
+    const body = document.body;
+    const html = document.documentElement;
+
+    const lockPageScroll = () => {
+      if (body.dataset.lagraziaScrollLocked === "true") return;
+
+      const scrollY = window.scrollY || html.scrollTop || body.scrollTop || 0;
+
+      body.dataset.lagraziaScrollLocked = "true";
+      body.dataset.lagraziaScrollY = String(scrollY);
+
+      body.style.position = "fixed";
+      body.style.top = `-${scrollY}px`;
+      body.style.left = "0";
+      body.style.right = "0";
+      body.style.width = "100%";
+      body.style.overflow = "hidden";
+      html.style.overflow = "hidden";
+    };
+
+    const unlockPageScroll = () => {
+      if (body.dataset.lagraziaScrollLocked !== "true") return;
+
+      const savedScrollY = Number(body.dataset.lagraziaScrollY || "0");
+
+      body.style.position = "";
+      body.style.top = "";
+      body.style.left = "";
+      body.style.right = "";
+      body.style.width = "";
+      body.style.overflow = "";
+      html.style.overflow = "";
+
+      delete body.dataset.lagraziaScrollLocked;
+      delete body.dataset.lagraziaScrollY;
+
+      window.scrollTo(0, savedScrollY);
+    };
 
     if (shouldLockPage) {
-      document.body.style.overflow = "hidden";
+      lockPageScroll();
+    } else {
+      unlockPageScroll();
     }
-
-    return () => {
-      document.body.style.overflow = previousOverflow;
-    };
-  }, [searchOpen, offerPopupOpen]);
+  }, [selectedProduct, searchOpen, offerPopupOpen]);
 
   useEffect(() => {
     if (!supabase) return;
@@ -5081,6 +5116,9 @@ export default function App() {
           z-index: 80;
           background: rgba(36, 26, 20, 0.58);
           animation: overlayFade 0.28s ease both;
+          overflow-y: auto;
+          overscroll-behavior: contain;
+          -webkit-overflow-scrolling: touch;
         }
 
         .menuOverlay { display: flex; }
@@ -5614,6 +5652,7 @@ export default function App() {
           background: #fff9f0;
           border-radius: 32px;
           overflow: hidden;
+          overscroll-behavior: contain;
           border: 1px solid rgba(176, 138, 69, 0.30);
           box-shadow: 0 30px 90px rgba(0,0,0,0.34);
         }
@@ -5637,6 +5676,8 @@ export default function App() {
         .modalInfo {
           padding: 30px;
           overflow-y: auto;
+          overscroll-behavior: contain;
+          -webkit-overflow-scrolling: touch;
           max-height: 84vh;
           text-align: center;
         }
@@ -10859,6 +10900,8 @@ export default function App() {
             max-height: 92vh !important;
             grid-template-columns: 1fr !important;
             overflow-y: auto !important;
+            overscroll-behavior: contain !important;
+            -webkit-overflow-scrolling: touch !important;
           }
 
           .modalImage {
