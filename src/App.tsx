@@ -2824,6 +2824,7 @@ export default function App() {
 
       setOfferStatus(isArabic ? "تم تسجيل بريدك في قائمة لا غراتسيا الخاصة. كودك: GRAZIA10" : "Your private access has been saved. Code GRAZIA10 is now applied for 10% off your first pre-order.");
       setToast(isArabic ? "تم تفعيل خصم ١٠٪" : "10% private offer applied");
+      closeOfferPopup(false);
     } finally {
       setOfferSubmitting(false);
     }
@@ -11703,6 +11704,11 @@ export default function App() {
 
         .offerForm input::placeholder {
           color: rgba(74, 56, 43, 0.45) !important;
+        }
+
+        .offerForm input:focus::placeholder {
+          color: transparent !important;
+          opacity: 0 !important;
         }
 
         .offerForm button {
