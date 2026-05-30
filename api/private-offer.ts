@@ -215,20 +215,10 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   } catch (error) {
     console.error("Private offer API error:", error);
 
-    const errorDetails =
-  error instanceof Error
-    ? error.message
-    : typeof error === "object" && error !== null
-      ? JSON.stringify(error, null, 2)
-      : String(error);
-
-return res.status(500).json({
-  ok: false,
-  status: "error",
-  error: errorDetails,
-  debug: {
-    hasSupabaseUrl: Boolean(process.env.SUPABASE_URL),
-    hasServiceRoleKey: Boolean(process.env.SUPABASE_SERVICE_ROLE_KEY),
-    supabaseUrlStartsCorrectly: String(process.env.SUPABASE_URL || "").startsWith("https://"),
-  },
-});
+    return res.status(500).json({
+      ok: false,
+      status: "error",
+      error: "Private offer API error",
+    });
+  }
+}
