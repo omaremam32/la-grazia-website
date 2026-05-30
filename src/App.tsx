@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useLayoutEffect, useMemo, useState } from "react";
 import { Analytics } from "@vercel/analytics/react";
 import { createClient, type Session } from "@supabase/supabase-js";
 
@@ -1299,7 +1299,33 @@ export default function App() {
   const isArabic = language === "AR";
   const t = text[language];
 
+  useLayoutEffect(() => {
+    if (typeof window === "undefined") return;
+
+    const viewportMeta = document.querySelector<HTMLMetaElement>('meta[name="viewport"]');
+    const viewportContent = "width=device-width, initial-scale=1, viewport-fit=cover";
+
+    if (viewportMeta) {
+      viewportMeta.setAttribute("content", viewportContent);
+    } else {
+      const meta = document.createElement("meta");
+      meta.name = "viewport";
+      meta.content = viewportContent;
+      document.head.appendChild(meta);
+    }
+
+    if ("scrollRestoration" in window.history) {
+      window.history.scrollRestoration = "manual";
+    }
+
+    window.scrollTo(0, 0);
+    document.documentElement.scrollTop = 0;
+    document.body.scrollTop = 0;
+  }, []);
+
   useEffect(() => {
+    if (typeof window === "undefined") return;
+
     if ("scrollRestoration" in window.history) {
       window.history.scrollRestoration = "manual";
     }
@@ -1312,7 +1338,9 @@ export default function App() {
 
     scrollToPageTop();
 
-    const initialScrollTimer = window.setTimeout(scrollToPageTop, 80);
+    const initialScrollTimers = [0, 60, 160, 360, 700, 1100, 1600].map((delay) =>
+      window.setTimeout(scrollToPageTop, delay)
+    );
 
     const handleBeforeUnload = () => {
       if ("scrollRestoration" in window.history) {
@@ -1320,21 +1348,30 @@ export default function App() {
       }
 
       window.scrollTo(0, 0);
+      document.documentElement.scrollTop = 0;
+      document.body.scrollTop = 0;
     };
 
-    const handlePageShow = (event: PageTransitionEvent) => {
-      if (event.persisted) {
-        scrollToPageTop();
-      }
+    const handlePageShow = () => {
+      scrollToPageTop();
+      window.setTimeout(scrollToPageTop, 120);
+      window.setTimeout(scrollToPageTop, 450);
+    };
+
+    const handleLoad = () => {
+      scrollToPageTop();
+      window.setTimeout(scrollToPageTop, 250);
     };
 
     window.addEventListener("beforeunload", handleBeforeUnload);
     window.addEventListener("pageshow", handlePageShow);
+    window.addEventListener("load", handleLoad);
 
     return () => {
-      window.clearTimeout(initialScrollTimer);
+      initialScrollTimers.forEach((timer) => window.clearTimeout(timer));
       window.removeEventListener("beforeunload", handleBeforeUnload);
       window.removeEventListener("pageshow", handlePageShow);
+      window.removeEventListener("load", handleLoad);
     };
   }, []);
 
