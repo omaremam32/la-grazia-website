@@ -222,7 +222,8 @@ const ADMIN_EMAILS = ["omaromohamed2003@gmail.com", "yazedhani28@gmail.com"].map
 );
 
 const LAGRAZIA_AUTH_STORAGE_KEY = "lagrazia-supabase-auth-v4";
-const LAGRAZIA_OFFER_STORAGE_KEY = "lagrazia-private-offer-v3";
+const LAGRAZIA_OFFER_STORAGE_KEY = "lagrazia-private-offer-v4";
+const LAGRAZIA_OFFER_DISMISS_STORAGE_KEY = "lagrazia-private-offer-dismissed-v5";
 
 function clearOldSupabaseAuthStorage() {
   if (typeof window === "undefined") return;
@@ -1031,8 +1032,8 @@ function SearchIcon() {
 function BagIcon() {
   return (
     <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-      <path d="M6 8h12l-1 12H7L6 8Z" />
-      <path d="M9 8a3 3 0 0 1 6 0" />
+      <path d="M6.5 8.5h11v10.8c0 .9-.7 1.7-1.7 1.7H8.2c-.9 0-1.7-.7-1.7-1.7V8.5Z" />
+      <path d="M9 8.5V7a3 3 0 0 1 6 0v1.5" />
     </svg>
   );
 }
@@ -1554,10 +1555,9 @@ export default function App() {
 
     if (savedOfferEmail && savedOfferEmail.includes("@")) {
       setOfferEmail(savedOfferEmail);
-      return;
     }
 
-    const dismissed = window.sessionStorage.getItem(`${LAGRAZIA_OFFER_STORAGE_KEY}-dismissed`);
+    const dismissed = window.sessionStorage.getItem(LAGRAZIA_OFFER_DISMISS_STORAGE_KEY);
     if (dismissed) return;
 
     const timer = window.setTimeout(() => {
@@ -2818,7 +2818,7 @@ export default function App() {
     setOfferPopupOpen(false);
 
     if (dismiss && typeof window !== "undefined") {
-      window.sessionStorage.setItem(`${LAGRAZIA_OFFER_STORAGE_KEY}-dismissed`, "true");
+      window.sessionStorage.setItem(LAGRAZIA_OFFER_DISMISS_STORAGE_KEY, "true");
     }
   }
 
@@ -2838,7 +2838,7 @@ export default function App() {
     try {
       if (typeof window !== "undefined") {
         window.localStorage.setItem(LAGRAZIA_OFFER_STORAGE_KEY, cleanEmail);
-        window.sessionStorage.setItem(`${LAGRAZIA_OFFER_STORAGE_KEY}-dismissed`, "true");
+        window.sessionStorage.setItem(LAGRAZIA_OFFER_DISMISS_STORAGE_KEY, "true");
       }
 
       setNewsletterEmail(cleanEmail);
