@@ -1037,6 +1037,15 @@ function BagIcon() {
   );
 }
 
+function AccountIcon() {
+  return (
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M20 21a8 8 0 0 0-16 0" />
+      <circle cx="12" cy="7" r="4" />
+    </svg>
+  );
+}
+
 function MenuIcon() {
   return (
     <svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round">
@@ -12000,7 +12009,7 @@ export default function App() {
               >
                 <span className="accountShortName">
                   <span className="accountAvatar" aria-hidden="true">
-                    {accountUser ? accountInitials : "AC"}
+                    {accountUser ? accountInitials : <AccountIcon />}
                   </span>
                   <span className="accountDesktopLabel">
                     {accountUser ? t.myAccount : (isArabic ? "الحساب" : "Account")}
