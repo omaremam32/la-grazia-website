@@ -224,6 +224,17 @@ const ADMIN_EMAILS = ["omaromohamed2003@gmail.com", "yazedhani28@gmail.com"].map
 const LAGRAZIA_AUTH_STORAGE_KEY = "lagrazia-supabase-auth-v4";
 const LAGRAZIA_OFFER_STORAGE_KEY = "lagrazia-private-offer-v4";
 const LAGRAZIA_OFFER_DISMISS_STORAGE_KEY = "lagrazia-private-offer-dismissed-v5";
+const PRIVATE_OFFER_CODE = "GRAZIA10";
+
+type PrivateOfferStatus = "unknown" | "unclaimed" | "claimed" | "redeemed" | "used" | "error";
+
+type PrivateOfferApiResponse = {
+  ok?: boolean;
+  status?: PrivateOfferStatus;
+  canUse?: boolean;
+  message?: string;
+  error?: string;
+};
 
 function clearOldSupabaseAuthStorage() {
   if (typeof window === "undefined") return;
@@ -1291,6 +1302,7 @@ export default function App() {
   const [offerEmail, setOfferEmail] = useState("");
   const [offerStatus, setOfferStatus] = useState("");
   const [offerSubmitting, setOfferSubmitting] = useState(false);
+  const [privateOfferStatus, setPrivateOfferStatus] = useState<PrivateOfferStatus>("unknown");
 
   const [toast, setToast] = useState("");
   const [scrollProgress, setScrollProgress] = useState(0);
@@ -1500,7 +1512,9 @@ export default function App() {
   const lineBreak = String.fromCharCode(10);
   const savedPrivateOfferEmail = getSavedOfferEmail();
   const activePrivateOfferEmail = offerEmail.trim().toLowerCase() || savedPrivateOfferEmail || newsletterEmail.trim().toLowerCase();
-  const privateOfferActive = Boolean(activePrivateOfferEmail && activePrivateOfferEmail.includes("@"));
+  const privateOfferActive =
+    privateOfferStatus === "claimed" &&
+    Boolean(activePrivateOfferEmail && activePrivateOfferEmail.includes("@"));
   const cartSubtotal = cart.reduce((total, item) => total + item.product.minPrice * item.quantity, 0);
   const cartDiscount = privateOfferActive ? Math.round(cartSubtotal * 0.10) : 0;
   const cartTotalAfterDiscount = Math.max(0, cartSubtotal - cartDiscount);
@@ -1555,6 +1569,7 @@ export default function App() {
 
     if (savedOfferEmail && savedOfferEmail.includes("@")) {
       setOfferEmail(savedOfferEmail);
+      void refreshPrivateOfferStatus(savedOfferEmail);
     }
 
     const dismissed = window.sessionStorage.getItem(LAGRAZIA_OFFER_DISMISS_STORAGE_KEY);
@@ -2807,6 +2822,123 @@ export default function App() {
   }
 
 
+  function normalizeOfferEmail(email: string) {
+    return email.trim().toLowerCase();
+  }
+
+  function isValidOfferEmail(email: string) {
+    const cleanEmail = normalizeOfferEmail(email);
+    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(cleanEmail);
+  }
+
+  async function callPrivateOfferApi(action: "status" | "claim" | "redeem" | "release", email: string, orderReference?: string): Promise<PrivateOfferApiResponse> {
+    const cleanEmail = normalizeOfferEmail(email);
+
+    if (!isValidOfferEmail(cleanEmail)) {
+      return { ok: false, status: "error", error: "Invalid email address" } as PrivateOfferApiResponse;
+    }
+
+    try {
+      const response = await fetch("/api/private-offer", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          action,
+          email: cleanEmail,
+          code: PRIVATE_OFFER_CODE,
+          orderReference,
+        }),
+      });
+
+      let data: PrivateOfferApiResponse = {};
+
+      try {
+        data = await response.json();
+      } catch {
+        data = {};
+      }
+
+      if (!response.ok || !data.ok) {
+        return {
+          ok: false,
+          status: data.status || "error",
+          error: data.error || data.message || "Private offer request failed",
+        };
+      }
+
+      return data;
+    } catch (error) {
+      console.error("Private offer request failed:", error);
+
+      return {
+        ok: false,
+        status: "error",
+        error: error instanceof Error ? error.message : "Private offer request failed",
+      };
+    }
+  }
+
+  async function refreshPrivateOfferStatus(email: string) {
+    const cleanEmail = normalizeOfferEmail(email);
+
+    if (!isValidOfferEmail(cleanEmail)) {
+      setPrivateOfferStatus("unknown");
+      return;
+    }
+
+    const result = await callPrivateOfferApi("status", cleanEmail);
+    const nextStatus = result.status || "unknown";
+
+    if (result.ok && (nextStatus === "claimed" || nextStatus === "used" || nextStatus === "unclaimed")) {
+      setPrivateOfferStatus(nextStatus);
+
+      if (nextStatus === "used" && typeof window !== "undefined") {
+        window.localStorage.removeItem(LAGRAZIA_OFFER_STORAGE_KEY);
+      }
+    } else {
+      setPrivateOfferStatus("unknown");
+    }
+  }
+
+  async function claimPrivateOffer(email: string): Promise<PrivateOfferApiResponse> {
+    const cleanEmail = normalizeOfferEmail(email);
+    const result = await callPrivateOfferApi("claim", cleanEmail);
+
+    if (result.ok && result.status === "claimed") {
+      setPrivateOfferStatus("claimed");
+    } else if (result.status === "used") {
+      setPrivateOfferStatus("used");
+    }
+
+    return result;
+  }
+
+  async function redeemPrivateOffer(email: string, orderReference: string): Promise<PrivateOfferApiResponse> {
+    const cleanEmail = normalizeOfferEmail(email);
+    const result = await callPrivateOfferApi("redeem", cleanEmail, orderReference);
+
+    if (result.ok && result.status === "redeemed") {
+      setPrivateOfferStatus("used");
+    } else if (result.status === "used") {
+      setPrivateOfferStatus("used");
+    }
+
+    return result;
+  }
+
+  async function releasePrivateOffer(email: string, orderReference: string): Promise<PrivateOfferApiResponse> {
+    const cleanEmail = normalizeOfferEmail(email);
+    const result = await callPrivateOfferApi("release", cleanEmail, orderReference);
+
+    if (result.ok && result.status === "claimed") {
+      setPrivateOfferStatus("claimed");
+    }
+
+    return result;
+  }
+
   function getSavedOfferEmail() {
     if (typeof window === "undefined") return "";
 
@@ -2825,9 +2957,9 @@ export default function App() {
   async function handleOfferSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
 
-    const cleanEmail = offerEmail.trim().toLowerCase();
+    const cleanEmail = normalizeOfferEmail(offerEmail);
 
-    if (!cleanEmail.includes("@") || !cleanEmail.includes(".")) {
+    if (!isValidOfferEmail(cleanEmail)) {
       setOfferStatus(isArabic ? "من فضلك اكتبي بريد إلكتروني صحيح." : "Please enter a valid email address.");
       return;
     }
@@ -2836,6 +2968,32 @@ export default function App() {
     setOfferStatus("");
 
     try {
+      const offerClaim = await claimPrivateOffer(cleanEmail);
+
+      if (!offerClaim.ok || offerClaim.status === "error") {
+        setOfferStatus(
+          isArabic
+            ? "لم نتمكن من تفعيل الامتياز الآن. حاولي مرة أخرى بعد قليل."
+            : "We could not activate the private privilege right now. Please try again in a moment."
+        );
+        setToast(offerClaim.error || "Private offer request failed");
+        return;
+      }
+
+      if (offerClaim.status === "used" || offerClaim.canUse === false) {
+        if (typeof window !== "undefined") {
+          window.localStorage.removeItem(LAGRAZIA_OFFER_STORAGE_KEY);
+        }
+
+        setOfferStatus(
+          isArabic
+            ? "تم استخدام امتياز أول حجز مسبق لهذا البريد من قبل."
+            : "This first pre-order privilege has already been used for this email."
+        );
+        setToast(isArabic ? "تم استخدام كود GRAZIA10 من قبل" : "GRAZIA10 was already used for this email");
+        return;
+      }
+
       if (typeof window !== "undefined") {
         window.localStorage.setItem(LAGRAZIA_OFFER_STORAGE_KEY, cleanEmail);
         window.sessionStorage.setItem(LAGRAZIA_OFFER_DISMISS_STORAGE_KEY, "true");
@@ -2859,8 +3017,12 @@ export default function App() {
         console.error("Private offer email failed:", error);
       });
 
-      setOfferStatus(isArabic ? "تم تسجيل بريدك في قائمة لا غراتسيا الخاصة. كودك: GRAZIA10" : "Your private access has been saved. Code GRAZIA10 is now applied for 10% off your first pre-order.");
-      setToast(isArabic ? "تم تفعيل خصم ١٠٪" : "10% private offer applied");
+      setOfferStatus(
+        isArabic
+          ? "تم تفعيل امتياز GRAZIA10 لأول حجز مسبق فقط."
+          : "GRAZIA10 is now secured for your first pre-order only."
+      );
+      setToast(isArabic ? "تم تفعيل امتياز أول حجز مسبق" : "First pre-order privilege secured");
       closeOfferPopup(false);
     } finally {
       setOfferSubmitting(false);
@@ -2884,11 +3046,38 @@ export default function App() {
     }
 
     const checkoutUserId = activeSession?.user?.id || accountUser?.id || null;
+    const cleanGuestEmail = normalizeOfferEmail(guestEmail);
+    const offerOrderReference = `LG-OFFER-${Date.now()}`;
+    let offerRedeemedForCheckout = false;
 
     try {
       setPaymentLoading(true);
 
-      const hasPrivateOfferDiscount = Boolean(guestEmail && guestEmail.includes("@"));
+      let hasPrivateOfferDiscount = false;
+
+      if (isValidOfferEmail(cleanGuestEmail)) {
+        const offerRedemption = await redeemPrivateOffer(cleanGuestEmail, offerOrderReference);
+
+        if (offerRedemption.ok && offerRedemption.status === "redeemed") {
+          hasPrivateOfferDiscount = true;
+          offerRedeemedForCheckout = true;
+
+          if (typeof window !== "undefined") {
+            window.localStorage.removeItem(LAGRAZIA_OFFER_STORAGE_KEY);
+          }
+        } else if (offerRedemption.status === "used") {
+          setToast(
+            isArabic
+              ? "تم استخدام امتياز GRAZIA10 لهذا البريد من قبل، لذلك سيستمر الطلب بدون الخصم."
+              : "GRAZIA10 has already been used for this email, so this pre-order will continue without the discount."
+          );
+
+          if (typeof window !== "undefined") {
+            window.localStorage.removeItem(LAGRAZIA_OFFER_STORAGE_KEY);
+          }
+        }
+      }
+
       const paymentItems = cart.map((item) => {
         const unitPrice = hasPrivateOfferDiscount ? Math.max(1, Math.round(item.product.minPrice * 0.90)) : item.product.minPrice;
 
@@ -2948,6 +3137,10 @@ export default function App() {
 
       if (!response.ok || !checkoutUrl) {
         console.error(data);
+
+        if (offerRedeemedForCheckout && isValidOfferEmail(cleanGuestEmail)) {
+          await releasePrivateOffer(cleanGuestEmail, offerOrderReference);
+        }
 
         if (window.location.hostname === "localhost") {
           setToast(t.paymentServerError || t.paymentError);
@@ -3059,6 +3252,10 @@ export default function App() {
       window.location.href = checkoutUrl;
     } catch (error) {
       console.error(error);
+
+      if (offerRedeemedForCheckout && isValidOfferEmail(cleanGuestEmail)) {
+        await releasePrivateOffer(cleanGuestEmail, offerOrderReference);
+      }
 
       if (window.location.hostname === "localhost") {
         setToast(t.paymentServerError || t.paymentError);
@@ -12050,7 +12247,7 @@ export default function App() {
 
             <p className="offerEyebrow">{isArabic ? "وصول خاص قبل الإطلاق" : "Private Atelier Access"}</p>
             <h3>{isArabic ? "امتياز خاص لأول حجز مسبق" : "A private first pre-order privilege"}</h3>
-            <p>{isArabic ? "انضمي إلى قائمة لا غراتسيا الخاصة واحصلي على وصول مبكر قبل الإطلاق، مع امتياز 10% على أول حجز مسبق باستخدام كود GRAZIA10." : "Join the La Grazia private list for early access before the official launch, with a discreet 10% privilege on your first pre-order using code GRAZIA10."}</p>
+            <p>{isArabic ? "انضمي إلى قائمة لا غراتسيا الخاصة واحصلي على وصول مبكر قبل الإطلاق، مع امتياز 10% صالح مرة واحدة فقط لأول حجز مسبق باستخدام كود GRAZIA10." : "Join the La Grazia private list for early access before the official launch, with a discreet 10% privilege valid once for your first pre-order using code GRAZIA10."}</p>
 
             <form className="offerForm" onSubmit={handleOfferSubmit}>
               <input
@@ -12073,7 +12270,7 @@ export default function App() {
 
             <div className="offerCodeBox" aria-label="Private offer code">
               <span>{isArabic ? "كود الامتياز" : "Atelier code"}</span>
-              <strong>GRAZIA10</strong>
+              <strong>{PRIVATE_OFFER_CODE}</strong>
             </div>
 
             <button className="offerNoThanks" onClick={() => closeOfferPopup(true)}>
