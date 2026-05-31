@@ -1316,16 +1316,16 @@ export default function App() {
 
   const offerCelebrationPieces = useMemo(
     () =>
-      Array.from({ length: 42 }, (_, index) => ({
+      Array.from({ length: 32 }, (_, index) => ({
         id: index,
-        label: index % 7 === 0 ? PRIVATE_OFFER_CODE : "10%",
-        left: `${(index * 23 + 7) % 100}%`,
-        delay: `${(index % 14) * 0.08}s`,
-        duration: `${2.8 + (index % 6) * 0.22}s`,
-        drift: `${index % 2 === 0 ? "" : "-"}${18 + (index % 9) * 5}px`,
-        rotate: `${index % 2 === 0 ? "" : "-"}${14 + (index % 10) * 4}deg`,
-        size: `${12 + (index % 5) * 2}px`,
-        opacity: `${0.45 + (index % 6) * 0.07}`,
+        label: index % 11 === 0 ? PRIVATE_OFFER_CODE : "10%",
+        left: `${(index * 29 + 6) % 100}%`,
+        delay: `${0.18 + (index % 16) * 0.13}s`,
+        duration: `${4.9 + (index % 7) * 0.28}s`,
+        drift: `${index % 2 === 0 ? "" : "-"}${26 + (index % 10) * 6}px`,
+        rotate: `${index % 2 === 0 ? "" : "-"}${8 + (index % 8) * 3}deg`,
+        size: `${11 + (index % 5) * 1.6}px`,
+        opacity: `${0.34 + (index % 7) * 0.045}`,
       })),
     []
   );
@@ -3084,7 +3084,7 @@ export default function App() {
       if (typeof window !== "undefined") {
         window.setTimeout(() => {
           closeOfferPopup(false);
-        }, 3200);
+        }, 5600);
       } else {
         closeOfferPopup(false);
       }
@@ -12361,68 +12361,146 @@ export default function App() {
         }
 
 
-        /* FINAL FIX — LUXURY PRIVATE OFFER SUCCESS ANIMATION */
+        /* FINAL FIX — ELEVATED LUXURY PRIVATE OFFER SUCCESS ANIMATION */
         .offerCelebrationLayer {
           position: fixed;
           inset: 0;
           z-index: 360;
           pointer-events: none;
           overflow: hidden;
+          isolation: isolate;
+        }
+
+        .offerCelebrationLayer::before {
+          content: "";
+          position: absolute;
+          inset: 0;
+          z-index: 0;
+          background:
+            radial-gradient(circle at 50% 18%, rgba(255, 248, 232, 0.34), transparent 34%),
+            radial-gradient(circle at 12% 82%, rgba(192, 145, 70, 0.14), transparent 28%),
+            radial-gradient(circle at 88% 76%, rgba(192, 145, 70, 0.12), transparent 26%);
+          opacity: 0;
+          animation: graziaCelebrationVeil 5.6s ease-in-out both;
         }
 
         .offerCelebrationLayer span {
           position: absolute;
-          top: -54px;
+          top: -74px;
           left: var(--offer-x);
+          z-index: 1;
+          display: inline-flex;
+          align-items: center;
+          justify-content: center;
+          min-width: 54px;
+          min-height: 30px;
+          padding: 7px 12px 6px;
+          border-radius: 999px;
+          border: 1px solid rgba(204, 165, 94, 0.32);
+          background:
+            linear-gradient(145deg, rgba(255, 252, 245, 0.72), rgba(238, 219, 184, 0.38)),
+            radial-gradient(circle at 30% 18%, rgba(255, 255, 255, 0.92), transparent 36%);
+          box-shadow:
+            0 16px 38px rgba(50, 34, 24, 0.10),
+            inset 0 0 0 1px rgba(255, 249, 236, 0.68),
+            inset 0 -8px 18px rgba(126, 83, 38, 0.08);
+          backdrop-filter: blur(5px);
+          -webkit-backdrop-filter: blur(5px);
           font-family: Georgia, "Times New Roman", serif;
           font-size: var(--offer-size);
-          letter-spacing: 0.16em;
-          color: rgba(196, 156, 84, var(--offer-opacity));
-          text-shadow: 0 10px 28px rgba(44, 31, 24, 0.12), 0 0 18px rgba(218, 186, 126, 0.28);
+          line-height: 1;
+          letter-spacing: 0.18em;
+          color: rgba(126, 83, 38, var(--offer-opacity));
+          text-shadow: 0 1px 0 rgba(255, 250, 239, 0.7), 0 10px 26px rgba(75, 47, 28, 0.12);
           white-space: nowrap;
           opacity: 0;
-          transform: translate3d(0, -40px, 0) rotate(0deg) scale(0.86);
-          animation: graziaOfferFall var(--offer-duration) cubic-bezier(0.16, 0.84, 0.36, 1) var(--offer-delay) forwards;
+          transform: translate3d(0, -48px, 0) rotate(0deg) scale(0.92);
+          animation: graziaOfferFall var(--offer-duration) cubic-bezier(0.2, 0.82, 0.28, 1) var(--offer-delay) forwards;
         }
 
-        .offerCelebrationLayer span:nth-child(3n) {
-          color: rgba(255, 247, 232, 0.74);
-          letter-spacing: 0.22em;
+        .offerCelebrationLayer span::before,
+        .offerCelebrationLayer span::after {
+          content: "";
+          position: absolute;
+          width: 5px;
+          height: 5px;
+          border-radius: 1px;
+          background: rgba(196, 156, 84, 0.5);
+          transform: rotate(45deg);
+          opacity: 0.55;
+        }
+
+        .offerCelebrationLayer span::before {
+          left: -12px;
+          top: 50%;
+        }
+
+        .offerCelebrationLayer span::after {
+          right: -12px;
+          top: 50%;
         }
 
         .offerCelebrationLayer span:nth-child(4n) {
+          min-width: 38px;
+          border-radius: 16px;
+          background: rgba(255, 248, 234, 0.54);
+          color: rgba(176, 140, 78, calc(var(--offer-opacity) + 0.12));
+          letter-spacing: 0.12em;
+          box-shadow: 0 12px 32px rgba(50, 34, 24, 0.08), inset 0 0 0 1px rgba(255, 255, 255, 0.52);
+        }
+
+        .offerCelebrationLayer span:nth-child(7n) {
+          min-width: 98px;
           font-family: Inter, system-ui, sans-serif;
+          font-size: calc(var(--offer-size) - 1px);
           font-weight: 700;
-          color: rgba(176, 140, 78, 0.58);
+          letter-spacing: 0.2em;
+          color: rgba(80, 48, 28, calc(var(--offer-opacity) + 0.08));
+        }
+
+        @keyframes graziaCelebrationVeil {
+          0% { opacity: 0; }
+          16% { opacity: 1; }
+          76% { opacity: 0.82; }
+          100% { opacity: 0; }
         }
 
         @keyframes graziaOfferFall {
           0% {
             opacity: 0;
-            transform: translate3d(0, -42px, 0) rotate(0deg) scale(0.82);
+            transform: translate3d(0, -52px, 0) rotate(0deg) scale(0.9);
+            filter: blur(2px);
           }
-          12% {
+          14% {
             opacity: 1;
+            filter: blur(0);
           }
-          78% {
-            opacity: 0.82;
+          54% {
+            opacity: 0.86;
+            transform: translate3d(calc(var(--offer-drift) * 0.36), 48vh, 0) rotate(calc(var(--offer-rotate) * 0.42)) scale(1);
           }
           100% {
             opacity: 0;
-            transform: translate3d(var(--offer-drift), 112vh, 0) rotate(var(--offer-rotate)) scale(1.02);
+            transform: translate3d(var(--offer-drift), 112vh, 0) rotate(var(--offer-rotate)) scale(0.98);
+            filter: blur(1px);
           }
         }
 
         .offerPanel {
-          animation: luxuryOfferEntrance 0.62s cubic-bezier(0.18, 0.86, 0.32, 1) both;
+          animation: luxuryOfferEntrance 0.78s cubic-bezier(0.18, 0.86, 0.32, 1) both;
           transform-origin: center;
         }
 
         @keyframes luxuryOfferEntrance {
           0% {
             opacity: 0;
-            transform: translateY(18px) scale(0.965);
-            filter: blur(6px);
+            transform: translateY(22px) scale(0.958);
+            filter: blur(8px);
+          }
+          72% {
+            opacity: 1;
+            transform: translateY(-2px) scale(1.006);
+            filter: blur(0);
           }
           100% {
             opacity: 1;
@@ -12436,21 +12514,17 @@ export default function App() {
         .offerForm,
         .offerCodeBox,
         .offerNoThanks {
-          animation: luxuryOfferContentIn 0.72s cubic-bezier(0.18, 0.86, 0.32, 1) both;
+          animation: luxuryOfferContentIn 0.78s cubic-bezier(0.18, 0.86, 0.32, 1) both;
         }
 
-        .offerForm {
-          animation-delay: 0.08s;
-        }
-
-        .offerCodeBox {
-          animation-delay: 0.14s;
-        }
+        .offerForm { animation-delay: 0.08s; }
+        .offerCodeBox { animation-delay: 0.16s; }
+        .offerNoThanks { animation-delay: 0.22s; }
 
         @keyframes luxuryOfferContentIn {
           0% {
             opacity: 0;
-            transform: translateY(12px);
+            transform: translateY(14px);
           }
           100% {
             opacity: 1;
@@ -12460,43 +12534,48 @@ export default function App() {
 
         .offerPanel.offerPanelUnlocked {
           overflow: hidden;
-          animation: luxuryOfferUnlockPanel 0.7s cubic-bezier(0.16, 0.84, 0.36, 1) both;
+          animation: luxuryOfferUnlockPanel 0.92s cubic-bezier(0.16, 0.84, 0.36, 1) both;
+        }
+
+        .offerPanel.offerPanelUnlocked::before {
+          content: "";
+          position: absolute;
+          inset: 16px;
+          z-index: 0;
+          pointer-events: none;
+          border-radius: 30px;
+          border: 1px solid rgba(196, 156, 84, 0.18);
+          opacity: 0;
+          animation: offerInnerFrameIn 1.1s ease both 0.1s;
         }
 
         .offerPanel.offerPanelUnlocked::after {
           content: "";
           position: absolute;
-          inset: -30%;
+          inset: -34%;
           z-index: 0;
           pointer-events: none;
-          background: radial-gradient(circle at 50% 34%, rgba(212, 174, 103, 0.26), transparent 34%), linear-gradient(115deg, transparent 32%, rgba(255, 248, 232, 0.5) 48%, transparent 62%);
-          animation: offerLuxuryShimmer 1.9s ease-in-out infinite;
+          background:
+            radial-gradient(circle at 50% 36%, rgba(212, 174, 103, 0.23), transparent 32%),
+            linear-gradient(112deg, transparent 34%, rgba(255, 248, 232, 0.62) 48%, transparent 62%);
+          animation: offerLuxuryShimmer 3.4s ease-in-out infinite;
         }
 
         @keyframes luxuryOfferUnlockPanel {
-          0% {
-            transform: translateY(10px) scale(0.98);
-          }
-          54% {
-            transform: translateY(0) scale(1.012);
-          }
-          100% {
-            transform: translateY(0) scale(1);
-          }
+          0% { opacity: 0; transform: translateY(18px) scale(0.972); filter: blur(7px); }
+          55% { opacity: 1; transform: translateY(-2px) scale(1.01); filter: blur(0); }
+          100% { opacity: 1; transform: translateY(0) scale(1); filter: blur(0); }
+        }
+
+        @keyframes offerInnerFrameIn {
+          0% { opacity: 0; transform: scale(0.96); }
+          100% { opacity: 1; transform: scale(1); }
         }
 
         @keyframes offerLuxuryShimmer {
-          0% {
-            transform: translateX(-18%) rotate(0deg);
-            opacity: 0.35;
-          }
-          50% {
-            opacity: 0.78;
-          }
-          100% {
-            transform: translateX(18%) rotate(0deg);
-            opacity: 0.35;
-          }
+          0% { transform: translateX(-20%) rotate(0deg); opacity: 0.28; }
+          42% { opacity: 0.72; }
+          100% { transform: translateX(20%) rotate(0deg); opacity: 0.28; }
         }
 
         .offerSuccessMoment {
@@ -12505,97 +12584,130 @@ export default function App() {
           display: grid;
           justify-items: center;
           text-align: center;
-          padding: 6px 0 2px;
+          padding: 12px 0 4px;
+        }
+
+        .offerSuccessMoment .offerEyebrow {
+          animation: offerSuccessTextIn 0.68s ease both 0.22s;
+        }
+
+        .offerSuccessMoment h3 {
+          animation: offerSuccessTitleIn 0.82s cubic-bezier(0.18, 0.86, 0.32, 1) both 0.38s;
+        }
+
+        .offerSuccessMoment p:not(.offerEyebrow) {
+          animation: offerSuccessTextIn 0.76s ease both 0.58s;
         }
 
         .offerSuccessSeal {
           position: relative;
-          width: 116px;
-          height: 116px;
+          width: 106px;
+          height: 106px;
           border-radius: 999px;
           display: grid;
           place-items: center;
-          margin: 0 auto 20px;
+          margin: 0 auto 22px;
           color: #fff9ee;
-          background: radial-gradient(circle at 34% 24%, #f7dfad 0%, #c79a49 42%, #6f4525 100%);
-          box-shadow: 0 18px 42px rgba(76, 49, 31, 0.28), inset 0 0 0 1px rgba(255, 248, 232, 0.58), inset 0 0 0 9px rgba(255, 248, 232, 0.13);
-          animation: offerSealRise 0.86s cubic-bezier(0.2, 0.92, 0.28, 1) both, offerSealGlow 1.8s ease-in-out infinite 0.86s;
+          background:
+            radial-gradient(circle at 32% 22%, #fff0c8 0%, #d6ad61 34%, #a06b2f 62%, #4b2b19 100%);
+          box-shadow:
+            0 24px 58px rgba(76, 49, 31, 0.24),
+            0 0 0 12px rgba(213, 177, 111, 0.08),
+            inset 0 0 0 1px rgba(255, 248, 232, 0.68),
+            inset 0 0 0 9px rgba(255, 248, 232, 0.12);
+          animation: offerSealRise 1.05s cubic-bezier(0.2, 0.92, 0.28, 1) both, offerSealGlow 2.7s ease-in-out infinite 1.05s;
         }
 
         .offerSuccessSeal::before,
         .offerSuccessSeal::after {
           content: "";
           position: absolute;
-          inset: -9px;
           border-radius: inherit;
-          border: 1px solid rgba(196, 156, 84, 0.22);
+          pointer-events: none;
+        }
+
+        .offerSuccessSeal::before {
+          inset: -8px;
+          border: 1px solid rgba(196, 156, 84, 0.26);
         }
 
         .offerSuccessSeal::after {
-          inset: -18px;
-          border-color: rgba(255, 248, 232, 0.3);
-          animation: offerSealRing 1.8s ease-out infinite;
+          inset: -20px;
+          border: 1px solid rgba(255, 248, 232, 0.28);
+          animation: offerSealRing 2.7s ease-out infinite 1.05s;
         }
 
         .offerSuccessSeal span {
-          font-family: Inter, system-ui, sans-serif;
-          font-size: 32px;
-          font-weight: 800;
-          letter-spacing: 0.08em;
-          text-shadow: 0 6px 16px rgba(44, 31, 24, 0.22);
+          font-family: Georgia, "Times New Roman", serif;
+          font-size: 34px;
+          font-weight: 600;
+          letter-spacing: 0.04em;
+          text-shadow: 0 6px 16px rgba(44, 31, 24, 0.28);
+        }
+
+        .offerSuccessLine {
+          width: min(260px, 78%);
+          height: 1px;
+          margin: 18px auto 2px;
+          overflow: hidden;
+          background: rgba(196, 156, 84, 0.16);
+        }
+
+        .offerSuccessLine::after {
+          content: "";
+          display: block;
+          width: 100%;
+          height: 100%;
+          transform-origin: left center;
+          background: linear-gradient(90deg, transparent, rgba(196, 156, 84, 0.82), transparent);
+          animation: offerSuccessLineFill 4.6s ease both 0.72s;
         }
 
         @keyframes offerSealRise {
-          0% {
-            opacity: 0;
-            transform: translateY(18px) scale(0.72) rotate(-6deg);
-          }
-          72% {
-            transform: translateY(-2px) scale(1.06) rotate(1deg);
-          }
-          100% {
-            opacity: 1;
-            transform: translateY(0) scale(1) rotate(0deg);
-          }
+          0% { opacity: 0; transform: translateY(20px) scale(0.72) rotate(-4deg); filter: blur(5px); }
+          62% { opacity: 1; transform: translateY(-3px) scale(1.055) rotate(0.8deg); filter: blur(0); }
+          100% { opacity: 1; transform: translateY(0) scale(1) rotate(0deg); filter: blur(0); }
         }
 
         @keyframes offerSealGlow {
           0%, 100% {
-            box-shadow: 0 18px 42px rgba(76, 49, 31, 0.28), inset 0 0 0 1px rgba(255, 248, 232, 0.58), inset 0 0 0 9px rgba(255, 248, 232, 0.13);
+            box-shadow: 0 24px 58px rgba(76, 49, 31, 0.24), 0 0 0 12px rgba(213, 177, 111, 0.08), inset 0 0 0 1px rgba(255, 248, 232, 0.68), inset 0 0 0 9px rgba(255, 248, 232, 0.12);
           }
           50% {
-            box-shadow: 0 22px 54px rgba(176, 140, 78, 0.34), inset 0 0 0 1px rgba(255, 248, 232, 0.72), inset 0 0 0 9px rgba(255, 248, 232, 0.18);
+            box-shadow: 0 28px 68px rgba(176, 140, 78, 0.28), 0 0 0 15px rgba(213, 177, 111, 0.11), inset 0 0 0 1px rgba(255, 248, 232, 0.82), inset 0 0 0 9px rgba(255, 248, 232, 0.17);
           }
         }
 
         @keyframes offerSealRing {
-          0% {
-            opacity: 0.65;
-            transform: scale(0.88);
-          }
-          100% {
-            opacity: 0;
-            transform: scale(1.18);
-          }
+          0% { opacity: 0.62; transform: scale(0.88); }
+          100% { opacity: 0; transform: scale(1.15); }
+        }
+
+        @keyframes offerSuccessTitleIn {
+          0% { opacity: 0; transform: translateY(14px) scale(0.98); filter: blur(5px); }
+          100% { opacity: 1; transform: translateY(0) scale(1); filter: blur(0); }
+        }
+
+        @keyframes offerSuccessTextIn {
+          0% { opacity: 0; transform: translateY(10px); }
+          100% { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes offerSuccessLineFill {
+          0% { transform: scaleX(0); opacity: 0; }
+          12% { opacity: 1; }
+          100% { transform: scaleX(1); opacity: 0.72; }
         }
 
         .offerPanel.offerPanelUnlocked .offerCodeBox {
           width: min(100%, 420px);
-          margin-top: 10px;
-          animation: offerCodeBoxGlow 1.15s ease-in-out both;
+          margin-top: 12px;
+          animation: offerCodeBoxGlow 1.2s ease-in-out both 0.78s;
         }
 
         @keyframes offerCodeBoxGlow {
-          0% {
-            opacity: 0;
-            transform: translateY(12px);
-            box-shadow: 0 0 0 rgba(176, 140, 78, 0);
-          }
-          100% {
-            opacity: 1;
-            transform: translateY(0);
-            box-shadow: 0 14px 32px rgba(176, 140, 78, 0.16);
-          }
+          0% { opacity: 0; transform: translateY(14px); box-shadow: 0 0 0 rgba(176, 140, 78, 0); }
+          100% { opacity: 1; transform: translateY(0); box-shadow: 0 16px 36px rgba(176, 140, 78, 0.16); }
         }
 
         @media (prefers-reduced-motion: reduce) {
@@ -12607,6 +12719,7 @@ export default function App() {
 
           .offerPanel,
           .offerPanel *,
+          .offerPanel::before,
           .offerPanel::after {
             animation: none !important;
           }
@@ -12665,12 +12778,14 @@ export default function App() {
 
                 <p className="offerEyebrow">{isArabic ? "تم تأمين الامتياز" : "Atelier privilege secured"}</p>
                 <h3>{isArabic ? "تم فتح الوصول الخاص" : "Private access unlocked"}</h3>
-                <p>{isArabic ? "تم حفظ كود GRAZIA10 لأول حجز مسبق فقط. سنعيدك للتصفح خلال لحظات." : "GRAZIA10 has been reserved for your first pre-order only. We will return you to the collection in a moment."}</p>
+                <p>{isArabic ? "تم حجز كود GRAZIA10 لأول حجز مسبق فقط. انتظري لحظة قصيرة وسنعيدك للتصفح." : "GRAZIA10 is now reserved for your first pre-order only. Stay for a brief moment while your private access is confirmed."}</p>
 
                 <div className="offerCodeBox" aria-label="Private offer code">
                   <span>{isArabic ? "كود الامتياز" : "Atelier code"}</span>
                   <strong>{PRIVATE_OFFER_CODE}</strong>
                 </div>
+
+                <div className="offerSuccessLine" aria-hidden="true" />
               </div>
             ) : (
               <>
