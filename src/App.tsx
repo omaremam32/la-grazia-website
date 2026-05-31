@@ -1302,6 +1302,8 @@ export default function App() {
   const [offerEmail, setOfferEmail] = useState("");
   const [offerStatus, setOfferStatus] = useState("");
   const [offerSubmitting, setOfferSubmitting] = useState(false);
+  const [offerJustUnlocked, setOfferJustUnlocked] = useState(false);
+  const [offerCelebrationOpen, setOfferCelebrationOpen] = useState(false);
   const [privateOfferStatus, setPrivateOfferStatus] = useState<PrivateOfferStatus>("unknown");
 
   const [toast, setToast] = useState("");
@@ -1311,6 +1313,22 @@ export default function App() {
 
   const isArabic = language === "AR";
   const t = text[language];
+
+  const offerCelebrationPieces = useMemo(
+    () =>
+      Array.from({ length: 42 }, (_, index) => ({
+        id: index,
+        label: index % 7 === 0 ? PRIVATE_OFFER_CODE : "10%",
+        left: `${(index * 23 + 7) % 100}%`,
+        delay: `${(index % 14) * 0.08}s`,
+        duration: `${2.8 + (index % 6) * 0.22}s`,
+        drift: `${index % 2 === 0 ? "" : "-"}${18 + (index % 9) * 5}px`,
+        rotate: `${index % 2 === 0 ? "" : "-"}${14 + (index % 10) * 4}deg`,
+        size: `${12 + (index % 5) * 2}px`,
+        opacity: `${0.45 + (index % 6) * 0.07}`,
+      })),
+    []
+  );
 
   useLayoutEffect(() => {
     if (typeof window === "undefined") return;
@@ -2983,6 +3001,8 @@ export default function App() {
 
   function closeOfferPopup(dismiss = true) {
     setOfferPopupOpen(false);
+    setOfferJustUnlocked(false);
+    setOfferCelebrationOpen(false);
 
     if (dismiss && typeof window !== "undefined") {
       window.sessionStorage.setItem(LAGRAZIA_OFFER_DISMISS_STORAGE_KEY, "true");
@@ -3057,8 +3077,17 @@ export default function App() {
           ? "تم تفعيل امتياز GRAZIA10 لأول حجز مسبق فقط."
           : "GRAZIA10 is now secured for your first pre-order only."
       );
+      setOfferJustUnlocked(true);
+      setOfferCelebrationOpen(true);
       setToast(isArabic ? "تم تفعيل امتياز أول حجز مسبق" : "First pre-order privilege secured");
-      closeOfferPopup(false);
+
+      if (typeof window !== "undefined") {
+        window.setTimeout(() => {
+          closeOfferPopup(false);
+        }, 3200);
+      } else {
+        closeOfferPopup(false);
+      }
     } finally {
       setOfferSubmitting(false);
     }
@@ -12332,6 +12361,258 @@ export default function App() {
         }
 
 
+        /* FINAL FIX — LUXURY PRIVATE OFFER SUCCESS ANIMATION */
+        .offerCelebrationLayer {
+          position: fixed;
+          inset: 0;
+          z-index: 360;
+          pointer-events: none;
+          overflow: hidden;
+        }
+
+        .offerCelebrationLayer span {
+          position: absolute;
+          top: -54px;
+          left: var(--offer-x);
+          font-family: Georgia, "Times New Roman", serif;
+          font-size: var(--offer-size);
+          letter-spacing: 0.16em;
+          color: rgba(196, 156, 84, var(--offer-opacity));
+          text-shadow: 0 10px 28px rgba(44, 31, 24, 0.12), 0 0 18px rgba(218, 186, 126, 0.28);
+          white-space: nowrap;
+          opacity: 0;
+          transform: translate3d(0, -40px, 0) rotate(0deg) scale(0.86);
+          animation: graziaOfferFall var(--offer-duration) cubic-bezier(0.16, 0.84, 0.36, 1) var(--offer-delay) forwards;
+        }
+
+        .offerCelebrationLayer span:nth-child(3n) {
+          color: rgba(255, 247, 232, 0.74);
+          letter-spacing: 0.22em;
+        }
+
+        .offerCelebrationLayer span:nth-child(4n) {
+          font-family: Inter, system-ui, sans-serif;
+          font-weight: 700;
+          color: rgba(176, 140, 78, 0.58);
+        }
+
+        @keyframes graziaOfferFall {
+          0% {
+            opacity: 0;
+            transform: translate3d(0, -42px, 0) rotate(0deg) scale(0.82);
+          }
+          12% {
+            opacity: 1;
+          }
+          78% {
+            opacity: 0.82;
+          }
+          100% {
+            opacity: 0;
+            transform: translate3d(var(--offer-drift), 112vh, 0) rotate(var(--offer-rotate)) scale(1.02);
+          }
+        }
+
+        .offerPanel {
+          animation: luxuryOfferEntrance 0.62s cubic-bezier(0.18, 0.86, 0.32, 1) both;
+          transform-origin: center;
+        }
+
+        @keyframes luxuryOfferEntrance {
+          0% {
+            opacity: 0;
+            transform: translateY(18px) scale(0.965);
+            filter: blur(6px);
+          }
+          100% {
+            opacity: 1;
+            transform: translateY(0) scale(1);
+            filter: blur(0);
+          }
+        }
+
+        .offerPanel h3,
+        .offerPanel p:not(.offerEyebrow),
+        .offerForm,
+        .offerCodeBox,
+        .offerNoThanks {
+          animation: luxuryOfferContentIn 0.72s cubic-bezier(0.18, 0.86, 0.32, 1) both;
+        }
+
+        .offerForm {
+          animation-delay: 0.08s;
+        }
+
+        .offerCodeBox {
+          animation-delay: 0.14s;
+        }
+
+        @keyframes luxuryOfferContentIn {
+          0% {
+            opacity: 0;
+            transform: translateY(12px);
+          }
+          100% {
+            opacity: 1;
+            transform: translateY(0);
+          }
+        }
+
+        .offerPanel.offerPanelUnlocked {
+          overflow: hidden;
+          animation: luxuryOfferUnlockPanel 0.7s cubic-bezier(0.16, 0.84, 0.36, 1) both;
+        }
+
+        .offerPanel.offerPanelUnlocked::after {
+          content: "";
+          position: absolute;
+          inset: -30%;
+          z-index: 0;
+          pointer-events: none;
+          background: radial-gradient(circle at 50% 34%, rgba(212, 174, 103, 0.26), transparent 34%), linear-gradient(115deg, transparent 32%, rgba(255, 248, 232, 0.5) 48%, transparent 62%);
+          animation: offerLuxuryShimmer 1.9s ease-in-out infinite;
+        }
+
+        @keyframes luxuryOfferUnlockPanel {
+          0% {
+            transform: translateY(10px) scale(0.98);
+          }
+          54% {
+            transform: translateY(0) scale(1.012);
+          }
+          100% {
+            transform: translateY(0) scale(1);
+          }
+        }
+
+        @keyframes offerLuxuryShimmer {
+          0% {
+            transform: translateX(-18%) rotate(0deg);
+            opacity: 0.35;
+          }
+          50% {
+            opacity: 0.78;
+          }
+          100% {
+            transform: translateX(18%) rotate(0deg);
+            opacity: 0.35;
+          }
+        }
+
+        .offerSuccessMoment {
+          position: relative;
+          z-index: 2;
+          display: grid;
+          justify-items: center;
+          text-align: center;
+          padding: 6px 0 2px;
+        }
+
+        .offerSuccessSeal {
+          position: relative;
+          width: 116px;
+          height: 116px;
+          border-radius: 999px;
+          display: grid;
+          place-items: center;
+          margin: 0 auto 20px;
+          color: #fff9ee;
+          background: radial-gradient(circle at 34% 24%, #f7dfad 0%, #c79a49 42%, #6f4525 100%);
+          box-shadow: 0 18px 42px rgba(76, 49, 31, 0.28), inset 0 0 0 1px rgba(255, 248, 232, 0.58), inset 0 0 0 9px rgba(255, 248, 232, 0.13);
+          animation: offerSealRise 0.86s cubic-bezier(0.2, 0.92, 0.28, 1) both, offerSealGlow 1.8s ease-in-out infinite 0.86s;
+        }
+
+        .offerSuccessSeal::before,
+        .offerSuccessSeal::after {
+          content: "";
+          position: absolute;
+          inset: -9px;
+          border-radius: inherit;
+          border: 1px solid rgba(196, 156, 84, 0.22);
+        }
+
+        .offerSuccessSeal::after {
+          inset: -18px;
+          border-color: rgba(255, 248, 232, 0.3);
+          animation: offerSealRing 1.8s ease-out infinite;
+        }
+
+        .offerSuccessSeal span {
+          font-family: Inter, system-ui, sans-serif;
+          font-size: 32px;
+          font-weight: 800;
+          letter-spacing: 0.08em;
+          text-shadow: 0 6px 16px rgba(44, 31, 24, 0.22);
+        }
+
+        @keyframes offerSealRise {
+          0% {
+            opacity: 0;
+            transform: translateY(18px) scale(0.72) rotate(-6deg);
+          }
+          72% {
+            transform: translateY(-2px) scale(1.06) rotate(1deg);
+          }
+          100% {
+            opacity: 1;
+            transform: translateY(0) scale(1) rotate(0deg);
+          }
+        }
+
+        @keyframes offerSealGlow {
+          0%, 100% {
+            box-shadow: 0 18px 42px rgba(76, 49, 31, 0.28), inset 0 0 0 1px rgba(255, 248, 232, 0.58), inset 0 0 0 9px rgba(255, 248, 232, 0.13);
+          }
+          50% {
+            box-shadow: 0 22px 54px rgba(176, 140, 78, 0.34), inset 0 0 0 1px rgba(255, 248, 232, 0.72), inset 0 0 0 9px rgba(255, 248, 232, 0.18);
+          }
+        }
+
+        @keyframes offerSealRing {
+          0% {
+            opacity: 0.65;
+            transform: scale(0.88);
+          }
+          100% {
+            opacity: 0;
+            transform: scale(1.18);
+          }
+        }
+
+        .offerPanel.offerPanelUnlocked .offerCodeBox {
+          width: min(100%, 420px);
+          margin-top: 10px;
+          animation: offerCodeBoxGlow 1.15s ease-in-out both;
+        }
+
+        @keyframes offerCodeBoxGlow {
+          0% {
+            opacity: 0;
+            transform: translateY(12px);
+            box-shadow: 0 0 0 rgba(176, 140, 78, 0);
+          }
+          100% {
+            opacity: 1;
+            transform: translateY(0);
+            box-shadow: 0 14px 32px rgba(176, 140, 78, 0.16);
+          }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+          .offerCelebrationLayer,
+          .offerCelebrationLayer span {
+            animation: none !important;
+            display: none !important;
+          }
+
+          .offerPanel,
+          .offerPanel *,
+          .offerPanel::after {
+            animation: none !important;
+          }
+        }
+
+
       `}</style>
 
       <div className="scrollProgress" style={{ width: `${scrollProgress}%` }} />
@@ -12346,51 +12627,92 @@ export default function App() {
         </div>
       )}
 
+      {offerCelebrationOpen && (
+        <div className="offerCelebrationLayer" aria-hidden="true">
+          {offerCelebrationPieces.map((piece) => (
+            <span
+              key={piece.id}
+              style={{
+                "--offer-x": piece.left,
+                "--offer-delay": piece.delay,
+                "--offer-duration": piece.duration,
+                "--offer-drift": piece.drift,
+                "--offer-rotate": piece.rotate,
+                "--offer-size": piece.size,
+                "--offer-opacity": piece.opacity,
+              } as React.CSSProperties}
+            >
+              {piece.label}
+            </span>
+          ))}
+        </div>
+      )}
+
       {toast && <div className="toast">{toast}</div>}
 
       {offerPopupOpen && (
         <div className="offerBackdrop" onClick={() => closeOfferPopup(true)}>
-          <div className="offerPanel" onClick={(event) => event.stopPropagation()}>
+          <div className={offerJustUnlocked ? "offerPanel offerPanelUnlocked" : "offerPanel"} onClick={(event) => event.stopPropagation()}>
             <button className="offerClose" onClick={() => closeOfferPopup(true)} aria-label="Close private offer">
               ×
             </button>
 
-            <div className="offerLogo">
-              <span>LA GRAZIA</span>
-              <small>MILANO</small>
-            </div>
+            {offerJustUnlocked ? (
+              <div className="offerSuccessMoment">
+                <div className="offerSuccessSeal">
+                  <span>10%</span>
+                </div>
 
-            <p className="offerEyebrow">{isArabic ? "وصول خاص قبل الإطلاق" : "Private Atelier Access"}</p>
-            <h3>{isArabic ? "امتياز خاص لأول حجز مسبق" : "A private first pre-order privilege"}</h3>
-            <p>{isArabic ? "انضمي إلى قائمة لا غراتسيا الخاصة واحصلي على وصول مبكر قبل الإطلاق، مع امتياز 10% صالح مرة واحدة فقط لأول حجز مسبق باستخدام كود GRAZIA10." : "Join the La Grazia private list for early access before the official launch, with a discreet 10% privilege valid once for your first pre-order using code GRAZIA10."}</p>
+                <p className="offerEyebrow">{isArabic ? "تم تأمين الامتياز" : "Atelier privilege secured"}</p>
+                <h3>{isArabic ? "تم فتح الوصول الخاص" : "Private access unlocked"}</h3>
+                <p>{isArabic ? "تم حفظ كود GRAZIA10 لأول حجز مسبق فقط. سنعيدك للتصفح خلال لحظات." : "GRAZIA10 has been reserved for your first pre-order only. We will return you to the collection in a moment."}</p>
 
-            <form className="offerForm" onSubmit={handleOfferSubmit}>
-              <input
-                type="email"
-                value={offerEmail}
-                onChange={(event) => {
-                  setOfferEmail(event.target.value);
-                  setOfferStatus("");
-                }}
-                placeholder={isArabic ? "اكتبي بريدك الإلكتروني" : "Enter your email address"}
-                autoComplete="email"
-              />
+                <div className="offerCodeBox" aria-label="Private offer code">
+                  <span>{isArabic ? "كود الامتياز" : "Atelier code"}</span>
+                  <strong>{PRIVATE_OFFER_CODE}</strong>
+                </div>
+              </div>
+            ) : (
+              <>
+                <div className="offerLogo">
+                  <span>LA GRAZIA</span>
+                  <small>MILANO</small>
+                </div>
 
-              <button type="submit" disabled={offerSubmitting}>
-                {offerSubmitting ? (isArabic ? "جاري الحفظ..." : "Saving...") : (isArabic ? "فتح الوصول الخاص" : "Unlock private access")}
-              </button>
-            </form>
+                <p className="offerEyebrow">{isArabic ? "وصول خاص قبل الإطلاق" : "Private Atelier Access"}</p>
+                <h3>{isArabic ? "امتياز خاص لأول حجز مسبق" : "A private first pre-order privilege"}</h3>
+                <p>{isArabic ? "انضمي إلى قائمة لا غراتسيا الخاصة واحصلي على وصول مبكر قبل الإطلاق، مع امتياز 10% صالح مرة واحدة فقط لأول حجز مسبق باستخدام كود GRAZIA10." : "Join the La Grazia private list for early access before the official launch, with a discreet 10% privilege valid once for your first pre-order using code GRAZIA10."}</p>
 
-            {offerStatus && <span className="offerStatus">{offerStatus}</span>}
+                <form className="offerForm" onSubmit={handleOfferSubmit}>
+                  <input
+                    type="email"
+                    value={offerEmail}
+                    onChange={(event) => {
+                      setOfferEmail(event.target.value);
+                      setOfferStatus("");
+                      setOfferJustUnlocked(false);
+                    }}
+                    placeholder={isArabic ? "اكتبي بريدك الإلكتروني" : "Enter your email address"}
+                    autoComplete="email"
+                  />
 
-            <div className="offerCodeBox" aria-label="Private offer code">
-              <span>{isArabic ? "كود الامتياز" : "Atelier code"}</span>
-              <strong>{PRIVATE_OFFER_CODE}</strong>
-            </div>
+                  <button type="submit" disabled={offerSubmitting}>
+                    {offerSubmitting ? (isArabic ? "جاري الحفظ..." : "Saving...") : (isArabic ? "فتح الوصول الخاص" : "Unlock private access")}
+                  </button>
+                </form>
 
-            <button className="offerNoThanks" onClick={() => closeOfferPopup(true)}>
-              {isArabic ? "المتابعة الآن" : "Continue browsing"}
-            </button>
+                {offerStatus && <span className="offerStatus">{offerStatus}</span>}
+
+                <div className="offerCodeBox" aria-label="Private offer code">
+                  <span>{isArabic ? "كود الامتياز" : "Atelier code"}</span>
+                  <strong>{PRIVATE_OFFER_CODE}</strong>
+                </div>
+
+                <button className="offerNoThanks" onClick={() => closeOfferPopup(true)}>
+                  {isArabic ? "المتابعة الآن" : "Continue browsing"}
+                </button>
+              </>
+            )}
           </div>
         </div>
       )}
