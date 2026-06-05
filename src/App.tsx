@@ -188,8 +188,8 @@ const WHATSAPP_NUMBER = "201101900086";
 const BRAND_EMAIL = "omaromohamed2003@gmail.com";
 
 // Real launch countdown target. Change this date/time whenever you want to change the official launch moment.
-// Current setting: 30-day launch countdown ending on 27 June 2026 at 11:59 PM Egypt time.
-const LAUNCH_DATE_ISO = "2026-06-27T23:59:59+03:00";
+// Redone countdown: 30-day launch countdown ending on 5 July 2026 at 11:59 PM Egypt time.
+const LAUNCH_DATE_ISO = "2026-07-05T23:59:59+03:00";
 const COUNTDOWN_SECOND = 1000;
 const COUNTDOWN_MINUTE = COUNTDOWN_SECOND * 60;
 const COUNTDOWN_HOUR = COUNTDOWN_MINUTE * 60;
@@ -1309,7 +1309,7 @@ export default function App() {
   const [toast, setToast] = useState("");
   const [scrollProgress, setScrollProgress] = useState(0);
   const [loading, setLoading] = useState(true);
-  const [launchCountdown, setLaunchCountdown] = useState(getLaunchCountdown);
+  const [launchCountdown, setLaunchCountdown] = useState<LaunchCountdown>(() => getLaunchCountdown());
 
   const isArabic = language === "AR";
   const t = text[language];
@@ -1601,9 +1601,13 @@ export default function App() {
   }, []);
 
   useEffect(() => {
-    const countdownTimer = window.setInterval(() => {
+    const updateLaunchCountdown = () => {
       setLaunchCountdown(getLaunchCountdown());
-    }, 1000);
+    };
+
+    updateLaunchCountdown();
+
+    const countdownTimer = window.setInterval(updateLaunchCountdown, COUNTDOWN_SECOND);
 
     return () => window.clearInterval(countdownTimer);
   }, []);
@@ -4029,35 +4033,82 @@ export default function App() {
         }
 
         .launchCountdown {
+          position: relative;
+          isolation: isolate;
           max-width: 760px;
-          margin: 22px 0 0;
-          padding: 18px;
-          border-radius: 26px;
-          border: 1px solid rgba(176, 138, 69, 0.32);
-          background: linear-gradient(135deg, rgba(255, 249, 240, 0.92), rgba(239, 219, 187, 0.58));
-          box-shadow: 0 18px 46px rgba(54, 37, 25, 0.10);
+          margin: 24px 0 0;
+          padding: 20px;
+          overflow: hidden;
+          border-radius: 30px;
+          border: 1px solid rgba(176, 138, 69, 0.36);
+          background:
+            radial-gradient(circle at top left, rgba(255, 255, 255, 0.92), transparent 34%),
+            linear-gradient(135deg, rgba(255, 249, 240, 0.96), rgba(239, 219, 187, 0.64));
+          box-shadow: 0 22px 54px rgba(54, 37, 25, 0.12);
+        }
+
+        .launchCountdown::before {
+          content: "";
+          position: absolute;
+          inset: 1px;
+          z-index: -1;
+          border-radius: 28px;
+          background:
+            linear-gradient(120deg, transparent, rgba(255, 255, 255, 0.56), transparent);
+          transform: translateX(-120%);
+          animation: countdownShine 6.5s ease-in-out infinite;
+          pointer-events: none;
+        }
+
+        .launchCountdown::after {
+          content: "";
+          position: absolute;
+          right: -42px;
+          top: -56px;
+          width: 160px;
+          height: 160px;
+          z-index: -2;
+          border-radius: 999px;
+          background: rgba(176, 138, 69, 0.14);
+          filter: blur(6px);
+          pointer-events: none;
         }
 
         .launchCountdownHeader {
           display: flex;
-          align-items: center;
+          align-items: flex-start;
           justify-content: space-between;
-          gap: 16px;
-          margin-bottom: 14px;
+          gap: 18px;
+          margin-bottom: 16px;
         }
 
         .launchCountdownHeader span {
+          display: block;
           color: #9c7336;
           font-size: 11px;
           letter-spacing: 0.28em;
           text-transform: uppercase;
         }
 
-        .launchCountdownHeader strong {
-          color: #3b2a20;
+        .launchCountdownHeader p {
+          margin: 8px 0 0;
+          color: #6a5545;
           font-size: 13px;
-          letter-spacing: 0.1em;
+          line-height: 1.6;
+          letter-spacing: 0.06em;
+        }
+
+        .launchCountdownHeader strong {
+          flex: 0 0 auto;
+          padding: 9px 12px;
+          border-radius: 999px;
+          color: #3b2a20;
+          background: rgba(255, 255, 255, 0.62);
+          border: 1px solid rgba(176, 138, 69, 0.22);
+          font-size: 12px;
+          letter-spacing: 0.12em;
           text-transform: uppercase;
+          box-shadow: 0 10px 26px rgba(54, 37, 25, 0.08);
         }
 
         .launchCountdownGrid {
@@ -4067,39 +4118,75 @@ export default function App() {
         }
 
         .countdownUnit {
-          border-radius: 20px;
-          padding: 14px 10px;
+          position: relative;
+          overflow: hidden;
+          border-radius: 22px;
+          padding: 16px 10px 15px;
           text-align: center;
-          background: rgba(255, 255, 255, 0.62);
-          border: 1px solid rgba(176, 138, 69, 0.18);
+          background: rgba(255, 255, 255, 0.68);
+          border: 1px solid rgba(176, 138, 69, 0.2);
+          box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.66);
+        }
+
+        .countdownUnit::before {
+          content: "";
+          position: absolute;
+          inset: 0;
+          background: linear-gradient(180deg, rgba(176, 138, 69, 0.12), transparent 46%);
+          opacity: 0.72;
+          pointer-events: none;
         }
 
         .countdownUnit strong {
+          position: relative;
           display: block;
           color: #2c1f18;
           font-family: Georgia, "Times New Roman", serif;
-          font-size: clamp(28px, 3vw, 46px);
+          font-size: clamp(30px, 3.2vw, 50px);
           font-weight: 500;
           line-height: 1;
+          font-variant-numeric: tabular-nums;
+          letter-spacing: 0.02em;
         }
 
         .countdownUnit span {
+          position: relative;
           display: block;
-          margin-top: 8px;
+          margin-top: 9px;
           color: #7a604d;
-          font-size: 11px;
-          letter-spacing: 0.22em;
+          font-size: 10px;
+          letter-spacing: 0.2em;
           text-transform: uppercase;
         }
 
+        .launchCountdownFooter {
+          margin: 14px 4px 0;
+          color: #6a5545;
+          font-size: 12px;
+          line-height: 1.7;
+          letter-spacing: 0.05em;
+        }
+
+        .launchCountdown.finished .launchCountdownHeader strong {
+          background: rgba(176, 138, 69, 0.16);
+        }
+
+        .page.arabic .launchCountdown,
         .page.arabic .launchCountdownGrid {
           direction: ltr;
         }
 
+        .page.arabic .launchCountdownHeader,
+        .page.arabic .launchCountdownFooter {
+          direction: rtl;
+        }
+
         .darkMode .launchCountdown {
-          background: linear-gradient(135deg, rgba(255, 249, 240, 0.09), rgba(176, 138, 69, 0.13));
-          border-color: rgba(215, 180, 111, 0.34);
-          box-shadow: 0 18px 46px rgba(0, 0, 0, 0.22);
+          background:
+            radial-gradient(circle at top left, rgba(255, 244, 223, 0.13), transparent 34%),
+            linear-gradient(135deg, rgba(255, 249, 240, 0.09), rgba(176, 138, 69, 0.13));
+          border-color: rgba(215, 180, 111, 0.36);
+          box-shadow: 0 22px 54px rgba(0, 0, 0, 0.24);
         }
 
         .darkMode .launchCountdownHeader span,
@@ -4107,17 +4194,34 @@ export default function App() {
           color: #d7b46f;
         }
 
+        .darkMode .launchCountdownHeader p,
+        .darkMode .launchCountdownFooter {
+          color: #eadcc8;
+        }
+
         .darkMode .launchCountdownHeader strong,
         .darkMode .countdownUnit strong {
           color: #fff4df;
         }
 
+        .darkMode .launchCountdownHeader strong,
         .darkMode .countdownUnit {
           background: rgba(255, 249, 240, 0.08);
-          border-color: rgba(215, 180, 111, 0.22);
+          border-color: rgba(215, 180, 111, 0.24);
+        }
+
+        @keyframes countdownShine {
+          0%, 58% { transform: translateX(-120%); opacity: 0; }
+          66% { opacity: 1; }
+          100% { transform: translateX(120%); opacity: 0; }
         }
 
         @media (max-width: 640px) {
+          .launchCountdown {
+            padding: 16px;
+            border-radius: 26px;
+          }
+
           .launchCountdownGrid {
             grid-template-columns: repeat(2, minmax(0, 1fr));
           }
@@ -4125,6 +4229,11 @@ export default function App() {
           .launchCountdownHeader {
             align-items: flex-start;
             flex-direction: column;
+            gap: 10px;
+          }
+
+          .launchCountdownHeader strong {
+            align-self: flex-start;
           }
         }
 
@@ -13842,24 +13951,36 @@ export default function App() {
               <p className="description">{t.heroDescription}</p>
               <p className="preOrderNotice">{t.preOrderNotice}</p>
 
-              <div className="launchCountdown" aria-label={isArabic ? "العد التنازلي للإطلاق" : "Launch countdown"}>
+              <div
+                className={launchCountdown.isFinished ? "launchCountdown finished" : "launchCountdown"}
+                aria-label={isArabic ? "العد التنازلي للإطلاق" : "Launch countdown"}
+                aria-live="polite"
+              >
                 <div className="launchCountdownHeader">
-                  <span>{isArabic ? "العد التنازلي للإطلاق" : "Official Launch Countdown"}</span>
-                  <strong>{launchCountdown.isFinished ? (isArabic ? "تم الإطلاق" : "Launched") : (isArabic ? "حجز مسبق الآن" : "Pre-Order Now")}</strong>
+                  <div>
+                    <span>{isArabic ? "العد التنازلي للإطلاق" : "Official Launch Countdown"}</span>
+                    <p>{isArabic ? "الإطلاق الرسمي · ٥ يوليو ٢٠٢٦ · ١١:٥٩ مساءً بتوقيت مصر" : "Official launch · 5 July 2026 · 11:59 PM Egypt time"}</p>
+                  </div>
+                  <strong>{launchCountdown.isFinished ? (isArabic ? "تم الإطلاق" : "Launched") : (isArabic ? "الحجز المسبق مفتوح" : "Pre-Order Open")}</strong>
                 </div>
                 <div className="launchCountdownGrid">
                   {[
-                    { label: isArabic ? "يوم" : "Days", value: launchCountdown.days },
-                    { label: isArabic ? "ساعة" : "Hours", value: launchCountdown.hours },
-                    { label: isArabic ? "دقيقة" : "Minutes", value: launchCountdown.minutes },
-                    { label: isArabic ? "ثانية" : "Seconds", value: launchCountdown.seconds },
+                    { key: "days", label: isArabic ? "يوم" : "Days", value: launchCountdown.days },
+                    { key: "hours", label: isArabic ? "ساعة" : "Hours", value: launchCountdown.hours },
+                    { key: "minutes", label: isArabic ? "دقيقة" : "Minutes", value: launchCountdown.minutes },
+                    { key: "seconds", label: isArabic ? "ثانية" : "Seconds", value: launchCountdown.seconds },
                   ].map((unit) => (
-                    <div className="countdownUnit" key={unit.label}>
+                    <div className={`countdownUnit countdownUnit-${unit.key}`} key={unit.key}>
                       <strong>{String(unit.value).padStart(2, "0")}</strong>
                       <span>{unit.label}</span>
                     </div>
                   ))}
                 </div>
+                <p className="launchCountdownFooter">
+                  {launchCountdown.isFinished
+                    ? (isArabic ? "المجموعة أصبحت متاحة الآن." : "The collection is now officially live.")
+                    : (isArabic ? "كل الطلبات قبل الإطلاق تظل محفوظة حتى انتهاء العد التنازلي." : "Every pre-order stays reserved until the countdown reaches zero.")}
+                </p>
               </div>
 
               <div className="actions">
