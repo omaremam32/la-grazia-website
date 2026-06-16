@@ -1587,7 +1587,7 @@ export default function App() {
   useEffect(() => {
     if (!introExitStarted) return;
 
-    const finishTimer = window.setTimeout(() => setLoading(false), 3600);
+    const finishTimer = window.setTimeout(() => setLoading(false), 3900);
     return () => window.clearTimeout(finishTimer);
   }, [introExitStarted]);
 
@@ -6565,8 +6565,18 @@ export default function App() {
           object-fit: cover;
           object-position: center center;
           background: #120c08;
-          transform: translateZ(0);
+          transform: translateZ(0) scale(1);
           backface-visibility: hidden;
+          transition:
+            opacity 1800ms cubic-bezier(.22, 1, .36, 1),
+            transform 2200ms cubic-bezier(.22, 1, .36, 1),
+            filter 1800ms cubic-bezier(.22, 1, .36, 1);
+        }
+
+        .dreamExitStarted .logoDreamVideo {
+          opacity: 0.72;
+          transform: translateZ(0) scale(1.025);
+          filter: brightness(1.06) saturate(0.88);
         }
 
         .logoDreamTone {
@@ -6618,7 +6628,7 @@ export default function App() {
         }
 
         .dreamExitStarted .logoDreamWash {
-          opacity: 0.42;
+          opacity: 0.36;
           transform: translateY(0);
         }
 
@@ -6644,13 +6654,13 @@ export default function App() {
           left: 50%;
           top: 50%;
           z-index: -1;
-          width: min(620px, 82vw);
-          height: clamp(120px, 16vw, 210px);
+          width: min(640px, 84vw);
+          height: clamp(124px, 16vw, 214px);
           transform: translate3d(-50%, -50%, 0);
           border-radius: 999px;
           background:
-            radial-gradient(ellipse at center, rgba(42, 26, 16, 0.52), rgba(42, 26, 16, 0.22) 46%, transparent 72%);
-          opacity: 0.9;
+            radial-gradient(ellipse at center, rgba(42, 26, 16, 0.60), rgba(42, 26, 16, 0.28) 46%, transparent 72%);
+          opacity: 0.92;
         }
 
         .logoDreamBrand strong {
@@ -6660,28 +6670,28 @@ export default function App() {
           font-weight: 500;
           letter-spacing: 0.18em;
           line-height: 1;
-          color: #d7b46f;
+          color: #9f6b24;
           text-shadow:
-            0 1px 0 rgba(255, 247, 218, 0.16),
-            0 10px 26px rgba(44, 26, 15, 0.42),
-            0 0 18px rgba(215, 180, 111, 0.26);
+            0 1px 0 rgba(255, 244, 210, 0.28),
+            0 10px 26px rgba(44, 26, 15, 0.55),
+            0 0 18px rgba(176, 127, 48, 0.42);
           backface-visibility: hidden;
         }
 
         .logoDreamKicker {
           display: block;
           margin-bottom: 16px;
-          color: #f1d89d;
+          color: #8f6428;
           font-size: 11px;
           letter-spacing: 0.38em;
           text-transform: uppercase;
           text-shadow:
-            0 8px 20px rgba(44, 26, 15, 0.42),
-            0 0 12px rgba(215, 180, 111, 0.24);
+            0 8px 20px rgba(44, 26, 15, 0.44),
+            0 0 12px rgba(176, 127, 48, 0.24);
         }
 
         .dreamExitStarted .logoDreamBrand {
-          animation: logoDreamBrandIn 3300ms ease-in-out 180ms forwards;
+          animation: logoDreamBrandIn 3600ms ease-in-out 280ms forwards;
         }
 
         .logoDreamProgress {
@@ -6731,13 +6741,13 @@ export default function App() {
           0% {
             opacity: 0;
           }
-          22% {
-            opacity: 0.82;
+          24% {
+            opacity: 0.88;
           }
-          34% {
+          38% {
             opacity: 1;
           }
-          76% {
+          82% {
             opacity: 1;
           }
           100% {
@@ -12581,6 +12591,12 @@ export default function App() {
             muted
             playsInline
             preload="auto"
+            onTimeUpdate={(event) => {
+              const video = event.currentTarget;
+              if (video.duration && video.currentTime >= video.duration - 1.15) {
+                setIntroExitStarted(true);
+              }
+            }}
             onEnded={() => setIntroExitStarted(true)}
           >
             <source src="/videos/la-grazia-entry.mp4" type="video/mp4" />
