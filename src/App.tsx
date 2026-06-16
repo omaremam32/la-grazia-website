@@ -6618,7 +6618,7 @@ export default function App() {
         }
 
         .dreamExitStarted .logoDreamWash {
-          opacity: 1;
+          opacity: 0.82;
           transform: translateY(0);
         }
 
@@ -6645,15 +6645,28 @@ export default function App() {
           font-weight: 500;
           letter-spacing: 0.18em;
           line-height: 1;
+          color: #d7b46f;
+          background: linear-gradient(180deg, #fff3c8 0%, #d7b46f 38%, #b7893f 72%, #fff0bd 100%);
+          -webkit-background-clip: text;
+          background-clip: text;
+          -webkit-text-fill-color: transparent;
+          text-shadow:
+            0 2px 0 rgba(255, 247, 218, 0.18),
+            0 14px 38px rgba(44, 26, 15, 0.52),
+            0 0 26px rgba(215, 180, 111, 0.42);
+          filter: drop-shadow(0 12px 24px rgba(35, 20, 12, 0.38));
         }
 
         .logoDreamKicker {
           display: block;
           margin-bottom: 14px;
-          color: rgba(255, 238, 207, 0.92);
+          color: #f3d89b;
           font-size: 10px;
           letter-spacing: 0.36em;
           text-transform: uppercase;
+          text-shadow:
+            0 8px 22px rgba(44, 26, 15, 0.48),
+            0 0 18px rgba(215, 180, 111, 0.32);
         }
 
         .dreamExitStarted .logoDreamBrand {
@@ -6709,10 +6722,10 @@ export default function App() {
             transform: translate(-50%, -40%) scale(0.96);
             letter-spacing: 0.10em;
           }
-          38% {
+          30% {
             opacity: 1;
           }
-          72% {
+          78% {
             opacity: 1;
             transform: translate(-50%, -50%) scale(1);
           }
