@@ -1309,7 +1309,6 @@ export default function App() {
   const [toast, setToast] = useState("");
   const [scrollProgress, setScrollProgress] = useState(0);
   const [loading, setLoading] = useState(true);
-  const [introVideoStarted, setIntroVideoStarted] = useState(false);
   const [introExitStarted, setIntroExitStarted] = useState(false);
   const [launchCountdown, setLaunchCountdown] = useState<LaunchCountdown>(() => getLaunchCountdown());
 
