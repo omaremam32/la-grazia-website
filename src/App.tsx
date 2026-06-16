@@ -1587,7 +1587,7 @@ export default function App() {
   useEffect(() => {
     if (!introExitStarted) return;
 
-    const finishTimer = window.setTimeout(() => setLoading(false), 1550);
+    const finishTimer = window.setTimeout(() => setLoading(false), 1850);
     return () => window.clearTimeout(finishTimer);
   }, [introExitStarted]);
 
@@ -6599,7 +6599,7 @@ export default function App() {
         }
 
         .dreamExitStarted .logoDreamSatin {
-          animation: logoSatinDreamSweep 1000ms ease forwards;
+          animation: logoSatinDreamSweep 1350ms ease forwards;
         }
 
         .logoDreamWash {
@@ -6618,7 +6618,7 @@ export default function App() {
         }
 
         .dreamExitStarted .logoDreamWash {
-          opacity: 0.82;
+          opacity: 0.62;
           transform: translateY(0);
         }
 
@@ -6651,10 +6651,10 @@ export default function App() {
           background-clip: text;
           -webkit-text-fill-color: transparent;
           text-shadow:
-            0 2px 0 rgba(255, 247, 218, 0.18),
-            0 14px 38px rgba(44, 26, 15, 0.52),
-            0 0 26px rgba(215, 180, 111, 0.42);
-          filter: drop-shadow(0 12px 24px rgba(35, 20, 12, 0.38));
+            0 1px 0 rgba(255, 247, 218, 0.16),
+            0 16px 42px rgba(44, 26, 15, 0.46),
+            0 0 34px rgba(215, 180, 111, 0.46);
+          filter: drop-shadow(0 14px 28px rgba(35, 20, 12, 0.32));
         }
 
         .logoDreamKicker {
@@ -6670,7 +6670,7 @@ export default function App() {
         }
 
         .dreamExitStarted .logoDreamBrand {
-          animation: logoDreamBrandIn 1300ms cubic-bezier(.16, 1, .3, 1) forwards;
+          animation: logoDreamBrandIn 1750ms cubic-bezier(.16, 1, .3, 1) 120ms forwards;
         }
 
         .logoDreamProgress {
@@ -6712,26 +6712,34 @@ export default function App() {
 
         @keyframes logoSatinDreamSweep {
           0% { opacity: 0; transform: translate3d(-12%, 0, 0); }
-          38% { opacity: 0.44; }
+          42% { opacity: 0.34; }
           100% { opacity: 0; transform: translate3d(12%, 0, 0); }
         }
 
         @keyframes logoDreamBrandIn {
           0% {
             opacity: 0;
-            transform: translate(-50%, -40%) scale(0.96);
-            letter-spacing: 0.10em;
+            transform: translate(-50%, -46%) scale(0.985);
+            filter: blur(2px);
           }
-          30% {
+          24% {
+            opacity: 0.78;
+            filter: blur(0.6px);
+          }
+          42% {
             opacity: 1;
+            transform: translate(-50%, -50%) scale(1);
+            filter: blur(0);
           }
           78% {
             opacity: 1;
             transform: translate(-50%, -50%) scale(1);
+            filter: blur(0);
           }
           100% {
             opacity: 0;
-            transform: translate(-50%, -54%) scale(1.015);
+            transform: translate(-50%, -53%) scale(1.012);
+            filter: blur(1.4px);
           }
         }
 
