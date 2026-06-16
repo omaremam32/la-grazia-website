@@ -1587,7 +1587,7 @@ export default function App() {
   useEffect(() => {
     if (!introExitStarted) return;
 
-    const finishTimer = window.setTimeout(() => setLoading(false), 4200);
+    const finishTimer = window.setTimeout(() => setLoading(false), 4300);
     return () => window.clearTimeout(finishTimer);
   }, [introExitStarted]);
 
@@ -6604,7 +6604,7 @@ export default function App() {
         }
 
         .dreamExitStarted .logoDreamSatin {
-          animation: logoSatinDreamSweep 850ms ease forwards;
+          animation: logoSatinDreamSweep 750ms ease forwards;
         }
 
         .logoDreamWash {
@@ -6623,7 +6623,7 @@ export default function App() {
         }
 
         .dreamExitStarted .logoDreamWash {
-          opacity: 0.24;
+          opacity: 0.20;
           transform: translateY(0);
         }
 
@@ -6632,7 +6632,7 @@ export default function App() {
           left: 50%;
           top: 50%;
           z-index: 5;
-          width: min(780px, 90vw);
+          width: min(820px, 92vw);
           transform: translate3d(-50%, -50%, 0);
           text-align: center;
           opacity: 0;
@@ -6641,6 +6641,7 @@ export default function App() {
           isolation: isolate;
           will-change: opacity;
           backface-visibility: hidden;
+          contain: layout paint;
         }
 
         .logoDreamBrand::before {
@@ -6649,48 +6650,55 @@ export default function App() {
           left: 50%;
           top: 50%;
           z-index: -1;
-          width: min(680px, 86vw);
-          height: clamp(132px, 17vw, 228px);
+          width: min(700px, 88vw);
+          height: clamp(138px, 18vw, 238px);
           transform: translate3d(-50%, -50%, 0);
           border-radius: 999px;
           background:
-            radial-gradient(ellipse at center, rgba(44, 27, 17, 0.72), rgba(44, 27, 17, 0.38) 44%, rgba(44, 27, 17, 0.12) 68%, transparent 76%);
+            radial-gradient(ellipse at center, rgba(38, 23, 15, 0.72), rgba(38, 23, 15, 0.36) 46%, rgba(38, 23, 15, 0.10) 68%, transparent 76%);
           opacity: 0.96;
         }
 
         .logoDreamBrand strong {
           display: block;
           font-family: Georgia, "Times New Roman", serif;
-          font-size: clamp(48px, 7.6vw, 108px);
+          font-size: clamp(50px, 7.8vw, 112px);
           font-weight: 500;
           letter-spacing: 0.18em;
           line-height: 1;
-          color: #b67c28;
-          background: linear-gradient(180deg, #fff0bd 0%, #d5a348 35%, #9a641f 72%, #e7bc68 100%);
+          color: #c6933f;
+          background: linear-gradient(180deg, #f4d37b 0%, #c6933f 42%, #8f5b1d 100%);
           -webkit-background-clip: text;
           background-clip: text;
           -webkit-text-fill-color: transparent;
           text-shadow:
-            0 1px 0 rgba(255, 244, 210, 0.24),
-            0 12px 30px rgba(27, 16, 10, 0.62),
-            0 0 22px rgba(154, 100, 31, 0.42);
+            0 1px 0 rgba(255, 240, 196, 0.20),
+            0 10px 28px rgba(25, 14, 8, 0.58);
           backface-visibility: hidden;
+        }
+
+        .logoDreamBrand::after {
+          content: "";
+          display: block;
+          width: min(340px, 46vw);
+          height: 1px;
+          margin: 26px auto 0;
+          background: linear-gradient(90deg, transparent, rgba(214, 173, 99, 0.92), transparent);
+          opacity: 0.82;
         }
 
         .logoDreamKicker {
           display: block;
           margin-bottom: 18px;
-          color: #d8ab5a;
+          color: #d6ad63;
           font-size: 11px;
           letter-spacing: 0.38em;
           text-transform: uppercase;
-          text-shadow:
-            0 8px 20px rgba(27, 16, 10, 0.56),
-            0 0 12px rgba(154, 100, 31, 0.32);
+          text-shadow: 0 8px 20px rgba(25, 14, 8, 0.48);
         }
 
         .dreamExitStarted .logoDreamBrand {
-          animation: logoDreamBrandIn 3900ms ease-in-out 220ms forwards;
+          animation: logoDreamBrandIn 4100ms cubic-bezier(.22, 1, .36, 1) 180ms forwards;
         }
 
         .logoDreamProgress {
@@ -6740,14 +6748,17 @@ export default function App() {
           0% {
             opacity: 0;
           }
-          22% {
-            opacity: 0.9;
+          18% {
+            opacity: 0.72;
           }
-          34% {
+          30% {
             opacity: 1;
           }
-          82% {
+          76% {
             opacity: 1;
+          }
+          90% {
+            opacity: 0.55;
           }
           100% {
             opacity: 0;
@@ -6758,17 +6769,14 @@ export default function App() {
           0% {
             opacity: 1;
             transform: translate3d(0, 0, 0) scale(1);
-            filter: brightness(1) saturate(0.94);
           }
-          45% {
-            opacity: 0.88;
-            transform: translate3d(0, 0, 0) scale(1.012);
-            filter: brightness(1.03) saturate(0.9);
+          52% {
+            opacity: 0.92;
+            transform: translate3d(0, 0, 0) scale(1.008);
           }
           100% {
-            opacity: 0.58;
-            transform: translate3d(0, 0, 0) scale(1.04);
-            filter: brightness(1.08) saturate(0.82);
+            opacity: 0.70;
+            transform: translate3d(0, 0, 0) scale(1.024);
           }
         }
 
@@ -6816,7 +6824,7 @@ export default function App() {
           }
 
           .logoDreamBrand strong {
-            font-size: clamp(36px, 11vw, 58px);
+            font-size: clamp(38px, 11vw, 62px);
             letter-spacing: 0.13em;
           }
 
