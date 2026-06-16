@@ -1577,8 +1577,8 @@ export default function App() {
       : "Hello La Grazia Milano, I would love to ask about reserving a piece from the upcoming La Grazia Atelier Collection.";
 
   useEffect(() => {
-    const textStartFallback = window.setTimeout(() => setIntroExitStarted(true), 3691);
-    const finishFallback = window.setTimeout(() => setLoading(false), 7291);
+    const textStartFallback = window.setTimeout(() => setIntroExitStarted(true), 2991);
+    const finishFallback = window.setTimeout(() => setLoading(false), 6161);
 
     return () => {
       window.clearTimeout(textStartFallback);
@@ -6566,7 +6566,7 @@ export default function App() {
         }
 
         .textOverVideoStarted .finalEntryVideo {
-          animation: finalVideoContinueSoftly 3250ms cubic-bezier(.16, 1, .3, 1) forwards;
+          animation: finalVideoContinueSoftly 2950ms cubic-bezier(.16, 1, .3, 1) forwards;
         }
 
         .finalVideoTone {
@@ -6644,7 +6644,7 @@ export default function App() {
         }
 
         .textOverVideoStarted .finalEntryBrand {
-          animation: finalBrandOverVideo 3300ms ease-in-out forwards;
+          animation: finalBrandOverVideo 2950ms ease-in-out forwards;
         }
 
         .pageBehindDream {
@@ -6659,9 +6659,10 @@ export default function App() {
 
         @keyframes finalBrandOverVideo {
           0% { opacity: 0; }
-          18% { opacity: 0.82; }
+          18% { opacity: 0.86; }
           30% { opacity: 1; }
-          78% { opacity: 1; }
+          72% { opacity: 1; }
+          92% { opacity: 0.38; }
           100% { opacity: 0; }
         }
 
@@ -6670,23 +6671,23 @@ export default function App() {
             opacity: 1;
             transform: translate3d(0, 0, 0) scale(1);
           }
-          55% {
-            opacity: 0.94;
-            transform: translate3d(0, 0, 0) scale(1.008);
+          65% {
+            opacity: 0.98;
+            transform: translate3d(0, 0, 0) scale(1.004);
           }
           100% {
-            opacity: 0.74;
-            transform: translate3d(0, 0, 0) scale(1.024);
+            opacity: 0.90;
+            transform: translate3d(0, 0, 0) scale(1.012);
           }
         }
 
         @keyframes pageFinalEntryReveal {
           0% {
             opacity: 0;
-            transform: translateY(12px) scale(1.004);
+            transform: translateY(8px) scale(1.003);
           }
           55% {
-            opacity: 0.86;
+            opacity: 0.9;
           }
           100% {
             opacity: 1;
@@ -12504,12 +12505,12 @@ export default function App() {
             preload="auto"
             onTimeUpdate={(event) => {
               const video = event.currentTarget;
-              if (video.duration && video.currentTime >= video.duration - 2.35) {
+              if (video.duration && video.currentTime >= video.duration - 3.05) {
                 setIntroExitStarted(true);
               }
             }}
             onEnded={() => {
-              window.setTimeout(() => setLoading(false), 950);
+              window.setTimeout(() => setLoading(false), 80);
             }}
           >
             <source src="/videos/la-grazia-entry.mp4" type="video/mp4" />
