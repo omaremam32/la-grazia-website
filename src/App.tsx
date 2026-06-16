@@ -1587,7 +1587,7 @@ export default function App() {
   useEffect(() => {
     if (!introExitStarted) return;
 
-    const finishTimer = window.setTimeout(() => setLoading(false), 1850);
+    const finishTimer = window.setTimeout(() => setLoading(false), 2850);
     return () => window.clearTimeout(finishTimer);
   }, [introExitStarted]);
 
@@ -6618,7 +6618,7 @@ export default function App() {
         }
 
         .dreamExitStarted .logoDreamWash {
-          opacity: 0.62;
+          opacity: 0.56;
           transform: translateY(0);
         }
 
@@ -6627,8 +6627,8 @@ export default function App() {
           left: 50%;
           top: 50%;
           z-index: 5;
-          width: min(720px, 86vw);
-          transform: translate(-50%, -44%) scale(0.98);
+          width: min(760px, 88vw);
+          transform: translate(-50%, -46%) scale(0.985);
           text-align: center;
           opacity: 0;
           pointer-events: none;
@@ -6636,41 +6636,58 @@ export default function App() {
           text-shadow:
             0 18px 46px rgba(47, 29, 19, 0.44),
             0 0 24px rgba(214, 177, 107, 0.16);
+          isolation: isolate;
+        }
+
+        .logoDreamBrand::before {
+          content: "";
+          position: absolute;
+          left: 50%;
+          top: 50%;
+          z-index: -1;
+          width: min(640px, 84vw);
+          height: clamp(120px, 17vw, 220px);
+          transform: translate(-50%, -50%);
+          border-radius: 999px;
+          background:
+            radial-gradient(ellipse at center, rgba(42, 26, 16, 0.42), rgba(42, 26, 16, 0.18) 45%, transparent 72%);
+          opacity: 0.92;
+          filter: blur(18px);
         }
 
         .logoDreamBrand strong {
           display: block;
           font-family: Georgia, "Times New Roman", serif;
-          font-size: clamp(42px, 7vw, 92px);
+          font-size: clamp(46px, 7.4vw, 104px);
           font-weight: 500;
           letter-spacing: 0.18em;
           line-height: 1;
           color: #d7b46f;
-          background: linear-gradient(180deg, #fff3c8 0%, #d7b46f 38%, #b7893f 72%, #fff0bd 100%);
+          background: linear-gradient(180deg, #fff7d8 0%, #e6c77f 34%, #c59746 68%, #fff1bd 100%);
           -webkit-background-clip: text;
           background-clip: text;
           -webkit-text-fill-color: transparent;
           text-shadow:
-            0 1px 0 rgba(255, 247, 218, 0.16),
-            0 16px 42px rgba(44, 26, 15, 0.46),
-            0 0 34px rgba(215, 180, 111, 0.46);
-          filter: drop-shadow(0 14px 28px rgba(35, 20, 12, 0.32));
+            0 1px 0 rgba(255, 247, 218, 0.18),
+            0 18px 48px rgba(44, 26, 15, 0.58),
+            0 0 42px rgba(215, 180, 111, 0.58);
+          filter: drop-shadow(0 16px 30px rgba(35, 20, 12, 0.44));
         }
 
         .logoDreamKicker {
           display: block;
-          margin-bottom: 14px;
-          color: #f3d89b;
-          font-size: 10px;
-          letter-spacing: 0.36em;
+          margin-bottom: 16px;
+          color: #f5dc9f;
+          font-size: 11px;
+          letter-spacing: 0.38em;
           text-transform: uppercase;
           text-shadow:
-            0 8px 22px rgba(44, 26, 15, 0.48),
-            0 0 18px rgba(215, 180, 111, 0.32);
+            0 8px 24px rgba(44, 26, 15, 0.62),
+            0 0 22px rgba(215, 180, 111, 0.46);
         }
 
         .dreamExitStarted .logoDreamBrand {
-          animation: logoDreamBrandIn 1750ms cubic-bezier(.16, 1, .3, 1) 120ms forwards;
+          animation: logoDreamBrandIn 2650ms cubic-bezier(.16, 1, .3, 1) 160ms forwards;
         }
 
         .logoDreamProgress {
@@ -6719,27 +6736,28 @@ export default function App() {
         @keyframes logoDreamBrandIn {
           0% {
             opacity: 0;
-            transform: translate(-50%, -46%) scale(0.985);
-            filter: blur(2px);
+            transform: translate(-50%, -43%) scale(0.972);
+            filter: blur(2.2px);
           }
-          24% {
-            opacity: 0.78;
-            filter: blur(0.6px);
+          18% {
+            opacity: 0.82;
+            transform: translate(-50%, -47%) scale(0.99);
+            filter: blur(0.8px);
           }
-          42% {
+          34% {
             opacity: 1;
             transform: translate(-50%, -50%) scale(1);
             filter: blur(0);
           }
-          78% {
+          74% {
             opacity: 1;
-            transform: translate(-50%, -50%) scale(1);
+            transform: translate(-50%, -51.5%) scale(1.006);
             filter: blur(0);
           }
           100% {
             opacity: 0;
-            transform: translate(-50%, -53%) scale(1.012);
-            filter: blur(1.4px);
+            transform: translate(-50%, -56%) scale(1.018);
+            filter: blur(1.8px);
           }
         }
 
@@ -6787,7 +6805,7 @@ export default function App() {
           }
 
           .logoDreamBrand strong {
-            font-size: clamp(34px, 11vw, 54px);
+            font-size: clamp(36px, 11vw, 58px);
             letter-spacing: 0.13em;
           }
 
