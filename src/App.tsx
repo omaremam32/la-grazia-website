@@ -1576,9 +1576,29 @@ export default function App() {
       : "Hello La Grazia Milano, I would love to ask about reserving a piece from the upcoming La Grazia Atelier Collection.";
 
   useEffect(() => {
-    const timer = window.setTimeout(() => setLoading(false), 5800);
+    const timer = window.setTimeout(() => setLoading(false), 5600);
     return () => window.clearTimeout(timer);
   }, []);
+
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+
+    const previousBodyOverflow = document.body.style.overflow;
+    const previousHtmlOverflow = document.documentElement.style.overflow;
+
+    if (loading) {
+      document.body.style.overflow = "hidden";
+      document.documentElement.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = previousBodyOverflow;
+      document.documentElement.style.overflow = previousHtmlOverflow;
+    }
+
+    return () => {
+      document.body.style.overflow = previousBodyOverflow;
+      document.documentElement.style.overflow = previousHtmlOverflow;
+    };
+  }, [loading]);
 
   useEffect(() => {
     if (typeof window === "undefined") return;
@@ -6520,185 +6540,114 @@ export default function App() {
           animation: loaderOut 0.95s ease 4.95s forwards;
         }
 
-        .realisticBoutiqueLoader {
-          display: grid;
-          place-items: center;
+        .cleanLuxuryLoader {
+          display: block;
         }
 
-        .loaderBoutiqueImage {
+        .boutiqueSplashImage {
           position: absolute;
           inset: 0;
           z-index: 1;
-          background-image:
-            linear-gradient(180deg, rgba(14, 9, 6, 0.06), rgba(14, 9, 6, 0.44)),
-            url("/photos/la-grazia-boutique-entry.png");
+          background-image: url("/photos/la-grazia-boutique-entry.png");
           background-size: cover;
-          background-position: center;
-          transform: scale(1.04);
-          filter: contrast(1.04) saturate(0.94) brightness(0.86);
+          background-position: center 36%;
+          transform: scale(1.005);
+          filter: contrast(1.03) saturate(0.9) brightness(0.82);
           animation: boutiqueImagePush 5.55s cubic-bezier(.16, 1, .3, 1) forwards;
           will-change: transform, filter;
         }
 
-        .loaderBoutiqueVignette {
+        .boutiqueSplashTone {
           position: absolute;
           inset: 0;
-          z-index: 4;
+          z-index: 3;
           pointer-events: none;
           background:
-            radial-gradient(circle at 50% 48%, rgba(255, 241, 215, 0.12), transparent 34%),
-            linear-gradient(180deg, rgba(12, 8, 5, 0.05), rgba(12, 8, 5, 0.55)),
-            linear-gradient(90deg, rgba(12, 8, 5, 0.58), transparent 28%, transparent 72%, rgba(12, 8, 5, 0.58));
+            radial-gradient(circle at 50% 46%, rgba(255, 241, 215, 0.08), transparent 34%),
+            linear-gradient(180deg, rgba(12, 8, 5, 0.04), rgba(12, 8, 5, 0.42)),
+            linear-gradient(90deg, rgba(12, 8, 5, 0.42), transparent 28%, transparent 72%, rgba(12, 8, 5, 0.42));
         }
 
-        .loaderBoutiqueGrain {
+        .boutiqueSplashGrain {
           position: absolute;
           inset: -25%;
-          z-index: 5;
-          opacity: 0.075;
+          z-index: 4;
+          opacity: 0.055;
           mix-blend-mode: soft-light;
           pointer-events: none;
           background-image:
-            radial-gradient(circle, rgba(255,255,255,0.46) 0.55px, transparent 0.75px),
-            radial-gradient(circle, rgba(0,0,0,0.48) 0.45px, transparent 0.72px);
+            radial-gradient(circle, rgba(255,255,255,0.42) 0.5px, transparent 0.72px),
+            radial-gradient(circle, rgba(0,0,0,0.42) 0.42px, transparent 0.7px);
           background-size: 11px 11px, 17px 17px;
           animation: loaderGrain 9s linear infinite;
         }
 
-        .loaderDoorReveal {
-          position: absolute;
-          inset: 0;
-          z-index: 8;
-          pointer-events: none;
-          perspective: 1200px;
-          overflow: hidden;
-        }
-
-        .doorRevealPanel {
-          position: absolute;
-          top: 0;
-          width: 50.15%;
-          height: 100%;
-          background:
-            linear-gradient(180deg, rgba(33, 20, 13, 0.985), rgba(10, 6, 4, 0.965)),
-            radial-gradient(circle at 50% 46%, rgba(199, 158, 89, 0.12), transparent 38%);
-          box-shadow: inset 0 0 90px rgba(214, 177, 107, 0.08);
-          animation-duration: 1.72s;
-          animation-timing-function: cubic-bezier(.16, 1, .3, 1);
-          animation-delay: 2.25s;
-          animation-fill-mode: forwards;
-          will-change: transform;
-        }
-
-        .doorRevealLeft {
-          left: 0;
-          transform-origin: left center;
-          animation-name: openLeftReveal;
-        }
-
-        .doorRevealRight {
-          right: 0;
-          transform-origin: right center;
-          animation-name: openRightReveal;
-        }
-
-        .doorRevealBloom {
+        .boutiqueSplashLight {
           position: absolute;
           left: 50%;
-          top: 51%;
-          width: 15vw;
-          height: 15vw;
+          top: 52%;
+          z-index: 5;
+          width: 16vw;
+          height: 16vw;
           min-width: 170px;
           min-height: 170px;
           border-radius: 50%;
-          transform: translate(-50%, -50%) scale(0.16);
-          background: radial-gradient(circle, rgba(255, 249, 238, 0.95), rgba(214, 177, 107, 0.34) 42%, transparent 74%);
+          transform: translate(-50%, -50%) scale(0.15);
+          background: radial-gradient(circle, rgba(255, 247, 232, 0.78), rgba(214, 177, 107, 0.22) 42%, transparent 74%);
           opacity: 0;
-          filter: blur(8px);
-          animation: revealLightBloom 1.45s cubic-bezier(.16, 1, .3, 1) 3.42s forwards;
+          filter: blur(10px);
+          animation: boutiqueLightBloom 1.45s cubic-bezier(.16, 1, .3, 1) 3.78s forwards;
+          pointer-events: none;
         }
 
-        .loaderLuxuryCopy {
-          position: relative;
-          z-index: 12;
-          width: min(760px, 86vw);
-          padding: 0 18px;
-          text-align: center;
-          transform: translateY(18px);
-          animation: loaderTextMove 4.55s cubic-bezier(.16, 1, .3, 1) forwards;
-        }
-
-        .loaderKicker {
-          margin: 0 0 14px;
-          color: rgba(255, 238, 207, 0.94);
-          font-size: 11px;
-          letter-spacing: 0.34em;
-          text-transform: uppercase;
-          text-shadow: 0 10px 28px rgba(0, 0, 0, 0.58);
-        }
-
-        .loaderLuxuryCopy h1 {
-          margin: 0;
-          font-family: Georgia, "Times New Roman", serif;
-          font-size: clamp(44px, 8vw, 106px);
-          font-weight: 500;
-          letter-spacing: 0.18em;
-          color: #fff8ef;
-          text-shadow:
-            0 12px 34px rgba(0, 0, 0, 0.62),
-            0 0 42px rgba(214, 177, 107, 0.18);
-          animation: loaderLogo 1.25s cubic-bezier(.16, 1, .3, 1) both;
-        }
-
-        .loaderLuxuryCopy p:not(.loaderKicker) {
-          margin: 16px 0 0;
-          color: rgba(255, 238, 207, 0.9);
-          font-size: 11px;
-          letter-spacing: 0.28em;
-          text-transform: uppercase;
-          text-shadow: 0 10px 28px rgba(0, 0, 0, 0.58);
-          animation: fadeUp 1s ease 0.42s both;
-        }
-
-        .loaderLine {
-          width: 0;
+        .boutiqueSplashProgress {
+          position: absolute;
+          left: 50%;
+          bottom: clamp(28px, 5vh, 54px);
+          z-index: 8;
+          width: min(340px, 58vw);
           height: 1px;
-          margin: 26px auto 0;
-          background: linear-gradient(90deg, transparent, rgba(255, 238, 207, 0.95), rgba(214, 177, 107, 0.95), transparent);
-          animation: loaderLine 3.55s ease 0.58s forwards;
+          transform: translateX(-50%);
+          background: rgba(255, 238, 207, 0.14);
+          overflow: hidden;
+        }
+
+        .boutiqueSplashProgress span {
+          display: block;
+          width: 0;
+          height: 100%;
+          background: linear-gradient(90deg, transparent, rgba(255, 238, 207, 0.95), rgba(214, 177, 107, 0.95));
+          animation: boutiqueProgress 4.45s cubic-bezier(.16, 1, .3, 1) 0.35s forwards;
         }
 
         @keyframes boutiqueImagePush {
           0% {
-            transform: scale(1.04);
-            filter: contrast(1.02) saturate(0.9) brightness(0.78) blur(1.2px);
+            transform: scale(1.005);
+            filter: contrast(1.02) saturate(0.88) brightness(0.78) blur(0.7px);
           }
-          22% {
-            filter: contrast(1.04) saturate(0.94) brightness(0.86) blur(0px);
+          18% {
+            filter: contrast(1.03) saturate(0.9) brightness(0.82) blur(0px);
           }
           64% {
-            transform: scale(1.12);
+            transform: scale(1.045);
           }
           100% {
-            transform: scale(1.22);
-            filter: contrast(1.06) saturate(0.96) brightness(0.98) blur(0px);
+            transform: scale(1.075);
+            filter: contrast(1.04) saturate(0.93) brightness(0.92) blur(0px);
           }
         }
 
-        @keyframes openLeftReveal {
-          from { transform: rotateY(0deg) translateX(0); }
-          to { transform: rotateY(-78deg) translateX(-4%); }
+        @keyframes boutiqueLightBloom {
+          0% { opacity: 0; transform: translate(-50%, -50%) scale(0.15); }
+          32% { opacity: 0.58; }
+          100% { opacity: 0.82; transform: translate(-50%, -50%) scale(7.4); }
         }
 
-        @keyframes openRightReveal {
-          from { transform: rotateY(0deg) translateX(0); }
-          to { transform: rotateY(78deg) translateX(4%); }
-        }
-
-        @keyframes revealLightBloom {
-          0% { opacity: 0; transform: translate(-50%, -50%) scale(0.16); }
-          28% { opacity: 0.9; }
-          100% { opacity: 1; transform: translate(-50%, -50%) scale(8.2); }
+        @keyframes boutiqueProgress {
+          from { width: 0; opacity: 0; }
+          18% { opacity: 1; }
+          86% { width: 100%; opacity: 1; }
+          to { width: 100%; opacity: 0; }
         }
 
         @keyframes loaderGrain {
@@ -6706,70 +6655,43 @@ export default function App() {
           to { transform: translate3d(5%, 4%, 0); }
         }
 
-        @keyframes loaderLogo {
-          from {
-            opacity: 0;
-            letter-spacing: 0.08em;
-            transform: translateY(16px) scale(0.985);
-          }
-          to {
-            opacity: 1;
-            letter-spacing: 0.18em;
-            transform: translateY(0) scale(1);
-          }
-        }
-
-        @keyframes loaderLine {
-          from { width: 0; opacity: 0; }
-          20% { opacity: 1; }
-          78% { width: min(420px, 72vw); opacity: 1; }
-          to { width: min(420px, 72vw); opacity: 0; }
-        }
-
-        @keyframes loaderTextMove {
-          0% { opacity: 0; transform: translateY(28px); }
-          18% { opacity: 1; transform: translateY(0); }
-          72% { opacity: 1; transform: translateY(0); }
-          100% { opacity: 0; transform: translateY(-14px); }
-        }
-
         @keyframes loaderOut {
           to {
             opacity: 0;
             pointer-events: none;
-            transform: scale(1.01);
+            transform: scale(1.006);
           }
         }
 
         @media (max-width: 900px) {
-          .loaderLuxuryCopy {
-            width: min(680px, 88vw);
+          .boutiqueSplashImage {
+            background-position: center 38%;
           }
 
-          .loaderLuxuryCopy h1 {
-            font-size: clamp(38px, 9vw, 78px);
+          .boutiqueSplashProgress {
+            width: min(300px, 64vw);
+            bottom: 34px;
           }
         }
 
         @media (max-width: 560px) {
-          .loaderBoutiqueImage {
-            background-position: center;
-            transform: scale(1.12);
+          .boutiqueSplashImage {
+            background-position: center center;
+            transform: scale(1.04);
           }
 
-          .loaderKicker {
-            font-size: 9px;
-            letter-spacing: 0.22em;
-          }
-
-          .loaderLuxuryCopy h1 {
-            font-size: clamp(34px, 11vw, 54px);
-            letter-spacing: 0.13em;
-          }
-
-          .loaderLuxuryCopy p:not(.loaderKicker) {
-            font-size: 9px;
-            letter-spacing: 0.18em;
+          @keyframes boutiqueImagePush {
+            0% {
+              transform: scale(1.04);
+              filter: contrast(1.02) saturate(0.88) brightness(0.78) blur(0.7px);
+            }
+            18% {
+              filter: contrast(1.03) saturate(0.9) brightness(0.82) blur(0px);
+            }
+            100% {
+              transform: scale(1.11);
+              filter: contrast(1.04) saturate(0.93) brightness(0.92) blur(0px);
+            }
           }
         }
 
@@ -12545,24 +12467,13 @@ export default function App() {
       <div className="scrollProgress" style={{ width: `${scrollProgress}%` }} />
 
       {loading && (
-        <div className="loader realisticBoutiqueLoader" aria-label="Entering La Grazia boutique">
-          <div className="loaderBoutiqueImage" aria-hidden="true" />
-          <div className="loaderBoutiqueVignette" aria-hidden="true" />
-          <div className="loaderBoutiqueGrain" aria-hidden="true" />
-
-          <div className="loaderDoorReveal" aria-hidden="true">
-            <span className="doorRevealPanel doorRevealLeft" />
-            <span className="doorRevealPanel doorRevealRight" />
-            <span className="doorRevealBloom" />
-          </div>
-
-          <div className="loaderLuxuryCopy">
-            <p className="loaderKicker">
-              {isArabic ? "لا غراتسيا — ميلانو أتيليه" : "La Grazia — Milano Atelier"}
-            </p>
-            <h1>LA GRAZIA</h1>
-            <p>{isArabic ? "ادخلي إلى الأتيليه" : "Step inside the atelier"}</p>
-            <div className="loaderLine" />
+        <div className="loader cleanLuxuryLoader" aria-label="Entering La Grazia boutique">
+          <div className="boutiqueSplashImage" aria-hidden="true" />
+          <div className="boutiqueSplashTone" aria-hidden="true" />
+          <div className="boutiqueSplashGrain" aria-hidden="true" />
+          <div className="boutiqueSplashLight" aria-hidden="true" />
+          <div className="boutiqueSplashProgress" aria-hidden="true">
+            <span />
           </div>
         </div>
       )}
