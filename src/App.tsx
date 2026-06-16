@@ -1587,7 +1587,7 @@ export default function App() {
   useEffect(() => {
     if (!introExitStarted) return;
 
-    const finishTimer = window.setTimeout(() => setLoading(false), 2600);
+    const finishTimer = window.setTimeout(() => setLoading(false), 2850);
     return () => window.clearTimeout(finishTimer);
   }, [introExitStarted]);
 
@@ -6549,12 +6549,7 @@ export default function App() {
           color: #fff8ef;
           isolation: isolate;
           opacity: 1;
-          will-change: opacity, transform;
-          backface-visibility: hidden;
-        }
-
-        .loader.dreamExitStarted {
-          animation: logoLoaderDreamExit 2600ms cubic-bezier(.16, 1, .3, 1) forwards;
+          transition: opacity 950ms cubic-bezier(.16, 1, .3, 1);
         }
 
         .logoDreamVideoLoader {
@@ -6604,7 +6599,7 @@ export default function App() {
         }
 
         .dreamExitStarted .logoDreamSatin {
-          animation: logoSatinDreamSweep 1550ms ease forwards;
+          animation: logoSatinDreamSweep 1200ms ease forwards;
         }
 
         .logoDreamWash {
@@ -6623,7 +6618,7 @@ export default function App() {
         }
 
         .dreamExitStarted .logoDreamWash {
-          opacity: 0.38;
+          opacity: 0.48;
           transform: translateY(0);
         }
 
@@ -6632,12 +6627,15 @@ export default function App() {
           left: 50%;
           top: 50%;
           z-index: 5;
-          width: min(780px, 88vw);
-          transform: translate3d(-50%, -44%, 0) scale(0.985);
+          width: min(760px, 88vw);
+          transform: translate3d(-50%, -46%, 0) scale(0.985);
           text-align: center;
           opacity: 0;
           pointer-events: none;
-          color: #d7b46f;
+          color: #fff8ef;
+          text-shadow:
+            0 18px 46px rgba(47, 29, 19, 0.34),
+            0 0 18px rgba(214, 177, 107, 0.12);
           isolation: isolate;
           will-change: opacity, transform;
           backface-visibility: hidden;
@@ -6647,25 +6645,15 @@ export default function App() {
           content: "";
           position: absolute;
           left: 50%;
-          top: 52%;
+          top: 50%;
           z-index: -1;
-          width: min(650px, 84vw);
-          height: clamp(118px, 16vw, 205px);
+          width: min(620px, 82vw);
+          height: clamp(112px, 16vw, 200px);
           transform: translate3d(-50%, -50%, 0);
           border-radius: 999px;
           background:
-            radial-gradient(ellipse at center, rgba(36, 21, 12, 0.50), rgba(36, 21, 12, 0.18) 46%, transparent 72%);
-          opacity: 0.9;
-        }
-
-        .logoDreamBrand::after {
-          content: "";
-          display: block;
-          width: min(360px, 48vw);
-          height: 1px;
-          margin: 22px auto 0;
-          background: linear-gradient(90deg, transparent, rgba(255, 239, 196, 0.78), rgba(183, 137, 63, 0.7), transparent);
-          opacity: 0.8;
+            radial-gradient(ellipse at center, rgba(42, 26, 16, 0.46), rgba(42, 26, 16, 0.18) 44%, transparent 70%);
+          opacity: 0.88;
         }
 
         .logoDreamBrand strong {
@@ -6673,17 +6661,13 @@ export default function App() {
           font-family: Georgia, "Times New Roman", serif;
           font-size: clamp(46px, 7.4vw, 104px);
           font-weight: 500;
-          letter-spacing: 0.19em;
+          letter-spacing: 0.18em;
           line-height: 1;
           color: #d7b46f;
-          background: linear-gradient(180deg, #fff4c8 0%, #dfbd73 40%, #b9873c 72%, #f7df9e 100%);
-          -webkit-background-clip: text;
-          background-clip: text;
-          -webkit-text-fill-color: transparent;
           text-shadow:
-            0 1px 0 rgba(255, 247, 218, 0.14),
-            0 12px 30px rgba(44, 26, 15, 0.42),
-            0 0 20px rgba(215, 180, 111, 0.26);
+            0 1px 0 rgba(255, 247, 218, 0.18),
+            0 12px 30px rgba(44, 26, 15, 0.46),
+            0 0 22px rgba(215, 180, 111, 0.34);
           will-change: opacity, transform;
           backface-visibility: hidden;
         }
@@ -6701,7 +6685,7 @@ export default function App() {
         }
 
         .dreamExitStarted .logoDreamBrand {
-          animation: logoDreamBrandIn 2520ms cubic-bezier(.22, 1, .36, 1) 80ms forwards;
+          animation: logoDreamBrandIn 2450ms cubic-bezier(.22, 1, .36, 1) 140ms forwards;
         }
 
         .logoDreamProgress {
@@ -6741,21 +6725,6 @@ export default function App() {
             pageLogoDreamEnter 1s cubic-bezier(.16, 1, .3, 1) forwards;
         }
 
-        @keyframes logoLoaderDreamExit {
-          0% {
-            opacity: 1;
-            transform: scale(1);
-          }
-          62% {
-            opacity: 0.96;
-            transform: scale(1.002);
-          }
-          100% {
-            opacity: 0;
-            transform: scale(1.006);
-          }
-        }
-
         @keyframes logoSatinDreamSweep {
           0% { opacity: 0; transform: translate3d(-12%, 0, 0); }
           42% { opacity: 0.34; }
@@ -6765,23 +6734,23 @@ export default function App() {
         @keyframes logoDreamBrandIn {
           0% {
             opacity: 0;
-            transform: translate3d(-50%, -42%, 0) scale(0.976);
+            transform: translate3d(-50%, -43%, 0) scale(0.978);
           }
-          18% {
-            opacity: 0.9;
-            transform: translate3d(-50%, -46.5%, 0) scale(0.992);
+          20% {
+            opacity: 0.86;
+            transform: translate3d(-50%, -47%, 0) scale(0.992);
           }
-          34% {
+          36% {
             opacity: 1;
-            transform: translate3d(-50%, -49%, 0) scale(1);
+            transform: translate3d(-50%, -50%, 0) scale(1);
           }
-          68% {
+          78% {
             opacity: 1;
-            transform: translate3d(-50%, -51.5%, 0) scale(1.006);
+            transform: translate3d(-50%, -51.5%, 0) scale(1.004);
           }
           100% {
-            opacity: 0.18;
-            transform: translate3d(-50%, -56%, 0) scale(1.016);
+            opacity: 0;
+            transform: translate3d(-50%, -55%, 0) scale(1.012);
           }
         }
 
@@ -6794,11 +6763,11 @@ export default function App() {
 
         @keyframes pageLogoDreamEnter {
           0% {
-            opacity: 0.18;
-            transform: translateY(10px) scale(1.004);
+            opacity: 0;
+            transform: translateY(12px) scale(1.005);
           }
-          48% {
-            opacity: 0.82;
+          45% {
+            opacity: 0.8;
           }
           100% {
             opacity: 1;
