@@ -6599,7 +6599,7 @@ export default function App() {
         }
 
         .dreamExitStarted .logoDreamSatin {
-          animation: logoSatinDreamSweep 1350ms ease forwards;
+          animation: logoSatinDreamSweep 1200ms ease forwards;
         }
 
         .logoDreamWash {
@@ -6618,7 +6618,7 @@ export default function App() {
         }
 
         .dreamExitStarted .logoDreamWash {
-          opacity: 0.56;
+          opacity: 0.48;
           transform: translateY(0);
         }
 
@@ -6628,15 +6628,17 @@ export default function App() {
           top: 50%;
           z-index: 5;
           width: min(760px, 88vw);
-          transform: translate(-50%, -46%) scale(0.985);
+          transform: translate3d(-50%, -46%, 0) scale(0.985);
           text-align: center;
           opacity: 0;
           pointer-events: none;
           color: #fff8ef;
           text-shadow:
-            0 18px 46px rgba(47, 29, 19, 0.44),
-            0 0 24px rgba(214, 177, 107, 0.16);
+            0 18px 46px rgba(47, 29, 19, 0.34),
+            0 0 18px rgba(214, 177, 107, 0.12);
           isolation: isolate;
+          will-change: opacity, transform;
+          backface-visibility: hidden;
         }
 
         .logoDreamBrand::before {
@@ -6645,14 +6647,13 @@ export default function App() {
           left: 50%;
           top: 50%;
           z-index: -1;
-          width: min(640px, 84vw);
-          height: clamp(120px, 17vw, 220px);
-          transform: translate(-50%, -50%);
+          width: min(620px, 82vw);
+          height: clamp(112px, 16vw, 200px);
+          transform: translate3d(-50%, -50%, 0);
           border-radius: 999px;
           background:
-            radial-gradient(ellipse at center, rgba(42, 26, 16, 0.42), rgba(42, 26, 16, 0.18) 45%, transparent 72%);
-          opacity: 0.92;
-          filter: blur(18px);
+            radial-gradient(ellipse at center, rgba(42, 26, 16, 0.46), rgba(42, 26, 16, 0.18) 44%, transparent 70%);
+          opacity: 0.88;
         }
 
         .logoDreamBrand strong {
@@ -6663,15 +6664,12 @@ export default function App() {
           letter-spacing: 0.18em;
           line-height: 1;
           color: #d7b46f;
-          background: linear-gradient(180deg, #fff7d8 0%, #e6c77f 34%, #c59746 68%, #fff1bd 100%);
-          -webkit-background-clip: text;
-          background-clip: text;
-          -webkit-text-fill-color: transparent;
           text-shadow:
             0 1px 0 rgba(255, 247, 218, 0.18),
-            0 18px 48px rgba(44, 26, 15, 0.58),
-            0 0 42px rgba(215, 180, 111, 0.58);
-          filter: drop-shadow(0 16px 30px rgba(35, 20, 12, 0.44));
+            0 12px 30px rgba(44, 26, 15, 0.46),
+            0 0 22px rgba(215, 180, 111, 0.34);
+          will-change: opacity, transform;
+          backface-visibility: hidden;
         }
 
         .logoDreamKicker {
@@ -6687,7 +6685,7 @@ export default function App() {
         }
 
         .dreamExitStarted .logoDreamBrand {
-          animation: logoDreamBrandIn 2650ms cubic-bezier(.16, 1, .3, 1) 160ms forwards;
+          animation: logoDreamBrandIn 2450ms cubic-bezier(.22, 1, .36, 1) 140ms forwards;
         }
 
         .logoDreamProgress {
@@ -6736,28 +6734,23 @@ export default function App() {
         @keyframes logoDreamBrandIn {
           0% {
             opacity: 0;
-            transform: translate(-50%, -43%) scale(0.972);
-            filter: blur(2.2px);
+            transform: translate3d(-50%, -43%, 0) scale(0.978);
           }
-          18% {
-            opacity: 0.82;
-            transform: translate(-50%, -47%) scale(0.99);
-            filter: blur(0.8px);
+          20% {
+            opacity: 0.86;
+            transform: translate3d(-50%, -47%, 0) scale(0.992);
           }
-          34% {
+          36% {
             opacity: 1;
-            transform: translate(-50%, -50%) scale(1);
-            filter: blur(0);
+            transform: translate3d(-50%, -50%, 0) scale(1);
           }
-          74% {
+          78% {
             opacity: 1;
-            transform: translate(-50%, -51.5%) scale(1.006);
-            filter: blur(0);
+            transform: translate3d(-50%, -51.5%, 0) scale(1.004);
           }
           100% {
             opacity: 0;
-            transform: translate(-50%, -56%) scale(1.018);
-            filter: blur(1.8px);
+            transform: translate3d(-50%, -55%, 0) scale(1.012);
           }
         }
 
