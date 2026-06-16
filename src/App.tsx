@@ -6508,163 +6508,195 @@ export default function App() {
         }
 
         .mobileBottom { display: none; }
+
         .loader {
           position: fixed;
           inset: 0;
           z-index: 200;
           overflow: hidden;
+          color: #f8f2e8;
           background:
-            radial-gradient(circle at 50% 28%, rgba(247, 241, 232, 0.5), transparent 28%),
-            linear-gradient(180deg, #efe3cf 0%, #d6b98e 44%, #7a5940 100%);
-          color: #fff9f0;
-          animation: loaderOut 0.95s ease 4.95s forwards;
-          perspective: 1400px;
+            radial-gradient(circle at 50% 18%, rgba(255, 249, 239, 0.9), rgba(255, 249, 239, 0.12) 28%, transparent 42%),
+            linear-gradient(180deg, #f1e7d9 0%, #d8c4a6 44%, #6e4d3b 100%);
+          perspective: 1600px;
+          animation: loaderOut 0.9s ease 4.95s forwards;
+          isolation: isolate;
         }
 
         .loader::before {
           content: "";
           position: absolute;
           inset: 0;
-          z-index: 8;
+          z-index: 18;
           pointer-events: none;
           background:
-            radial-gradient(circle at center, transparent 34%, rgba(44, 31, 24, 0.28) 100%),
-            linear-gradient(90deg, rgba(44, 31, 24, 0.22), transparent 22%, transparent 78%, rgba(44, 31, 24, 0.22));
-          opacity: 0.72;
+            radial-gradient(circle at center, transparent 36%, rgba(54, 34, 22, 0.18) 100%),
+            linear-gradient(90deg, rgba(54, 34, 22, 0.2), transparent 22%, transparent 78%, rgba(54, 34, 22, 0.2));
+          opacity: 0.92;
         }
 
         .loader::after {
           content: "";
           position: absolute;
           inset: 0;
-          z-index: 20;
+          z-index: 26;
           pointer-events: none;
-          background: #fff9f0;
+          background: linear-gradient(180deg, rgba(255, 249, 239, 0), rgba(255, 249, 239, 0.16));
+          mix-blend-mode: screen;
           opacity: 0;
-          animation: boutiqueFlash 0.9s ease 4.42s forwards;
+          animation: boutiqueFlash 0.8s ease 4.46s forwards;
         }
 
-        .italySky {
+        .italyBackdrop {
+          position: absolute;
+          inset: 0;
+          z-index: 1;
+          background:
+            linear-gradient(180deg, rgba(255, 250, 242, 0.75), rgba(232, 214, 189, 0.3) 52%, rgba(83, 56, 42, 0.22)),
+            radial-gradient(circle at 50% 18%, rgba(255, 247, 230, 0.8), transparent 28%);
+        }
+
+        .backdropGlow {
           position: absolute;
           inset: 0;
           background:
-            linear-gradient(180deg, rgba(255, 249, 240, 0.72), rgba(233, 204, 162, 0.26) 48%, rgba(44, 31, 24, 0.2)),
-            radial-gradient(circle at 22% 22%, rgba(255, 249, 240, 0.8), transparent 18%);
-          animation: skyBreathe 4.8s ease-in-out both;
+            radial-gradient(circle at 50% 26%, rgba(255, 248, 234, 0.82), transparent 24%),
+            radial-gradient(circle at 50% 42%, rgba(255, 239, 207, 0.26), transparent 36%);
+          filter: blur(18px);
+          animation: skyBreathe 4.6s ease-in-out both;
         }
 
-        .italySun {
+        .backdropBuilding {
           position: absolute;
-          right: 15%;
-          top: 14%;
-          width: clamp(80px, 12vw, 160px);
-          height: clamp(80px, 12vw, 160px);
+          bottom: 26vh;
+          width: clamp(120px, 12vw, 190px);
+          height: clamp(250px, 35vh, 410px);
+          border-radius: 30px 30px 10px 10px;
+          background:
+            linear-gradient(180deg, rgba(131, 103, 77, 0.16), rgba(107, 77, 57, 0.24)),
+            repeating-linear-gradient(0deg, rgba(255, 249, 239, 0.09) 0 1px, transparent 1px 60px),
+            repeating-linear-gradient(90deg, rgba(255, 249, 239, 0.06) 0 1px, transparent 1px 70px);
+          box-shadow: inset 0 0 30px rgba(255, 248, 234, 0.08);
+          opacity: 0.52;
+          filter: blur(1.2px);
+        }
+
+        .backdropBuildingLeft { left: 7%; transform: translateY(14px); }
+        .backdropBuildingRight { right: 7%; transform: translateY(14px); }
+
+        .buildingTop {
+          position: absolute;
+          left: 50%;
+          top: -22px;
+          width: 56%;
+          height: 52px;
+          transform: translateX(-50%);
+          border-radius: 999px 999px 0 0;
+          background: rgba(107, 77, 57, 0.18);
+        }
+
+        .buildingWindow {
+          position: absolute;
+          width: 20%;
+          aspect-ratio: 0.88;
+          border-radius: 999px 999px 6px 6px;
+          background: radial-gradient(circle at 50% 26%, rgba(255, 247, 227, 0.38), rgba(125, 96, 72, 0.24) 76%);
+        }
+
+        .buildingWindowA { left: 20%; top: 26%; }
+        .buildingWindowB { right: 20%; top: 26%; }
+        .buildingWindowC { left: 50%; top: 58%; transform: translateX(-50%); }
+
+        .sunHaze {
+          position: absolute;
+          right: 12%;
+          top: 10%;
+          z-index: 2;
+          width: clamp(90px, 13vw, 180px);
+          height: clamp(90px, 13vw, 180px);
           border-radius: 50%;
-          background: radial-gradient(circle, rgba(255, 244, 213, 0.92), rgba(215, 180, 111, 0.2) 62%, transparent 70%);
-          filter: blur(1px);
-          opacity: 0.8;
+          background: radial-gradient(circle, rgba(253, 242, 210, 0.9), rgba(236, 209, 145, 0.18) 56%, transparent 72%);
+          filter: blur(2px);
+          opacity: 0.85;
           animation: sunGlow 3.8s ease-in-out infinite alternate;
         }
 
-        .italyFacade {
+        .cinemaGrain {
           position: absolute;
+          inset: -20%;
+          z-index: 3;
+          opacity: 0.07;
+          pointer-events: none;
+          background-image:
+            radial-gradient(circle, rgba(77, 53, 37, 0.34) 0.7px, transparent 0.8px),
+            radial-gradient(circle, rgba(255, 248, 234, 0.24) 0.5px, transparent 0.7px);
+          background-size: 10px 10px, 14px 14px;
+          animation: grainShift 8s linear infinite;
+        }
+
+        .streetPerspective {
+          position: absolute;
+          left: 50%;
+          bottom: -12%;
           z-index: 2;
-          bottom: 34vh;
-          width: clamp(96px, 14vw, 190px);
-          height: clamp(170px, 24vw, 310px);
-          border-radius: 28px 28px 6px 6px;
-          background:
-            linear-gradient(180deg, rgba(255, 249, 240, 0.2), rgba(109, 75, 52, 0.2)),
-            repeating-linear-gradient(
-              0deg,
-              rgba(255, 249, 240, 0.12) 0 1px,
-              transparent 1px 42px
-            ),
-            linear-gradient(135deg, rgba(94, 62, 42, 0.3), rgba(44, 31, 24, 0.36));
-          border: 1px solid rgba(255, 249, 240, 0.16);
-          box-shadow: 0 28px 80px rgba(44, 31, 24, 0.16);
-          opacity: 0.72;
-          filter: blur(0.15px);
-          animation: facadeDrift 5.2s cubic-bezier(.16, 1, .3, 1) both;
-        }
-
-        .italyFacade::before {
-          content: "";
-          position: absolute;
-          left: 50%;
-          top: -24px;
-          width: 54%;
-          height: 46px;
-          transform: translateX(-50%);
-          border-radius: 999px 999px 0 0;
-          background: rgba(92, 58, 38, 0.22);
-          border: 1px solid rgba(255, 249, 240, 0.14);
-        }
-
-        .italyFacade span {
-          position: absolute;
-          width: 22%;
-          height: 18%;
-          border-radius: 999px 999px 8px 8px;
-          background:
-            radial-gradient(circle at 50% 24%, rgba(255, 244, 213, 0.42), transparent 38%),
-            linear-gradient(180deg, rgba(44, 31, 24, 0.18), rgba(44, 31, 24, 0.36));
-          border: 1px solid rgba(255, 249, 240, 0.12);
-        }
-
-        .italyFacade span:nth-child(1) { left: 18%; top: 24%; }
-        .italyFacade span:nth-child(2) { right: 18%; top: 24%; }
-        .italyFacade span:nth-child(3) { left: 39%; top: 56%; }
-
-        .italyFacadeLeft {
-          left: clamp(16px, 7vw, 120px);
-          transform: translateX(-18px) scale(0.94);
-        }
-
-        .italyFacadeRight {
-          right: clamp(16px, 7vw, 120px);
-          transform: translateX(18px) scale(0.94);
-        }
-
-        .italianStreet {
-          position: absolute;
-          left: 50%;
-          bottom: -8%;
-          width: 120vw;
-          height: 42vh;
-          transform: translateX(-50%) rotateX(64deg);
+          width: 130vw;
+          height: 45vh;
+          transform: translateX(-50%) rotateX(67deg);
           transform-origin: center bottom;
           background:
-            repeating-linear-gradient(90deg, rgba(255, 249, 240, 0.08) 0 2px, transparent 2px 86px),
-            repeating-linear-gradient(0deg, rgba(255, 249, 240, 0.08) 0 2px, transparent 2px 64px),
-            linear-gradient(180deg, rgba(118, 82, 55, 0.2), #4e3528);
-          border-top: 1px solid rgba(255, 249, 240, 0.22);
-          box-shadow: inset 0 28px 60px rgba(44, 31, 24, 0.3);
+            linear-gradient(180deg, rgba(255, 249, 239, 0.05), rgba(255, 249, 239, 0) 10%),
+            repeating-linear-gradient(90deg, rgba(255, 249, 239, 0.08) 0 1px, transparent 1px 94px),
+            repeating-linear-gradient(0deg, rgba(255, 249, 239, 0.07) 0 1px, transparent 1px 72px),
+            linear-gradient(180deg, #7b5842, #4b3328 56%, #35221b 100%);
+          box-shadow: inset 0 24px 65px rgba(41, 24, 16, 0.34);
+          border-top: 1px solid rgba(255, 249, 239, 0.18);
         }
 
-        .streetLine {
+        .streetReflection {
           position: absolute;
           left: 50%;
+          top: 20%;
+          width: 46%;
+          height: 48%;
+          transform: translateX(-50%);
+          background: radial-gradient(ellipse at center, rgba(255, 241, 211, 0.13), transparent 70%);
+          filter: blur(8px);
+        }
+
+        .streetSeam {
+          position: absolute;
           bottom: 0;
           width: 1px;
           height: 120%;
-          background: linear-gradient(180deg, rgba(255, 249, 240, 0), rgba(255, 249, 240, 0.2));
+          background: linear-gradient(180deg, rgba(255, 249, 239, 0), rgba(255, 249, 239, 0.18));
           transform-origin: bottom;
         }
 
-        .streetLineOne { transform: rotate(18deg); }
-        .streetLineTwo { transform: rotate(-18deg); }
-        .streetLineThree { transform: translateX(-50%); opacity: 0.42; }
+        .streetSeamLeft { left: 32%; transform: rotate(20deg); }
+        .streetSeamCenter { left: 50%; transform: translateX(-50%); opacity: 0.58; }
+        .streetSeamRight { right: 32%; transform: rotate(-20deg); }
 
         .storeScene {
           position: absolute;
           left: 50%;
-          bottom: 11vh;
-          z-index: 5;
-          width: clamp(360px, 62vw, 840px);
-          transform: translateX(-50%) translateY(18px) scale(0.86);
+          bottom: 11.5vh;
+          z-index: 8;
+          width: clamp(390px, 60vw, 820px);
+          transform: translateX(-50%) translateY(16px) scale(0.88);
           transform-origin: center bottom;
-          animation: storeApproach 5.45s cubic-bezier(.16, 1, .3, 1) forwards;
+          animation: storeApproach 5.35s cubic-bezier(.16, 1, .3, 1) forwards;
+        }
+
+        .storeShadow {
+          position: absolute;
+          left: 50%;
+          bottom: 14px;
+          width: 82%;
+          height: clamp(34px, 4vw, 52px);
+          transform: translateX(-50%);
+          border-radius: 50%;
+          background: radial-gradient(ellipse at center, rgba(43, 25, 17, 0.44), rgba(43, 25, 17, 0.06) 70%, transparent 76%);
+          filter: blur(10px);
         }
 
         .storeAwning {
@@ -6672,159 +6704,228 @@ export default function App() {
           z-index: 4;
           display: grid;
           grid-template-columns: repeat(5, 1fr);
-          width: 88%;
-          height: clamp(34px, 5vw, 58px);
+          width: 84%;
+          height: clamp(40px, 5.3vw, 62px);
           margin: 0 auto;
-          border-radius: 26px 26px 10px 10px;
+          border-radius: 26px 26px 12px 12px;
           overflow: hidden;
-          border: 1px solid rgba(255, 249, 240, 0.3);
-          box-shadow: 0 18px 36px rgba(44, 31, 24, 0.26);
+          border: 1px solid rgba(255, 248, 234, 0.48);
+          box-shadow: 0 20px 30px rgba(53, 33, 22, 0.18), 0 8px 16px rgba(255, 248, 234, 0.14) inset;
+          backdrop-filter: blur(2px);
         }
 
         .storeAwning span:nth-child(odd) {
-          background: linear-gradient(180deg, #fff9f0, #d9bf91);
+          background: linear-gradient(180deg, #efe2c8, #d7bc91);
         }
 
         .storeAwning span:nth-child(even) {
-          background: linear-gradient(180deg, #7c4f37, #3b261d);
+          background: linear-gradient(180deg, #7f533d, #4a2f24);
         }
 
         .storeFacade {
           position: relative;
           display: grid;
-          grid-template-columns: 1fr 1.18fr 1fr;
-          gap: clamp(14px, 2.2vw, 26px);
+          grid-template-columns: 1fr 1.15fr 1fr;
+          gap: clamp(14px, 2vw, 24px);
           align-items: end;
-          min-height: clamp(260px, 37vw, 430px);
-          padding: clamp(72px, 8vw, 104px) clamp(22px, 4vw, 52px) clamp(24px, 3vw, 40px);
+          min-height: clamp(280px, 38vw, 440px);
+          padding: clamp(80px, 8vw, 112px) clamp(24px, 4vw, 56px) clamp(24px, 3vw, 38px);
           background:
-            linear-gradient(180deg, rgba(255, 249, 240, 0.96), rgba(230, 210, 176, 0.94)),
-            repeating-linear-gradient(90deg, rgba(176, 138, 69, 0.12) 0 1px, transparent 1px 80px);
-          border: 1px solid rgba(255, 249, 240, 0.5);
-          border-radius: 34px 34px 18px 18px;
+            linear-gradient(180deg, rgba(252, 246, 237, 0.98), rgba(232, 218, 197, 0.96)),
+            radial-gradient(circle at 50% 20%, rgba(255, 255, 255, 0.38), transparent 48%),
+            repeating-linear-gradient(90deg, rgba(176, 138, 69, 0.08) 0 1px, transparent 1px 92px);
+          border-radius: 36px 36px 18px 18px;
+          border: 1px solid rgba(255, 248, 234, 0.78);
           box-shadow:
-            0 34px 90px rgba(44, 31, 24, 0.36),
-            inset 0 0 0 1px rgba(176, 138, 69, 0.2);
+            0 34px 90px rgba(48, 29, 19, 0.25),
+            inset 0 0 0 1px rgba(176, 138, 69, 0.13),
+            inset 0 18px 24px rgba(255, 255, 255, 0.28);
+        }
+
+        .storeCornice {
+          position: absolute;
+          inset: 22px 22px auto;
+          height: 26px;
+          border-radius: 20px;
+          background: linear-gradient(180deg, rgba(255, 248, 234, 0.75), rgba(226, 206, 176, 0.4));
+          opacity: 0.5;
         }
 
         .storeSign {
           position: absolute;
           left: 50%;
-          top: clamp(18px, 2.2vw, 28px);
-          width: min(460px, 72%);
+          top: clamp(22px, 2.4vw, 30px);
+          width: min(500px, 70%);
           transform: translateX(-50%);
           text-align: center;
-          padding: 14px 22px 16px;
+          padding: 14px 24px 17px;
           border-radius: 999px;
           background:
-            linear-gradient(135deg, rgba(44, 31, 24, 0.96), rgba(86, 58, 40, 0.94)),
-            radial-gradient(circle at top, rgba(215, 180, 111, 0.25), transparent 60%);
-          border: 1px solid rgba(215, 180, 111, 0.46);
-          box-shadow: 0 16px 36px rgba(44, 31, 24, 0.22);
+            linear-gradient(135deg, rgba(74, 46, 33, 0.97), rgba(103, 67, 48, 0.95)),
+            radial-gradient(circle at top, rgba(214, 177, 107, 0.2), transparent 58%);
+          border: 1px solid rgba(214, 177, 107, 0.4);
+          box-shadow:
+            0 18px 32px rgba(41, 24, 16, 0.2),
+            inset 0 1px 0 rgba(255, 248, 234, 0.12);
         }
 
         .storeSign small {
           display: block;
           margin-bottom: 4px;
-          color: #d7b46f;
+          color: #d6b16b;
           font-size: 10px;
-          letter-spacing: 0.32em;
+          letter-spacing: 0.34em;
           text-transform: uppercase;
         }
 
         .storeSign h1 {
           margin: 0;
-          color: #fff9f0;
+          color: #fff9f1;
           font-family: Georgia, "Times New Roman", serif;
-          font-size: clamp(26px, 4vw, 52px);
+          font-size: clamp(28px, 4.2vw, 56px);
           font-weight: 500;
-          letter-spacing: 0.18em;
+          letter-spacing: 0.16em;
+          text-shadow: 0 6px 14px rgba(0, 0, 0, 0.16);
         }
 
         .boutiqueWindow {
           position: relative;
-          height: clamp(150px, 20vw, 236px);
+          height: clamp(160px, 21vw, 240px);
           border-radius: 999px 999px 18px 18px;
           overflow: hidden;
           background:
-            linear-gradient(135deg, rgba(255, 249, 240, 0.35), rgba(89, 62, 44, 0.52)),
-            radial-gradient(circle at 50% 28%, rgba(255, 249, 240, 0.48), transparent 40%);
-          border: 10px solid rgba(44, 31, 24, 0.9);
+            linear-gradient(180deg, rgba(255, 255, 255, 0.48), rgba(236, 226, 212, 0.82)),
+            linear-gradient(135deg, rgba(80, 55, 42, 0.08), rgba(80, 55, 42, 0.28));
+          border: 8px solid rgba(58, 38, 29, 0.94);
           box-shadow:
-            inset 0 0 26px rgba(255, 249, 240, 0.24),
-            0 18px 36px rgba(44, 31, 24, 0.16);
+            inset 0 0 28px rgba(255, 248, 234, 0.28),
+            inset 0 -20px 30px rgba(59, 39, 28, 0.1),
+            0 18px 30px rgba(48, 28, 18, 0.14);
+        }
+
+        .windowDepth {
+          position: absolute;
+          inset: 14px 12px 14px;
+          border-radius: 999px 999px 14px 14px;
+          background: linear-gradient(180deg, rgba(255, 255, 255, 0.3), rgba(193, 171, 145, 0.24));
+          opacity: 0.7;
         }
 
         .windowShine {
           position: absolute;
           inset: -20%;
-          background: linear-gradient(110deg, transparent 25%, rgba(255, 249, 240, 0.28) 45%, transparent 58%);
+          background: linear-gradient(110deg, transparent 24%, rgba(255, 255, 255, 0.38) 44%, transparent 56%);
           transform: translateX(-55%);
-          animation: windowShine 2.8s ease 1.2s forwards;
+          animation: windowShine 2.8s ease 1.15s forwards;
         }
 
         .displayPedestal {
           position: absolute;
           left: 50%;
-          bottom: 10%;
-          width: 46%;
+          bottom: 11%;
+          width: 48%;
           height: 13%;
           border-radius: 50%;
           transform: translateX(-50%);
-          background: rgba(255, 249, 240, 0.38);
+          background: radial-gradient(ellipse at center, rgba(255, 251, 244, 0.8), rgba(229, 211, 182, 0.52));
           filter: blur(0.3px);
+          box-shadow: 0 8px 12px rgba(56, 37, 28, 0.08);
         }
 
-        .displayDress {
+        .displayMannequin {
           position: absolute;
           left: 50%;
-          bottom: 20%;
-          width: 42px;
-          height: 82px;
+          bottom: 18%;
+          width: 54px;
+          height: 98px;
           transform: translateX(-50%);
-          background:
-            radial-gradient(circle at 50% 10%, #fff9f0 0 9px, transparent 10px),
-            linear-gradient(180deg, transparent 0 18px, #f8ead4 18px 35px, #d7b46f 35px 100%);
-          clip-path: polygon(45% 0, 55% 0, 66% 22%, 86% 100%, 14% 100%, 34% 22%);
-          opacity: 0.9;
         }
 
-        .displayScarf {
+        .displayMannequin::before {
+          content: "";
+          position: absolute;
+          left: 50%;
+          top: 0;
+          width: 18px;
+          height: 18px;
+          transform: translateX(-50%);
+          border-radius: 50%;
+          background: radial-gradient(circle at 50% 35%, rgba(255, 251, 244, 0.95), rgba(220, 197, 158, 0.85));
+        }
+
+        .displayMannequin::after {
+          content: "";
+          position: absolute;
+          left: 50%;
+          bottom: 0;
+          width: 54px;
+          height: 82px;
+          transform: translateX(-50%);
+          border-radius: 20px 20px 14px 14px;
+          background:
+            linear-gradient(180deg, rgba(253, 247, 236, 0.96), rgba(229, 205, 167, 0.95) 52%, rgba(214, 177, 107, 0.9));
+          clip-path: polygon(45% 0, 55% 0, 68% 20%, 86% 100%, 14% 100%, 32% 20%);
+          box-shadow: 0 8px 12px rgba(46, 29, 20, 0.08);
+        }
+
+        .displayScarfFold {
           position: absolute;
           left: 50%;
           bottom: 24%;
           width: 88px;
           height: 88px;
           transform: translateX(-50%) rotate(45deg);
-          border-radius: 12px;
+          border-radius: 18px;
           background:
-            linear-gradient(135deg, rgba(255, 249, 240, 0.95), rgba(215, 180, 111, 0.58)),
-            linear-gradient(45deg, transparent 45%, rgba(44, 31, 24, 0.22) 46% 52%, transparent 53%);
-          border: 1px solid rgba(44, 31, 24, 0.16);
+            linear-gradient(135deg, rgba(255, 250, 242, 0.98), rgba(223, 197, 154, 0.78)),
+            linear-gradient(45deg, transparent 45%, rgba(108, 74, 53, 0.18) 46% 52%, transparent 53%);
+          box-shadow: 0 10px 16px rgba(46, 28, 18, 0.08);
           opacity: 0.92;
         }
 
         .storeDoorWrap {
           position: relative;
-          height: clamp(190px, 26vw, 310px);
-          border-radius: 28px 28px 10px 10px;
-          background: rgba(44, 31, 24, 0.82);
-          border: 10px solid rgba(44, 31, 24, 0.96);
-          box-shadow:
-            inset 0 0 32px rgba(255, 249, 240, 0.14),
-            0 24px 50px rgba(44, 31, 24, 0.24);
+          height: clamp(205px, 27vw, 322px);
+          border-radius: 30px 30px 12px 12px;
           overflow: hidden;
+          background:
+            linear-gradient(180deg, rgba(65, 42, 31, 0.98), rgba(46, 28, 20, 0.98));
+          border: 8px solid rgba(50, 31, 23, 0.98);
+          box-shadow:
+            inset 0 0 38px rgba(255, 246, 232, 0.08),
+            0 24px 40px rgba(45, 27, 18, 0.18);
           transform-style: preserve-3d;
         }
+
+        .doorInterior {
+          position: absolute;
+          inset: 0;
+          background:
+            radial-gradient(circle at 50% 38%, rgba(255, 251, 242, 0.88), rgba(224, 193, 136, 0.58) 42%, rgba(100, 71, 53, 0.14) 72%),
+            linear-gradient(180deg, rgba(255, 247, 234, 0.24), rgba(255, 247, 234, 0));
+          opacity: 0.18;
+        }
+
+        .interiorLightBeam {
+          position: absolute;
+          top: 10%;
+          width: 26%;
+          height: 80%;
+          background: linear-gradient(180deg, rgba(255, 250, 242, 0.22), rgba(255, 250, 242, 0));
+          filter: blur(6px);
+          opacity: 0.45;
+        }
+
+        .beamOne { left: 18%; transform: skewX(-10deg); }
+        .beamTwo { right: 18%; transform: skewX(10deg); }
 
         .doorGlow {
           position: absolute;
           inset: 0;
-          background:
-            radial-gradient(circle at center, rgba(255, 249, 240, 0.98), rgba(215, 180, 111, 0.52) 42%, transparent 72%);
+          background: radial-gradient(circle at 50% 48%, rgba(255, 251, 242, 0.98), rgba(222, 189, 132, 0.54) 40%, transparent 72%);
           opacity: 0;
-          filter: blur(2px);
-          animation: doorGlowIn 2.2s ease 2.65s forwards;
+          filter: blur(4px);
+          animation: doorGlowIn 2.2s ease 2.56s forwards;
         }
 
         .doorPanel {
@@ -6833,47 +6934,48 @@ export default function App() {
           width: 50.5%;
           height: 100%;
           background:
-            linear-gradient(135deg, rgba(100, 68, 48, 0.94), rgba(44, 31, 24, 0.96)),
-            repeating-linear-gradient(90deg, rgba(255, 249, 240, 0.08) 0 1px, transparent 1px 46px);
-          border: 1px solid rgba(215, 180, 111, 0.18);
+            linear-gradient(135deg, rgba(112, 77, 56, 0.96), rgba(61, 39, 28, 0.98)),
+            repeating-linear-gradient(90deg, rgba(255, 248, 234, 0.05) 0 1px, transparent 1px 52px);
+          border: 1px solid rgba(214, 177, 107, 0.14);
           transform-style: preserve-3d;
+          box-shadow: inset 0 0 18px rgba(255, 248, 234, 0.04);
         }
 
         .doorPanel::before {
           content: "";
           position: absolute;
           inset: 16px;
-          border: 1px solid rgba(215, 180, 111, 0.22);
+          border: 1px solid rgba(214, 177, 107, 0.16);
           border-radius: 18px;
         }
 
         .doorPanelLeft {
           left: 0;
           transform-origin: left center;
-          animation: doorLeftOpen 1.65s cubic-bezier(.16, 1, .3, 1) 2.55s forwards;
+          animation: doorLeftOpen 1.55s cubic-bezier(.16, 1, .3, 1) 2.45s forwards;
         }
 
         .doorPanelRight {
           right: 0;
           transform-origin: right center;
-          animation: doorRightOpen 1.65s cubic-bezier(.16, 1, .3, 1) 2.55s forwards;
+          animation: doorRightOpen 1.55s cubic-bezier(.16, 1, .3, 1) 2.45s forwards;
         }
 
         .doorHandle {
           position: absolute;
-          top: 52%;
+          top: 50%;
           width: 8px;
-          height: 42px;
+          height: 44px;
           border-radius: 999px;
-          background: linear-gradient(180deg, #fff4d5, #d7b46f, #9f783d);
-          box-shadow: 0 0 18px rgba(215, 180, 111, 0.34);
+          background: linear-gradient(180deg, #fff5d8, #d6b16b, #956d34);
+          box-shadow: 0 0 14px rgba(214, 177, 107, 0.28);
         }
 
-        .doorPanelLeft .doorHandle { right: 20px; }
-        .doorPanelRight .doorHandle { left: 20px; }
+        .doorPanelLeft .doorHandle { right: 18px; }
+        .doorPanelRight .doorHandle { left: 18px; }
 
         .storeSteps {
-          width: 78%;
+          width: 80%;
           margin: 0 auto;
         }
 
@@ -6881,150 +6983,151 @@ export default function App() {
           display: block;
           height: clamp(10px, 1.3vw, 18px);
           margin: 0 auto;
-          background: linear-gradient(180deg, #d7b46f, #8b6942);
+          background: linear-gradient(180deg, rgba(214, 177, 107, 0.9), rgba(129, 95, 61, 0.96));
           border-radius: 0 0 999px 999px;
-          box-shadow: 0 12px 28px rgba(44, 31, 24, 0.28);
+          box-shadow: 0 12px 22px rgba(43, 26, 18, 0.2);
         }
 
         .storeSteps span:first-child { width: 86%; }
-        .storeSteps span:last-child { width: 96%; opacity: 0.72; }
+        .storeSteps span:last-child { width: 96%; opacity: 0.74; }
 
         .loaderInner {
           position: absolute;
           left: 50%;
-          bottom: clamp(34px, 6vh, 72px);
-          z-index: 12;
-          width: min(680px, 88vw);
+          bottom: clamp(26px, 5vh, 52px);
+          z-index: 22;
+          width: min(620px, 84vw);
           transform: translateX(-50%);
           text-align: center;
-          animation: loaderTextMove 4.6s cubic-bezier(.16, 1, .3, 1) forwards;
+          animation: loaderTextMove 4.5s cubic-bezier(.16, 1, .3, 1) forwards;
         }
 
         .loaderKicker {
-          margin: 0 0 12px;
-          color: #fff4d5;
+          margin: 0 0 10px;
+          color: rgba(255, 244, 218, 0.92);
           letter-spacing: 0.28em;
           text-transform: uppercase;
-          font-size: 11px;
-          text-shadow: 0 8px 22px rgba(44, 31, 24, 0.4);
+          font-size: 10px;
+          text-shadow: 0 6px 18px rgba(33, 19, 13, 0.34);
         }
 
         .loaderInner h1 {
           margin: 0;
           font-family: Georgia, "Times New Roman", serif;
-          font-size: clamp(38px, 7vw, 92px);
+          font-size: clamp(34px, 6vw, 76px);
           letter-spacing: 0.18em;
           font-weight: 500;
           color: #fff9f0;
-          text-shadow: 0 18px 42px rgba(44, 31, 24, 0.46);
-          animation: loaderLogo 1.35s cubic-bezier(.16, 1, .3, 1) both;
+          text-shadow: 0 12px 28px rgba(32, 18, 12, 0.34);
+          animation: loaderLogo 1.2s cubic-bezier(.16, 1, .3, 1) both;
         }
 
         .loaderInner p:not(.loaderKicker) {
-          margin: 18px 0 0;
-          color: #fff4d5;
-          letter-spacing: 0.22em;
-          text-align: center;
+          margin: 12px 0 0;
+          color: rgba(255, 244, 218, 0.9);
+          letter-spacing: 0.24em;
           text-transform: uppercase;
-          font-size: 11px;
-          text-shadow: 0 8px 18px rgba(44, 31, 24, 0.34);
-          animation: fadeUp 1s ease 0.45s both;
+          font-size: 10px;
+          text-shadow: 0 6px 18px rgba(33, 19, 13, 0.32);
+          animation: fadeUp 1s ease 0.42s both;
         }
 
         .loaderLine {
           width: 0;
           height: 1px;
-          margin: 28px auto 0;
-          background: linear-gradient(90deg, transparent, #fff4d5, #d7b46f, transparent);
-          animation: loaderLine 3.8s ease 0.7s forwards;
+          margin: 22px auto 0;
+          background: linear-gradient(90deg, transparent, rgba(255, 244, 218, 0.96), rgba(214, 177, 107, 0.9), transparent);
+          animation: loaderLine 3.6s ease 0.6s forwards;
         }
 
         .enterGlow {
           position: absolute;
           left: 50%;
-          top: 52%;
-          z-index: 10;
+          top: 49%;
+          z-index: 24;
           width: 18vw;
           height: 18vw;
           min-width: 180px;
           min-height: 180px;
           border-radius: 50%;
-          transform: translate(-50%, -50%) scale(0.2);
-          background: radial-gradient(circle, rgba(255, 249, 240, 0.95), rgba(215, 180, 111, 0.36) 45%, transparent 70%);
+          transform: translate(-50%, -50%) scale(0.24);
+          background: radial-gradient(circle, rgba(255, 250, 242, 0.95), rgba(214, 177, 107, 0.24) 42%, transparent 72%);
           opacity: 0;
-          filter: blur(3px);
-          animation: enterGlowExpand 1.45s cubic-bezier(.16, 1, .3, 1) 3.65s forwards;
-        }
-
-        @keyframes facadeDrift {
-          0% {
-            opacity: 0;
-            transform: translateY(20px) scale(0.9);
-          }
-          22% {
-            opacity: 0.64;
-          }
-          100% {
-            opacity: 0.72;
-            transform: translateY(0) scale(0.98);
-          }
+          filter: blur(5px);
+          animation: enterGlowExpand 1.35s cubic-bezier(.16, 1, .3, 1) 3.62s forwards;
         }
 
         @keyframes storeApproach {
-          0% { opacity: 0; transform: translateX(-50%) translateY(38px) scale(0.76); }
-          18% { opacity: 1; }
-          62% { transform: translateX(-50%) translateY(8px) scale(0.95); }
-          100% { transform: translateX(-50%) translateY(18px) scale(1.22); }
+          0% {
+            opacity: 0;
+            transform: translateX(-50%) translateY(42px) scale(0.8);
+            filter: blur(3px);
+          }
+          18% {
+            opacity: 1;
+            filter: blur(0.2px);
+          }
+          62% {
+            transform: translateX(-50%) translateY(10px) scale(0.97);
+          }
+          100% {
+            transform: translateX(-50%) translateY(14px) scale(1.14);
+          }
         }
 
         @keyframes doorLeftOpen {
           from { transform: rotateY(0deg); }
-          to { transform: rotateY(-74deg); }
+          to { transform: rotateY(-72deg); }
         }
 
         @keyframes doorRightOpen {
           from { transform: rotateY(0deg); }
-          to { transform: rotateY(74deg); }
+          to { transform: rotateY(72deg); }
         }
 
         @keyframes doorGlowIn {
-          0% { opacity: 0; transform: scale(0.82); }
-          55% { opacity: 0.85; }
-          100% { opacity: 1; transform: scale(1.2); }
+          0% { opacity: 0; transform: scale(0.8); }
+          55% { opacity: 0.86; }
+          100% { opacity: 1; transform: scale(1.18); }
         }
 
         @keyframes enterGlowExpand {
-          0% { opacity: 0; transform: translate(-50%, -50%) scale(0.2); }
-          28% { opacity: 0.9; }
-          100% { opacity: 1; transform: translate(-50%, -50%) scale(7); }
+          0% { opacity: 0; transform: translate(-50%, -50%) scale(0.24); }
+          28% { opacity: 0.92; }
+          100% { opacity: 1; transform: translate(-50%, -50%) scale(6.8); }
         }
 
         @keyframes boutiqueFlash {
           0% { opacity: 0; }
-          55% { opacity: 0.82; }
+          55% { opacity: 0.68; }
           100% { opacity: 0; }
         }
 
         @keyframes skyBreathe {
-          from { transform: scale(1); filter: saturate(0.95); }
-          to { transform: scale(1.05); filter: saturate(1.08); }
+          from { transform: scale(1); filter: saturate(0.98); }
+          to { transform: scale(1.05); filter: saturate(1.04); }
         }
 
         @keyframes sunGlow {
-          from { opacity: 0.55; transform: scale(0.96); }
-          to { opacity: 0.95; transform: scale(1.04); }
+          from { opacity: 0.56; transform: scale(0.98); }
+          to { opacity: 0.92; transform: scale(1.05); }
+        }
+
+        @keyframes grainShift {
+          from { transform: translate3d(0, 0, 0); }
+          to { transform: translate3d(5%, 3%, 0); }
         }
 
         @keyframes windowShine {
           from { transform: translateX(-65%) rotate(4deg); }
-          to { transform: translateX(72%) rotate(4deg); }
+          to { transform: translateX(74%) rotate(4deg); }
         }
 
         @keyframes loaderLogo {
           from {
             opacity: 0;
-            letter-spacing: 0.05em;
-            transform: translateY(18px) scale(0.98);
+            letter-spacing: 0.06em;
+            transform: translateY(14px) scale(0.98);
           }
           to {
             opacity: 1;
@@ -7036,44 +7139,31 @@ export default function App() {
         @keyframes loaderLine {
           from { width: 0; opacity: 0; }
           20% { opacity: 1; }
-          78% { width: min(460px, 76vw); opacity: 1; }
-          to { width: min(460px, 76vw); opacity: 0; }
+          78% { width: min(380px, 72vw); opacity: 1; }
+          to { width: min(380px, 72vw); opacity: 0; }
         }
 
         @keyframes loaderTextMove {
-          0% { opacity: 0; transform: translateX(-50%) translateY(22px); }
+          0% { opacity: 0; transform: translateX(-50%) translateY(20px); }
           18% { opacity: 1; transform: translateX(-50%) translateY(0); }
           72% { opacity: 1; transform: translateX(-50%) translateY(0); }
-          100% { opacity: 0; transform: translateX(-50%) translateY(-18px); }
+          100% { opacity: 0; transform: translateX(-50%) translateY(-14px); }
         }
 
         @keyframes loaderOut {
           to {
             opacity: 0;
             pointer-events: none;
-            transform: scale(1.015);
+            transform: scale(1.01);
           }
         }
 
         @media (max-width: 900px) {
-          .italyFacade {
-            bottom: 40vh;
-            opacity: 0.42;
-          }
+          .backdropBuilding { bottom: 28vh; width: 116px; height: 270px; opacity: 0.4; }
 
-          .italyFacadeLeft {
-            left: -26px;
-          }
-
-          .italyFacadeRight {
-            right: -26px;
-          }
-        }
-
-        @media (max-width: 900px) {
           .storeScene {
-            width: min(92vw, 620px);
-            bottom: 15vh;
+            width: min(92vw, 640px);
+            bottom: 14vh;
           }
 
           .storeFacade {
@@ -7083,41 +7173,39 @@ export default function App() {
             padding-right: 18px;
           }
 
-          .storeSign {
-            width: 78%;
-          }
-
-          .boutiqueWindow {
-            border-width: 7px;
-          }
-
-          .loaderInner {
-            bottom: 34px;
-          }
+          .storeSign { width: 78%; }
+          .loaderInner { bottom: 28px; }
         }
 
         @media (max-width: 560px) {
+          .backdropBuilding { display: none; }
+
+          .streetPerspective {
+            width: 150vw;
+            height: 42vh;
+          }
+
           .storeScene {
             width: 104vw;
-            bottom: 18vh;
+            bottom: 17vh;
           }
 
           .storeFacade {
-            min-height: 300px;
-            grid-template-columns: 0.62fr 1.32fr 0.62fr;
+            min-height: 312px;
+            grid-template-columns: 0.64fr 1.3fr 0.64fr;
             gap: 8px;
-            border-radius: 28px 28px 16px 16px;
-            padding-top: 82px;
+            border-radius: 30px 30px 16px 16px;
+            padding-top: 86px;
           }
 
           .storeAwning {
             width: 82%;
-            height: 38px;
+            height: 40px;
           }
 
           .storeSign {
             width: 82%;
-            padding: 11px 14px 12px;
+            padding: 12px 14px 13px;
           }
 
           .storeSign small {
@@ -7131,27 +7219,32 @@ export default function App() {
           }
 
           .boutiqueWindow {
-            height: 142px;
+            height: 146px;
             border-width: 6px;
           }
 
+          .displayMannequin {
+            width: 42px;
+            height: 78px;
+          }
+
+          .displayMannequin::after {
+            width: 42px;
+            height: 66px;
+          }
+
+          .displayScarfFold {
+            width: 58px;
+            height: 58px;
+          }
+
           .storeDoorWrap {
-            height: 198px;
+            height: 206px;
             border-width: 7px;
           }
 
-          .displayDress {
-            width: 30px;
-            height: 62px;
-          }
-
-          .displayScarf {
-            width: 54px;
-            height: 54px;
-          }
-
           .loaderInner h1 {
-            font-size: clamp(34px, 10vw, 52px);
+            font-size: clamp(32px, 10vw, 50px);
             letter-spacing: 0.13em;
           }
 
@@ -12934,28 +13027,36 @@ export default function App() {
       <div className="scrollProgress" style={{ width: `${scrollProgress}%` }} />
 
       {loading && (
-        <div className="loader" aria-label="Opening La Grazia boutique">
-          <div className="italySky" />
-          <div className="italySun" />
-
-          <div className="italyFacade italyFacadeLeft" aria-hidden="true">
-            <span />
-            <span />
-            <span />
+        <div className="loader" aria-label="Entering La Grazia boutique">
+          <div className="italyBackdrop">
+            <div className="backdropGlow" />
+            <div className="backdropBuilding backdropBuildingLeft">
+              <span className="buildingTop" />
+              <span className="buildingWindow buildingWindowA" />
+              <span className="buildingWindow buildingWindowB" />
+              <span className="buildingWindow buildingWindowC" />
+            </div>
+            <div className="backdropBuilding backdropBuildingRight">
+              <span className="buildingTop" />
+              <span className="buildingWindow buildingWindowA" />
+              <span className="buildingWindow buildingWindowB" />
+              <span className="buildingWindow buildingWindowC" />
+            </div>
           </div>
-          <div className="italyFacade italyFacadeRight" aria-hidden="true">
-            <span />
-            <span />
-            <span />
-          </div>
 
-          <div className="italianStreet">
-            <span className="streetLine streetLineOne" />
-            <span className="streetLine streetLineTwo" />
-            <span className="streetLine streetLineThree" />
+          <div className="sunHaze" />
+          <div className="cinemaGrain" />
+
+          <div className="streetPerspective">
+            <span className="streetSeam streetSeamLeft" />
+            <span className="streetSeam streetSeamCenter" />
+            <span className="streetSeam streetSeamRight" />
+            <div className="streetReflection" />
           </div>
 
           <div className="storeScene">
+            <div className="storeShadow" />
+
             <div className="storeAwning">
               <span />
               <span />
@@ -12965,19 +13066,26 @@ export default function App() {
             </div>
 
             <div className="storeFacade">
+              <div className="storeCornice" />
+
               <div className="storeSign">
                 <small>Milano Atelier</small>
                 <h1>LA GRAZIA</h1>
               </div>
 
               <div className="boutiqueWindow boutiqueWindowLeft">
+                <div className="windowDepth" />
                 <div className="windowShine" />
                 <div className="displayPedestal" />
-                <div className="displayDress" />
+                <div className="displayMannequin" />
               </div>
 
               <div className="storeDoorWrap">
                 <div className="doorGlow" />
+                <div className="doorInterior">
+                  <span className="interiorLightBeam beamOne" />
+                  <span className="interiorLightBeam beamTwo" />
+                </div>
                 <div className="doorPanel doorPanelLeft">
                   <span className="doorHandle" />
                 </div>
@@ -12987,9 +13095,10 @@ export default function App() {
               </div>
 
               <div className="boutiqueWindow boutiqueWindowRight">
+                <div className="windowDepth" />
                 <div className="windowShine" />
                 <div className="displayPedestal" />
-                <div className="displayScarf" />
+                <div className="displayScarfFold" />
               </div>
             </div>
 
@@ -13000,9 +13109,9 @@ export default function App() {
           </div>
 
           <div className="loaderInner">
-            <p className="loaderKicker">{isArabic ? "مرحباً بكِ في إيطاليا" : "Benvenuta in Italia"}</p>
+            <p className="loaderKicker">{isArabic ? "من شوارع إيطاليا إلى لا غراتسيا" : "From the streets of Italy to La Grazia"}</p>
             <h1>LA GRAZIA</h1>
-            <p>{isArabic ? "أبواب الأتيليه تُفتح الآن" : "The atelier doors are opening"}</p>
+            <p>{isArabic ? "ادخلي إلى Milano Atelier" : "Entering the Milano Atelier"}</p>
             <div className="loaderLine" />
           </div>
 
