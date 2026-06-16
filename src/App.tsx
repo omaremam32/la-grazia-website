@@ -1629,7 +1629,7 @@ export default function App() {
 
     const timer = window.setTimeout(() => {
       setOfferPopupOpen(true);
-    }, 5200);
+    }, 13500);
 
     return () => window.clearTimeout(timer);
   }, []);
@@ -6559,15 +6559,27 @@ export default function App() {
           display: block;
         }
 
+        .boutiqueSmoothBackdrop {
+          position: absolute;
+          inset: 0;
+          z-index: 0;
+          background-image:
+            linear-gradient(180deg, rgba(16, 11, 8, 0.18), rgba(16, 11, 8, 0.46)),
+            url("/photos/la-grazia-boutique-entry.png");
+          background-size: cover;
+          background-position: center center;
+          transform: scale(1.08);
+          filter: blur(18px) contrast(1.05) saturate(0.88) brightness(0.72);
+        }
+
         .boutiqueSmoothStill,
         .boutiqueSmoothVideo {
           position: absolute;
           inset: 0;
           width: 100%;
           height: 100%;
-          object-fit: cover;
           object-position: center center;
-          background: #100b08;
+          background: transparent;
           transform: translateZ(0);
           will-change: opacity, transform;
           backface-visibility: hidden;
@@ -6575,13 +6587,12 @@ export default function App() {
 
         .boutiqueSmoothStill {
           z-index: 1;
-          background-image:
-            linear-gradient(180deg, rgba(16, 11, 8, 0.03), rgba(16, 11, 8, 0.32)),
-            url("/photos/la-grazia-boutique-entry.png");
-          background-size: cover;
+          background-image: url("/photos/la-grazia-boutique-entry.png");
+          background-size: contain;
+          background-repeat: no-repeat;
           background-position: center center;
           opacity: 1;
-          transform: scale(1.01);
+          transform: scale(1);
           animation: smoothStillHold 2.20s cubic-bezier(.16, 1, .3, 1) forwards;
         }
 
@@ -6592,6 +6603,7 @@ export default function App() {
 
         .boutiqueSmoothVideo {
           z-index: 2;
+          object-fit: contain;
           opacity: 0;
           animation: smoothVideoIn 700ms ease forwards;
         }
@@ -6603,14 +6615,14 @@ export default function App() {
           pointer-events: none;
           background:
             radial-gradient(circle at 54% 50%, rgba(255, 238, 205, 0.05) 0 20%, rgba(16, 11, 8, 0.02) 42%, rgba(16, 11, 8, 0.18) 100%),
-            linear-gradient(90deg, rgba(16, 11, 8, 0.28), transparent 32%, transparent 68%, rgba(16, 11, 8, 0.28)),
-            linear-gradient(180deg, rgba(16, 11, 8, 0.03), rgba(16, 11, 8, 0.12));
+            linear-gradient(90deg, rgba(16, 11, 8, 0.24), transparent 32%, transparent 68%, rgba(16, 11, 8, 0.24)),
+            linear-gradient(180deg, rgba(16, 11, 8, 0.02), rgba(16, 11, 8, 0.10));
           opacity: 1;
           transition: opacity 900ms cubic-bezier(.16, 1, .3, 1);
         }
 
         .dreamExitStarted .boutiqueSmoothTone {
-          opacity: 0.42;
+          opacity: 0.34;
         }
 
         .boutiqueSmoothDream {
@@ -6620,8 +6632,8 @@ export default function App() {
           pointer-events: none;
           opacity: 0;
           background:
-            radial-gradient(circle at 54% 52%, rgba(255, 248, 236, 0.82), rgba(255, 248, 236, 0.24) 32%, transparent 67%),
-            linear-gradient(180deg, rgba(255, 248, 236, 0), rgba(255, 248, 236, 0.2));
+            radial-gradient(circle at 54% 52%, rgba(255, 248, 236, 0.82), rgba(255, 248, 236, 0.22) 32%, transparent 67%),
+            linear-gradient(180deg, rgba(255, 248, 236, 0), rgba(255, 248, 236, 0.18));
           transform: scale(0.96);
           transition:
             opacity 1100ms cubic-bezier(.16, 1, .3, 1),
@@ -6640,7 +6652,7 @@ export default function App() {
           pointer-events: none;
           opacity: 0;
           background:
-            linear-gradient(115deg, transparent 20%, rgba(255, 248, 236, 0.24) 43%, transparent 62%);
+            linear-gradient(115deg, transparent 20%, rgba(255, 248, 236, 0.22) 43%, transparent 62%);
           transform: translate3d(-10%, 0, 0);
         }
 
@@ -6672,7 +6684,7 @@ export default function App() {
           width: 0;
           height: 100%;
           background: linear-gradient(90deg, transparent, rgba(255, 238, 207, 0.88), rgba(214, 177, 107, 0.9));
-          animation: smoothProgress 7.67s cubic-bezier(.16, 1, .3, 1) 0.35s forwards;
+          animation: smoothProgress 7.70s cubic-bezier(.16, 1, .3, 1) 0.35s forwards;
         }
 
         .pageBehindDream {
@@ -6686,8 +6698,8 @@ export default function App() {
         }
 
         @keyframes smoothStillHold {
-          0% { transform: scale(1.01); opacity: 1; }
-          100% { transform: scale(1.035); opacity: 1; }
+          0% { transform: scale(1); opacity: 1; }
+          100% { transform: scale(1.015); opacity: 1; }
         }
 
         @keyframes smoothVideoIn {
@@ -6697,7 +6709,7 @@ export default function App() {
 
         @keyframes smoothPearlSweep {
           0% { opacity: 0; transform: translate3d(-10%, 0, 0); }
-          38% { opacity: 0.55; }
+          38% { opacity: 0.50; }
           100% { opacity: 0; transform: translate3d(10%, 0, 0); }
         }
 
@@ -6740,6 +6752,11 @@ export default function App() {
           .boutiqueSmoothStill {
             object-position: center center;
             background-position: center center;
+          }
+
+          .boutiqueSmoothBackdrop {
+            transform: scale(1.14);
+            filter: blur(16px) contrast(1.05) saturate(0.88) brightness(0.68);
           }
         }
 
@@ -12524,6 +12541,7 @@ export default function App() {
           ].filter(Boolean).join(" ")}
           aria-label="Entering La Grazia boutique"
         >
+          <div className="boutiqueSmoothBackdrop" aria-hidden="true" />
           <div className="boutiqueSmoothStill" aria-hidden="true" />
 
           {introVideoStarted && (
