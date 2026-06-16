@@ -1310,6 +1310,7 @@ export default function App() {
   const [scrollProgress, setScrollProgress] = useState(0);
   const [loading, setLoading] = useState(true);
   const [introVideoStarted, setIntroVideoStarted] = useState(false);
+  const [introExitStarted, setIntroExitStarted] = useState(false);
   const [launchCountdown, setLaunchCountdown] = useState<LaunchCountdown>(() => getLaunchCountdown());
 
   const isArabic = language === "AR";
@@ -1577,14 +1578,21 @@ export default function App() {
       : "Hello La Grazia Milano, I would love to ask about reserving a piece from the upcoming La Grazia Atelier Collection.";
 
   useEffect(() => {
-    const videoStartTimer = window.setTimeout(() => setIntroVideoStarted(true), 2600);
-    const finishTimer = window.setTimeout(() => setLoading(false), 10850);
+    const videoStartTimer = window.setTimeout(() => setIntroVideoStarted(true), 2200);
+    const fallbackExitTimer = window.setTimeout(() => setIntroExitStarted(true), 8321);
 
     return () => {
       window.clearTimeout(videoStartTimer);
-      window.clearTimeout(finishTimer);
+      window.clearTimeout(fallbackExitTimer);
     };
   }, []);
+
+  useEffect(() => {
+    if (!introExitStarted) return;
+
+    const finishTimer = window.setTimeout(() => setLoading(false), 1250);
+    return () => window.clearTimeout(finishTimer);
+  }, [introExitStarted]);
 
   useEffect(() => {
     if (typeof window === "undefined") return;
@@ -6543,15 +6551,16 @@ export default function App() {
           background: #100b08;
           color: #fff8ef;
           isolation: isolate;
-          animation: loaderOut 1.25s cubic-bezier(.16, 1, .3, 1) 9.55s forwards;
+          opacity: 1;
+          transition: opacity 900ms cubic-bezier(.16, 1, .3, 1);
         }
 
-        .boutiqueDreamLoader {
+        .boutiqueSmoothLoader {
           display: block;
         }
 
-        .boutiqueDreamStill,
-        .boutiqueDreamVideo {
+        .boutiqueSmoothStill,
+        .boutiqueSmoothVideo {
           position: absolute;
           inset: 0;
           width: 100%;
@@ -6559,323 +6568,178 @@ export default function App() {
           object-fit: cover;
           object-position: center center;
           background: #100b08;
+          transform: translateZ(0);
+          will-change: opacity, transform;
+          backface-visibility: hidden;
         }
 
-        .boutiqueDreamStill {
+        .boutiqueSmoothStill {
           z-index: 1;
           background-image:
-            linear-gradient(180deg, rgba(16, 11, 8, 0.02), rgba(16, 11, 8, 0.34)),
+            linear-gradient(180deg, rgba(16, 11, 8, 0.03), rgba(16, 11, 8, 0.32)),
             url("/photos/la-grazia-boutique-entry.png");
           background-size: cover;
           background-position: center center;
-          transform: scale(1.018);
-          filter: contrast(1.03) saturate(0.9) brightness(0.84);
-          animation: dreamStillHold 2.65s cubic-bezier(.16, 1, .3, 1) forwards;
-          will-change: transform, filter, opacity;
+          opacity: 1;
+          transform: scale(1.01);
+          animation: smoothStillHold 2.20s cubic-bezier(.16, 1, .3, 1) forwards;
         }
 
-        .boutiqueDreamVideo {
+        .videoHasStarted .boutiqueSmoothStill {
+          opacity: 0;
+          transition: opacity 700ms ease;
+        }
+
+        .boutiqueSmoothVideo {
           z-index: 2;
           opacity: 0;
-          filter: contrast(1.03) saturate(0.92) brightness(0.9);
-          animation:
-            dreamVideoFadeIn 0.95s ease forwards,
-            dreamVideoSoftOut 2.35s cubic-bezier(.16, 1, .3, 1) 6.45s forwards;
-          will-change: opacity, filter, transform;
+          animation: smoothVideoIn 700ms ease forwards;
         }
 
-        .boutiqueDreamTone {
+        .boutiqueSmoothTone {
+          position: absolute;
+          inset: 0;
+          z-index: 3;
+          pointer-events: none;
+          background:
+            radial-gradient(circle at 54% 50%, rgba(255, 238, 205, 0.05) 0 20%, rgba(16, 11, 8, 0.02) 42%, rgba(16, 11, 8, 0.18) 100%),
+            linear-gradient(90deg, rgba(16, 11, 8, 0.28), transparent 32%, transparent 68%, rgba(16, 11, 8, 0.28)),
+            linear-gradient(180deg, rgba(16, 11, 8, 0.03), rgba(16, 11, 8, 0.12));
+          opacity: 1;
+          transition: opacity 900ms cubic-bezier(.16, 1, .3, 1);
+        }
+
+        .dreamExitStarted .boutiqueSmoothTone {
+          opacity: 0.42;
+        }
+
+        .boutiqueSmoothDream {
           position: absolute;
           inset: 0;
           z-index: 4;
           pointer-events: none;
+          opacity: 0;
           background:
-            radial-gradient(circle at 54% 50%, rgba(255, 238, 205, 0.04) 0 18%, rgba(16, 11, 8, 0.03) 38%, rgba(16, 11, 8, 0.30) 100%),
-            linear-gradient(90deg, rgba(16, 11, 8, 0.34), transparent 30%, transparent 70%, rgba(16, 11, 8, 0.34)),
-            linear-gradient(180deg, rgba(16, 11, 8, 0.04), rgba(16, 11, 8, 0.18));
-          animation: dreamToneLift 10s cubic-bezier(.16, 1, .3, 1) forwards;
+            radial-gradient(circle at 54% 52%, rgba(255, 248, 236, 0.82), rgba(255, 248, 236, 0.24) 32%, transparent 67%),
+            linear-gradient(180deg, rgba(255, 248, 236, 0), rgba(255, 248, 236, 0.2));
+          transform: scale(0.96);
+          transition:
+            opacity 1100ms cubic-bezier(.16, 1, .3, 1),
+            transform 1100ms cubic-bezier(.16, 1, .3, 1);
         }
 
-        .boutiqueDreamGrain {
+        .dreamExitStarted .boutiqueSmoothDream {
+          opacity: 1;
+          transform: scale(1.08);
+        }
+
+        .boutiqueSmoothPearl {
           position: absolute;
-          inset: -25%;
+          inset: 0;
           z-index: 5;
-          opacity: 0.052;
-          mix-blend-mode: soft-light;
           pointer-events: none;
-          background-image:
-            radial-gradient(circle, rgba(255,255,255,0.42) 0.5px, transparent 0.72px),
-            radial-gradient(circle, rgba(0,0,0,0.42) 0.42px, transparent 0.7px);
-          background-size: 11px 11px, 17px 17px;
-          animation: loaderGrain 9s linear infinite;
-        }
-
-        .boutiqueDreamMist {
-          position: absolute;
-          z-index: 6;
-          pointer-events: none;
-          border-radius: 50%;
           opacity: 0;
-          filter: blur(28px);
-          mix-blend-mode: screen;
-        }
-
-        .boutiqueDreamMistOne {
-          left: 2%;
-          top: 14%;
-          width: 44vw;
-          height: 22vw;
-          background: radial-gradient(ellipse at center, rgba(255, 244, 225, 0.22), transparent 68%);
-          animation: dreamMistDriftOne 2.8s ease 7.5s forwards;
-        }
-
-        .boutiqueDreamMistTwo {
-          right: -8%;
-          bottom: 10%;
-          width: 52vw;
-          height: 26vw;
-          background: radial-gradient(ellipse at center, rgba(214, 177, 107, 0.16), transparent 68%);
-          animation: dreamMistDriftTwo 3s ease 7.7s forwards;
-        }
-
-        .boutiqueDreamBloom {
-          position: absolute;
-          left: 54%;
-          top: 50%;
-          z-index: 7;
-          width: 14vw;
-          height: 14vw;
-          min-width: 160px;
-          min-height: 160px;
-          border-radius: 50%;
-          transform: translate(-50%, -50%) scale(0.16);
-          background: radial-gradient(circle, rgba(255, 248, 236, 0.76), rgba(218, 180, 112, 0.22) 43%, transparent 74%);
-          opacity: 0;
-          filter: blur(12px);
-          pointer-events: none;
-          animation: dreamInteriorBloom 2.25s cubic-bezier(.16, 1, .3, 1) 7.15s forwards;
-        }
-
-        .boutiqueDreamVeil {
-          position: absolute;
-          inset: 0;
-          z-index: 8;
-          pointer-events: none;
           background:
-            radial-gradient(circle at 54% 50%, rgba(255, 248, 236, 0.78), rgba(255, 248, 236, 0.26) 34%, transparent 68%),
-            linear-gradient(180deg, rgba(255, 248, 236, 0), rgba(255, 248, 236, 0.18));
-          opacity: 0;
-          filter: blur(0.8px);
-          animation: dreamVeilIn 2.1s cubic-bezier(.16, 1, .3, 1) 8s forwards;
+            linear-gradient(115deg, transparent 20%, rgba(255, 248, 236, 0.24) 43%, transparent 62%);
+          transform: translate3d(-10%, 0, 0);
         }
 
-        .boutiqueDreamPearl {
-          position: absolute;
-          inset: 0;
-          z-index: 9;
-          pointer-events: none;
-          background:
-            linear-gradient(120deg, transparent 16%, rgba(255, 248, 236, 0.14) 42%, transparent 62%),
-            radial-gradient(circle at 50% 42%, rgba(255, 248, 236, 0.34), transparent 28%);
-          opacity: 0;
-          transform: translateX(-10%);
-          animation: dreamPearlSweep 1.9s ease 8.45s forwards;
+        .dreamExitStarted .boutiqueSmoothPearl {
+          animation: smoothPearlSweep 1050ms ease forwards;
         }
 
-        .boutiqueDreamExit {
-          position: absolute;
-          inset: 0;
-          z-index: 10;
-          pointer-events: none;
-          background: #fff8ef;
-          opacity: 0;
-          animation: dreamFinalWash 1.65s cubic-bezier(.16, 1, .3, 1) 9.05s forwards;
-        }
-
-        .boutiqueDreamProgress {
+        .boutiqueSmoothProgress {
           position: absolute;
           left: 50%;
           bottom: clamp(28px, 5vh, 54px);
-          z-index: 12;
+          z-index: 8;
           width: min(300px, 52vw);
           height: 1px;
           transform: translateX(-50%);
           background: rgba(255, 238, 207, 0.11);
           overflow: hidden;
-          opacity: 0.88;
-          animation: dreamProgressDisappear 1s ease 8.45s forwards;
+          opacity: 0.86;
+          transition: opacity 500ms ease, transform 500ms ease;
         }
 
-        .boutiqueDreamProgress span {
+        .dreamExitStarted .boutiqueSmoothProgress {
+          opacity: 0;
+          transform: translateX(-50%) translateY(8px);
+        }
+
+        .boutiqueSmoothProgress span {
           display: block;
           width: 0;
           height: 100%;
           background: linear-gradient(90deg, transparent, rgba(255, 238, 207, 0.88), rgba(214, 177, 107, 0.9));
-          animation: dreamProgress 8.25s cubic-bezier(.16, 1, .3, 1) 0.35s forwards;
+          animation: smoothProgress 7.67s cubic-bezier(.16, 1, .3, 1) 0.35s forwards;
         }
 
         .pageBehindDream {
-          opacity: 0.98;
+          opacity: 0.99;
         }
 
-        .pageDreamEnter {
+        .pageSmoothDreamEnter {
           animation:
-            pageFade 0.9s ease forwards,
-            pageDreamEnter 1.35s cubic-bezier(.16, 1, .3, 1) forwards;
+            pageFade 0.7s ease forwards,
+            pageSmoothDreamEnter 1.05s cubic-bezier(.16, 1, .3, 1) forwards;
         }
 
-        @keyframes dreamStillHold {
-          0% {
-            transform: scale(1.018);
-            filter: contrast(1.02) saturate(0.88) brightness(0.78) blur(0.45px);
-          }
-          58% {
-            transform: scale(1.026);
-            filter: contrast(1.03) saturate(0.9) brightness(0.84) blur(0px);
-          }
-          100% {
-            transform: scale(1.042);
-            filter: contrast(1.04) saturate(0.92) brightness(0.9) blur(0px);
-          }
+        @keyframes smoothStillHold {
+          0% { transform: scale(1.01); opacity: 1; }
+          100% { transform: scale(1.035); opacity: 1; }
         }
 
-        @keyframes dreamVideoFadeIn {
+        @keyframes smoothVideoIn {
           from { opacity: 0; }
           to { opacity: 1; }
         }
 
-        @keyframes dreamVideoSoftOut {
-          0% {
-            filter: contrast(1.03) saturate(0.92) brightness(0.9) blur(0);
-            transform: scale(1);
-          }
-          62% {
-            filter: contrast(1.02) saturate(0.88) brightness(1.08) blur(1.4px);
-            transform: scale(1.018);
-          }
-          100% {
-            filter: contrast(0.98) saturate(0.74) brightness(1.24) blur(4px);
-            transform: scale(1.038);
-            opacity: 0.92;
-          }
+        @keyframes smoothPearlSweep {
+          0% { opacity: 0; transform: translate3d(-10%, 0, 0); }
+          38% { opacity: 0.55; }
+          100% { opacity: 0; transform: translate3d(10%, 0, 0); }
         }
 
-        @keyframes dreamToneLift {
-          0% {
-            background:
-              radial-gradient(circle at 54% 50%, rgba(255, 238, 205, 0.035) 0 18%, rgba(16, 11, 8, 0.03) 38%, rgba(16, 11, 8, 0.38) 100%),
-              linear-gradient(90deg, rgba(16, 11, 8, 0.4), transparent 30%, transparent 70%, rgba(16, 11, 8, 0.4)),
-              linear-gradient(180deg, rgba(16, 11, 8, 0.06), rgba(16, 11, 8, 0.24));
-          }
-          100% {
-            background:
-              radial-gradient(circle at 54% 50%, rgba(255, 238, 205, 0.16) 0 22%, rgba(16, 11, 8, 0.02) 42%, rgba(16, 11, 8, 0.12) 100%),
-              linear-gradient(90deg, rgba(16, 11, 8, 0.18), transparent 35%, transparent 65%, rgba(16, 11, 8, 0.18)),
-              linear-gradient(180deg, rgba(16, 11, 8, 0.01), rgba(16, 11, 8, 0.08));
-          }
-        }
-
-        @keyframes dreamMistDriftOne {
-          0% { opacity: 0; transform: translate3d(-8%, 10%, 0) scale(0.86); }
-          42% { opacity: 0.52; }
-          100% { opacity: 0.18; transform: translate3d(18%, -8%, 0) scale(1.32); }
-        }
-
-        @keyframes dreamMistDriftTwo {
-          0% { opacity: 0; transform: translate3d(8%, 8%, 0) scale(0.86); }
-          42% { opacity: 0.46; }
-          100% { opacity: 0.16; transform: translate3d(-18%, -12%, 0) scale(1.36); }
-        }
-
-        @keyframes dreamInteriorBloom {
-          0% { opacity: 0; transform: translate(-50%, -50%) scale(0.16); }
-          36% { opacity: 0.58; }
-          100% { opacity: 0.86; transform: translate(-50%, -50%) scale(7.2); }
-        }
-
-        @keyframes dreamVeilIn {
-          0% { opacity: 0; transform: scale(0.96); }
-          48% { opacity: 0.46; }
-          100% { opacity: 0.74; transform: scale(1.1); }
-        }
-
-        @keyframes dreamPearlSweep {
-          0% { opacity: 0; transform: translateX(-12%) scale(1); }
-          36% { opacity: 0.54; }
-          100% { opacity: 0.08; transform: translateX(12%) scale(1.04); }
-        }
-
-        @keyframes dreamFinalWash {
-          0% { opacity: 0; }
-          46% { opacity: 0.34; }
-          100% { opacity: 0.08; }
-        }
-
-        @keyframes dreamProgress {
+        @keyframes smoothProgress {
           from { width: 0; opacity: 0; }
           12% { opacity: 1; }
           88% { width: 100%; opacity: 1; }
           to { width: 100%; opacity: 0; }
         }
 
-        @keyframes dreamProgressDisappear {
-          to { opacity: 0; transform: translateX(-50%) translateY(8px); }
-        }
-
-        @keyframes pageDreamEnter {
+        @keyframes pageSmoothDreamEnter {
           0% {
             opacity: 0;
-            filter: blur(14px) saturate(0.82) brightness(1.13);
-            transform: translateY(18px) scale(1.012);
+            transform: translateY(16px) scale(1.008);
           }
           45% {
-            opacity: 0.74;
-            filter: blur(6px) saturate(0.94) brightness(1.07);
+            opacity: 0.78;
           }
           100% {
             opacity: 1;
-            filter: blur(0) saturate(1) brightness(1);
             transform: translateY(0) scale(1);
           }
         }
 
-        @keyframes loaderGrain {
-          from { transform: translate3d(0, 0, 0); }
-          to { transform: translate3d(5%, 4%, 0); }
-        }
-
-        @keyframes loaderOut {
-          to {
-            opacity: 0;
-            pointer-events: none;
-            transform: scale(1.006);
-          }
-        }
-
         @media (max-width: 900px) {
-          .boutiqueDreamVideo,
-          .boutiqueDreamStill {
+          .boutiqueSmoothVideo,
+          .boutiqueSmoothStill {
             object-position: center center;
             background-position: center center;
           }
 
-          .boutiqueDreamProgress {
+          .boutiqueSmoothProgress {
             width: min(300px, 64vw);
             bottom: 34px;
           }
         }
 
         @media (max-width: 560px) {
-          .boutiqueDreamVideo,
-          .boutiqueDreamStill {
+          .boutiqueSmoothVideo,
+          .boutiqueSmoothStill {
             object-position: center center;
             background-position: center center;
-          }
-
-          .boutiqueDreamMistOne,
-          .boutiqueDreamMistTwo {
-            width: 82vw;
-            height: 44vw;
           }
         }
 
@@ -12652,34 +12516,35 @@ export default function App() {
 
       {loading && (
         <div
-          className={introVideoStarted ? "loader boutiqueDreamLoader videoHasStarted" : "loader boutiqueDreamLoader"}
+          className={[
+            "loader",
+            "boutiqueSmoothLoader",
+            introVideoStarted ? "videoHasStarted" : "",
+            introExitStarted ? "dreamExitStarted" : "",
+          ].filter(Boolean).join(" ")}
           aria-label="Entering La Grazia boutique"
         >
-          <div className="boutiqueDreamStill" aria-hidden="true" />
+          <div className="boutiqueSmoothStill" aria-hidden="true" />
 
           {introVideoStarted && (
             <video
-              className="boutiqueDreamVideo"
+              className="boutiqueSmoothVideo"
               autoPlay
               muted
               playsInline
               preload="auto"
               poster="/photos/la-grazia-boutique-entry.png"
+              onEnded={() => setIntroExitStarted(true)}
             >
               <source src="/videos/la-grazia-entry.mp4" type="video/mp4" />
             </video>
           )}
 
-          <div className="boutiqueDreamTone" aria-hidden="true" />
-          <div className="boutiqueDreamGrain" aria-hidden="true" />
-          <div className="boutiqueDreamMist boutiqueDreamMistOne" aria-hidden="true" />
-          <div className="boutiqueDreamMist boutiqueDreamMistTwo" aria-hidden="true" />
-          <div className="boutiqueDreamBloom" aria-hidden="true" />
-          <div className="boutiqueDreamVeil" aria-hidden="true" />
-          <div className="boutiqueDreamPearl" aria-hidden="true" />
-          <div className="boutiqueDreamExit" aria-hidden="true" />
+          <div className="boutiqueSmoothTone" aria-hidden="true" />
+          <div className="boutiqueSmoothDream" aria-hidden="true" />
+          <div className="boutiqueSmoothPearl" aria-hidden="true" />
 
-          <div className="boutiqueDreamProgress" aria-hidden="true">
+          <div className="boutiqueSmoothProgress" aria-hidden="true">
             <span />
           </div>
         </div>
@@ -13088,7 +12953,7 @@ export default function App() {
         </div>
       )}
 
-      <div className={`${darkMode ? "page darkMode" : "page"} ${isArabic ? "arabic" : ""} ${loading ? "pageBehindDream" : "pageDreamEnter"}`} id="top">
+      <div className={`${darkMode ? "page darkMode" : "page"} ${isArabic ? "arabic" : ""} ${loading ? "pageBehindDream" : "pageSmoothDreamEnter"}`} id="top">
         <div className="topBar" aria-label={t.topBar}>
           <div className="topBarTrack">
             {[0, 1].map((group) => (
