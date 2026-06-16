@@ -1587,7 +1587,7 @@ export default function App() {
   useEffect(() => {
     if (!introExitStarted) return;
 
-    const finishTimer = window.setTimeout(() => setLoading(false), 2850);
+    const finishTimer = window.setTimeout(() => setLoading(false), 3600);
     return () => window.clearTimeout(finishTimer);
   }, [introExitStarted]);
 
@@ -6599,7 +6599,7 @@ export default function App() {
         }
 
         .dreamExitStarted .logoDreamSatin {
-          animation: logoSatinDreamSweep 1200ms ease forwards;
+          animation: logoSatinDreamSweep 900ms ease forwards;
         }
 
         .logoDreamWash {
@@ -6618,7 +6618,7 @@ export default function App() {
         }
 
         .dreamExitStarted .logoDreamWash {
-          opacity: 0.48;
+          opacity: 0.42;
           transform: translateY(0);
         }
 
@@ -6628,16 +6628,13 @@ export default function App() {
           top: 50%;
           z-index: 5;
           width: min(760px, 88vw);
-          transform: translate3d(-50%, -46%, 0) scale(0.985);
+          transform: translate3d(-50%, -50%, 0);
           text-align: center;
           opacity: 0;
           pointer-events: none;
           color: #fff8ef;
-          text-shadow:
-            0 18px 46px rgba(47, 29, 19, 0.34),
-            0 0 18px rgba(214, 177, 107, 0.12);
           isolation: isolate;
-          will-change: opacity, transform;
+          will-change: opacity;
           backface-visibility: hidden;
         }
 
@@ -6648,12 +6645,12 @@ export default function App() {
           top: 50%;
           z-index: -1;
           width: min(620px, 82vw);
-          height: clamp(112px, 16vw, 200px);
+          height: clamp(120px, 16vw, 210px);
           transform: translate3d(-50%, -50%, 0);
           border-radius: 999px;
           background:
-            radial-gradient(ellipse at center, rgba(42, 26, 16, 0.46), rgba(42, 26, 16, 0.18) 44%, transparent 70%);
-          opacity: 0.88;
+            radial-gradient(ellipse at center, rgba(42, 26, 16, 0.52), rgba(42, 26, 16, 0.22) 46%, transparent 72%);
+          opacity: 0.9;
         }
 
         .logoDreamBrand strong {
@@ -6665,27 +6662,26 @@ export default function App() {
           line-height: 1;
           color: #d7b46f;
           text-shadow:
-            0 1px 0 rgba(255, 247, 218, 0.18),
-            0 12px 30px rgba(44, 26, 15, 0.46),
-            0 0 22px rgba(215, 180, 111, 0.34);
-          will-change: opacity, transform;
+            0 1px 0 rgba(255, 247, 218, 0.16),
+            0 10px 26px rgba(44, 26, 15, 0.42),
+            0 0 18px rgba(215, 180, 111, 0.26);
           backface-visibility: hidden;
         }
 
         .logoDreamKicker {
           display: block;
           margin-bottom: 16px;
-          color: #f5dc9f;
+          color: #f1d89d;
           font-size: 11px;
           letter-spacing: 0.38em;
           text-transform: uppercase;
           text-shadow:
-            0 8px 24px rgba(44, 26, 15, 0.62),
-            0 0 22px rgba(215, 180, 111, 0.46);
+            0 8px 20px rgba(44, 26, 15, 0.42),
+            0 0 12px rgba(215, 180, 111, 0.24);
         }
 
         .dreamExitStarted .logoDreamBrand {
-          animation: logoDreamBrandIn 2450ms cubic-bezier(.22, 1, .36, 1) 140ms forwards;
+          animation: logoDreamBrandIn 3300ms ease-in-out 180ms forwards;
         }
 
         .logoDreamProgress {
@@ -6721,8 +6717,8 @@ export default function App() {
 
         .pageLogoDreamEnter {
           animation:
-            pageFade 0.65s ease forwards,
-            pageLogoDreamEnter 1s cubic-bezier(.16, 1, .3, 1) forwards;
+            pageFade 0.75s ease forwards,
+            pageLogoDreamEnter 1.05s cubic-bezier(.16, 1, .3, 1) forwards;
         }
 
         @keyframes logoSatinDreamSweep {
@@ -6734,23 +6730,18 @@ export default function App() {
         @keyframes logoDreamBrandIn {
           0% {
             opacity: 0;
-            transform: translate3d(-50%, -43%, 0) scale(0.978);
           }
-          20% {
-            opacity: 0.86;
-            transform: translate3d(-50%, -47%, 0) scale(0.992);
+          22% {
+            opacity: 0.82;
           }
-          36% {
+          34% {
             opacity: 1;
-            transform: translate3d(-50%, -50%, 0) scale(1);
           }
-          78% {
+          76% {
             opacity: 1;
-            transform: translate3d(-50%, -51.5%, 0) scale(1.004);
           }
           100% {
             opacity: 0;
-            transform: translate3d(-50%, -55%, 0) scale(1.012);
           }
         }
 
