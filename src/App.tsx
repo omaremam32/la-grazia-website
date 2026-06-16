@@ -1576,7 +1576,7 @@ export default function App() {
       : "Hello La Grazia Milano, I would love to ask about reserving a piece from the upcoming La Grazia Atelier Collection.";
 
   useEffect(() => {
-    const timer = window.setTimeout(() => setLoading(false), 6200);
+    const timer = window.setTimeout(() => setLoading(false), 6041);
     return () => window.clearTimeout(timer);
   }, []);
 
@@ -6537,55 +6537,56 @@ export default function App() {
           background: #100b08;
           color: #fff8ef;
           isolation: isolate;
-          animation: loaderOut 0.9s ease 5.45s forwards;
+          animation: loaderOut 0.9s ease 5.19s forwards;
         }
 
-        .boutiqueEnterLoader {
+        .boutiqueVideoLoader {
           display: block;
         }
 
-        .boutiqueEnterFrame,
-        .boutiqueEnterFocus {
+        .boutiqueIntroVideo,
+        .boutiqueVideoFallback {
           position: absolute;
           inset: 0;
+          width: 100%;
+          height: 100%;
+          object-fit: cover;
+          object-position: center center;
           z-index: 1;
-          background-image: url("/photos/la-grazia-boutique-entry.png");
+          background: #100b08;
+        }
+
+        .boutiqueIntroVideo {
+          filter: contrast(1.03) saturate(0.92) brightness(0.9);
+        }
+
+        .boutiqueVideoFallback {
+          z-index: 0;
+          background-image:
+            linear-gradient(180deg, rgba(16, 11, 8, 0.04), rgba(16, 11, 8, 0.42)),
+            url("/photos/la-grazia-boutique-entry.png");
           background-size: cover;
           background-position: center center;
-          transform-origin: 54% 48%;
-          will-change: transform, opacity, filter;
+          transform: scale(1.04);
+          filter: contrast(1.03) saturate(0.9) brightness(0.82);
         }
 
-        .boutiqueEnterFrame {
-          filter: contrast(1.04) saturate(0.9) brightness(0.78);
-          animation: boutiqueCameraEnter 6.05s cubic-bezier(.16, 1, .3, 1) forwards;
-        }
-
-        .boutiqueEnterFocus {
-          z-index: 2;
-          opacity: 0;
-          filter: contrast(1.06) saturate(0.94) brightness(0.96) blur(0.6px);
-          clip-path: circle(17% at 54% 50%);
-          animation: boutiqueDoorFocus 6.05s cubic-bezier(.16, 1, .3, 1) forwards;
-        }
-
-        .boutiqueEnterShade {
+        .boutiqueVideoTone {
           position: absolute;
           inset: 0;
-          z-index: 4;
+          z-index: 3;
           pointer-events: none;
           background:
-            radial-gradient(circle at 54% 50%, rgba(255, 238, 205, 0.04) 0 18%, rgba(16, 11, 8, 0.06) 35%, rgba(16, 11, 8, 0.52) 100%),
-            linear-gradient(90deg, rgba(16, 11, 8, 0.55), transparent 31%, transparent 69%, rgba(16, 11, 8, 0.55)),
-            linear-gradient(180deg, rgba(16, 11, 8, 0.08), rgba(16, 11, 8, 0.42));
-          animation: boutiqueShadeShift 6.05s cubic-bezier(.16, 1, .3, 1) forwards;
+            radial-gradient(circle at 54% 50%, rgba(255, 238, 205, 0.04) 0 18%, rgba(16, 11, 8, 0.03) 38%, rgba(16, 11, 8, 0.34) 100%),
+            linear-gradient(90deg, rgba(16, 11, 8, 0.38), transparent 30%, transparent 70%, rgba(16, 11, 8, 0.38)),
+            linear-gradient(180deg, rgba(16, 11, 8, 0.06), rgba(16, 11, 8, 0.22));
         }
 
-        .boutiqueEnterGrain {
+        .boutiqueVideoGrain {
           position: absolute;
           inset: -25%;
-          z-index: 5;
-          opacity: 0.06;
+          z-index: 4;
+          opacity: 0.055;
           mix-blend-mode: soft-light;
           pointer-events: none;
           background-image:
@@ -6595,124 +6596,48 @@ export default function App() {
           animation: loaderGrain 9s linear infinite;
         }
 
-        .boutiqueEnterGlow {
+        .boutiqueVideoLight {
           position: absolute;
           left: 54%;
           top: 50%;
-          z-index: 6;
-          width: 12vw;
-          height: 12vw;
-          min-width: 150px;
-          min-height: 150px;
+          z-index: 5;
+          width: 14vw;
+          height: 14vw;
+          min-width: 160px;
+          min-height: 160px;
           border-radius: 50%;
           transform: translate(-50%, -50%) scale(0.16);
-          background: radial-gradient(circle, rgba(255, 248, 236, 0.9), rgba(218, 180, 112, 0.26) 43%, transparent 74%);
+          background: radial-gradient(circle, rgba(255, 248, 236, 0.72), rgba(218, 180, 112, 0.22) 43%, transparent 74%);
           opacity: 0;
-          filter: blur(9px);
+          filter: blur(10px);
           pointer-events: none;
-          animation: boutiqueInteriorLight 2.05s cubic-bezier(.16, 1, .3, 1) 3.85s forwards;
+          animation: boutiqueInteriorLight 1.7s cubic-bezier(.16, 1, .3, 1) 4.14s forwards;
         }
 
-        .boutiqueEnterCurtain {
-          position: absolute;
-          inset: 0;
-          z-index: 8;
-          pointer-events: none;
-          background: #fff8ef;
-          opacity: 0;
-          animation: boutiqueEnterFlash 1.05s ease 5.05s forwards;
-        }
-
-        .boutiqueEnterProgress {
+        .boutiqueVideoProgress {
           position: absolute;
           left: 50%;
           bottom: clamp(28px, 5vh, 54px);
-          z-index: 9;
-          width: min(340px, 58vw);
+          z-index: 8;
+          width: min(320px, 56vw);
           height: 1px;
           transform: translateX(-50%);
-          background: rgba(255, 238, 207, 0.13);
+          background: rgba(255, 238, 207, 0.12);
           overflow: hidden;
         }
 
-        .boutiqueEnterProgress span {
+        .boutiqueVideoProgress span {
           display: block;
           width: 0;
           height: 100%;
-          background: linear-gradient(90deg, transparent, rgba(255, 238, 207, 0.95), rgba(214, 177, 107, 0.95));
-          animation: boutiqueProgress 5.1s cubic-bezier(.16, 1, .3, 1) 0.32s forwards;
-        }
-
-        @keyframes boutiqueCameraEnter {
-          0% {
-            transform: scale(1.01) translate3d(0, 0, 0);
-            filter: contrast(1.02) saturate(0.88) brightness(0.74) blur(0.8px);
-          }
-          14% {
-            filter: contrast(1.03) saturate(0.9) brightness(0.8) blur(0px);
-          }
-          48% {
-            transform: scale(1.22) translate3d(-1.4%, 1.2%, 0);
-            filter: contrast(1.04) saturate(0.91) brightness(0.83) blur(0px);
-          }
-          78% {
-            transform: scale(1.82) translate3d(-4.4%, 2.8%, 0);
-            filter: contrast(1.05) saturate(0.92) brightness(0.92) blur(0.2px);
-          }
-          100% {
-            transform: scale(2.52) translate3d(-7.2%, 4.7%, 0);
-            filter: contrast(1.05) saturate(0.92) brightness(1.04) blur(0.6px);
-          }
-        }
-
-        @keyframes boutiqueDoorFocus {
-          0%, 26% {
-            opacity: 0;
-            transform: scale(1.01) translate3d(0, 0, 0);
-            clip-path: circle(13% at 54% 50%);
-          }
-          58% {
-            opacity: 0.18;
-            transform: scale(1.32) translate3d(-1.8%, 1.4%, 0);
-            clip-path: circle(21% at 54% 50%);
-          }
-          86% {
-            opacity: 0.35;
-            transform: scale(2.05) translate3d(-5.1%, 3.3%, 0);
-            clip-path: circle(34% at 54% 50%);
-          }
-          100% {
-            opacity: 0;
-            transform: scale(2.75) translate3d(-7.6%, 4.9%, 0);
-            clip-path: circle(55% at 54% 50%);
-          }
-        }
-
-        @keyframes boutiqueShadeShift {
-          0% {
-            background:
-              radial-gradient(circle at 54% 50%, rgba(255, 238, 205, 0.03) 0 14%, rgba(16, 11, 8, 0.08) 36%, rgba(16, 11, 8, 0.58) 100%),
-              linear-gradient(90deg, rgba(16, 11, 8, 0.56), transparent 31%, transparent 69%, rgba(16, 11, 8, 0.56)),
-              linear-gradient(180deg, rgba(16, 11, 8, 0.08), rgba(16, 11, 8, 0.44));
-          }
-          100% {
-            background:
-              radial-gradient(circle at 54% 50%, rgba(255, 238, 205, 0.18) 0 20%, rgba(16, 11, 8, 0.05) 38%, rgba(16, 11, 8, 0.22) 100%),
-              linear-gradient(90deg, rgba(16, 11, 8, 0.38), transparent 36%, transparent 64%, rgba(16, 11, 8, 0.38)),
-              linear-gradient(180deg, rgba(16, 11, 8, 0.04), rgba(16, 11, 8, 0.18));
-          }
+          background: linear-gradient(90deg, transparent, rgba(255, 238, 207, 0.92), rgba(214, 177, 107, 0.92));
+          animation: boutiqueProgress 5.14s cubic-bezier(.16, 1, .3, 1) 0.3s forwards;
         }
 
         @keyframes boutiqueInteriorLight {
           0% { opacity: 0; transform: translate(-50%, -50%) scale(0.16); }
-          30% { opacity: 0.68; }
-          100% { opacity: 0.92; transform: translate(-50%, -50%) scale(7.6); }
-        }
-
-        @keyframes boutiqueEnterFlash {
-          0% { opacity: 0; }
-          48% { opacity: 0.76; }
-          100% { opacity: 0; }
+          34% { opacity: 0.54; }
+          100% { opacity: 0.82; transform: translate(-50%, -50%) scale(6.8); }
         }
 
         @keyframes boutiqueProgress {
@@ -6736,46 +6661,21 @@ export default function App() {
         }
 
         @media (max-width: 900px) {
-          .boutiqueEnterFrame,
-          .boutiqueEnterFocus {
-            background-position: center center;
-            transform-origin: 54% 51%;
+          .boutiqueIntroVideo,
+          .boutiqueVideoFallback {
+            object-position: center center;
           }
 
-          .boutiqueEnterGlow {
-            left: 54%;
-            top: 51%;
-          }
-
-          .boutiqueEnterProgress {
+          .boutiqueVideoProgress {
             width: min(300px, 64vw);
             bottom: 34px;
           }
         }
 
         @media (max-width: 560px) {
-          .boutiqueEnterFrame,
-          .boutiqueEnterFocus {
-            background-position: 54% center;
-            transform-origin: 54% 52%;
-          }
-
-          @keyframes boutiqueCameraEnter {
-            0% {
-              transform: scale(1.12) translate3d(0, 0, 0);
-              filter: contrast(1.02) saturate(0.88) brightness(0.74) blur(0.8px);
-            }
-            20% {
-              filter: contrast(1.03) saturate(0.9) brightness(0.8) blur(0px);
-            }
-            64% {
-              transform: scale(1.62) translate3d(-2.3%, 2.8%, 0);
-              filter: contrast(1.04) saturate(0.91) brightness(0.9) blur(0px);
-            }
-            100% {
-              transform: scale(2.18) translate3d(-5.8%, 5.3%, 0);
-              filter: contrast(1.05) saturate(0.92) brightness(1.04) blur(0.5px);
-            }
+          .boutiqueIntroVideo,
+          .boutiqueVideoFallback {
+            object-position: center center;
           }
         }
 
@@ -12551,15 +12451,24 @@ export default function App() {
       <div className="scrollProgress" style={{ width: `${scrollProgress}%` }} />
 
       {loading && (
-        <div className="loader boutiqueEnterLoader" aria-label="Entering La Grazia boutique">
-          <div className="boutiqueEnterFrame" aria-hidden="true" />
-          <div className="boutiqueEnterFocus" aria-hidden="true" />
-          <div className="boutiqueEnterShade" aria-hidden="true" />
-          <div className="boutiqueEnterGrain" aria-hidden="true" />
-          <div className="boutiqueEnterGlow" aria-hidden="true" />
-          <div className="boutiqueEnterCurtain" aria-hidden="true" />
+        <div className="loader boutiqueVideoLoader" aria-label="Entering La Grazia boutique">
+          <video
+            className="boutiqueIntroVideo"
+            autoPlay
+            muted
+            playsInline
+            preload="auto"
+            poster="/photos/la-grazia-boutique-entry.png"
+          >
+            <source src="/videos/la-grazia-entry.mp4" type="video/mp4" />
+          </video>
 
-          <div className="boutiqueEnterProgress" aria-hidden="true">
+          <div className="boutiqueVideoFallback" aria-hidden="true" />
+          <div className="boutiqueVideoTone" aria-hidden="true" />
+          <div className="boutiqueVideoGrain" aria-hidden="true" />
+          <div className="boutiqueVideoLight" aria-hidden="true" />
+
+          <div className="boutiqueVideoProgress" aria-hidden="true">
             <span />
           </div>
         </div>
