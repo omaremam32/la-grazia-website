@@ -6514,70 +6514,58 @@ export default function App() {
           inset: 0;
           z-index: 200;
           overflow: hidden;
-          background: #19120e;
+          background: #120d0a;
           color: #fff8ef;
           isolation: isolate;
           animation: loaderOut 0.95s ease 4.95s forwards;
         }
 
-        .cinematicLoader {
+        .realisticBoutiqueLoader {
           display: grid;
           place-items: center;
         }
 
-        .loaderVideo,
-        .loaderPhotoFallback {
+        .loaderBoutiqueImage {
           position: absolute;
           inset: 0;
-          width: 100%;
-          height: 100%;
-          object-fit: cover;
-          transform: scale(1.08);
-          filter: contrast(1.04) saturate(0.92) brightness(0.84);
-          animation: boutiqueCameraPush 5.55s cubic-bezier(.16, 1, .3, 1) forwards;
-        }
-
-        .loaderVideo {
           z-index: 1;
-          background: transparent;
-        }
-
-        .loaderPhotoFallback {
-          z-index: 0;
-          background:
-            linear-gradient(180deg, rgba(24, 16, 11, 0.18), rgba(24, 16, 11, 0.72)),
-            radial-gradient(circle at 50% 32%, rgba(255, 242, 220, 0.44), transparent 28%),
-            url("/photos/la-grazia-boutique-entry.jpg");
+          background-image:
+            linear-gradient(180deg, rgba(14, 9, 6, 0.06), rgba(14, 9, 6, 0.44)),
+            url("/photos/la-grazia-boutique-entry.png");
           background-size: cover;
           background-position: center;
+          transform: scale(1.04);
+          filter: contrast(1.04) saturate(0.94) brightness(0.86);
+          animation: boutiqueImagePush 5.55s cubic-bezier(.16, 1, .3, 1) forwards;
+          will-change: transform, filter;
         }
 
-        .loaderFilmTint {
+        .loaderBoutiqueVignette {
           position: absolute;
           inset: 0;
           z-index: 4;
           pointer-events: none;
           background:
-            linear-gradient(180deg, rgba(17, 10, 7, 0.18), rgba(17, 10, 7, 0.42)),
-            radial-gradient(circle at 50% 46%, rgba(255, 244, 224, 0.18), transparent 34%),
-            linear-gradient(90deg, rgba(17, 10, 7, 0.48), transparent 28%, transparent 72%, rgba(17, 10, 7, 0.48));
+            radial-gradient(circle at 50% 48%, rgba(255, 241, 215, 0.12), transparent 34%),
+            linear-gradient(180deg, rgba(12, 8, 5, 0.05), rgba(12, 8, 5, 0.55)),
+            linear-gradient(90deg, rgba(12, 8, 5, 0.58), transparent 28%, transparent 72%, rgba(12, 8, 5, 0.58));
         }
 
-        .loaderSoftGrain {
+        .loaderBoutiqueGrain {
           position: absolute;
           inset: -25%;
           z-index: 5;
-          pointer-events: none;
-          opacity: 0.08;
+          opacity: 0.075;
           mix-blend-mode: soft-light;
+          pointer-events: none;
           background-image:
-            radial-gradient(circle, rgba(255,255,255,0.45) 0.6px, transparent 0.7px),
-            radial-gradient(circle, rgba(0,0,0,0.45) 0.45px, transparent 0.7px);
+            radial-gradient(circle, rgba(255,255,255,0.46) 0.55px, transparent 0.75px),
+            radial-gradient(circle, rgba(0,0,0,0.48) 0.45px, transparent 0.72px);
           background-size: 11px 11px, 17px 17px;
           animation: loaderGrain 9s linear infinite;
         }
 
-        .boutiqueDoorReveal {
+        .loaderDoorReveal {
           position: absolute;
           inset: 0;
           z-index: 8;
@@ -6589,16 +6577,17 @@ export default function App() {
         .doorRevealPanel {
           position: absolute;
           top: 0;
-          width: 50.2%;
+          width: 50.15%;
           height: 100%;
           background:
-            linear-gradient(180deg, rgba(32, 20, 14, 0.98), rgba(12, 7, 5, 0.96)),
-            radial-gradient(circle at 50% 48%, rgba(169, 128, 73, 0.16), transparent 38%);
-          box-shadow: inset 0 0 80px rgba(214, 177, 107, 0.08);
-          animation-duration: 1.7s;
+            linear-gradient(180deg, rgba(33, 20, 13, 0.985), rgba(10, 6, 4, 0.965)),
+            radial-gradient(circle at 50% 46%, rgba(199, 158, 89, 0.12), transparent 38%);
+          box-shadow: inset 0 0 90px rgba(214, 177, 107, 0.08);
+          animation-duration: 1.72s;
           animation-timing-function: cubic-bezier(.16, 1, .3, 1);
-          animation-delay: 2.35s;
+          animation-delay: 2.25s;
           animation-fill-mode: forwards;
+          will-change: transform;
         }
 
         .doorRevealLeft {
@@ -6613,20 +6602,20 @@ export default function App() {
           animation-name: openRightReveal;
         }
 
-        .doorRevealLight {
+        .doorRevealBloom {
           position: absolute;
           left: 50%;
-          top: 50%;
-          width: 14vw;
-          height: 14vw;
-          min-width: 160px;
-          min-height: 160px;
+          top: 51%;
+          width: 15vw;
+          height: 15vw;
+          min-width: 170px;
+          min-height: 170px;
           border-radius: 50%;
           transform: translate(-50%, -50%) scale(0.16);
-          background: radial-gradient(circle, rgba(255, 248, 236, 0.95), rgba(214, 177, 107, 0.34) 42%, transparent 72%);
+          background: radial-gradient(circle, rgba(255, 249, 238, 0.95), rgba(214, 177, 107, 0.34) 42%, transparent 74%);
           opacity: 0;
           filter: blur(8px);
-          animation: revealLightBloom 1.45s cubic-bezier(.16, 1, .3, 1) 3.45s forwards;
+          animation: revealLightBloom 1.45s cubic-bezier(.16, 1, .3, 1) 3.42s forwards;
         }
 
         .loaderLuxuryCopy {
@@ -6645,7 +6634,7 @@ export default function App() {
           font-size: 11px;
           letter-spacing: 0.34em;
           text-transform: uppercase;
-          text-shadow: 0 10px 28px rgba(0, 0, 0, 0.5);
+          text-shadow: 0 10px 28px rgba(0, 0, 0, 0.58);
         }
 
         .loaderLuxuryCopy h1 {
@@ -6656,8 +6645,8 @@ export default function App() {
           letter-spacing: 0.18em;
           color: #fff8ef;
           text-shadow:
-            0 12px 34px rgba(0, 0, 0, 0.58),
-            0 0 42px rgba(214, 177, 107, 0.16);
+            0 12px 34px rgba(0, 0, 0, 0.62),
+            0 0 42px rgba(214, 177, 107, 0.18);
           animation: loaderLogo 1.25s cubic-bezier(.16, 1, .3, 1) both;
         }
 
@@ -6667,7 +6656,7 @@ export default function App() {
           font-size: 11px;
           letter-spacing: 0.28em;
           text-transform: uppercase;
-          text-shadow: 0 10px 28px rgba(0, 0, 0, 0.5);
+          text-shadow: 0 10px 28px rgba(0, 0, 0, 0.58);
           animation: fadeUp 1s ease 0.42s both;
         }
 
@@ -6679,20 +6668,20 @@ export default function App() {
           animation: loaderLine 3.55s ease 0.58s forwards;
         }
 
-        @keyframes boutiqueCameraPush {
+        @keyframes boutiqueImagePush {
           0% {
-            transform: scale(1.08);
-            filter: contrast(1.02) saturate(0.88) brightness(0.78) blur(1.4px);
+            transform: scale(1.04);
+            filter: contrast(1.02) saturate(0.9) brightness(0.78) blur(1.2px);
           }
           22% {
-            filter: contrast(1.04) saturate(0.92) brightness(0.84) blur(0px);
+            filter: contrast(1.04) saturate(0.94) brightness(0.86) blur(0px);
           }
           64% {
-            transform: scale(1.16);
+            transform: scale(1.12);
           }
           100% {
-            transform: scale(1.28);
-            filter: contrast(1.06) saturate(0.95) brightness(0.98) blur(0px);
+            transform: scale(1.22);
+            filter: contrast(1.06) saturate(0.96) brightness(0.98) blur(0px);
           }
         }
 
@@ -6763,9 +6752,8 @@ export default function App() {
         }
 
         @media (max-width: 560px) {
-          .loaderVideo,
-          .loaderPhotoFallback {
-            object-position: center;
+          .loaderBoutiqueImage {
+            background-position: center;
             transform: scale(1.12);
           }
 
@@ -12557,30 +12545,21 @@ export default function App() {
       <div className="scrollProgress" style={{ width: `${scrollProgress}%` }} />
 
       {loading && (
-        <div className="loader cinematicLoader" aria-label="Entering La Grazia boutique">
-          <video
-            className="loaderVideo"
-            autoPlay
-            muted
-            playsInline
-            preload="auto"
-            poster="/photos/la-grazia-boutique-entry.jpg"
-          >
-            <source src="/videos/la-grazia-entry.mp4" type="video/mp4" />
-          </video>
+        <div className="loader realisticBoutiqueLoader" aria-label="Entering La Grazia boutique">
+          <div className="loaderBoutiqueImage" aria-hidden="true" />
+          <div className="loaderBoutiqueVignette" aria-hidden="true" />
+          <div className="loaderBoutiqueGrain" aria-hidden="true" />
 
-          <div className="loaderPhotoFallback" />
-          <div className="loaderFilmTint" />
-          <div className="loaderSoftGrain" />
-
-          <div className="boutiqueDoorReveal" aria-hidden="true">
+          <div className="loaderDoorReveal" aria-hidden="true">
             <span className="doorRevealPanel doorRevealLeft" />
             <span className="doorRevealPanel doorRevealRight" />
-            <span className="doorRevealLight" />
+            <span className="doorRevealBloom" />
           </div>
 
           <div className="loaderLuxuryCopy">
-            <p className="loaderKicker">{isArabic ? "لا غراتسيا — ميلانو أتيليه" : "La Grazia — Milano Atelier"}</p>
+            <p className="loaderKicker">
+              {isArabic ? "لا غراتسيا — ميلانو أتيليه" : "La Grazia — Milano Atelier"}
+            </p>
             <h1>LA GRAZIA</h1>
             <p>{isArabic ? "ادخلي إلى الأتيليه" : "Step inside the atelier"}</p>
             <div className="loaderLine" />
