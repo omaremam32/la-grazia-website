@@ -1577,7 +1577,7 @@ export default function App() {
       : "Hello La Grazia Milano, I would love to ask about reserving a piece from the upcoming La Grazia Atelier Collection.";
 
   useEffect(() => {
-    const fallbackExitTimer = window.setTimeout(() => setIntroExitStarted(true), 6391);
+    const fallbackExitTimer = window.setTimeout(() => setIntroExitStarted(true), 6291);
 
     return () => {
       window.clearTimeout(fallbackExitTimer);
@@ -1587,7 +1587,7 @@ export default function App() {
   useEffect(() => {
     if (!introExitStarted) return;
 
-    const finishTimer = window.setTimeout(() => setLoading(false), 1300);
+    const finishTimer = window.setTimeout(() => setLoading(false), 1250);
     return () => window.clearTimeout(finishTimer);
   }, [introExitStarted]);
 
@@ -1626,7 +1626,7 @@ export default function App() {
 
     const timer = window.setTimeout(() => {
       setOfferPopupOpen(true);
-    }, 450);
+    }, 350);
 
     return () => window.clearTimeout(timer);
   }, [loading]);
@@ -6552,50 +6552,41 @@ export default function App() {
           transition: opacity 900ms cubic-bezier(.16, 1, .3, 1);
         }
 
-        .videoOnlyDreamLoader {
+        .fullscreenVideoDreamLoader {
           display: block;
         }
 
-        .videoOnlyDreamVideo {
+        .fullscreenDreamVideo {
           position: absolute;
           inset: 0;
           z-index: 1;
           width: 100%;
           height: 100%;
-          object-fit: contain;
+          object-fit: cover;
           object-position: center center;
           background: #120c08;
           transform: translateZ(0);
           backface-visibility: hidden;
         }
 
-        .videoOnlyDreamBackdrop {
-          position: absolute;
-          inset: 0;
-          z-index: 0;
-          pointer-events: none;
-          background:
-            radial-gradient(circle at 50% 50%, rgba(255, 238, 205, 0.11), transparent 34%),
-            linear-gradient(135deg, #120c08 0%, #2b1c14 46%, #120c08 100%);
-        }
-
-        .videoOnlyDreamTone {
+        .fullscreenDreamTone {
           position: absolute;
           inset: 0;
           z-index: 2;
           pointer-events: none;
           background:
-            linear-gradient(90deg, rgba(18, 12, 8, 0.16), transparent 25%, transparent 75%, rgba(18, 12, 8, 0.16)),
+            radial-gradient(circle at 54% 50%, rgba(255, 238, 205, 0.035) 0 20%, rgba(18, 12, 8, 0.02) 42%, rgba(18, 12, 8, 0.16) 100%),
+            linear-gradient(90deg, rgba(18, 12, 8, 0.18), transparent 30%, transparent 70%, rgba(18, 12, 8, 0.18)),
             linear-gradient(180deg, rgba(18, 12, 8, 0.02), rgba(18, 12, 8, 0.10));
           opacity: 1;
           transition: opacity 900ms cubic-bezier(.16, 1, .3, 1);
         }
 
-        .dreamExitStarted .videoOnlyDreamTone {
-          opacity: 0.28;
+        .dreamExitStarted .fullscreenDreamTone {
+          opacity: 0.22;
         }
 
-        .videoOnlyDreamSatin {
+        .fullscreenDreamSatin {
           position: absolute;
           inset: 0;
           z-index: 3;
@@ -6607,31 +6598,31 @@ export default function App() {
           transform: translate3d(-12%, 0, 0);
         }
 
-        .dreamExitStarted .videoOnlyDreamSatin {
-          animation: satinDreamSweep 1150ms ease forwards;
+        .dreamExitStarted .fullscreenDreamSatin {
+          animation: fullscreenSatinDreamSweep 1150ms ease forwards;
         }
 
-        .videoOnlyDreamWash {
+        .fullscreenDreamVeil {
           position: absolute;
           inset: 0;
           z-index: 4;
           pointer-events: none;
           opacity: 0;
           background:
-            radial-gradient(ellipse at 50% 50%, rgba(255, 248, 236, 0.78), rgba(255, 248, 236, 0.26) 34%, transparent 68%),
-            linear-gradient(180deg, rgba(255, 248, 236, 0.04), rgba(255, 248, 236, 0.24));
-          transform: scale(0.98);
+            linear-gradient(180deg, rgba(255, 248, 236, 0.06), rgba(255, 248, 236, 0.32)),
+            radial-gradient(ellipse at 50% 48%, rgba(255, 248, 236, 0.66), rgba(255, 248, 236, 0.22) 36%, transparent 72%);
+          transform: translateY(8px) scale(0.99);
           transition:
             opacity 1150ms cubic-bezier(.16, 1, .3, 1),
             transform 1150ms cubic-bezier(.16, 1, .3, 1);
         }
 
-        .dreamExitStarted .videoOnlyDreamWash {
+        .dreamExitStarted .fullscreenDreamVeil {
           opacity: 1;
-          transform: scale(1.06);
+          transform: translateY(0) scale(1.04);
         }
 
-        .videoOnlyDreamProgress {
+        .fullscreenDreamProgress {
           position: absolute;
           left: 50%;
           bottom: clamp(28px, 5vh, 54px);
@@ -6645,43 +6636,43 @@ export default function App() {
           transition: opacity 500ms ease, transform 500ms ease;
         }
 
-        .dreamExitStarted .videoOnlyDreamProgress {
+        .dreamExitStarted .fullscreenDreamProgress {
           opacity: 0;
           transform: translateX(-50%) translateY(8px);
         }
 
-        .videoOnlyDreamProgress span {
+        .fullscreenDreamProgress span {
           display: block;
           width: 0;
           height: 100%;
           background: linear-gradient(90deg, transparent, rgba(255, 238, 207, 0.84), rgba(214, 177, 107, 0.88));
-          animation: videoOnlyProgress 5.9s cubic-bezier(.16, 1, .3, 1) 0.25s forwards;
+          animation: fullscreenDreamProgress 5.9s cubic-bezier(.16, 1, .3, 1) 0.25s forwards;
         }
 
         .pageBehindDream {
           opacity: 0.99;
         }
 
-        .pageVideoDreamEnter {
+        .pageFullscreenDreamEnter {
           animation:
             pageFade 0.7s ease forwards,
-            pageVideoDreamEnter 1.05s cubic-bezier(.16, 1, .3, 1) forwards;
+            pageFullscreenDreamEnter 1.05s cubic-bezier(.16, 1, .3, 1) forwards;
         }
 
-        @keyframes satinDreamSweep {
+        @keyframes fullscreenSatinDreamSweep {
           0% { opacity: 0; transform: translate3d(-12%, 0, 0); }
-          38% { opacity: 0.52; }
+          38% { opacity: 0.50; }
           100% { opacity: 0; transform: translate3d(12%, 0, 0); }
         }
 
-        @keyframes videoOnlyProgress {
+        @keyframes fullscreenDreamProgress {
           from { width: 0; opacity: 0; }
           12% { opacity: 1; }
           88% { width: 100%; opacity: 1; }
           to { width: 100%; opacity: 0; }
         }
 
-        @keyframes pageVideoDreamEnter {
+        @keyframes pageFullscreenDreamEnter {
           0% {
             opacity: 0;
             transform: translateY(14px) scale(1.006);
@@ -6696,19 +6687,21 @@ export default function App() {
         }
 
         @media (max-width: 900px) {
-          .videoOnlyDreamVideo {
-            object-fit: contain;
+          .fullscreenDreamVideo {
+            object-fit: cover;
+            object-position: center center;
           }
 
-          .videoOnlyDreamProgress {
+          .fullscreenDreamProgress {
             width: min(300px, 64vw);
             bottom: 34px;
           }
         }
 
         @media (max-width: 560px) {
-          .videoOnlyDreamVideo {
-            object-fit: contain;
+          .fullscreenDreamVideo {
+            object-fit: cover;
+            object-position: center center;
           }
         }
 
@@ -12485,11 +12478,11 @@ export default function App() {
 
       {loading && (
         <div
-          className={introExitStarted ? "loader videoOnlyDreamLoader dreamExitStarted" : "loader videoOnlyDreamLoader"}
+          className={introExitStarted ? "loader fullscreenVideoDreamLoader dreamExitStarted" : "loader fullscreenVideoDreamLoader"}
           aria-label="Entering La Grazia boutique"
         >
           <video
-            className="videoOnlyDreamVideo"
+            className="fullscreenDreamVideo"
             autoPlay
             muted
             playsInline
@@ -12499,12 +12492,11 @@ export default function App() {
             <source src="/videos/la-grazia-entry.mp4" type="video/mp4" />
           </video>
 
-          <div className="videoOnlyDreamBackdrop" aria-hidden="true" />
-          <div className="videoOnlyDreamTone" aria-hidden="true" />
-          <div className="videoOnlyDreamSatin" aria-hidden="true" />
-          <div className="videoOnlyDreamWash" aria-hidden="true" />
+          <div className="fullscreenDreamTone" aria-hidden="true" />
+          <div className="fullscreenDreamSatin" aria-hidden="true" />
+          <div className="fullscreenDreamVeil" aria-hidden="true" />
 
-          <div className="videoOnlyDreamProgress" aria-hidden="true">
+          <div className="fullscreenDreamProgress" aria-hidden="true">
             <span />
           </div>
         </div>
@@ -12913,7 +12905,7 @@ export default function App() {
         </div>
       )}
 
-      <div className={`${darkMode ? "page darkMode" : "page"} ${isArabic ? "arabic" : ""} ${loading ? "pageBehindDream" : "pageVideoDreamEnter"}`} id="top">
+      <div className={`${darkMode ? "page darkMode" : "page"} ${isArabic ? "arabic" : ""} ${loading ? "pageBehindDream" : "pageFullscreenDreamEnter"}`} id="top">
         <div className="topBar" aria-label={t.topBar}>
           <div className="topBarTrack">
             {[0, 1].map((group) => (
