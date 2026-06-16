@@ -1576,7 +1576,7 @@ export default function App() {
       : "Hello La Grazia Milano, I would love to ask about reserving a piece from the upcoming La Grazia Atelier Collection.";
 
   useEffect(() => {
-    const timer = window.setTimeout(() => setLoading(false), 5800);
+    const timer = window.setTimeout(() => setLoading(false), 4300);
     return () => window.clearTimeout(timer);
   }, []);
 
@@ -6508,671 +6508,577 @@ export default function App() {
         }
 
         .mobileBottom { display: none; }
+
         .loader {
           position: fixed;
           inset: 0;
           z-index: 200;
-          overflow: hidden;
-          background:
-            radial-gradient(circle at 50% 28%, rgba(247, 241, 232, 0.5), transparent 28%),
-            linear-gradient(180deg, #efe3cf 0%, #d6b98e 44%, #7a5940 100%);
-          color: #fff9f0;
-          animation: loaderOut 0.95s ease 4.95s forwards;
-          perspective: 1400px;
-        }
-
-        .loader::before {
-          content: "";
-          position: absolute;
-          inset: 0;
-          z-index: 8;
-          pointer-events: none;
-          background:
-            radial-gradient(circle at center, transparent 34%, rgba(44, 31, 24, 0.28) 100%),
-            linear-gradient(90deg, rgba(44, 31, 24, 0.22), transparent 22%, transparent 78%, rgba(44, 31, 24, 0.22));
-          opacity: 0.72;
-        }
-
-        .loader::after {
-          content: "";
-          position: absolute;
-          inset: 0;
-          z-index: 20;
-          pointer-events: none;
-          background: #fff9f0;
-          opacity: 0;
-          animation: boutiqueFlash 0.9s ease 4.42s forwards;
-        }
-
-        .italySky {
-          position: absolute;
-          inset: 0;
-          background:
-            linear-gradient(180deg, rgba(255, 249, 240, 0.72), rgba(233, 204, 162, 0.26) 48%, rgba(44, 31, 24, 0.2)),
-            radial-gradient(circle at 22% 22%, rgba(255, 249, 240, 0.8), transparent 18%);
-          animation: skyBreathe 4.8s ease-in-out both;
-        }
-
-        .italySun {
-          position: absolute;
-          right: 15%;
-          top: 14%;
-          width: clamp(80px, 12vw, 160px);
-          height: clamp(80px, 12vw, 160px);
-          border-radius: 50%;
-          background: radial-gradient(circle, rgba(255, 244, 213, 0.92), rgba(215, 180, 111, 0.2) 62%, transparent 70%);
-          filter: blur(1px);
-          opacity: 0.8;
-          animation: sunGlow 3.8s ease-in-out infinite alternate;
-        }
-
-        .italyFacade {
-          position: absolute;
-          z-index: 2;
-          bottom: 34vh;
-          width: clamp(96px, 14vw, 190px);
-          height: clamp(170px, 24vw, 310px);
-          border-radius: 28px 28px 6px 6px;
-          background:
-            linear-gradient(180deg, rgba(255, 249, 240, 0.2), rgba(109, 75, 52, 0.2)),
-            repeating-linear-gradient(
-              0deg,
-              rgba(255, 249, 240, 0.12) 0 1px,
-              transparent 1px 42px
-            ),
-            linear-gradient(135deg, rgba(94, 62, 42, 0.3), rgba(44, 31, 24, 0.36));
-          border: 1px solid rgba(255, 249, 240, 0.16);
-          box-shadow: 0 28px 80px rgba(44, 31, 24, 0.16);
-          opacity: 0.72;
-          filter: blur(0.15px);
-          animation: facadeDrift 5.2s cubic-bezier(.16, 1, .3, 1) both;
-        }
-
-        .italyFacade::before {
-          content: "";
-          position: absolute;
-          left: 50%;
-          top: -24px;
-          width: 54%;
-          height: 46px;
-          transform: translateX(-50%);
-          border-radius: 999px 999px 0 0;
-          background: rgba(92, 58, 38, 0.22);
-          border: 1px solid rgba(255, 249, 240, 0.14);
-        }
-
-        .italyFacade span {
-          position: absolute;
-          width: 22%;
-          height: 18%;
-          border-radius: 999px 999px 8px 8px;
-          background:
-            radial-gradient(circle at 50% 24%, rgba(255, 244, 213, 0.42), transparent 38%),
-            linear-gradient(180deg, rgba(44, 31, 24, 0.18), rgba(44, 31, 24, 0.36));
-          border: 1px solid rgba(255, 249, 240, 0.12);
-        }
-
-        .italyFacade span:nth-child(1) { left: 18%; top: 24%; }
-        .italyFacade span:nth-child(2) { right: 18%; top: 24%; }
-        .italyFacade span:nth-child(3) { left: 39%; top: 56%; }
-
-        .italyFacadeLeft {
-          left: clamp(16px, 7vw, 120px);
-          transform: translateX(-18px) scale(0.94);
-        }
-
-        .italyFacadeRight {
-          right: clamp(16px, 7vw, 120px);
-          transform: translateX(18px) scale(0.94);
-        }
-
-        .italianStreet {
-          position: absolute;
-          left: 50%;
-          bottom: -8%;
-          width: 120vw;
-          height: 42vh;
-          transform: translateX(-50%) rotateX(64deg);
-          transform-origin: center bottom;
-          background:
-            repeating-linear-gradient(90deg, rgba(255, 249, 240, 0.08) 0 2px, transparent 2px 86px),
-            repeating-linear-gradient(0deg, rgba(255, 249, 240, 0.08) 0 2px, transparent 2px 64px),
-            linear-gradient(180deg, rgba(118, 82, 55, 0.2), #4e3528);
-          border-top: 1px solid rgba(255, 249, 240, 0.22);
-          box-shadow: inset 0 28px 60px rgba(44, 31, 24, 0.3);
-        }
-
-        .streetLine {
-          position: absolute;
-          left: 50%;
-          bottom: 0;
-          width: 1px;
-          height: 120%;
-          background: linear-gradient(180deg, rgba(255, 249, 240, 0), rgba(255, 249, 240, 0.2));
-          transform-origin: bottom;
-        }
-
-        .streetLineOne { transform: rotate(18deg); }
-        .streetLineTwo { transform: rotate(-18deg); }
-        .streetLineThree { transform: translateX(-50%); opacity: 0.42; }
-
-        .storeScene {
-          position: absolute;
-          left: 50%;
-          bottom: 11vh;
-          z-index: 5;
-          width: clamp(360px, 62vw, 840px);
-          transform: translateX(-50%) translateY(18px) scale(0.86);
-          transform-origin: center bottom;
-          animation: storeApproach 5.45s cubic-bezier(.16, 1, .3, 1) forwards;
-        }
-
-        .storeAwning {
-          position: relative;
-          z-index: 4;
           display: grid;
-          grid-template-columns: repeat(5, 1fr);
-          width: 88%;
-          height: clamp(34px, 5vw, 58px);
-          margin: 0 auto;
-          border-radius: 26px 26px 10px 10px;
+          place-items: center;
+          background: radial-gradient(circle at center, rgba(176, 138, 69, 0.18), transparent 42%), #2c1f18;
+          color: #f7f1e8;
+          animation: loaderOut 0.95s ease 3.25s forwards;
           overflow: hidden;
-          border: 1px solid rgba(255, 249, 240, 0.3);
-          box-shadow: 0 18px 36px rgba(44, 31, 24, 0.26);
         }
-
-        .storeAwning span:nth-child(odd) {
-          background: linear-gradient(180deg, #fff9f0, #d9bf91);
-        }
-
-        .storeAwning span:nth-child(even) {
-          background: linear-gradient(180deg, #7c4f37, #3b261d);
-        }
-
-        .storeFacade {
-          position: relative;
-          display: grid;
-          grid-template-columns: 1fr 1.18fr 1fr;
-          gap: clamp(14px, 2.2vw, 26px);
-          align-items: end;
-          min-height: clamp(260px, 37vw, 430px);
-          padding: clamp(72px, 8vw, 104px) clamp(22px, 4vw, 52px) clamp(24px, 3vw, 40px);
-          background:
-            linear-gradient(180deg, rgba(255, 249, 240, 0.96), rgba(230, 210, 176, 0.94)),
-            repeating-linear-gradient(90deg, rgba(176, 138, 69, 0.12) 0 1px, transparent 1px 80px);
-          border: 1px solid rgba(255, 249, 240, 0.5);
-          border-radius: 34px 34px 18px 18px;
-          box-shadow:
-            0 34px 90px rgba(44, 31, 24, 0.36),
-            inset 0 0 0 1px rgba(176, 138, 69, 0.2);
-        }
-
-        .storeSign {
-          position: absolute;
-          left: 50%;
-          top: clamp(18px, 2.2vw, 28px);
-          width: min(460px, 72%);
-          transform: translateX(-50%);
-          text-align: center;
-          padding: 14px 22px 16px;
-          border-radius: 999px;
-          background:
-            linear-gradient(135deg, rgba(44, 31, 24, 0.96), rgba(86, 58, 40, 0.94)),
-            radial-gradient(circle at top, rgba(215, 180, 111, 0.25), transparent 60%);
-          border: 1px solid rgba(215, 180, 111, 0.46);
-          box-shadow: 0 16px 36px rgba(44, 31, 24, 0.22);
-        }
-
-        .storeSign small {
-          display: block;
-          margin-bottom: 4px;
-          color: #d7b46f;
-          font-size: 10px;
-          letter-spacing: 0.32em;
-          text-transform: uppercase;
-        }
-
-        .storeSign h1 {
-          margin: 0;
-          color: #fff9f0;
-          font-family: Georgia, "Times New Roman", serif;
-          font-size: clamp(26px, 4vw, 52px);
-          font-weight: 500;
-          letter-spacing: 0.18em;
-        }
-
-        .boutiqueWindow {
-          position: relative;
-          height: clamp(150px, 20vw, 236px);
-          border-radius: 999px 999px 18px 18px;
-          overflow: hidden;
-          background:
-            linear-gradient(135deg, rgba(255, 249, 240, 0.35), rgba(89, 62, 44, 0.52)),
-            radial-gradient(circle at 50% 28%, rgba(255, 249, 240, 0.48), transparent 40%);
-          border: 10px solid rgba(44, 31, 24, 0.9);
-          box-shadow:
-            inset 0 0 26px rgba(255, 249, 240, 0.24),
-            0 18px 36px rgba(44, 31, 24, 0.16);
-        }
-
-        .windowShine {
-          position: absolute;
-          inset: -20%;
-          background: linear-gradient(110deg, transparent 25%, rgba(255, 249, 240, 0.28) 45%, transparent 58%);
-          transform: translateX(-55%);
-          animation: windowShine 2.8s ease 1.2s forwards;
-        }
-
-        .displayPedestal {
-          position: absolute;
-          left: 50%;
-          bottom: 10%;
-          width: 46%;
-          height: 13%;
-          border-radius: 50%;
-          transform: translateX(-50%);
-          background: rgba(255, 249, 240, 0.38);
-          filter: blur(0.3px);
-        }
-
-        .displayDress {
-          position: absolute;
-          left: 50%;
-          bottom: 20%;
-          width: 42px;
-          height: 82px;
-          transform: translateX(-50%);
-          background:
-            radial-gradient(circle at 50% 10%, #fff9f0 0 9px, transparent 10px),
-            linear-gradient(180deg, transparent 0 18px, #f8ead4 18px 35px, #d7b46f 35px 100%);
-          clip-path: polygon(45% 0, 55% 0, 66% 22%, 86% 100%, 14% 100%, 34% 22%);
-          opacity: 0.9;
-        }
-
-        .displayScarf {
-          position: absolute;
-          left: 50%;
-          bottom: 24%;
-          width: 88px;
-          height: 88px;
-          transform: translateX(-50%) rotate(45deg);
-          border-radius: 12px;
-          background:
-            linear-gradient(135deg, rgba(255, 249, 240, 0.95), rgba(215, 180, 111, 0.58)),
-            linear-gradient(45deg, transparent 45%, rgba(44, 31, 24, 0.22) 46% 52%, transparent 53%);
-          border: 1px solid rgba(44, 31, 24, 0.16);
-          opacity: 0.92;
-        }
-
-        .storeDoorWrap {
-          position: relative;
-          height: clamp(190px, 26vw, 310px);
-          border-radius: 28px 28px 10px 10px;
-          background: rgba(44, 31, 24, 0.82);
-          border: 10px solid rgba(44, 31, 24, 0.96);
-          box-shadow:
-            inset 0 0 32px rgba(255, 249, 240, 0.14),
-            0 24px 50px rgba(44, 31, 24, 0.24);
-          overflow: hidden;
-          transform-style: preserve-3d;
-        }
-
-        .doorGlow {
-          position: absolute;
-          inset: 0;
-          background:
-            radial-gradient(circle at center, rgba(255, 249, 240, 0.98), rgba(215, 180, 111, 0.52) 42%, transparent 72%);
-          opacity: 0;
-          filter: blur(2px);
-          animation: doorGlowIn 2.2s ease 2.65s forwards;
-        }
-
-        .doorPanel {
-          position: absolute;
-          top: 0;
-          width: 50.5%;
-          height: 100%;
-          background:
-            linear-gradient(135deg, rgba(100, 68, 48, 0.94), rgba(44, 31, 24, 0.96)),
-            repeating-linear-gradient(90deg, rgba(255, 249, 240, 0.08) 0 1px, transparent 1px 46px);
-          border: 1px solid rgba(215, 180, 111, 0.18);
-          transform-style: preserve-3d;
-        }
-
-        .doorPanel::before {
-          content: "";
-          position: absolute;
-          inset: 16px;
-          border: 1px solid rgba(215, 180, 111, 0.22);
-          border-radius: 18px;
-        }
-
-        .doorPanelLeft {
-          left: 0;
-          transform-origin: left center;
-          animation: doorLeftOpen 1.65s cubic-bezier(.16, 1, .3, 1) 2.55s forwards;
-        }
-
-        .doorPanelRight {
-          right: 0;
-          transform-origin: right center;
-          animation: doorRightOpen 1.65s cubic-bezier(.16, 1, .3, 1) 2.55s forwards;
-        }
-
-        .doorHandle {
-          position: absolute;
-          top: 52%;
-          width: 8px;
-          height: 42px;
-          border-radius: 999px;
-          background: linear-gradient(180deg, #fff4d5, #d7b46f, #9f783d);
-          box-shadow: 0 0 18px rgba(215, 180, 111, 0.34);
-        }
-
-        .doorPanelLeft .doorHandle { right: 20px; }
-        .doorPanelRight .doorHandle { left: 20px; }
-
-        .storeSteps {
-          width: 78%;
-          margin: 0 auto;
-        }
-
-        .storeSteps span {
-          display: block;
-          height: clamp(10px, 1.3vw, 18px);
-          margin: 0 auto;
-          background: linear-gradient(180deg, #d7b46f, #8b6942);
-          border-radius: 0 0 999px 999px;
-          box-shadow: 0 12px 28px rgba(44, 31, 24, 0.28);
-        }
-
-        .storeSteps span:first-child { width: 86%; }
-        .storeSteps span:last-child { width: 96%; opacity: 0.72; }
 
         .loaderInner {
-          position: absolute;
-          left: 50%;
-          bottom: clamp(34px, 6vh, 72px);
-          z-index: 12;
-          width: min(680px, 88vw);
-          transform: translateX(-50%);
           text-align: center;
-          animation: loaderTextMove 4.6s cubic-bezier(.16, 1, .3, 1) forwards;
+          width: min(680px, 88vw);
+          position: relative;
+          z-index: 2;
         }
 
-        .loaderKicker {
-          margin: 0 0 12px;
-          color: #fff4d5;
-          letter-spacing: 0.28em;
-          text-transform: uppercase;
-          font-size: 11px;
-          text-shadow: 0 8px 22px rgba(44, 31, 24, 0.4);
-        }
-
-        .loaderInner h1 {
+        .loader h1 {
           margin: 0;
           font-family: Georgia, "Times New Roman", serif;
-          font-size: clamp(38px, 7vw, 92px);
+          font-size: clamp(42px, 7vw, 88px);
           letter-spacing: 0.18em;
           font-weight: 500;
-          color: #fff9f0;
-          text-shadow: 0 18px 42px rgba(44, 31, 24, 0.46);
-          animation: loaderLogo 1.35s cubic-bezier(.16, 1, .3, 1) both;
+          animation: loaderLogo 1.55s cubic-bezier(.16, 1, .3, 1) both;
         }
 
-        .loaderInner p:not(.loaderKicker) {
-          margin: 18px 0 0;
-          color: #fff4d5;
-          letter-spacing: 0.22em;
+        .loader p {
+          margin: 22px 0 0;
+          color: #d7b46f;
+          letter-spacing: 0.26em;
           text-align: center;
           text-transform: uppercase;
-          font-size: 11px;
-          text-shadow: 0 8px 18px rgba(44, 31, 24, 0.34);
-          animation: fadeUp 1s ease 0.45s both;
+          font-size: 12px;
+          animation: fadeUp 1s ease 0.75s both;
         }
 
         .loaderLine {
           width: 0;
           height: 1px;
-          margin: 28px auto 0;
-          background: linear-gradient(90deg, transparent, #fff4d5, #d7b46f, transparent);
-          animation: loaderLine 3.8s ease 0.7s forwards;
+          margin: 38px auto 0;
+          background: linear-gradient(90deg, transparent, #d7b46f, transparent);
+          animation: loaderLine 2.65s ease 0.8s forwards;
         }
 
-        .enterGlow {
-          position: absolute;
-          left: 50%;
-          top: 52%;
-          z-index: 10;
-          width: 18vw;
-          height: 18vw;
-          min-width: 180px;
-          min-height: 180px;
-          border-radius: 50%;
-          transform: translate(-50%, -50%) scale(0.2);
-          background: radial-gradient(circle, rgba(255, 249, 240, 0.95), rgba(215, 180, 111, 0.36) 45%, transparent 70%);
-          opacity: 0;
-          filter: blur(3px);
-          animation: enterGlowExpand 1.45s cubic-bezier(.16, 1, .3, 1) 3.65s forwards;
+
+
+        .footerTextBtn {
+          border: 0;
+          background: transparent;
+          color: inherit;
+          padding: 0;
+          font: inherit;
+          text-decoration: none;
         }
 
-        @keyframes facadeDrift {
-          0% {
-            opacity: 0;
-            transform: translateY(20px) scale(0.9);
-          }
-          22% {
-            opacity: 0.64;
-          }
-          100% {
-            opacity: 0.72;
-            transform: translateY(0) scale(0.98);
-          }
-        }
-
-        @keyframes storeApproach {
-          0% { opacity: 0; transform: translateX(-50%) translateY(38px) scale(0.76); }
-          18% { opacity: 1; }
-          62% { transform: translateX(-50%) translateY(8px) scale(0.95); }
-          100% { transform: translateX(-50%) translateY(18px) scale(1.22); }
-        }
-
-        @keyframes doorLeftOpen {
-          from { transform: rotateY(0deg); }
-          to { transform: rotateY(-74deg); }
-        }
-
-        @keyframes doorRightOpen {
-          from { transform: rotateY(0deg); }
-          to { transform: rotateY(74deg); }
-        }
-
-        @keyframes doorGlowIn {
-          0% { opacity: 0; transform: scale(0.82); }
-          55% { opacity: 0.85; }
-          100% { opacity: 1; transform: scale(1.2); }
-        }
-
-        @keyframes enterGlowExpand {
-          0% { opacity: 0; transform: translate(-50%, -50%) scale(0.2); }
-          28% { opacity: 0.9; }
-          100% { opacity: 1; transform: translate(-50%, -50%) scale(7); }
-        }
-
-        @keyframes boutiqueFlash {
-          0% { opacity: 0; }
-          55% { opacity: 0.82; }
-          100% { opacity: 0; }
-        }
-
-        @keyframes skyBreathe {
-          from { transform: scale(1); filter: saturate(0.95); }
-          to { transform: scale(1.05); filter: saturate(1.08); }
-        }
-
-        @keyframes sunGlow {
-          from { opacity: 0.55; transform: scale(0.96); }
-          to { opacity: 0.95; transform: scale(1.04); }
-        }
-
-        @keyframes windowShine {
-          from { transform: translateX(-65%) rotate(4deg); }
-          to { transform: translateX(72%) rotate(4deg); }
+        .footerTextBtn:hover {
+          color: #b08a45;
         }
 
         @keyframes loaderLogo {
-          from {
-            opacity: 0;
-            letter-spacing: 0.05em;
-            transform: translateY(18px) scale(0.98);
-          }
-          to {
-            opacity: 1;
-            letter-spacing: 0.18em;
-            transform: translateY(0) scale(1);
-          }
+          from { opacity: 0; letter-spacing: 0.05em; transform: translateY(18px) scale(0.98); }
+          to { opacity: 1; letter-spacing: 0.18em; transform: translateY(0) scale(1); }
         }
 
         @keyframes loaderLine {
           from { width: 0; opacity: 0; }
           20% { opacity: 1; }
-          78% { width: min(460px, 76vw); opacity: 1; }
-          to { width: min(460px, 76vw); opacity: 0; }
-        }
-
-        @keyframes loaderTextMove {
-          0% { opacity: 0; transform: translateX(-50%) translateY(22px); }
-          18% { opacity: 1; transform: translateX(-50%) translateY(0); }
-          72% { opacity: 1; transform: translateX(-50%) translateY(0); }
-          100% { opacity: 0; transform: translateX(-50%) translateY(-18px); }
+          to { width: min(420px, 76vw); opacity: 1; }
         }
 
         @keyframes loaderOut {
-          to {
-            opacity: 0;
-            pointer-events: none;
-            transform: scale(1.015);
-          }
+          to { opacity: 0; pointer-events: none; transform: scale(1.01); }
+        }
+
+
+
+        .productReviewsPanel {
+          margin: 18px 0 20px;
+          border: 1px solid rgba(176, 138, 69, 0.24);
+          background: rgba(247, 241, 232, 0.66);
+          border-radius: 24px;
+          padding: 18px;
+        }
+
+        .productReviewsHeader {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          gap: 16px;
+          margin-bottom: 12px;
+        }
+
+        .productReviewsHeader .eyebrow {
+          margin-bottom: 6px;
+          font-size: 10px;
+        }
+
+        .productReviewsHeader h4 {
+          margin: 0;
+          font-family: Georgia, "Times New Roman", serif;
+          font-size: 22px;
+          font-weight: 500;
+        }
+
+        .reviewStars,
+        .productReviewCard span {
+          color: #b08a45;
+          letter-spacing: 0.08em;
+          white-space: nowrap;
+        }
+
+        .reviewEmptyText {
+          margin: 0 0 12px !important;
+          color: #6a5545 !important;
+          font-size: 13px !important;
+        }
+
+        .productReviewsList {
+          display: grid;
+          gap: 10px;
+          margin-bottom: 14px;
+        }
+
+        .productReviewCard {
+          background: rgba(255, 249, 240, 0.84);
+          border: 1px solid rgba(176, 138, 69, 0.18);
+          border-radius: 18px;
+          padding: 13px;
+        }
+
+        .productReviewCard div {
+          display: flex;
+          justify-content: space-between;
+          gap: 12px;
+          align-items: center;
+        }
+
+        .productReviewCard strong {
+          font-family: Georgia, "Times New Roman", serif;
+          font-size: 15px;
+          font-weight: 500;
+        }
+
+        .productReviewCard p {
+          margin: 8px 0 0 !important;
+          font-size: 13px !important;
+          line-height: 1.55 !important;
+        }
+
+        .reviewForm {
+          border-top: 1px solid rgba(176, 138, 69, 0.18);
+          padding-top: 14px;
+          display: grid;
+          gap: 10px;
+        }
+
+        .reviewFormTop {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          gap: 12px;
+        }
+
+        .reviewFormTop label {
+          font-size: 11px;
+          letter-spacing: 0.16em;
+          color: #b08a45;
+          text-transform: uppercase;
+        }
+
+        .reviewRatingButtons {
+          display: flex;
+          gap: 4px;
+        }
+
+        .reviewStarBtn {
+          border: 0;
+          background: transparent;
+          color: rgba(176, 138, 69, 0.34);
+          font-size: 20px;
+          padding: 0 2px;
+          line-height: 1;
+        }
+
+        .reviewStarBtn.active {
+          color: #b08a45;
+        }
+
+        .reviewForm textarea {
+          width: 100%;
+          min-height: 82px;
+          resize: vertical;
+          border: 1px solid rgba(176, 138, 69, 0.28);
+          background: #fff9f0;
+          border-radius: 18px;
+          padding: 13px 14px;
+          color: #241a14;
+          outline: none;
+          line-height: 1.55;
+        }
+
+        .reviewSubmitBtn {
+          border: 1px solid rgba(176, 138, 69, 0.42);
+          background: #2c1f18;
+          color: #fff9f0;
+          border-radius: 999px;
+          padding: 12px 16px;
+          font-size: 11px;
+          letter-spacing: 0.14em;
+          text-transform: uppercase;
+        }
+
+        .reviewSubmitBtn:disabled {
+          opacity: 0.6;
+          cursor: not-allowed;
+        }
+
+        .reviewForm small {
+          color: #7a6250;
+          line-height: 1.5;
+        }
+
+        .adminReviewsList {
+          display: grid;
+          gap: 14px;
+        }
+
+        .adminReviewCard {
+          border: 1px solid rgba(176, 138, 69, 0.24);
+          background: #fff9f0;
+          border-radius: 24px;
+          padding: 20px;
+          box-shadow: 0 12px 28px rgba(36, 26, 20, 0.06);
+        }
+
+        .adminReviewTop {
+          display: flex;
+          justify-content: space-between;
+          gap: 16px;
+          align-items: flex-start;
+          margin-bottom: 12px;
+        }
+
+        .adminReviewTop small {
+          display: block;
+          color: #b08a45;
+          letter-spacing: 0.12em;
+          text-transform: uppercase;
+          font-size: 10px;
+          margin-bottom: 6px;
+        }
+
+        .adminReviewTop strong {
+          display: block;
+          color: #b08a45;
+          letter-spacing: 0.06em;
+          font-size: 18px;
+        }
+
+        .adminReviewTop span:not(.reviewApprovalPill) {
+          display: block;
+          color: #6a5545;
+          margin-top: 6px;
+          font-size: 13px;
+        }
+
+        .reviewApprovalPill {
+          border-radius: 999px;
+          padding: 9px 12px;
+          font-size: 10px;
+          letter-spacing: 0.12em;
+          text-transform: uppercase;
+          white-space: nowrap;
+        }
+
+        .reviewApprovalPill.approved {
+          background: rgba(78, 126, 89, 0.14);
+          color: #416f4d;
+          border: 1px solid rgba(78, 126, 89, 0.28);
+        }
+
+        .reviewApprovalPill.pending {
+          background: rgba(176, 138, 69, 0.12);
+          color: #8a682f;
+          border: 1px solid rgba(176, 138, 69, 0.24);
+        }
+
+        .adminReviewCard p {
+          color: #5f4c3e;
+          line-height: 1.7;
+          margin: 0 0 14px;
+        }
+
+        .statusUpdateBtn.danger {
+          border-color: rgba(139, 48, 48, 0.36);
+          color: #8b3030;
+        }
+
+        .darkMode .productReviewsPanel,
+        .darkMode .productReviewCard,
+        .darkMode .adminReviewCard {
+          background: #211713;
+          border-color: rgba(215, 180, 111, 0.28);
+        }
+
+        .darkMode .reviewForm textarea {
+          background: #2c1f18;
+          color: #fff9f0;
+          border-color: rgba(215, 180, 111, 0.38);
+        }
+
+        .darkMode .adminReviewCard p,
+        .darkMode .reviewForm small,
+        .darkMode .adminReviewTop span:not(.reviewApprovalPill) {
+          color: #eadcc8;
+        }
+
+        .adminProductsPanel {
+          margin-top: 34px;
+          padding-top: 30px;
+          border-top: 1px solid rgba(176, 138, 69, 0.22);
+        }
+
+        .productAdminHeader {
+          margin-bottom: 22px;
+        }
+
+        .adminProductForm {
+          background: rgba(255, 249, 240, 0.74);
+          border: 1px solid rgba(176, 138, 69, 0.28);
+          border-radius: 30px;
+          padding: 24px;
+          box-shadow: 0 14px 34px rgba(36, 26, 20, 0.06);
+          margin-bottom: 24px;
+        }
+
+        .darkMode .adminProductForm {
+          background: rgba(255, 249, 240, 0.06);
+          border-color: rgba(215, 180, 111, 0.32);
+        }
+
+        .adminProductFormHead {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          gap: 12px;
+          margin-bottom: 18px;
+        }
+
+        .adminProductFormHead strong {
+          font-family: Georgia, "Times New Roman", serif;
+          font-size: 26px;
+          font-weight: 500;
+        }
+
+        .ghostSmallBtn {
+          border: 1px solid rgba(176, 138, 69, 0.38);
+          background: transparent;
+          color: inherit;
+          border-radius: 999px;
+          padding: 9px 13px;
+          font-size: 10px;
+          letter-spacing: 0.12em;
+          text-transform: uppercase;
+        }
+
+        .adminProductGrid {
+          display: grid;
+          grid-template-columns: repeat(4, minmax(0, 1fr));
+          gap: 14px;
+        }
+
+        .adminProductGrid label {
+          display: flex;
+          flex-direction: column;
+          gap: 7px;
+          min-width: 0;
+        }
+
+        .adminProductGrid label span,
+        .productActiveSwitch span {
+          color: #b08a45;
+          font-size: 10px;
+          letter-spacing: 0.14em;
+          text-transform: uppercase;
+        }
+
+        .adminProductGrid input,
+        .adminProductGrid textarea {
+          width: 100%;
+          border: 1px solid rgba(176, 138, 69, 0.34);
+          background: rgba(255, 249, 240, 0.86);
+          color: #241a14;
+          border-radius: 18px;
+          padding: 13px 14px;
+          outline: none;
+          font-size: 13px;
+        }
+
+        .darkMode .adminProductGrid input,
+        .darkMode .adminProductGrid textarea {
+          background: rgba(255, 249, 240, 0.08);
+          color: #fff9f0;
+          border-color: rgba(215, 180, 111, 0.40);
+        }
+
+        .adminProductGrid textarea {
+          min-height: 96px;
+          resize: vertical;
+        }
+
+        .wideField {
+          grid-column: span 2;
+        }
+
+        .productActiveSwitch {
+          display: flex;
+          flex-direction: row !important;
+          align-items: center;
+          gap: 10px !important;
+          padding: 12px 14px;
+          border: 1px solid rgba(176, 138, 69, 0.28);
+          border-radius: 18px;
+          background: rgba(255, 249, 240, 0.45);
+        }
+
+        .productActiveSwitch input {
+          width: auto !important;
+          accent-color: #b08a45;
+        }
+
+        .adminProductSave {
+          width: fit-content;
+          margin-top: 18px;
+        }
+
+        .adminProductsList {
+          display: grid;
+          grid-template-columns: repeat(2, minmax(0, 1fr));
+          gap: 16px;
+        }
+
+        .adminProductCard {
+          display: grid;
+          grid-template-columns: 112px 1fr;
+          gap: 16px;
+          align-items: center;
+          background: #fff9f0;
+          border: 1px solid rgba(176, 138, 69, 0.24);
+          border-radius: 24px;
+          padding: 14px;
+          box-shadow: 0 12px 28px rgba(36, 26, 20, 0.05);
+        }
+
+        .darkMode .adminProductCard {
+          background: rgba(255, 249, 240, 0.06);
+          border-color: rgba(215, 180, 111, 0.28);
+        }
+
+        .adminProductCard.hiddenProduct {
+          opacity: 0.62;
+        }
+
+        .adminProductCard img {
+          width: 112px;
+          height: 140px;
+          object-fit: cover;
+          object-position: top center;
+          border-radius: 18px;
+          background: #e8d6bd;
+        }
+
+        .adminProductCard small {
+          color: #b08a45;
+          letter-spacing: 0.12em;
+          text-transform: uppercase;
+          font-size: 10px;
+        }
+
+        .adminProductCard strong {
+          display: block;
+          margin: 6px 0;
+          font-family: Georgia, "Times New Roman", serif;
+          font-size: 22px;
+          font-weight: 500;
+        }
+
+        .adminProductCard span,
+        .adminProductCard p {
+          display: block;
+          color: #6a5545;
+          font-size: 13px;
+          line-height: 1.5;
+          margin: 0;
+        }
+
+        .adminProductCard p {
+          margin-top: 6px;
+          display: -webkit-box;
+          -webkit-line-clamp: 2;
+          -webkit-box-orient: vertical;
+          overflow: hidden;
+        }
+
+        .adminProductActions {
+          display: flex;
+          flex-wrap: wrap;
+          gap: 8px;
+          margin-top: 12px;
+        }
+
+        .adminProductActions button {
+          border: 1px solid rgba(176, 138, 69, 0.36);
+          background: transparent;
+          color: inherit;
+          border-radius: 999px;
+          padding: 8px 12px;
+          font-size: 10px;
+          letter-spacing: 0.11em;
+          text-transform: uppercase;
+        }
+
+        .adminProductActions .dangerBtn {
+          border-color: rgba(150, 51, 43, 0.45);
+          color: #96332b;
         }
 
         @media (max-width: 900px) {
-          .italyFacade {
-            bottom: 40vh;
-            opacity: 0.42;
+          .adminProductGrid {
+            grid-template-columns: repeat(2, minmax(0, 1fr));
           }
 
-          .italyFacadeLeft {
-            left: -26px;
-          }
-
-          .italyFacadeRight {
-            right: -26px;
+          .adminProductsList {
+            grid-template-columns: 1fr;
           }
         }
 
-        @media (max-width: 900px) {
-          .storeScene {
-            width: min(92vw, 620px);
-            bottom: 15vh;
+        @media (max-width: 640px) {
+          .adminProductForm {
+            padding: 16px;
+            border-radius: 24px;
           }
 
-          .storeFacade {
-            grid-template-columns: 0.78fr 1.2fr 0.78fr;
+          .adminProductGrid {
+            grid-template-columns: 1fr;
+          }
+
+          .wideField {
+            grid-column: auto;
+          }
+
+          .adminProductCard {
+            grid-template-columns: 86px 1fr;
             gap: 12px;
-            padding-left: 18px;
-            padding-right: 18px;
+            padding: 12px;
+            border-radius: 20px;
           }
 
-          .storeSign {
-            width: 78%;
+          .adminProductCard img {
+            width: 86px;
+            height: 116px;
+            border-radius: 15px;
           }
 
-          .boutiqueWindow {
-            border-width: 7px;
-          }
-
-          .loaderInner {
-            bottom: 34px;
+          .adminProductCard strong {
+            font-size: 18px;
           }
         }
-
-        @media (max-width: 560px) {
-          .storeScene {
-            width: 104vw;
-            bottom: 18vh;
-          }
-
-          .storeFacade {
-            min-height: 300px;
-            grid-template-columns: 0.62fr 1.32fr 0.62fr;
-            gap: 8px;
-            border-radius: 28px 28px 16px 16px;
-            padding-top: 82px;
-          }
-
-          .storeAwning {
-            width: 82%;
-            height: 38px;
-          }
-
-          .storeSign {
-            width: 82%;
-            padding: 11px 14px 12px;
-          }
-
-          .storeSign small {
-            font-size: 8px;
-            letter-spacing: 0.22em;
-          }
-
-          .storeSign h1 {
-            font-size: 25px;
-            letter-spacing: 0.14em;
-          }
-
-          .boutiqueWindow {
-            height: 142px;
-            border-width: 6px;
-          }
-
-          .storeDoorWrap {
-            height: 198px;
-            border-width: 7px;
-          }
-
-          .displayDress {
-            width: 30px;
-            height: 62px;
-          }
-
-          .displayScarf {
-            width: 54px;
-            height: 54px;
-          }
-
-          .loaderInner h1 {
-            font-size: clamp(34px, 10vw, 52px);
-            letter-spacing: 0.13em;
-          }
-
-          .loaderInner p:not(.loaderKicker),
-          .loaderKicker {
-            font-size: 9px;
-            letter-spacing: 0.16em;
-          }
-        }
-
-        @media (prefers-reduced-motion: reduce) {
-          .loader,
-          .loader *,
-          .loader::before,
-          .loader::after {
-            animation-duration: 0.001ms !important;
-            animation-iteration-count: 1 !important;
-            transition-duration: 0.001ms !important;
-          }
-        }
-
 
         @keyframes pageFade {
           from { opacity: 0.92; }
@@ -12934,79 +12840,12 @@ export default function App() {
       <div className="scrollProgress" style={{ width: `${scrollProgress}%` }} />
 
       {loading && (
-        <div className="loader" aria-label="Opening La Grazia boutique">
-          <div className="italySky" />
-          <div className="italySun" />
-
-          <div className="italyFacade italyFacadeLeft" aria-hidden="true">
-            <span />
-            <span />
-            <span />
-          </div>
-          <div className="italyFacade italyFacadeRight" aria-hidden="true">
-            <span />
-            <span />
-            <span />
-          </div>
-
-          <div className="italianStreet">
-            <span className="streetLine streetLineOne" />
-            <span className="streetLine streetLineTwo" />
-            <span className="streetLine streetLineThree" />
-          </div>
-
-          <div className="storeScene">
-            <div className="storeAwning">
-              <span />
-              <span />
-              <span />
-              <span />
-              <span />
-            </div>
-
-            <div className="storeFacade">
-              <div className="storeSign">
-                <small>Milano Atelier</small>
-                <h1>LA GRAZIA</h1>
-              </div>
-
-              <div className="boutiqueWindow boutiqueWindowLeft">
-                <div className="windowShine" />
-                <div className="displayPedestal" />
-                <div className="displayDress" />
-              </div>
-
-              <div className="storeDoorWrap">
-                <div className="doorGlow" />
-                <div className="doorPanel doorPanelLeft">
-                  <span className="doorHandle" />
-                </div>
-                <div className="doorPanel doorPanelRight">
-                  <span className="doorHandle" />
-                </div>
-              </div>
-
-              <div className="boutiqueWindow boutiqueWindowRight">
-                <div className="windowShine" />
-                <div className="displayPedestal" />
-                <div className="displayScarf" />
-              </div>
-            </div>
-
-            <div className="storeSteps">
-              <span />
-              <span />
-            </div>
-          </div>
-
+        <div className="loader">
           <div className="loaderInner">
-            <p className="loaderKicker">{isArabic ? "مرحباً بكِ في إيطاليا" : "Benvenuta in Italia"}</p>
             <h1>LA GRAZIA</h1>
-            <p>{isArabic ? "أبواب الأتيليه تُفتح الآن" : "The atelier doors are opening"}</p>
+            <p>{t.loadingLine}</p>
             <div className="loaderLine" />
           </div>
-
-          <div className="enterGlow" />
         </div>
       )}
 
