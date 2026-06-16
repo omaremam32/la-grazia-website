@@ -6514,620 +6514,214 @@ export default function App() {
           inset: 0;
           z-index: 200;
           overflow: hidden;
-          color: #f8f2e8;
-          background:
-            radial-gradient(circle at 50% 18%, rgba(255, 249, 239, 0.9), rgba(255, 249, 239, 0.12) 28%, transparent 42%),
-            linear-gradient(180deg, #f1e7d9 0%, #d8c4a6 44%, #6e4d3b 100%);
-          perspective: 1600px;
-          animation: loaderOut 0.9s ease 4.95s forwards;
+          background: #19120e;
+          color: #fff8ef;
           isolation: isolate;
+          animation: loaderOut 0.95s ease 4.95s forwards;
         }
 
-        .loader::before {
-          content: "";
-          position: absolute;
-          inset: 0;
-          z-index: 18;
-          pointer-events: none;
-          background:
-            radial-gradient(circle at center, transparent 36%, rgba(54, 34, 22, 0.18) 100%),
-            linear-gradient(90deg, rgba(54, 34, 22, 0.2), transparent 22%, transparent 78%, rgba(54, 34, 22, 0.2));
-          opacity: 0.92;
+        .cinematicLoader {
+          display: grid;
+          place-items: center;
         }
 
-        .loader::after {
-          content: "";
+        .loaderVideo,
+        .loaderPhotoFallback {
           position: absolute;
           inset: 0;
-          z-index: 26;
-          pointer-events: none;
-          background: linear-gradient(180deg, rgba(255, 249, 239, 0), rgba(255, 249, 239, 0.16));
-          mix-blend-mode: screen;
-          opacity: 0;
-          animation: boutiqueFlash 0.8s ease 4.46s forwards;
+          width: 100%;
+          height: 100%;
+          object-fit: cover;
+          transform: scale(1.08);
+          filter: contrast(1.04) saturate(0.92) brightness(0.84);
+          animation: boutiqueCameraPush 5.55s cubic-bezier(.16, 1, .3, 1) forwards;
         }
 
-        .italyBackdrop {
-          position: absolute;
-          inset: 0;
+        .loaderVideo {
           z-index: 1;
-          background:
-            linear-gradient(180deg, rgba(255, 250, 242, 0.75), rgba(232, 214, 189, 0.3) 52%, rgba(83, 56, 42, 0.22)),
-            radial-gradient(circle at 50% 18%, rgba(255, 247, 230, 0.8), transparent 28%);
+          background: transparent;
         }
 
-        .backdropGlow {
+        .loaderPhotoFallback {
+          z-index: 0;
+          background:
+            linear-gradient(180deg, rgba(24, 16, 11, 0.18), rgba(24, 16, 11, 0.72)),
+            radial-gradient(circle at 50% 32%, rgba(255, 242, 220, 0.44), transparent 28%),
+            url("/photos/la-grazia-boutique-entry.jpg");
+          background-size: cover;
+          background-position: center;
+        }
+
+        .loaderFilmTint {
           position: absolute;
           inset: 0;
-          background:
-            radial-gradient(circle at 50% 26%, rgba(255, 248, 234, 0.82), transparent 24%),
-            radial-gradient(circle at 50% 42%, rgba(255, 239, 207, 0.26), transparent 36%);
-          filter: blur(18px);
-          animation: skyBreathe 4.6s ease-in-out both;
-        }
-
-        .backdropBuilding {
-          position: absolute;
-          bottom: 26vh;
-          width: clamp(120px, 12vw, 190px);
-          height: clamp(250px, 35vh, 410px);
-          border-radius: 30px 30px 10px 10px;
-          background:
-            linear-gradient(180deg, rgba(131, 103, 77, 0.16), rgba(107, 77, 57, 0.24)),
-            repeating-linear-gradient(0deg, rgba(255, 249, 239, 0.09) 0 1px, transparent 1px 60px),
-            repeating-linear-gradient(90deg, rgba(255, 249, 239, 0.06) 0 1px, transparent 1px 70px);
-          box-shadow: inset 0 0 30px rgba(255, 248, 234, 0.08);
-          opacity: 0.52;
-          filter: blur(1.2px);
-        }
-
-        .backdropBuildingLeft { left: 7%; transform: translateY(14px); }
-        .backdropBuildingRight { right: 7%; transform: translateY(14px); }
-
-        .buildingTop {
-          position: absolute;
-          left: 50%;
-          top: -22px;
-          width: 56%;
-          height: 52px;
-          transform: translateX(-50%);
-          border-radius: 999px 999px 0 0;
-          background: rgba(107, 77, 57, 0.18);
-        }
-
-        .buildingWindow {
-          position: absolute;
-          width: 20%;
-          aspect-ratio: 0.88;
-          border-radius: 999px 999px 6px 6px;
-          background: radial-gradient(circle at 50% 26%, rgba(255, 247, 227, 0.38), rgba(125, 96, 72, 0.24) 76%);
-        }
-
-        .buildingWindowA { left: 20%; top: 26%; }
-        .buildingWindowB { right: 20%; top: 26%; }
-        .buildingWindowC { left: 50%; top: 58%; transform: translateX(-50%); }
-
-        .sunHaze {
-          position: absolute;
-          right: 12%;
-          top: 10%;
-          z-index: 2;
-          width: clamp(90px, 13vw, 180px);
-          height: clamp(90px, 13vw, 180px);
-          border-radius: 50%;
-          background: radial-gradient(circle, rgba(253, 242, 210, 0.9), rgba(236, 209, 145, 0.18) 56%, transparent 72%);
-          filter: blur(2px);
-          opacity: 0.85;
-          animation: sunGlow 3.8s ease-in-out infinite alternate;
-        }
-
-        .cinemaGrain {
-          position: absolute;
-          inset: -20%;
-          z-index: 3;
-          opacity: 0.07;
-          pointer-events: none;
-          background-image:
-            radial-gradient(circle, rgba(77, 53, 37, 0.34) 0.7px, transparent 0.8px),
-            radial-gradient(circle, rgba(255, 248, 234, 0.24) 0.5px, transparent 0.7px);
-          background-size: 10px 10px, 14px 14px;
-          animation: grainShift 8s linear infinite;
-        }
-
-        .streetPerspective {
-          position: absolute;
-          left: 50%;
-          bottom: -12%;
-          z-index: 2;
-          width: 130vw;
-          height: 45vh;
-          transform: translateX(-50%) rotateX(67deg);
-          transform-origin: center bottom;
-          background:
-            linear-gradient(180deg, rgba(255, 249, 239, 0.05), rgba(255, 249, 239, 0) 10%),
-            repeating-linear-gradient(90deg, rgba(255, 249, 239, 0.08) 0 1px, transparent 1px 94px),
-            repeating-linear-gradient(0deg, rgba(255, 249, 239, 0.07) 0 1px, transparent 1px 72px),
-            linear-gradient(180deg, #7b5842, #4b3328 56%, #35221b 100%);
-          box-shadow: inset 0 24px 65px rgba(41, 24, 16, 0.34);
-          border-top: 1px solid rgba(255, 249, 239, 0.18);
-        }
-
-        .streetReflection {
-          position: absolute;
-          left: 50%;
-          top: 20%;
-          width: 46%;
-          height: 48%;
-          transform: translateX(-50%);
-          background: radial-gradient(ellipse at center, rgba(255, 241, 211, 0.13), transparent 70%);
-          filter: blur(8px);
-        }
-
-        .streetSeam {
-          position: absolute;
-          bottom: 0;
-          width: 1px;
-          height: 120%;
-          background: linear-gradient(180deg, rgba(255, 249, 239, 0), rgba(255, 249, 239, 0.18));
-          transform-origin: bottom;
-        }
-
-        .streetSeamLeft { left: 32%; transform: rotate(20deg); }
-        .streetSeamCenter { left: 50%; transform: translateX(-50%); opacity: 0.58; }
-        .streetSeamRight { right: 32%; transform: rotate(-20deg); }
-
-        .storeScene {
-          position: absolute;
-          left: 50%;
-          bottom: 11.5vh;
-          z-index: 8;
-          width: clamp(390px, 60vw, 820px);
-          transform: translateX(-50%) translateY(16px) scale(0.88);
-          transform-origin: center bottom;
-          animation: storeApproach 5.35s cubic-bezier(.16, 1, .3, 1) forwards;
-        }
-
-        .storeShadow {
-          position: absolute;
-          left: 50%;
-          bottom: 14px;
-          width: 82%;
-          height: clamp(34px, 4vw, 52px);
-          transform: translateX(-50%);
-          border-radius: 50%;
-          background: radial-gradient(ellipse at center, rgba(43, 25, 17, 0.44), rgba(43, 25, 17, 0.06) 70%, transparent 76%);
-          filter: blur(10px);
-        }
-
-        .storeAwning {
-          position: relative;
           z-index: 4;
-          display: grid;
-          grid-template-columns: repeat(5, 1fr);
-          width: 84%;
-          height: clamp(40px, 5.3vw, 62px);
-          margin: 0 auto;
-          border-radius: 26px 26px 12px 12px;
-          overflow: hidden;
-          border: 1px solid rgba(255, 248, 234, 0.48);
-          box-shadow: 0 20px 30px rgba(53, 33, 22, 0.18), 0 8px 16px rgba(255, 248, 234, 0.14) inset;
-          backdrop-filter: blur(2px);
-        }
-
-        .storeAwning span:nth-child(odd) {
-          background: linear-gradient(180deg, #efe2c8, #d7bc91);
-        }
-
-        .storeAwning span:nth-child(even) {
-          background: linear-gradient(180deg, #7f533d, #4a2f24);
-        }
-
-        .storeFacade {
-          position: relative;
-          display: grid;
-          grid-template-columns: 1fr 1.15fr 1fr;
-          gap: clamp(14px, 2vw, 24px);
-          align-items: end;
-          min-height: clamp(280px, 38vw, 440px);
-          padding: clamp(80px, 8vw, 112px) clamp(24px, 4vw, 56px) clamp(24px, 3vw, 38px);
+          pointer-events: none;
           background:
-            linear-gradient(180deg, rgba(252, 246, 237, 0.98), rgba(232, 218, 197, 0.96)),
-            radial-gradient(circle at 50% 20%, rgba(255, 255, 255, 0.38), transparent 48%),
-            repeating-linear-gradient(90deg, rgba(176, 138, 69, 0.08) 0 1px, transparent 1px 92px);
-          border-radius: 36px 36px 18px 18px;
-          border: 1px solid rgba(255, 248, 234, 0.78);
-          box-shadow:
-            0 34px 90px rgba(48, 29, 19, 0.25),
-            inset 0 0 0 1px rgba(176, 138, 69, 0.13),
-            inset 0 18px 24px rgba(255, 255, 255, 0.28);
+            linear-gradient(180deg, rgba(17, 10, 7, 0.18), rgba(17, 10, 7, 0.42)),
+            radial-gradient(circle at 50% 46%, rgba(255, 244, 224, 0.18), transparent 34%),
+            linear-gradient(90deg, rgba(17, 10, 7, 0.48), transparent 28%, transparent 72%, rgba(17, 10, 7, 0.48));
         }
 
-        .storeCornice {
+        .loaderSoftGrain {
           position: absolute;
-          inset: 22px 22px auto;
-          height: 26px;
-          border-radius: 20px;
-          background: linear-gradient(180deg, rgba(255, 248, 234, 0.75), rgba(226, 206, 176, 0.4));
-          opacity: 0.5;
+          inset: -25%;
+          z-index: 5;
+          pointer-events: none;
+          opacity: 0.08;
+          mix-blend-mode: soft-light;
+          background-image:
+            radial-gradient(circle, rgba(255,255,255,0.45) 0.6px, transparent 0.7px),
+            radial-gradient(circle, rgba(0,0,0,0.45) 0.45px, transparent 0.7px);
+          background-size: 11px 11px, 17px 17px;
+          animation: loaderGrain 9s linear infinite;
         }
 
-        .storeSign {
-          position: absolute;
-          left: 50%;
-          top: clamp(22px, 2.4vw, 30px);
-          width: min(500px, 70%);
-          transform: translateX(-50%);
-          text-align: center;
-          padding: 14px 24px 17px;
-          border-radius: 999px;
-          background:
-            linear-gradient(135deg, rgba(74, 46, 33, 0.97), rgba(103, 67, 48, 0.95)),
-            radial-gradient(circle at top, rgba(214, 177, 107, 0.2), transparent 58%);
-          border: 1px solid rgba(214, 177, 107, 0.4);
-          box-shadow:
-            0 18px 32px rgba(41, 24, 16, 0.2),
-            inset 0 1px 0 rgba(255, 248, 234, 0.12);
-        }
-
-        .storeSign small {
-          display: block;
-          margin-bottom: 4px;
-          color: #d6b16b;
-          font-size: 10px;
-          letter-spacing: 0.34em;
-          text-transform: uppercase;
-        }
-
-        .storeSign h1 {
-          margin: 0;
-          color: #fff9f1;
-          font-family: Georgia, "Times New Roman", serif;
-          font-size: clamp(28px, 4.2vw, 56px);
-          font-weight: 500;
-          letter-spacing: 0.16em;
-          text-shadow: 0 6px 14px rgba(0, 0, 0, 0.16);
-        }
-
-        .boutiqueWindow {
-          position: relative;
-          height: clamp(160px, 21vw, 240px);
-          border-radius: 999px 999px 18px 18px;
-          overflow: hidden;
-          background:
-            linear-gradient(180deg, rgba(255, 255, 255, 0.48), rgba(236, 226, 212, 0.82)),
-            linear-gradient(135deg, rgba(80, 55, 42, 0.08), rgba(80, 55, 42, 0.28));
-          border: 8px solid rgba(58, 38, 29, 0.94);
-          box-shadow:
-            inset 0 0 28px rgba(255, 248, 234, 0.28),
-            inset 0 -20px 30px rgba(59, 39, 28, 0.1),
-            0 18px 30px rgba(48, 28, 18, 0.14);
-        }
-
-        .windowDepth {
-          position: absolute;
-          inset: 14px 12px 14px;
-          border-radius: 999px 999px 14px 14px;
-          background: linear-gradient(180deg, rgba(255, 255, 255, 0.3), rgba(193, 171, 145, 0.24));
-          opacity: 0.7;
-        }
-
-        .windowShine {
-          position: absolute;
-          inset: -20%;
-          background: linear-gradient(110deg, transparent 24%, rgba(255, 255, 255, 0.38) 44%, transparent 56%);
-          transform: translateX(-55%);
-          animation: windowShine 2.8s ease 1.15s forwards;
-        }
-
-        .displayPedestal {
-          position: absolute;
-          left: 50%;
-          bottom: 11%;
-          width: 48%;
-          height: 13%;
-          border-radius: 50%;
-          transform: translateX(-50%);
-          background: radial-gradient(ellipse at center, rgba(255, 251, 244, 0.8), rgba(229, 211, 182, 0.52));
-          filter: blur(0.3px);
-          box-shadow: 0 8px 12px rgba(56, 37, 28, 0.08);
-        }
-
-        .displayMannequin {
-          position: absolute;
-          left: 50%;
-          bottom: 18%;
-          width: 54px;
-          height: 98px;
-          transform: translateX(-50%);
-        }
-
-        .displayMannequin::before {
-          content: "";
-          position: absolute;
-          left: 50%;
-          top: 0;
-          width: 18px;
-          height: 18px;
-          transform: translateX(-50%);
-          border-radius: 50%;
-          background: radial-gradient(circle at 50% 35%, rgba(255, 251, 244, 0.95), rgba(220, 197, 158, 0.85));
-        }
-
-        .displayMannequin::after {
-          content: "";
-          position: absolute;
-          left: 50%;
-          bottom: 0;
-          width: 54px;
-          height: 82px;
-          transform: translateX(-50%);
-          border-radius: 20px 20px 14px 14px;
-          background:
-            linear-gradient(180deg, rgba(253, 247, 236, 0.96), rgba(229, 205, 167, 0.95) 52%, rgba(214, 177, 107, 0.9));
-          clip-path: polygon(45% 0, 55% 0, 68% 20%, 86% 100%, 14% 100%, 32% 20%);
-          box-shadow: 0 8px 12px rgba(46, 29, 20, 0.08);
-        }
-
-        .displayScarfFold {
-          position: absolute;
-          left: 50%;
-          bottom: 24%;
-          width: 88px;
-          height: 88px;
-          transform: translateX(-50%) rotate(45deg);
-          border-radius: 18px;
-          background:
-            linear-gradient(135deg, rgba(255, 250, 242, 0.98), rgba(223, 197, 154, 0.78)),
-            linear-gradient(45deg, transparent 45%, rgba(108, 74, 53, 0.18) 46% 52%, transparent 53%);
-          box-shadow: 0 10px 16px rgba(46, 28, 18, 0.08);
-          opacity: 0.92;
-        }
-
-        .storeDoorWrap {
-          position: relative;
-          height: clamp(205px, 27vw, 322px);
-          border-radius: 30px 30px 12px 12px;
-          overflow: hidden;
-          background:
-            linear-gradient(180deg, rgba(65, 42, 31, 0.98), rgba(46, 28, 20, 0.98));
-          border: 8px solid rgba(50, 31, 23, 0.98);
-          box-shadow:
-            inset 0 0 38px rgba(255, 246, 232, 0.08),
-            0 24px 40px rgba(45, 27, 18, 0.18);
-          transform-style: preserve-3d;
-        }
-
-        .doorInterior {
+        .boutiqueDoorReveal {
           position: absolute;
           inset: 0;
-          background:
-            radial-gradient(circle at 50% 38%, rgba(255, 251, 242, 0.88), rgba(224, 193, 136, 0.58) 42%, rgba(100, 71, 53, 0.14) 72%),
-            linear-gradient(180deg, rgba(255, 247, 234, 0.24), rgba(255, 247, 234, 0));
-          opacity: 0.18;
+          z-index: 8;
+          pointer-events: none;
+          perspective: 1200px;
+          overflow: hidden;
         }
 
-        .interiorLightBeam {
-          position: absolute;
-          top: 10%;
-          width: 26%;
-          height: 80%;
-          background: linear-gradient(180deg, rgba(255, 250, 242, 0.22), rgba(255, 250, 242, 0));
-          filter: blur(6px);
-          opacity: 0.45;
-        }
-
-        .beamOne { left: 18%; transform: skewX(-10deg); }
-        .beamTwo { right: 18%; transform: skewX(10deg); }
-
-        .doorGlow {
-          position: absolute;
-          inset: 0;
-          background: radial-gradient(circle at 50% 48%, rgba(255, 251, 242, 0.98), rgba(222, 189, 132, 0.54) 40%, transparent 72%);
-          opacity: 0;
-          filter: blur(4px);
-          animation: doorGlowIn 2.2s ease 2.56s forwards;
-        }
-
-        .doorPanel {
+        .doorRevealPanel {
           position: absolute;
           top: 0;
-          width: 50.5%;
+          width: 50.2%;
           height: 100%;
           background:
-            linear-gradient(135deg, rgba(112, 77, 56, 0.96), rgba(61, 39, 28, 0.98)),
-            repeating-linear-gradient(90deg, rgba(255, 248, 234, 0.05) 0 1px, transparent 1px 52px);
-          border: 1px solid rgba(214, 177, 107, 0.14);
-          transform-style: preserve-3d;
-          box-shadow: inset 0 0 18px rgba(255, 248, 234, 0.04);
+            linear-gradient(180deg, rgba(32, 20, 14, 0.98), rgba(12, 7, 5, 0.96)),
+            radial-gradient(circle at 50% 48%, rgba(169, 128, 73, 0.16), transparent 38%);
+          box-shadow: inset 0 0 80px rgba(214, 177, 107, 0.08);
+          animation-duration: 1.7s;
+          animation-timing-function: cubic-bezier(.16, 1, .3, 1);
+          animation-delay: 2.35s;
+          animation-fill-mode: forwards;
         }
 
-        .doorPanel::before {
-          content: "";
-          position: absolute;
-          inset: 16px;
-          border: 1px solid rgba(214, 177, 107, 0.16);
-          border-radius: 18px;
-        }
-
-        .doorPanelLeft {
+        .doorRevealLeft {
           left: 0;
           transform-origin: left center;
-          animation: doorLeftOpen 1.55s cubic-bezier(.16, 1, .3, 1) 2.45s forwards;
+          animation-name: openLeftReveal;
         }
 
-        .doorPanelRight {
+        .doorRevealRight {
           right: 0;
           transform-origin: right center;
-          animation: doorRightOpen 1.55s cubic-bezier(.16, 1, .3, 1) 2.45s forwards;
+          animation-name: openRightReveal;
         }
 
-        .doorHandle {
-          position: absolute;
-          top: 50%;
-          width: 8px;
-          height: 44px;
-          border-radius: 999px;
-          background: linear-gradient(180deg, #fff5d8, #d6b16b, #956d34);
-          box-shadow: 0 0 14px rgba(214, 177, 107, 0.28);
-        }
-
-        .doorPanelLeft .doorHandle { right: 18px; }
-        .doorPanelRight .doorHandle { left: 18px; }
-
-        .storeSteps {
-          width: 80%;
-          margin: 0 auto;
-        }
-
-        .storeSteps span {
-          display: block;
-          height: clamp(10px, 1.3vw, 18px);
-          margin: 0 auto;
-          background: linear-gradient(180deg, rgba(214, 177, 107, 0.9), rgba(129, 95, 61, 0.96));
-          border-radius: 0 0 999px 999px;
-          box-shadow: 0 12px 22px rgba(43, 26, 18, 0.2);
-        }
-
-        .storeSteps span:first-child { width: 86%; }
-        .storeSteps span:last-child { width: 96%; opacity: 0.74; }
-
-        .loaderInner {
+        .doorRevealLight {
           position: absolute;
           left: 50%;
-          bottom: clamp(26px, 5vh, 52px);
-          z-index: 22;
-          width: min(620px, 84vw);
-          transform: translateX(-50%);
+          top: 50%;
+          width: 14vw;
+          height: 14vw;
+          min-width: 160px;
+          min-height: 160px;
+          border-radius: 50%;
+          transform: translate(-50%, -50%) scale(0.16);
+          background: radial-gradient(circle, rgba(255, 248, 236, 0.95), rgba(214, 177, 107, 0.34) 42%, transparent 72%);
+          opacity: 0;
+          filter: blur(8px);
+          animation: revealLightBloom 1.45s cubic-bezier(.16, 1, .3, 1) 3.45s forwards;
+        }
+
+        .loaderLuxuryCopy {
+          position: relative;
+          z-index: 12;
+          width: min(760px, 86vw);
+          padding: 0 18px;
           text-align: center;
-          animation: loaderTextMove 4.5s cubic-bezier(.16, 1, .3, 1) forwards;
+          transform: translateY(18px);
+          animation: loaderTextMove 4.55s cubic-bezier(.16, 1, .3, 1) forwards;
         }
 
         .loaderKicker {
-          margin: 0 0 10px;
-          color: rgba(255, 244, 218, 0.92);
-          letter-spacing: 0.28em;
+          margin: 0 0 14px;
+          color: rgba(255, 238, 207, 0.94);
+          font-size: 11px;
+          letter-spacing: 0.34em;
           text-transform: uppercase;
-          font-size: 10px;
-          text-shadow: 0 6px 18px rgba(33, 19, 13, 0.34);
+          text-shadow: 0 10px 28px rgba(0, 0, 0, 0.5);
         }
 
-        .loaderInner h1 {
+        .loaderLuxuryCopy h1 {
           margin: 0;
           font-family: Georgia, "Times New Roman", serif;
-          font-size: clamp(34px, 6vw, 76px);
-          letter-spacing: 0.18em;
+          font-size: clamp(44px, 8vw, 106px);
           font-weight: 500;
-          color: #fff9f0;
-          text-shadow: 0 12px 28px rgba(32, 18, 12, 0.34);
-          animation: loaderLogo 1.2s cubic-bezier(.16, 1, .3, 1) both;
+          letter-spacing: 0.18em;
+          color: #fff8ef;
+          text-shadow:
+            0 12px 34px rgba(0, 0, 0, 0.58),
+            0 0 42px rgba(214, 177, 107, 0.16);
+          animation: loaderLogo 1.25s cubic-bezier(.16, 1, .3, 1) both;
         }
 
-        .loaderInner p:not(.loaderKicker) {
-          margin: 12px 0 0;
-          color: rgba(255, 244, 218, 0.9);
-          letter-spacing: 0.24em;
+        .loaderLuxuryCopy p:not(.loaderKicker) {
+          margin: 16px 0 0;
+          color: rgba(255, 238, 207, 0.9);
+          font-size: 11px;
+          letter-spacing: 0.28em;
           text-transform: uppercase;
-          font-size: 10px;
-          text-shadow: 0 6px 18px rgba(33, 19, 13, 0.32);
+          text-shadow: 0 10px 28px rgba(0, 0, 0, 0.5);
           animation: fadeUp 1s ease 0.42s both;
         }
 
         .loaderLine {
           width: 0;
           height: 1px;
-          margin: 22px auto 0;
-          background: linear-gradient(90deg, transparent, rgba(255, 244, 218, 0.96), rgba(214, 177, 107, 0.9), transparent);
-          animation: loaderLine 3.6s ease 0.6s forwards;
+          margin: 26px auto 0;
+          background: linear-gradient(90deg, transparent, rgba(255, 238, 207, 0.95), rgba(214, 177, 107, 0.95), transparent);
+          animation: loaderLine 3.55s ease 0.58s forwards;
         }
 
-        .enterGlow {
-          position: absolute;
-          left: 50%;
-          top: 49%;
-          z-index: 24;
-          width: 18vw;
-          height: 18vw;
-          min-width: 180px;
-          min-height: 180px;
-          border-radius: 50%;
-          transform: translate(-50%, -50%) scale(0.24);
-          background: radial-gradient(circle, rgba(255, 250, 242, 0.95), rgba(214, 177, 107, 0.24) 42%, transparent 72%);
-          opacity: 0;
-          filter: blur(5px);
-          animation: enterGlowExpand 1.35s cubic-bezier(.16, 1, .3, 1) 3.62s forwards;
-        }
-
-        @keyframes storeApproach {
+        @keyframes boutiqueCameraPush {
           0% {
-            opacity: 0;
-            transform: translateX(-50%) translateY(42px) scale(0.8);
-            filter: blur(3px);
+            transform: scale(1.08);
+            filter: contrast(1.02) saturate(0.88) brightness(0.78) blur(1.4px);
           }
-          18% {
-            opacity: 1;
-            filter: blur(0.2px);
+          22% {
+            filter: contrast(1.04) saturate(0.92) brightness(0.84) blur(0px);
           }
-          62% {
-            transform: translateX(-50%) translateY(10px) scale(0.97);
+          64% {
+            transform: scale(1.16);
           }
           100% {
-            transform: translateX(-50%) translateY(14px) scale(1.14);
+            transform: scale(1.28);
+            filter: contrast(1.06) saturate(0.95) brightness(0.98) blur(0px);
           }
         }
 
-        @keyframes doorLeftOpen {
-          from { transform: rotateY(0deg); }
-          to { transform: rotateY(-72deg); }
+        @keyframes openLeftReveal {
+          from { transform: rotateY(0deg) translateX(0); }
+          to { transform: rotateY(-78deg) translateX(-4%); }
         }
 
-        @keyframes doorRightOpen {
-          from { transform: rotateY(0deg); }
-          to { transform: rotateY(72deg); }
+        @keyframes openRightReveal {
+          from { transform: rotateY(0deg) translateX(0); }
+          to { transform: rotateY(78deg) translateX(4%); }
         }
 
-        @keyframes doorGlowIn {
-          0% { opacity: 0; transform: scale(0.8); }
-          55% { opacity: 0.86; }
-          100% { opacity: 1; transform: scale(1.18); }
+        @keyframes revealLightBloom {
+          0% { opacity: 0; transform: translate(-50%, -50%) scale(0.16); }
+          28% { opacity: 0.9; }
+          100% { opacity: 1; transform: translate(-50%, -50%) scale(8.2); }
         }
 
-        @keyframes enterGlowExpand {
-          0% { opacity: 0; transform: translate(-50%, -50%) scale(0.24); }
-          28% { opacity: 0.92; }
-          100% { opacity: 1; transform: translate(-50%, -50%) scale(6.8); }
-        }
-
-        @keyframes boutiqueFlash {
-          0% { opacity: 0; }
-          55% { opacity: 0.68; }
-          100% { opacity: 0; }
-        }
-
-        @keyframes skyBreathe {
-          from { transform: scale(1); filter: saturate(0.98); }
-          to { transform: scale(1.05); filter: saturate(1.04); }
-        }
-
-        @keyframes sunGlow {
-          from { opacity: 0.56; transform: scale(0.98); }
-          to { opacity: 0.92; transform: scale(1.05); }
-        }
-
-        @keyframes grainShift {
+        @keyframes loaderGrain {
           from { transform: translate3d(0, 0, 0); }
-          to { transform: translate3d(5%, 3%, 0); }
-        }
-
-        @keyframes windowShine {
-          from { transform: translateX(-65%) rotate(4deg); }
-          to { transform: translateX(74%) rotate(4deg); }
+          to { transform: translate3d(5%, 4%, 0); }
         }
 
         @keyframes loaderLogo {
           from {
             opacity: 0;
-            letter-spacing: 0.06em;
-            transform: translateY(14px) scale(0.98);
+            letter-spacing: 0.08em;
+            transform: translateY(16px) scale(0.985);
           }
           to {
             opacity: 1;
@@ -7139,15 +6733,15 @@ export default function App() {
         @keyframes loaderLine {
           from { width: 0; opacity: 0; }
           20% { opacity: 1; }
-          78% { width: min(380px, 72vw); opacity: 1; }
-          to { width: min(380px, 72vw); opacity: 0; }
+          78% { width: min(420px, 72vw); opacity: 1; }
+          to { width: min(420px, 72vw); opacity: 0; }
         }
 
         @keyframes loaderTextMove {
-          0% { opacity: 0; transform: translateX(-50%) translateY(20px); }
-          18% { opacity: 1; transform: translateX(-50%) translateY(0); }
-          72% { opacity: 1; transform: translateX(-50%) translateY(0); }
-          100% { opacity: 0; transform: translateX(-50%) translateY(-14px); }
+          0% { opacity: 0; transform: translateY(28px); }
+          18% { opacity: 1; transform: translateY(0); }
+          72% { opacity: 1; transform: translateY(0); }
+          100% { opacity: 0; transform: translateY(-14px); }
         }
 
         @keyframes loaderOut {
@@ -7159,99 +6753,35 @@ export default function App() {
         }
 
         @media (max-width: 900px) {
-          .backdropBuilding { bottom: 28vh; width: 116px; height: 270px; opacity: 0.4; }
-
-          .storeScene {
-            width: min(92vw, 640px);
-            bottom: 14vh;
+          .loaderLuxuryCopy {
+            width: min(680px, 88vw);
           }
 
-          .storeFacade {
-            grid-template-columns: 0.78fr 1.2fr 0.78fr;
-            gap: 12px;
-            padding-left: 18px;
-            padding-right: 18px;
+          .loaderLuxuryCopy h1 {
+            font-size: clamp(38px, 9vw, 78px);
           }
-
-          .storeSign { width: 78%; }
-          .loaderInner { bottom: 28px; }
         }
 
         @media (max-width: 560px) {
-          .backdropBuilding { display: none; }
-
-          .streetPerspective {
-            width: 150vw;
-            height: 42vh;
+          .loaderVideo,
+          .loaderPhotoFallback {
+            object-position: center;
+            transform: scale(1.12);
           }
 
-          .storeScene {
-            width: 104vw;
-            bottom: 17vh;
-          }
-
-          .storeFacade {
-            min-height: 312px;
-            grid-template-columns: 0.64fr 1.3fr 0.64fr;
-            gap: 8px;
-            border-radius: 30px 30px 16px 16px;
-            padding-top: 86px;
-          }
-
-          .storeAwning {
-            width: 82%;
-            height: 40px;
-          }
-
-          .storeSign {
-            width: 82%;
-            padding: 12px 14px 13px;
-          }
-
-          .storeSign small {
-            font-size: 8px;
+          .loaderKicker {
+            font-size: 9px;
             letter-spacing: 0.22em;
           }
 
-          .storeSign h1 {
-            font-size: 25px;
-            letter-spacing: 0.14em;
-          }
-
-          .boutiqueWindow {
-            height: 146px;
-            border-width: 6px;
-          }
-
-          .displayMannequin {
-            width: 42px;
-            height: 78px;
-          }
-
-          .displayMannequin::after {
-            width: 42px;
-            height: 66px;
-          }
-
-          .displayScarfFold {
-            width: 58px;
-            height: 58px;
-          }
-
-          .storeDoorWrap {
-            height: 206px;
-            border-width: 7px;
-          }
-
-          .loaderInner h1 {
-            font-size: clamp(32px, 10vw, 50px);
+          .loaderLuxuryCopy h1 {
+            font-size: clamp(34px, 11vw, 54px);
             letter-spacing: 0.13em;
           }
 
-          .loaderInner p:not(.loaderKicker),
-          .loaderKicker {
+          .loaderLuxuryCopy p:not(.loaderKicker) {
             font-size: 9px;
-            letter-spacing: 0.16em;
+            letter-spacing: 0.18em;
           }
         }
 
@@ -13027,95 +12557,34 @@ export default function App() {
       <div className="scrollProgress" style={{ width: `${scrollProgress}%` }} />
 
       {loading && (
-        <div className="loader" aria-label="Entering La Grazia boutique">
-          <div className="italyBackdrop">
-            <div className="backdropGlow" />
-            <div className="backdropBuilding backdropBuildingLeft">
-              <span className="buildingTop" />
-              <span className="buildingWindow buildingWindowA" />
-              <span className="buildingWindow buildingWindowB" />
-              <span className="buildingWindow buildingWindowC" />
-            </div>
-            <div className="backdropBuilding backdropBuildingRight">
-              <span className="buildingTop" />
-              <span className="buildingWindow buildingWindowA" />
-              <span className="buildingWindow buildingWindowB" />
-              <span className="buildingWindow buildingWindowC" />
-            </div>
+        <div className="loader cinematicLoader" aria-label="Entering La Grazia boutique">
+          <video
+            className="loaderVideo"
+            autoPlay
+            muted
+            playsInline
+            preload="auto"
+            poster="/photos/la-grazia-boutique-entry.jpg"
+          >
+            <source src="/videos/la-grazia-entry.mp4" type="video/mp4" />
+          </video>
+
+          <div className="loaderPhotoFallback" />
+          <div className="loaderFilmTint" />
+          <div className="loaderSoftGrain" />
+
+          <div className="boutiqueDoorReveal" aria-hidden="true">
+            <span className="doorRevealPanel doorRevealLeft" />
+            <span className="doorRevealPanel doorRevealRight" />
+            <span className="doorRevealLight" />
           </div>
 
-          <div className="sunHaze" />
-          <div className="cinemaGrain" />
-
-          <div className="streetPerspective">
-            <span className="streetSeam streetSeamLeft" />
-            <span className="streetSeam streetSeamCenter" />
-            <span className="streetSeam streetSeamRight" />
-            <div className="streetReflection" />
-          </div>
-
-          <div className="storeScene">
-            <div className="storeShadow" />
-
-            <div className="storeAwning">
-              <span />
-              <span />
-              <span />
-              <span />
-              <span />
-            </div>
-
-            <div className="storeFacade">
-              <div className="storeCornice" />
-
-              <div className="storeSign">
-                <small>Milano Atelier</small>
-                <h1>LA GRAZIA</h1>
-              </div>
-
-              <div className="boutiqueWindow boutiqueWindowLeft">
-                <div className="windowDepth" />
-                <div className="windowShine" />
-                <div className="displayPedestal" />
-                <div className="displayMannequin" />
-              </div>
-
-              <div className="storeDoorWrap">
-                <div className="doorGlow" />
-                <div className="doorInterior">
-                  <span className="interiorLightBeam beamOne" />
-                  <span className="interiorLightBeam beamTwo" />
-                </div>
-                <div className="doorPanel doorPanelLeft">
-                  <span className="doorHandle" />
-                </div>
-                <div className="doorPanel doorPanelRight">
-                  <span className="doorHandle" />
-                </div>
-              </div>
-
-              <div className="boutiqueWindow boutiqueWindowRight">
-                <div className="windowDepth" />
-                <div className="windowShine" />
-                <div className="displayPedestal" />
-                <div className="displayScarfFold" />
-              </div>
-            </div>
-
-            <div className="storeSteps">
-              <span />
-              <span />
-            </div>
-          </div>
-
-          <div className="loaderInner">
-            <p className="loaderKicker">{isArabic ? "من شوارع إيطاليا إلى لا غراتسيا" : "From the streets of Italy to La Grazia"}</p>
+          <div className="loaderLuxuryCopy">
+            <p className="loaderKicker">{isArabic ? "لا غراتسيا — ميلانو أتيليه" : "La Grazia — Milano Atelier"}</p>
             <h1>LA GRAZIA</h1>
-            <p>{isArabic ? "ادخلي إلى Milano Atelier" : "Entering the Milano Atelier"}</p>
+            <p>{isArabic ? "ادخلي إلى الأتيليه" : "Step inside the atelier"}</p>
             <div className="loaderLine" />
           </div>
-
-          <div className="enterGlow" />
         </div>
       )}
 
