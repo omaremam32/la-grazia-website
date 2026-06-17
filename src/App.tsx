@@ -6733,31 +6733,6 @@ export default function App() {
         }
 
 
-        /* Mobile product image full-item display patch */
-        @media (min-width: 641px) and (max-width: 900px) {
-          .productImage {
-            height: clamp(420px, 62vw, 560px) !important;
-            background:
-              radial-gradient(circle at 50% 42%, rgba(255, 249, 240, 0.98), rgba(245, 235, 222, 0.94) 62%, rgba(232, 214, 189, 0.72) 100%) !important;
-            display: flex !important;
-            align-items: center !important;
-            justify-content: center !important;
-          }
-
-          .productImage img {
-            object-fit: contain !important;
-            object-position: center center !important;
-            padding: 14px !important;
-            box-sizing: border-box !important;
-            transform: none !important;
-          }
-
-          .productCard:hover .productImage img {
-            transform: none !important;
-            filter: none !important;
-          }
-        }
-
         @keyframes pageFade {
           from { opacity: 0.92; }
           to { opacity: 1; }
@@ -10749,49 +10724,30 @@ export default function App() {
           }
 
           .productImage {
-            height: clamp(380px, 108vw, 500px) !important;
-            min-height: 380px !important;
-            aspect-ratio: auto !important;
+            height: clamp(210px, 48vw, 270px) !important;
+            min-height: 0 !important;
+            aspect-ratio: 3 / 4 !important;
             border-radius: 20px !important;
             overflow: hidden !important;
-            background:
-              radial-gradient(circle at 50% 42%, rgba(255, 249, 240, 0.98), rgba(245, 235, 222, 0.94) 62%, rgba(232, 214, 189, 0.72) 100%) !important;
-            display: flex !important;
-            align-items: center !important;
-            justify-content: center !important;
           }
 
           .productImage img {
             width: 100% !important;
             height: 100% !important;
-            object-fit: contain !important;
+            object-fit: cover !important;
             object-position: center center !important;
-            padding: 12px !important;
-            box-sizing: border-box !important;
-            display: block !important;
-            transform: none !important;
-            filter: none !important;
-          }
-
-          .productCard:hover .productImage img {
-            transform: none !important;
-            filter: none !important;
           }
 
           .productImage.linenPantsProductImage {
-            height: clamp(420px, 118vw, 540px) !important;
-            min-height: 420px !important;
-            aspect-ratio: auto !important;
-            background:
-              radial-gradient(circle at 50% 42%, rgba(255, 249, 240, 0.98), rgba(248, 241, 232, 0.96) 62%, rgba(232, 214, 189, 0.68) 100%) !important;
+            height: clamp(280px, 62vw, 360px) !important;
+            aspect-ratio: 4 / 5 !important;
+            background: #f8f1e8 !important;
           }
 
           .productImage.linenPantsProductImage img {
             object-fit: contain !important;
             object-position: center center !important;
-            padding: 10px !important;
-            box-sizing: border-box !important;
-            transform: none !important;
+            padding: 8px !important;
           }
 
           .productInfo {
@@ -12528,6 +12484,150 @@ export default function App() {
           .offerPanel::before,
           .offerPanel::after {
             animation: none !important;
+          }
+        }
+
+
+
+        /* =========================================================
+           FINAL MOBILE PRODUCT IMAGE FIX
+           Shows the full item on phone instead of cropping it.
+           This is intentionally placed LAST so it overrides older
+           mobile rules such as height:165px and object-fit:cover.
+           ========================================================= */
+
+        @media (max-width: 640px) {
+          .productGrid,
+          .bestSellerGrid,
+          .wishlistGrid {
+            grid-template-columns: 1fr !important;
+            gap: 24px !important;
+          }
+
+          .products,
+          .wishlistSection {
+            padding-left: 18px !important;
+            padding-right: 18px !important;
+          }
+
+          .productCard {
+            width: 100% !important;
+            max-width: 100% !important;
+            border-radius: 28px !important;
+            overflow: hidden !important;
+          }
+
+          .productImage {
+            width: 100% !important;
+            height: clamp(450px, 118vw, 580px) !important;
+            min-height: 450px !important;
+            max-height: 580px !important;
+            aspect-ratio: auto !important;
+            border-radius: 28px 28px 0 0 !important;
+            overflow: hidden !important;
+            background:
+              radial-gradient(circle at 50% 42%, rgba(255, 249, 240, 0.98), rgba(246, 237, 225, 0.96) 62%, rgba(232, 214, 189, 0.74) 100%) !important;
+            display: flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+          }
+
+          .productImage img {
+            width: 100% !important;
+            height: 100% !important;
+            max-width: 100% !important;
+            max-height: 100% !important;
+            object-fit: contain !important;
+            object-position: center center !important;
+            padding: 14px !important;
+            box-sizing: border-box !important;
+            display: block !important;
+            transform: none !important;
+            filter: none !important;
+          }
+
+          .productCard:hover .productImage img,
+          .productCard:active .productImage img,
+          .productCard:focus-within .productImage img {
+            transform: none !important;
+            filter: none !important;
+          }
+
+          .productImageSwitcher {
+            left: 14px !important;
+            bottom: 14px !important;
+          }
+
+          .stockTag {
+            left: 14px !important;
+            bottom: 14px !important;
+          }
+
+          .productInfo {
+            padding: 26px 24px 30px !important;
+          }
+
+          .productInfo .category,
+          .productInfo p.category,
+          .category {
+            font-size: 12px !important;
+            letter-spacing: 0.20em !important;
+            margin-bottom: 12px !important;
+          }
+
+          .productInfo h4 {
+            font-size: clamp(29px, 8.2vw, 38px) !important;
+            line-height: 1.08 !important;
+            min-height: 0 !important;
+            margin: 0 0 16px !important;
+          }
+
+          .price {
+            font-size: 22px !important;
+            line-height: 1.3 !important;
+            margin-top: 0 !important;
+          }
+        }
+
+        @media (max-width: 430px) {
+          .productImage {
+            height: clamp(445px, 122vw, 540px) !important;
+            min-height: 445px !important;
+            max-height: 540px !important;
+          }
+
+          .productImage img {
+            object-fit: contain !important;
+            object-position: center center !important;
+            padding: 12px !important;
+            transform: none !important;
+          }
+        }
+
+        @media (min-width: 641px) and (max-width: 900px) {
+          .productImage {
+            height: clamp(390px, 62vw, 560px) !important;
+            background:
+              radial-gradient(circle at 50% 42%, rgba(255, 249, 240, 0.98), rgba(246, 237, 225, 0.96) 62%, rgba(232, 214, 189, 0.74) 100%) !important;
+            display: flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+          }
+
+          .productImage img {
+            width: 100% !important;
+            height: 100% !important;
+            object-fit: contain !important;
+            object-position: center center !important;
+            padding: 16px !important;
+            box-sizing: border-box !important;
+            transform: none !important;
+            filter: none !important;
+          }
+
+          .productCard:hover .productImage img {
+            transform: none !important;
+            filter: none !important;
           }
         }
 
