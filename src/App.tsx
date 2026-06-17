@@ -6733,6 +6733,31 @@ export default function App() {
         }
 
 
+        /* Mobile product image full-item display patch */
+        @media (min-width: 641px) and (max-width: 900px) {
+          .productImage {
+            height: clamp(420px, 62vw, 560px) !important;
+            background:
+              radial-gradient(circle at 50% 42%, rgba(255, 249, 240, 0.98), rgba(245, 235, 222, 0.94) 62%, rgba(232, 214, 189, 0.72) 100%) !important;
+            display: flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+          }
+
+          .productImage img {
+            object-fit: contain !important;
+            object-position: center center !important;
+            padding: 14px !important;
+            box-sizing: border-box !important;
+            transform: none !important;
+          }
+
+          .productCard:hover .productImage img {
+            transform: none !important;
+            filter: none !important;
+          }
+        }
+
         @keyframes pageFade {
           from { opacity: 0.92; }
           to { opacity: 1; }
@@ -10724,30 +10749,49 @@ export default function App() {
           }
 
           .productImage {
-            height: clamp(210px, 48vw, 270px) !important;
-            min-height: 0 !important;
-            aspect-ratio: 3 / 4 !important;
+            height: clamp(380px, 108vw, 500px) !important;
+            min-height: 380px !important;
+            aspect-ratio: auto !important;
             border-radius: 20px !important;
             overflow: hidden !important;
+            background:
+              radial-gradient(circle at 50% 42%, rgba(255, 249, 240, 0.98), rgba(245, 235, 222, 0.94) 62%, rgba(232, 214, 189, 0.72) 100%) !important;
+            display: flex !important;
+            align-items: center !important;
+            justify-content: center !important;
           }
 
           .productImage img {
             width: 100% !important;
             height: 100% !important;
-            object-fit: cover !important;
+            object-fit: contain !important;
             object-position: center center !important;
+            padding: 12px !important;
+            box-sizing: border-box !important;
+            display: block !important;
+            transform: none !important;
+            filter: none !important;
+          }
+
+          .productCard:hover .productImage img {
+            transform: none !important;
+            filter: none !important;
           }
 
           .productImage.linenPantsProductImage {
-            height: clamp(280px, 62vw, 360px) !important;
-            aspect-ratio: 4 / 5 !important;
-            background: #f8f1e8 !important;
+            height: clamp(420px, 118vw, 540px) !important;
+            min-height: 420px !important;
+            aspect-ratio: auto !important;
+            background:
+              radial-gradient(circle at 50% 42%, rgba(255, 249, 240, 0.98), rgba(248, 241, 232, 0.96) 62%, rgba(232, 214, 189, 0.68) 100%) !important;
           }
 
           .productImage.linenPantsProductImage img {
             object-fit: contain !important;
             object-position: center center !important;
-            padding: 8px !important;
+            padding: 10px !important;
+            box-sizing: border-box !important;
+            transform: none !important;
           }
 
           .productInfo {
