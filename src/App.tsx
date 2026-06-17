@@ -12490,144 +12490,94 @@ export default function App() {
 
 
         /* =========================================================
-           FINAL MOBILE PRODUCT IMAGE FIX
-           Shows the full item on phone instead of cropping it.
-           This is intentionally placed LAST so it overrides older
-           mobile rules such as height:165px and object-fit:cover.
+           SEARCH RESULT FULL-ITEM MOBILE FIX ONLY
+           Keeps the old product grid/cards normally.
+           Applies only when the user searches and the collection grid
+           has .searchFilteredGrid.
            ========================================================= */
 
         @media (max-width: 640px) {
-          .productGrid,
-          .bestSellerGrid,
-          .wishlistGrid {
+          .productGrid.searchFilteredGrid {
             grid-template-columns: 1fr !important;
             gap: 24px !important;
           }
 
-          .products,
-          .wishlistSection {
-            padding-left: 18px !important;
-            padding-right: 18px !important;
-          }
-
-          .productCard {
+          .productGrid.searchFilteredGrid .productCard {
             width: 100% !important;
             max-width: 100% !important;
             border-radius: 28px !important;
             overflow: hidden !important;
           }
 
-          .productImage {
+          .productGrid.searchFilteredGrid .productImage {
             width: 100% !important;
-            height: clamp(450px, 118vw, 580px) !important;
-            min-height: 450px !important;
-            max-height: 580px !important;
+            height: clamp(430px, 112vw, 560px) !important;
+            min-height: 430px !important;
+            max-height: 560px !important;
             aspect-ratio: auto !important;
             border-radius: 28px 28px 0 0 !important;
             overflow: hidden !important;
             background:
-              radial-gradient(circle at 50% 42%, rgba(255, 249, 240, 0.98), rgba(246, 237, 225, 0.96) 62%, rgba(232, 214, 189, 0.74) 100%) !important;
+              radial-gradient(circle at 50% 42%, rgba(255, 249, 240, 0.98), rgba(246, 237, 225, 0.96) 62%, rgba(232, 214, 189, 0.70) 100%) !important;
             display: flex !important;
             align-items: center !important;
             justify-content: center !important;
           }
 
-          .productImage img {
+          .productGrid.searchFilteredGrid .productImage img {
             width: 100% !important;
             height: 100% !important;
             max-width: 100% !important;
             max-height: 100% !important;
             object-fit: contain !important;
             object-position: center center !important;
-            padding: 14px !important;
+            padding: 12px !important;
             box-sizing: border-box !important;
             display: block !important;
             transform: none !important;
             filter: none !important;
           }
 
-          .productCard:hover .productImage img,
-          .productCard:active .productImage img,
-          .productCard:focus-within .productImage img {
+          .productGrid.searchFilteredGrid .productCard:hover .productImage img,
+          .productGrid.searchFilteredGrid .productCard:active .productImage img,
+          .productGrid.searchFilteredGrid .productCard:focus-within .productImage img {
             transform: none !important;
             filter: none !important;
           }
 
-          .productImageSwitcher {
-            left: 14px !important;
-            bottom: 14px !important;
+          .productGrid.searchFilteredGrid .productInfo {
+            padding: 24px 22px 28px !important;
           }
 
-          .stockTag {
-            left: 14px !important;
-            bottom: 14px !important;
+          .productGrid.searchFilteredGrid .productInfo h4 {
+            font-size: clamp(28px, 7.8vw, 36px) !important;
+            line-height: 1.08 !important;
+            min-height: 0 !important;
+            margin-bottom: 14px !important;
           }
 
-          .productInfo {
-            padding: 26px 24px 30px !important;
-          }
-
-          .productInfo .category,
-          .productInfo p.category,
-          .category {
-            font-size: 12px !important;
+          .productGrid.searchFilteredGrid .category {
+            font-size: 11px !important;
             letter-spacing: 0.20em !important;
             margin-bottom: 12px !important;
           }
 
-          .productInfo h4 {
-            font-size: clamp(29px, 8.2vw, 38px) !important;
-            line-height: 1.08 !important;
-            min-height: 0 !important;
-            margin: 0 0 16px !important;
-          }
-
-          .price {
-            font-size: 22px !important;
+          .productGrid.searchFilteredGrid .price {
+            font-size: 21px !important;
             line-height: 1.3 !important;
-            margin-top: 0 !important;
           }
         }
 
-        @media (max-width: 430px) {
-          .productImage {
-            height: clamp(445px, 122vw, 540px) !important;
-            min-height: 445px !important;
-            max-height: 540px !important;
+        @media (max-width: 380px) {
+          .productGrid.searchFilteredGrid .productImage {
+            height: clamp(410px, 118vw, 520px) !important;
+            min-height: 410px !important;
+            max-height: 520px !important;
           }
 
-          .productImage img {
+          .productGrid.searchFilteredGrid .productImage img {
             object-fit: contain !important;
-            object-position: center center !important;
-            padding: 12px !important;
-            transform: none !important;
-          }
-        }
-
-        @media (min-width: 641px) and (max-width: 900px) {
-          .productImage {
-            height: clamp(390px, 62vw, 560px) !important;
-            background:
-              radial-gradient(circle at 50% 42%, rgba(255, 249, 240, 0.98), rgba(246, 237, 225, 0.96) 62%, rgba(232, 214, 189, 0.74) 100%) !important;
-            display: flex !important;
-            align-items: center !important;
-            justify-content: center !important;
-          }
-
-          .productImage img {
-            width: 100% !important;
-            height: 100% !important;
-            object-fit: contain !important;
-            object-position: center center !important;
-            padding: 16px !important;
-            box-sizing: border-box !important;
-            transform: none !important;
-            filter: none !important;
-          }
-
-          .productCard:hover .productImage img {
-            transform: none !important;
-            filter: none !important;
+            padding: 10px !important;
           }
         }
 
@@ -13917,7 +13867,7 @@ export default function App() {
             {filteredProducts.length === 0 ? (
               <div className="emptyState">{t.noResults}</div>
             ) : (
-              <div className="productGrid">
+              <div className={searchTerm.trim() ? "productGrid searchFilteredGrid" : "productGrid"}>
                 {filteredProducts.map((product) => (
                   <ProductCard
                     key={product.name}
