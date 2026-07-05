@@ -188,8 +188,10 @@ const WHATSAPP_NUMBER = "201101900086";
 const BRAND_EMAIL = "omaromohamed2003@gmail.com";
 
 // Real launch countdown target. Change this date/time whenever you want to change the official launch moment.
-// Redone countdown: 30-day launch countdown ending on 5 July 2026 at 11:59 PM Egypt time.
-const LAUNCH_DATE_ISO = "2026-07-05T23:59:59+03:00";
+// Reset countdown: edit VITE_LAUNCH_DATE_ISO in Vercel whenever you want a new launch moment.
+const LAUNCH_DATE_ISO =
+  (import.meta.env.VITE_LAUNCH_DATE_ISO as string | undefined) ||
+  "2026-08-05T23:59:59+03:00";
 const COUNTDOWN_SECOND = 1000;
 const COUNTDOWN_MINUTE = COUNTDOWN_SECOND * 60;
 const COUNTDOWN_HOUR = COUNTDOWN_MINUTE * 60;
@@ -1085,6 +1087,7 @@ function ProductCard({
   onWishlist,
   isWishlisted,
   language,
+  isLaunchLive,
 }: {
   product: Product;
   onOpen: (product: Product) => void;
@@ -1092,8 +1095,12 @@ function ProductCard({
   onWishlist: (product: Product) => void;
   isWishlisted: boolean;
   language: Lang;
+  isLaunchLive: boolean;
 }) {
   const t = text[language];
+  const isArabic = language === "AR";
+  const actionLabel = isLaunchLive ? (isArabic ? "شراء الآن" : "Buy Now") : t.add;
+  const badgeLabel = isLaunchLive ? (isArabic ? "متاح الآن" : "Available Now") : t.preOrderBadge;
   const [imageView, setImageView] = useState<"front" | "model" | "back">("front");
   const [manualImageView, setManualImageView] = useState(false);
 
@@ -1206,7 +1213,7 @@ function ProductCard({
           <p className="category">{product.category}</p>
           <h4>{product.name}</h4>
           <p className="price">{product.price}</p>
-          <p className="preOrderLine">{t.preOrderBadge}</p>
+          <p className="preOrderLine">{badgeLabel}</p>
         </div>
 
         <div className="cardActions">
@@ -1214,7 +1221,7 @@ function ProductCard({
             {t.view}
           </button>
           <button className="addBtn" onClick={() => onAdd(product)}>
-            {t.add}
+            {actionLabel}
           </button>
         </div>
       </div>
@@ -1310,10 +1317,117 @@ export default function App() {
   const [scrollProgress, setScrollProgress] = useState(0);
   const [loading, setLoading] = useState(true);
   const [introExitStarted, setIntroExitStarted] = useState(false);
+  const [launchAnnouncementOpen, setLaunchAnnouncementOpen] = useState(false);
   const [launchCountdown, setLaunchCountdown] = useState<LaunchCountdown>(() => getLaunchCountdown());
 
   const isArabic = language === "AR";
-  const t = text[language];
+  const baseText = text[language];
+  const isLaunchLive = launchCountdown.isFinished;
+
+  const launchDateLabel = useMemo(() => {
+    const launchDate = new Date(LAUNCH_DATE_ISO);
+    return launchDate.toLocaleString(isArabic ? "ar-EG" : "en-GB", {
+      day: "numeric",
+      month: "long",
+      year: "numeric",
+      hour: "numeric",
+      minute: "2-digit",
+      hour12: true,
+      timeZone: "Africa/Cairo",
+    });
+  }, [isArabic]);
+
+  const t = useMemo(() => {
+    if (!isLaunchLive) return baseText;
+
+    return {
+      ...baseText,
+      topBar: isArabic
+        ? "المجموعة متاحة الآن — تسوقي قطع لا غراتسيا مباشرة"
+        : "THE COLLECTION IS LIVE — shop La Grazia pieces now",
+      shopCollection: isArabic ? "تسوقي المجموعة الآن" : "Shop Collection",
+      trustDrops: isArabic ? "المجموعة متاحة الآن" : "Collection Live",
+      wardrobeIntro: isArabic
+        ? "تصفحي المجموعة الرسمية. أصبحت قطع لا غراتسيا متاحة الآن للشراء المباشر."
+        : "Browse the official 11-piece collection with one silk scarf available in multiple refined colorways. The collection is now live and available to order directly.",
+      yourSelection: isArabic ? "اختياراتك" : "Your Selection",
+      bagTitle: isArabic ? "شنطة التسوق" : "La Grazia Shopping Bag",
+      emptyBag: isArabic ? "شنطة التسوق فارغة. أضيفي القطعة المفضلة أولاً." : "Your shopping bag is empty. Add your favorite pieces first.",
+      sendOrder: isArabic ? "إرسال الطلب عبر واتساب" : "Send Order on WhatsApp",
+      payNow: isArabic ? "إتمام الشراء" : "Buy Now",
+      paymentServerError: isArabic
+        ? "الدفع لن يعمل محلياً إلا بعد النشر على Vercel أو تشغيل Vercel dev."
+        : "Checkout is not ready locally. Test checkout after pushing to Vercel, or run Vercel dev.",
+      add: isArabic ? "شراء الآن" : "Buy Now",
+      addBag: isArabic ? "أضيفي للشنطة" : "Add to Bag",
+      orderWhatsapp: isArabic ? "اطلبي عبر واتساب" : "Order on WhatsApp",
+      toastAdded: isArabic ? "تمت الإضافة إلى شنطة لا غراتسيا" : "Added to La Grazia Bag",
+      preOrderNotice: isArabic
+        ? "المجموعة متاحة الآن للشراء مباشرة."
+        : "The collection is officially live and available to order now.",
+      preOrderBadge: isArabic ? "متاح الآن" : "Available Now",
+      preOrderCartNote: isArabic
+        ? "سيتم تجهيز طلبك بعد إتمام الشراء."
+        : "Your order will be prepared after checkout is completed.",
+    };
+  }, [baseText, isLaunchLive, isArabic]);
+
+  const orderCopy = useMemo(() => {
+    return {
+      accountDescription: isLaunchLive
+        ? isArabic
+          ? "تابعي بياناتك وطلباتك وحالة التوصيل من صفحة واحدة مصممة بأسلوب لا غراتسيا."
+          : "Track your details, orders, and delivery status from one elegant La Grazia space."
+        : isArabic
+          ? "تابعي بياناتك وطلباتك وحالة التوصيل من صفحة واحدة مصممة بأسلوب لا غراتسيا."
+          : "Track your details, pre-orders, and delivery status from one elegant La Grazia space.",
+      ordersTab: isLaunchLive ? (isArabic ? "طلباتي" : "My Orders") : (isArabic ? "حجوزاتي المسبقة" : "My Pre-Orders"),
+      noOrdersTitle: isLaunchLive ? (isArabic ? "لا توجد طلبات حتى الآن" : "No orders yet") : (isArabic ? "لا توجد حجوزات مسبقة حتى الآن" : "No pre-orders yet"),
+      noOrdersText: isLaunchLive
+        ? isArabic
+          ? "عند إتمام أول طلب، سيظهر هنا لتتبعي حالته."
+          : "When you place your first order, it will appear here so you can track it."
+        : isArabic
+          ? "عند بدء الحجز المسبق، سيظهر طلبك هنا لتتبعي حالته."
+          : "When you start a pre-order, it will appear here so you can track it.",
+      orderReference: isLaunchLive ? (isArabic ? "رقم الطلب" : "Order Reference") : (isArabic ? "رقم الحجز المسبق" : "Pre-Order Reference"),
+      orderShort: isLaunchLive ? (isArabic ? "طلب" : "Order") : (isArabic ? "رقم الحجز المسبق" : "Pre-Order"),
+      supportPlaceholder: isLaunchLive
+        ? isArabic
+          ? "اكتبي تفاصيل الطلب أو سؤالك..."
+          : "Write your order question, product question, or support request..."
+        : isArabic
+          ? "اكتبي تفاصيل الحجز المسبق أو سؤالك..."
+          : "Write your pre-order question, product question, or support request...",
+      supportWhatsApp: isLaunchLive
+        ? "Hello La Grazia, I need support with my account/order."
+        : "Hello La Grazia, I need support with my account/pre-order.",
+      trackingEyebrow: isLaunchLive ? (isArabic ? "تتبع الطلبات" : "Order Tracking") : (isArabic ? "تتبع الحجوزات المسبقة" : "Pre-Order Tracking"),
+      trackingHint: isLaunchLive
+        ? isArabic
+          ? "اسحبي جانبياً لتصفح كل الطلبات عند وجود أكثر من طلب."
+          : "Swipe or slide sideways to browse all orders when you have more than one."
+        : isArabic
+          ? "اسحبي جانبياً لتصفح كل الحجوزات المسبقة عند وجود أكثر من طلب."
+          : "Swipe or slide sideways to browse all pre-orders when you have more than one.",
+      adminOrdersTitle: isLaunchLive ? (isArabic ? "كل طلبات لا غراتسيا" : "All La Grazia Orders") : (isArabic ? "كل حجوزات لا غراتسيا المسبقة" : "All La Grazia Pre-Orders"),
+      adminOrdersText: isLaunchLive
+        ? isArabic
+          ? "راجعي كل الطلبات وغيّري حالة التتبع من لوحة واحدة."
+          : "View every order and update its tracking status from one elegant dashboard."
+        : isArabic
+          ? "راجعي كل الحجوزات المسبقة وغيّري حالة التتبع من لوحة واحدة."
+          : "View every pre-order and update its tracking status from one elegant dashboard.",
+      totalOrders: isLaunchLive ? (isArabic ? "كل الطلبات" : "Total Orders") : (isArabic ? "كل الحجوزات المسبقة" : "Total Pre-Orders"),
+      noAdminOrdersTitle: isLaunchLive ? (isArabic ? "لا توجد طلبات بعد" : "No orders yet") : (isArabic ? "لا توجد حجوزات مسبقة بعد" : "No pre-orders yet"),
+      noAdminOrdersText: isLaunchLive ? (isArabic ? "كل طلب جديد سيظهر هنا." : "Every new customer order will appear here.") : (isArabic ? "كل حجز مسبق جديد سيظهر هنا." : "Every new customer pre-order will appear here."),
+      relatedOrder: isLaunchLive ? (isArabic ? "طلب" : "Order") : (isArabic ? "حجز مسبق" : "Pre-Order"),
+      cartTotal: isLaunchLive ? (isArabic ? "الإجمالي" : "Total") : (isArabic ? "الإجمالي" : "Pre-order total"),
+      footerWhatsApp: isLaunchLive ? "Hello La Grazia, I want to contact you about an order." : "Hello La Grazia, I want to contact you about pre-orders.",
+      floatingWhatsApp: isLaunchLive ? "Hello La Grazia, I want to ask about ordering the collection." : "Hello La Grazia, I want to ask about pre-ordering the new collection.",
+      bottomWhatsApp: isLaunchLive ? "Hello La Grazia, I want to order." : "Hello La Grazia, I want to pre-order.",
+    };
+  }, [isLaunchLive, isArabic]);
 
   const offerCelebrationPieces = useMemo(
     () =>
@@ -1551,6 +1665,24 @@ export default function App() {
       .map((item, index) => formatLuxuryPreOrderItem(item, index))
       .join(`${lineBreak}${lineBreak}`);
 
+    if (isLaunchLive) {
+      return (
+        "Hello La Grazia Milano," +
+        lineBreak +
+        lineBreak +
+        `I would love to order the following ${itemWord} from the La Grazia Atelier Collection:` +
+        lineBreak +
+        lineBreak +
+        luxuryOrderLines +
+        lineBreak +
+        lineBreak +
+        `Kindly assist me with the order confirmation, delivery details, and the next steps to secure my selected ${selectedWord}.` +
+        lineBreak +
+        lineBreak +
+        "Thank you."
+      );
+    }
+
     return (
       "Hello La Grazia Milano," +
       lineBreak +
@@ -1574,7 +1706,9 @@ export default function App() {
   const cartMessage =
     cart.length > 0
       ? createLuxuryPreOrderMessage(cart)
-      : "Hello La Grazia Milano, I would love to ask about reserving a piece from the upcoming La Grazia Atelier Collection.";
+      : isLaunchLive
+        ? "Hello La Grazia Milano, I would love to ask about ordering a piece from the La Grazia Atelier Collection."
+        : "Hello La Grazia Milano, I would love to ask about reserving a piece from the upcoming La Grazia Atelier Collection.";
 
   useEffect(() => {
     const textStartFallback = window.setTimeout(() => setIntroExitStarted(true), 2991);
@@ -1617,14 +1751,14 @@ export default function App() {
     }
 
     const dismissed = window.sessionStorage.getItem(LAGRAZIA_OFFER_DISMISS_STORAGE_KEY);
-    if (dismissed || loading) return;
+    if (dismissed || loading || isLaunchLive) return;
 
     const timer = window.setTimeout(() => {
       setOfferPopupOpen(true);
     }, 450);
 
     return () => window.clearTimeout(timer);
-  }, [loading]);
+  }, [loading, isLaunchLive]);
 
   useEffect(() => {
     const updateLaunchCountdown = () => {
@@ -1637,6 +1771,26 @@ export default function App() {
 
     return () => window.clearInterval(countdownTimer);
   }, []);
+
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    if (!accountUser?.email || !launchCountdown.isFinished || loading) return;
+
+    const seenKey = `lagrazia-launch-announcement-seen-${LAUNCH_DATE_ISO}-${accountUser.email.toLowerCase()}`;
+
+    if (window.localStorage.getItem(seenKey)) return;
+
+    setLaunchAnnouncementOpen(true);
+  }, [accountUser?.email, launchCountdown.isFinished, loading]);
+
+  function closeLaunchAnnouncement() {
+    if (typeof window !== "undefined" && accountUser?.email) {
+      const seenKey = `lagrazia-launch-announcement-seen-${LAUNCH_DATE_ISO}-${accountUser.email.toLowerCase()}`;
+      window.localStorage.setItem(seenKey, "true");
+    }
+
+    setLaunchAnnouncementOpen(false);
+  }
 
 
   useEffect(() => {
@@ -2744,7 +2898,7 @@ export default function App() {
       fetchUserOrders(session.user.id);
     }
 
-    setToast(isArabic ? "تم تحديث حالة الحجز المسبق" : "Pre-order status updated");
+    setToast(isLaunchLive ? (isArabic ? "تم تحديث حالة الطلب" : "Order status updated") : (isArabic ? "تم تحديث حالة الحجز المسبق" : "Pre-order status updated"));
   }
 
   function openProduct(product: Product) {
@@ -12581,6 +12735,107 @@ export default function App() {
           }
         }
 
+        .launchAnnouncementBackdrop {
+          position: fixed;
+          inset: 0;
+          z-index: 260;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          padding: 22px;
+          background:
+            radial-gradient(circle at top, rgba(255, 246, 230, 0.94), rgba(35, 24, 18, 0.68)),
+            rgba(35, 24, 18, 0.58);
+          backdrop-filter: blur(14px);
+        }
+
+        .launchAnnouncementCard {
+          position: relative;
+          width: min(92vw, 700px);
+          overflow: hidden;
+          padding: clamp(34px, 6vw, 64px);
+          border-radius: 34px;
+          text-align: center;
+          background:
+            linear-gradient(145deg, rgba(255, 250, 241, 0.98), rgba(243, 226, 197, 0.96)),
+            radial-gradient(circle at top left, rgba(176, 140, 78, 0.26), transparent 38%);
+          border: 1px solid rgba(176, 140, 78, 0.36);
+          box-shadow: 0 36px 100px rgba(35, 24, 18, 0.34);
+        }
+
+        .launchAnnouncementCard::before {
+          content: "LA GRAZIA";
+          position: absolute;
+          inset: auto 0 -18px 0;
+          color: rgba(176, 140, 78, 0.08);
+          font-family: Georgia, serif;
+          font-size: clamp(58px, 13vw, 124px);
+          letter-spacing: 0.12em;
+          pointer-events: none;
+        }
+
+        .launchAnnouncementCard h2 {
+          position: relative;
+          margin: 10px 0 14px;
+          font-family: Georgia, serif;
+          font-size: clamp(34px, 6vw, 64px);
+          line-height: 0.95;
+          color: #2c1f18;
+        }
+
+        .launchAnnouncementCard p {
+          position: relative;
+          max-width: 540px;
+          margin: 0 auto 26px;
+          color: #6d5845;
+          line-height: 1.8;
+        }
+
+        .launchAnnouncementCard .primaryBtn {
+          position: relative;
+          width: auto;
+          display: inline-flex;
+          justify-content: center;
+        }
+
+        .launchAnnouncementClose {
+          position: absolute;
+          top: 18px;
+          right: 18px;
+          z-index: 2;
+          width: 42px;
+          height: 42px;
+          border-radius: 999px;
+          border: 1px solid rgba(176, 140, 78, 0.32);
+          background: rgba(255, 255, 255, 0.72);
+          color: #2c1f18;
+          font-size: 24px;
+          cursor: pointer;
+        }
+
+        .launchAnnouncementConfetti {
+          position: absolute;
+          inset: 0;
+          pointer-events: none;
+          overflow: hidden;
+        }
+
+        .launchAnnouncementConfetti span {
+          position: absolute;
+          top: -30px;
+          left: var(--left);
+          font-size: var(--size);
+          color: rgba(176, 140, 78, 0.58);
+          animation: launchConfettiFall var(--duration) linear var(--delay) infinite;
+        }
+
+        @keyframes launchConfettiFall {
+          0% { transform: translateY(-30px) rotate(0deg); opacity: 0; }
+          12% { opacity: 1; }
+          100% { transform: translateY(720px) translateX(var(--drift)) rotate(360deg); opacity: 0; }
+        }
+
+
 
       `}</style>
 
@@ -12764,7 +13019,7 @@ export default function App() {
                     className={accountView === "orders" ? "profileTab active" : "profileTab"}
                     onClick={() => { setAccountView("orders"); fetchUserOrders(); }}
                   >
-                    {isArabic ? "حجوزاتي المسبقة" : "My Pre-Orders"}
+                    {orderCopy.ordersTab}
                   </button>
                 </div>
 
@@ -12787,15 +13042,15 @@ export default function App() {
                   <div className="ordersPanel">
                     {accountOrders.length === 0 ? (
                       <div className="noOrdersBox">
-                        <strong>{isArabic ? "لا توجد حجوزات مسبقة حتى الآن" : "No pre-orders yet"}</strong>
-                        <span>{isArabic ? "عند بدء الحجز المسبق، سيظهر طلبك هنا لتتبعي حالته." : "When you start a pre-order, it will appear here so you can track it."}</span>
+                        <strong>{orderCopy.noOrdersTitle}</strong>
+                        <span>{orderCopy.noOrdersText}</span>
                       </div>
                     ) : (
                       accountOrders.map((order) => (
                         <div className="orderCard" key={order.id}>
                           <div className="orderCardTop">
                             <div>
-                              <small>{isArabic ? "رقم الحجز المسبق" : "Pre-Order"}</small>
+                              <small>{orderCopy.orderShort}</small>
                               <strong>{order.order_reference}</strong>
                             </div>
                             <span className="orderStatusPill">{order.order_status}</span>
@@ -13121,9 +13376,7 @@ export default function App() {
                 <p className="eyebrow">{isArabic ? "حساب لا غراتسيا" : "La Grazia Account"}</p>
                 <h2>{isArabic ? "مساحتك الخاصة" : "Your Private Profile"}</h2>
                 <p>
-                  {isArabic
-                    ? "تابعي بياناتك وطلباتك وحالة التوصيل من صفحة واحدة مصممة بأسلوب لا غراتسيا."
-                    : "Track your details, pre-orders, and delivery status from one elegant La Grazia space."}
+                  {orderCopy.accountDescription}
                 </p>
 
                 <div className="accountFullDetails">
@@ -13165,7 +13418,7 @@ export default function App() {
                     className={accountView === "orders" ? "accountFullTab active" : "accountFullTab"}
                     onClick={() => { setAccountView("orders"); fetchUserOrders(); }}
                   >
-                    {isArabic ? "حجوزاتي المسبقة" : "My Pre-Orders"}
+                    {orderCopy.ordersTab}
                   </button>
                   {canAccessAdmin && (
                     <button
@@ -13313,7 +13566,7 @@ export default function App() {
                             </select>
                           </label>
                           <label>
-                            <span>{isArabic ? "رقم الحجز المسبق" : "Pre-Order Reference"}</span>
+                            <span>{orderCopy.orderReference}</span>
                             <input value={supportForm.relatedOrderReference} onChange={(event) => setSupportForm((current) => ({ ...current, relatedOrderReference: event.target.value }))} placeholder="LG-..." />
                           </label>
                           <label>
@@ -13322,14 +13575,14 @@ export default function App() {
                           </label>
                           <label className="profileWide">
                             <span>{isArabic ? "رسالتك" : "Message"}</span>
-                            <textarea value={supportForm.message} onChange={(event) => setSupportForm((current) => ({ ...current, message: event.target.value }))} placeholder={isArabic ? "اكتبي تفاصيل الحجز المسبق أو سؤالك..." : "Write your pre-order question, product question, or support request..."} />
+                            <textarea value={supportForm.message} onChange={(event) => setSupportForm((current) => ({ ...current, message: event.target.value }))} placeholder={orderCopy.supportPlaceholder} />
                           </label>
                         </div>
                         <div className="addressFormActions">
                           <button type="submit" className="primaryBtn" disabled={supportSubmitting}>
                             {supportSubmitting ? (isArabic ? "جاري الإرسال..." : "Sending...") : (isArabic ? "إرسال للدعم" : "Send to Support")}
                           </button>
-                          <a className="secondaryBtn" href={createWhatsAppLink("Hello La Grazia, I need support with my account/pre-order.")} target="_blank" rel="noreferrer">
+                          <a className="secondaryBtn" href={createWhatsAppLink(orderCopy.supportWhatsApp)} target="_blank" rel="noreferrer">
                             {isArabic ? "واتساب" : "WhatsApp"}
                           </a>
                         </div>
@@ -13361,13 +13614,9 @@ export default function App() {
                   <>
                     <div className="accountPageTitleRow">
                       <div>
-                        <p className="eyebrow">{isArabic ? "تتبع الحجوزات المسبقة" : "Pre-Order Tracking"}</p>
-                        <h3>{isArabic ? "حجوزاتي المسبقة" : "My Pre-Orders"}</h3>
-                        <p>
-                          {isArabic
-                            ? "اسحبي يميناً أو يساراً لمشاهدة كل الطلبات عند وجود أكثر من طلب."
-                            : "Swipe or slide sideways to browse all pre-orders when you have more than one."}
-                        </p>
+                        <p className="eyebrow">{orderCopy.trackingEyebrow}</p>
+                        <h3>{orderCopy.ordersTab}</h3>
+                        <p>{orderCopy.trackingHint}</p>
                       </div>
                       <button className="secondaryBtn" onClick={() => fetchUserOrders()}>
                         {isArabic ? "تحديث" : "Refresh"}
@@ -13376,11 +13625,11 @@ export default function App() {
 
                     {accountOrders.length === 0 ? (
                       <div className="noOrdersBox">
-                        <strong>{isArabic ? "لا توجد حجوزات مسبقة حتى الآن" : "No pre-orders yet"}</strong>
-                        <span>{isArabic ? "عند بدء الحجز المسبق، سيظهر طلبك هنا لتتبعي حالته." : "When you start a pre-order, it will appear here so you can track it."}</span>
+                        <strong>{orderCopy.noOrdersTitle}</strong>
+                        <span>{orderCopy.noOrdersText}</span>
                       </div>
                     ) : (
-                      <div className="accountOrdersCarousel" aria-label="Pre-order history">
+                      <div className="accountOrdersCarousel" aria-label={orderCopy.trackingEyebrow}>
                         {accountOrders.map((order) => {
                           const statusSteps = ["Pending Payment", "Paid", "Preparing", "Out for Delivery", "Delivered"];
                           const activeIndex = Math.max(0, statusSteps.findIndex((step) => step === order.order_status));
@@ -13390,7 +13639,7 @@ export default function App() {
                               <div className="orderCard">
                                 <div className="orderCardTop">
                                   <div>
-                                    <small>{isArabic ? "رقم الحجز المسبق" : "Pre-Order"}</small>
+                                    <small>{orderCopy.orderShort}</small>
                                     <strong>{order.order_reference}</strong>
                                   </div>
                                   <span className="orderStatusPill">{order.order_status}</span>
@@ -13433,12 +13682,8 @@ export default function App() {
                     <div className="accountPageTitleRow">
                       <div>
                         <p className="eyebrow">{isArabic ? "إدارة الطلبات" : "Admin Dashboard"}</p>
-                        <h3>{isArabic ? "كل حجوزات لا غراتسيا المسبقة" : "All La Grazia Pre-Orders"}</h3>
-                        <p>
-                          {isArabic
-                            ? "تابع كل الطلبات وغيّر حالة الطلب من لوحة واحدة."
-                            : "View every pre-order and update its tracking status from one elegant dashboard."}
-                        </p>
+                        <h3>{orderCopy.adminOrdersTitle}</h3>
+                        <p>{orderCopy.adminOrdersText}</p>
                       </div>
                       <button className="secondaryBtn" onClick={fetchAdminOrders}>
                         {adminLoading ? (isArabic ? "جاري التحديث..." : "Refreshing...") : (isArabic ? "تحديث" : "Refresh")}
@@ -13446,15 +13691,15 @@ export default function App() {
                     </div>
 
                     <div className="adminStatsGrid">
-                      <div className="adminStatCard"><small>{isArabic ? "كل الحجوزات المسبقة" : "Total Pre-Orders"}</small><strong>{adminOrders.length}</strong></div>
+                      <div className="adminStatCard"><small>{orderCopy.totalOrders}</small><strong>{adminOrders.length}</strong></div>
                       <div className="adminStatCard"><small>{isArabic ? "مدفوعة" : "Paid"}</small><strong>{adminOrders.filter((order) => order.payment_status === "paid").length}</strong></div>
                       <div className="adminStatCard"><small>{isArabic ? "قيد التجهيز" : "Preparing"}</small><strong>{adminOrders.filter((order) => order.order_status === "Preparing").length}</strong></div>
                     </div>
 
                     {adminOrders.length === 0 ? (
                       <div className="noOrdersBox">
-                        <strong>{isArabic ? "لا توجد حجوزات مسبقة بعد" : "No pre-orders yet"}</strong>
-                        <span>{isArabic ? "كل حجز مسبق جديد سيظهر هنا." : "Every new customer pre-order will appear here."}</span>
+                        <strong>{orderCopy.noAdminOrdersTitle}</strong>
+                        <span>{orderCopy.noAdminOrdersText}</span>
                       </div>
                     ) : (
                       <div className="adminOrdersList">
@@ -13462,7 +13707,7 @@ export default function App() {
                           <article className="adminOrderCard" key={order.id}>
                             <div className="adminOrderTop">
                               <div>
-                                <small>{isArabic ? "رقم الحجز المسبق" : "Pre-Order"}</small>
+                                <small>{orderCopy.orderShort}</small>
                                 <strong>{order.order_reference}</strong>
                                 <span>{new Date(order.created_at).toLocaleString()}</span>
                               </div>
@@ -13546,7 +13791,7 @@ export default function App() {
                                 <span className={message.status === "Closed" ? "reviewApprovalPill approved" : "reviewApprovalPill pending"}>{message.status}</span>
                               </div>
                               <div className="adminOrderInfoGrid">
-                                <span><b>{isArabic ? "حجز مسبق" : "Pre-Order"}:</b> {message.related_order_reference || "-"}</span>
+                                <span><b>{orderCopy.relatedOrder}:</b> {message.related_order_reference || "-"}</span>
                                 <span><b>{isArabic ? "منتج" : "Product"}:</b> {message.related_product_name || "-"}</span>
                               </div>
                               <p>{message.message}</p>
@@ -13729,7 +13974,7 @@ export default function App() {
                 <div className="launchCountdownHeader">
                   <div>
                     <span>{isArabic ? "العد التنازلي للإطلاق" : "Official Launch Countdown"}</span>
-                    <p>{isArabic ? "الإطلاق الرسمي · ٥ يوليو ٢٠٢٦ · ١١:٥٩ مساءً بتوقيت مصر" : "Official launch · 5 July 2026 · 11:59 PM Egypt time"}</p>
+                    <p>{isArabic ? `الإطلاق الرسمي · ${launchDateLabel} بتوقيت مصر` : `Official launch · ${launchDateLabel} Egypt time`}</p>
                   </div>
                   <strong>{launchCountdown.isFinished ? (isArabic ? "تم الإطلاق" : "Launched") : (isArabic ? "الحجز المسبق مفتوح" : "Pre-Order Open")}</strong>
                 </div>
@@ -13795,6 +14040,7 @@ export default function App() {
                   onWishlist={toggleWishlist}
                   isWishlisted={wishlist.includes(product.name)}
                   language={language}
+                  isLaunchLive={isLaunchLive}
                 />
               ))}
             </div>
@@ -13877,6 +14123,7 @@ export default function App() {
                     onWishlist={toggleWishlist}
                     isWishlisted={wishlist.includes(product.name)}
                     language={language}
+                    isLaunchLive={isLaunchLive}
                   />
                 ))}
               </div>
@@ -13999,14 +14246,14 @@ export default function App() {
               <a href="#gift-card" onClick={() => setAccountPageOpen(false)}>{t.giftTitle}</a>
               <a href="#story" onClick={() => setAccountPageOpen(false)}>{t.navAbout}</a>
               <a href={`mailto:${BRAND_EMAIL}`}>{t.email}</a>
-              <a href={createWhatsAppLink("Hello La Grazia, I want to contact you about pre-orders.")} target="_blank" rel="noreferrer">
+              <a href={createWhatsAppLink(orderCopy.footerWhatsApp)} target="_blank" rel="noreferrer">
                 {t.whatsapp}
               </a>
             </div>
           </div>
         </footer>
 
-        <a className="floatingWhatsApp" href={createWhatsAppLink("Hello La Grazia, I want to ask about pre-ordering the new collection.")} target="_blank" rel="noreferrer" aria-label="WhatsApp">
+        <a className="floatingWhatsApp" href={createWhatsAppLink(orderCopy.floatingWhatsApp)} target="_blank" rel="noreferrer" aria-label="WhatsApp">
           <WhatsAppIcon />
         </a>
 
@@ -14016,7 +14263,7 @@ export default function App() {
           <a href="#top">{t.home}</a>
           <a href="#collection" onClick={() => setAccountPageOpen(false)}>{t.shop}</a>
           <button onClick={() => setCartOpen(true)}>{t.bag}</button>
-          <a href={createWhatsAppLink("Hello La Grazia, I want to pre-order.")} target="_blank" rel="noreferrer">
+          <a href={createWhatsAppLink(orderCopy.bottomWhatsApp)} target="_blank" rel="noreferrer">
             {t.whatsapp}
           </a>
         </div>
@@ -14074,7 +14321,7 @@ export default function App() {
             <div className="cartSummaryBox">
               <div><span>{isArabic ? "الإجمالي قبل الخصم" : "Subtotal"}</span><strong>EGP {cartSubtotal.toLocaleString()}</strong></div>
               {privateOfferActive && <div className="discountRow"><span>{isArabic ? "خصم GRAZIA10" : "GRAZIA10 private offer"}</span><strong>- EGP {cartDiscount.toLocaleString()}</strong></div>}
-              <div className="totalRow"><span>{isArabic ? "الإجمالي" : "Pre-order total"}</span><strong>EGP {cartTotalAfterDiscount.toLocaleString()}</strong></div>
+              <div className="totalRow"><span>{orderCopy.cartTotal}</span><strong>EGP {cartTotalAfterDiscount.toLocaleString()}</strong></div>
             </div>
           )}
 
@@ -14349,6 +14596,52 @@ export default function App() {
           </div>
         </div>
       )}
+
+      {launchAnnouncementOpen && accountUser && (
+        <div className="launchAnnouncementBackdrop" onClick={closeLaunchAnnouncement}>
+          <div className="launchAnnouncementCard" onClick={(event) => event.stopPropagation()}>
+            <div className="launchAnnouncementConfetti" aria-hidden="true">
+              {Array.from({ length: 24 }, (_, index) => (
+                <span
+                  key={index}
+                  style={{
+                    "--left": `${(index * 37 + 8) % 100}%`,
+                    "--size": `${12 + (index % 5) * 2}px`,
+                    "--duration": `${5.2 + (index % 6) * 0.35}s`,
+                    "--delay": `${(index % 12) * 0.18}s`,
+                    "--drift": `${index % 2 === 0 ? "" : "-"}${24 + (index % 8) * 6}px`,
+                  } as React.CSSProperties}
+                >
+                  ✦
+                </span>
+              ))}
+            </div>
+
+            <button className="launchAnnouncementClose" onClick={closeLaunchAnnouncement} aria-label="Close launch announcement">
+              ×
+            </button>
+
+            <p className="eyebrow">{isArabic ? "إعلان لا غراتسيا" : "La Grazia Announcement"}</p>
+
+            <h2>{isArabic ? "المجموعة متاحة الآن" : "The Collection Is Now Live"}</h2>
+
+            <p>
+              {isArabic
+                ? `أهلاً ${accountUser.name || accountUser.email}، انتهى الحجز المسبق وأصبحت مجموعة لا غراتسيا متاحة الآن للشراء مباشرة.`
+                : `Welcome ${accountUser.name || accountUser.email}, pre-order access is now closed and the La Grazia collection is officially available to shop.`}
+            </p>
+
+            <a
+              className="primaryBtn"
+              href="#collection"
+              onClick={closeLaunchAnnouncement}
+            >
+              {isArabic ? "تسوقي الآن" : "Shop Now"}
+            </a>
+          </div>
+        </div>
+      )}
+
       <Analytics />
     </>
   );
