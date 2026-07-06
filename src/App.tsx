@@ -12837,8 +12837,6 @@ export default function App() {
 
 
 
-      `}
-
         /* Review form luxury fix */
         .productReviewsPanel {
           margin: 24px 0 18px;
@@ -13091,6 +13089,8 @@ export default function App() {
             width: 100%;
           }
         }
+      `}
+
 </style>
 
       <div className="scrollProgress" style={{ width: `${scrollProgress}%` }} />
