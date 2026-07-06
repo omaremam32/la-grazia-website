@@ -12837,7 +12837,261 @@ export default function App() {
 
 
 
-      `}</style>
+      `}
+
+        /* Review form luxury fix */
+        .productReviewsPanel {
+          margin: 24px 0 18px;
+          padding: 24px;
+          border-radius: 28px;
+          background: rgba(255, 250, 241, 0.76);
+          border: 1px solid rgba(176, 140, 78, 0.22);
+          box-shadow: 0 18px 42px rgba(35, 24, 18, 0.07);
+        }
+
+        .productReviewsHeader {
+          display: flex;
+          align-items: flex-start;
+          justify-content: space-between;
+          gap: 16px;
+          margin-bottom: 16px;
+        }
+
+        .productReviewsHeader h4 {
+          margin: 6px 0 0;
+          font-family: Georgia, serif;
+          font-size: 22px;
+          color: #2c1f18;
+        }
+
+        .reviewStars {
+          display: inline-flex;
+          color: #b08c4e;
+          letter-spacing: 0.08em;
+          font-size: 16px;
+          white-space: nowrap;
+        }
+
+        .reviewEmptyText {
+          margin: 0 0 18px;
+          color: #7a6755;
+          font-size: 14px;
+          line-height: 1.7;
+          text-align: left;
+        }
+
+        .productReviewsList {
+          display: grid;
+          gap: 12px;
+          margin-bottom: 18px;
+        }
+
+        .productReviewCard {
+          padding: 14px 16px;
+          border-radius: 18px;
+          background: rgba(255, 255, 255, 0.68);
+          border: 1px solid rgba(176, 140, 78, 0.16);
+        }
+
+        .productReviewCard div {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          gap: 12px;
+          margin-bottom: 6px;
+        }
+
+        .productReviewCard strong {
+          font-size: 13px;
+          color: #2c1f18;
+        }
+
+        .productReviewCard span {
+          color: #b08c4e;
+          font-size: 13px;
+          white-space: nowrap;
+        }
+
+        .productReviewCard p {
+          margin: 0;
+          color: #6d5845;
+          font-size: 13px;
+          line-height: 1.65;
+        }
+
+        .reviewForm {
+          display: grid;
+          gap: 13px;
+          width: 100%;
+          margin-top: 16px;
+          padding-top: 18px;
+          border-top: 1px solid rgba(176, 140, 78, 0.18);
+        }
+
+        .reviewFormTop {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          gap: 14px;
+          width: 100%;
+        }
+
+        .reviewFormTop label {
+          margin: 0;
+          font-size: 12px;
+          letter-spacing: 0.16em;
+          text-transform: uppercase;
+          color: #8a6b3f;
+          white-space: nowrap;
+        }
+
+        .reviewRatingButtons {
+          display: inline-flex;
+          align-items: center;
+          gap: 6px;
+          padding: 6px;
+          border-radius: 999px;
+          background: rgba(238, 223, 198, 0.62);
+          border: 1px solid rgba(176, 140, 78, 0.18);
+        }
+
+        .reviewStarBtn {
+          appearance: none;
+          -webkit-appearance: none;
+          display: inline-flex;
+          align-items: center;
+          justify-content: center;
+          width: 32px;
+          height: 32px;
+          padding: 0;
+          border-radius: 999px;
+          border: 1px solid rgba(176, 140, 78, 0.2);
+          background: rgba(255, 255, 255, 0.76);
+          color: rgba(176, 140, 78, 0.46);
+          font-size: 16px;
+          line-height: 1;
+          cursor: pointer;
+          transition: transform 0.2s ease, background 0.2s ease, color 0.2s ease;
+        }
+
+        .reviewStarBtn:hover {
+          transform: translateY(-1px);
+        }
+
+        .reviewStarBtn.active {
+          background: #b08c4e;
+          color: #fffaf1;
+          border-color: #b08c4e;
+          box-shadow: 0 8px 20px rgba(176, 140, 78, 0.22);
+        }
+
+        .reviewForm textarea {
+          display: block;
+          width: 100%;
+          min-height: 112px;
+          resize: vertical;
+          box-sizing: border-box;
+          padding: 15px 17px;
+          border-radius: 22px;
+          border: 1px solid rgba(176, 140, 78, 0.26);
+          outline: none;
+          background: rgba(255, 255, 255, 0.84);
+          color: #2c1f18;
+          font: inherit;
+          font-size: 14px;
+          line-height: 1.6;
+        }
+
+        .reviewForm textarea:focus {
+          border-color: rgba(176, 140, 78, 0.62);
+          box-shadow: 0 0 0 4px rgba(176, 140, 78, 0.1);
+        }
+
+        .reviewSubmitBtn {
+          appearance: none;
+          -webkit-appearance: none;
+          display: inline-flex;
+          align-items: center;
+          justify-content: center;
+          justify-self: start;
+          min-height: 46px;
+          padding: 0 26px;
+          border: 0;
+          border-radius: 999px;
+          background: #2c1f18;
+          color: #fffaf1;
+          font-size: 12px;
+          font-weight: 700;
+          letter-spacing: 0.16em;
+          text-transform: uppercase;
+          cursor: pointer;
+          box-shadow: 0 15px 34px rgba(35, 24, 18, 0.18);
+        }
+
+        .reviewSubmitBtn:disabled {
+          opacity: 0.62;
+          cursor: not-allowed;
+        }
+
+        .reviewForm small {
+          display: block;
+          color: #826c58;
+          font-size: 12px;
+          line-height: 1.6;
+          text-align: left;
+        }
+
+        .darkMode .productReviewsPanel {
+          background: rgba(39, 30, 24, 0.86);
+          border-color: rgba(216, 183, 130, 0.22);
+        }
+
+        .darkMode .productReviewsHeader h4,
+        .darkMode .productReviewCard strong,
+        .darkMode .reviewForm textarea {
+          color: #fffaf1;
+        }
+
+        .darkMode .reviewEmptyText,
+        .darkMode .productReviewCard p,
+        .darkMode .reviewForm small {
+          color: rgba(255, 250, 241, 0.72);
+        }
+
+        .darkMode .productReviewCard,
+        .darkMode .reviewForm textarea,
+        .darkMode .reviewStarBtn {
+          background: rgba(255, 250, 241, 0.08);
+          border-color: rgba(216, 183, 130, 0.22);
+        }
+
+        @media (max-width: 760px) {
+          .productReviewsPanel {
+            padding: 18px;
+            border-radius: 22px;
+          }
+
+          .productReviewsHeader,
+          .reviewFormTop {
+            align-items: flex-start;
+            flex-direction: column;
+          }
+
+          .reviewRatingButtons {
+            width: 100%;
+            justify-content: center;
+          }
+
+          .reviewStarBtn {
+            width: 36px;
+            height: 36px;
+          }
+
+          .reviewSubmitBtn {
+            width: 100%;
+          }
+        }
+</style>
 
       <div className="scrollProgress" style={{ width: `${scrollProgress}%` }} />
 
