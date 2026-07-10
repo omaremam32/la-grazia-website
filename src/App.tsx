@@ -1315,7 +1315,10 @@ export default function App() {
 
   const [toast, setToast] = useState("");
   const [scrollProgress, setScrollProgress] = useState(0);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(() => {
+    if (typeof window === "undefined") return true;
+    return window.sessionStorage.getItem("lagrazia-entry-seen-v1") !== "true";
+  });
   const [introExitStarted, setIntroExitStarted] = useState(false);
   const [launchAnnouncementOpen, setLaunchAnnouncementOpen] = useState(false);
   const [launchCountdown, setLaunchCountdown] = useState<LaunchCountdown>(() => getLaunchCountdown());
@@ -1711,14 +1714,21 @@ export default function App() {
         : "Hello La Grazia Milano, I would love to ask about reserving a piece from the upcoming La Grazia Atelier Collection.";
 
   useEffect(() => {
-    const textStartFallback = window.setTimeout(() => setIntroExitStarted(true), 2991);
-    const finishFallback = window.setTimeout(() => setLoading(false), 6161);
+    if (!loading || typeof window === "undefined") return;
+
+    const textStartFallback = window.setTimeout(() => setIntroExitStarted(true), 2200);
+    const finishFallback = window.setTimeout(() => setLoading(false), 4600);
 
     return () => {
       window.clearTimeout(textStartFallback);
       window.clearTimeout(finishFallback);
     };
-  }, []);
+  }, [loading]);
+
+  useEffect(() => {
+    if (loading || typeof window === "undefined") return;
+    window.sessionStorage.setItem("lagrazia-entry-seen-v1", "true");
+  }, [loading]);
 
   useEffect(() => {
     if (typeof window === "undefined") return;
@@ -13247,6 +13257,72 @@ export default function App() {
           }
         }
 
+
+        /* =========================================================
+           LATEST FIX — PREMIUM FILLED PRODUCT FRAMES + SAFER INTRO
+           - Product photos fill their boxes again.
+           - Search cards also fill their boxes.
+           - Entry screen no longer repeats every refresh in the same tab.
+           ========================================================= */
+        .productImage {
+          overflow: hidden !important;
+          background: #fff9f0 !important;
+        }
+
+        .productImage img,
+        .productCard:hover .productImage img,
+        .productImage.linenPantsProductImage img,
+        .productCard:hover .productImage.linenPantsProductImage img {
+          width: 100% !important;
+          height: 100% !important;
+          object-fit: cover !important;
+          object-position: center top !important;
+          padding: 0 !important;
+          transform: none !important;
+          filter: saturate(1.03) contrast(1.02) !important;
+          box-sizing: border-box !important;
+        }
+
+        .productCard:hover .productImage img {
+          transform: scale(1.035) !important;
+        }
+
+        .searchResultCard img {
+          width: 100% !important;
+          height: clamp(320px, 25vw, 430px) !important;
+          object-fit: cover !important;
+          object-position: center top !important;
+          padding: 0 !important;
+          background: #fff9f0 !important;
+          box-sizing: border-box !important;
+        }
+
+        .searchResultCard:hover img {
+          transform: scale(1.025) !important;
+        }
+
+        .finalEntryVideo {
+          background: radial-gradient(circle at center, #2c1f18 0%, #110b08 70%) !important;
+        }
+
+        @media (max-width: 700px) {
+          .productImage img,
+          .productCard:hover .productImage img,
+          .productImage.linenPantsProductImage img,
+          .productCard:hover .productImage.linenPantsProductImage img {
+            object-fit: cover !important;
+            object-position: center top !important;
+            padding: 0 !important;
+          }
+
+          .searchResultCard img {
+            height: 300px !important;
+            object-fit: cover !important;
+            object-position: center top !important;
+            padding: 0 !important;
+          }
+        }
+
       `}
 
 </style>
@@ -13272,6 +13348,10 @@ export default function App() {
             }}
             onEnded={() => {
               window.setTimeout(() => setLoading(false), 80);
+            }}
+            onError={() => {
+              setIntroExitStarted(true);
+              window.setTimeout(() => setLoading(false), 250);
             }}
           >
             <source src="/videos/la-grazia-entry.mp4" type="video/mp4" />
