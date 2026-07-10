@@ -13147,6 +13147,106 @@ export default function App() {
           }
         }
 
+
+        /* =========================================================
+           FINAL FIX — ALL PRODUCTS FULLY INSIDE THEIR FRAMES
+           1) Search overlay "All" now shows the complete collection.
+           2) Product images are contained inside each card, not cropped.
+           3) Search heading has enough space below the sticky search bar.
+           ========================================================= */
+        .productImage {
+          display: flex !important;
+          align-items: center !important;
+          justify-content: center !important;
+          background:
+            radial-gradient(circle at center, rgba(255, 255, 255, 0.96), rgba(250, 244, 235, 0.78)) !important;
+        }
+
+        .productImage img,
+        .productCard:hover .productImage img {
+          width: 100% !important;
+          height: 100% !important;
+          object-fit: contain !important;
+          object-position: center center !important;
+          padding: clamp(14px, 1.25vw, 24px) !important;
+          transform: none !important;
+          filter: saturate(1.03) contrast(1.02) !important;
+        }
+
+        .productImage.linenPantsProductImage img,
+        .productCard:hover .productImage.linenPantsProductImage img {
+          object-fit: contain !important;
+          object-position: center center !important;
+          padding: clamp(14px, 1.25vw, 24px) !important;
+          transform: none !important;
+        }
+
+        .searchOverlayContent {
+          padding-top: clamp(66px, 6vw, 104px) !important;
+        }
+
+        .searchOverlayContent .sectionHead {
+          margin-bottom: 28px !important;
+        }
+
+        .searchQuickLinks button.active,
+        .searchQuickLinks button:hover {
+          background: #2c1f18 !important;
+          color: #fff9f0 !important;
+          border-color: #2c1f18 !important;
+        }
+
+        .searchResultsGrid {
+          grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
+          align-items: stretch !important;
+        }
+
+        .searchResultCard {
+          display: flex !important;
+          flex-direction: column !important;
+          height: 100% !important;
+        }
+
+        .searchResultCard img {
+          width: 100% !important;
+          height: clamp(300px, 23vw, 390px) !important;
+          object-fit: contain !important;
+          object-position: center center !important;
+          padding: clamp(18px, 1.4vw, 28px) !important;
+          background:
+            radial-gradient(circle at center, rgba(255, 255, 255, 0.96), rgba(250, 244, 235, 0.78)) !important;
+        }
+
+        .searchResultCard div {
+          margin-top: auto !important;
+        }
+
+        @media (max-width: 900px) {
+          .searchResultsGrid {
+            grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+          }
+        }
+
+        @media (max-width: 700px) {
+          .productImage img,
+          .productCard:hover .productImage img {
+            padding: 9px !important;
+          }
+
+          .searchOverlayContent {
+            padding-top: 30px !important;
+          }
+
+          .searchResultsGrid {
+            grid-template-columns: 1fr !important;
+          }
+
+          .searchResultCard img {
+            height: 300px !important;
+            padding: 14px !important;
+          }
+        }
+
       `}
 
 </style>
@@ -13474,8 +13574,10 @@ export default function App() {
               {filters.map((filter) => (
                 <button
                   key={filter}
+                  className={activeFilter === filter ? "active" : ""}
                   onClick={() => {
                     setActiveFilter(filter);
+                    setCollectionFilter("All");
                     if (filter === "All") setSearchTerm("");
                   }}
                 >
@@ -13490,7 +13592,7 @@ export default function App() {
               </div>
             ) : (
               <div className="searchResultsGrid">
-                {filteredProducts.slice(0, 5).map((product) => (
+                {filteredProducts.map((product) => (
                   <button
                     className="searchResultCard"
                     key={product.name}
