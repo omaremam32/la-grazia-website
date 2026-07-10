@@ -1430,18 +1430,21 @@ export default function App() {
   }, [isLaunchLive, isArabic]);
 
   const offerCelebrationPieces = useMemo(
-    () =>
-      Array.from({ length: 32 }, (_, index) => ({
+    () => {
+      const labels = ["LG", "", "10%", "", "GRAZIA10", "", "LG", "", "", "10%", "", "LG", "GRAZIA10", "", "", "LG", "", "10%"];
+
+      return labels.map((label, index) => ({
         id: index,
-        label: index % 11 === 0 ? PRIVATE_OFFER_CODE : "10%",
-        left: `${(index * 29 + 6) % 100}%`,
-        delay: `${0.18 + (index % 16) * 0.13}s`,
-        duration: `${4.9 + (index % 7) * 0.28}s`,
-        drift: `${index % 2 === 0 ? "" : "-"}${26 + (index % 10) * 6}px`,
-        rotate: `${index % 2 === 0 ? "" : "-"}${8 + (index % 8) * 3}deg`,
-        size: `${11 + (index % 5) * 1.6}px`,
-        opacity: `${0.34 + (index % 7) * 0.045}`,
-      })),
+        label,
+        left: `${8 + ((index * 17) % 84)}%`,
+        delay: `${0.08 + (index % 9) * 0.16}s`,
+        duration: `${3.9 + (index % 5) * 0.28}s`,
+        drift: `${index % 2 === 0 ? "" : "-"}${18 + (index % 7) * 8}px`,
+        rotate: `${index % 2 === 0 ? "" : "-"}${4 + (index % 6) * 3}deg`,
+        size: `${10.5 + (index % 4) * 1.15}px`,
+        opacity: `${0.28 + (index % 6) * 0.035}`,
+      }));
+    },
     []
   );
 
@@ -13394,6 +13397,212 @@ export default function App() {
           }
         }
 
+
+
+        /* FINAL PREMIUM FIX — FORMAL LA GRAZIA PRIVATE OFFER ANIMATION
+           Replaces the old falling 10% feeling with a quiet luxury atelier reveal. */
+        .offerCelebrationLayer {
+          position: fixed !important;
+          inset: 0 !important;
+          z-index: 360 !important;
+          pointer-events: none !important;
+          overflow: hidden !important;
+          isolation: isolate !important;
+        }
+
+        .offerCelebrationLayer::before {
+          content: "" !important;
+          position: absolute !important;
+          inset: 0 !important;
+          z-index: 0 !important;
+          background:
+            radial-gradient(circle at 50% 42%, rgba(255, 249, 236, 0.46), transparent 34%),
+            radial-gradient(circle at 22% 78%, rgba(199, 153, 78, 0.12), transparent 30%),
+            radial-gradient(circle at 82% 22%, rgba(199, 153, 78, 0.10), transparent 28%),
+            linear-gradient(115deg, transparent 0%, rgba(255, 249, 236, 0.18) 44%, rgba(215, 180, 111, 0.14) 50%, rgba(255, 249, 236, 0.12) 56%, transparent 100%) !important;
+          opacity: 0 !important;
+          animation: atelierPrivilegeVeil 4.8s cubic-bezier(.18,.78,.24,1) both !important;
+        }
+
+        .offerCelebrationLayer::after {
+          content: "" !important;
+          position: absolute !important;
+          left: 50% !important;
+          top: 50% !important;
+          z-index: 0 !important;
+          width: min(560px, 74vw) !important;
+          height: min(560px, 74vw) !important;
+          border-radius: 999px !important;
+          border: 1px solid rgba(176, 140, 78, 0.16) !important;
+          box-shadow:
+            inset 0 0 0 1px rgba(255, 249, 236, 0.26),
+            0 0 90px rgba(176, 140, 78, 0.12) !important;
+          opacity: 0 !important;
+          transform: translate(-50%, -50%) scale(0.84) !important;
+          animation: atelierPrivilegeHalo 4.8s cubic-bezier(.18,.78,.24,1) both 0.08s !important;
+        }
+
+        .offerCelebrationLayer span {
+          position: absolute !important;
+          top: 50% !important;
+          left: var(--offer-x) !important;
+          z-index: 1 !important;
+          display: inline-flex !important;
+          align-items: center !important;
+          justify-content: center !important;
+          width: 7px !important;
+          height: 7px !important;
+          min-width: 7px !important;
+          min-height: 7px !important;
+          padding: 0 !important;
+          border: 0 !important;
+          border-radius: 999px !important;
+          background: radial-gradient(circle, rgba(255, 249, 236, 0.95), rgba(215, 180, 111, 0.66) 48%, rgba(176, 140, 78, 0) 72%) !important;
+          box-shadow: 0 0 20px rgba(215, 180, 111, 0.22) !important;
+          color: transparent !important;
+          font-size: 0 !important;
+          line-height: 1 !important;
+          letter-spacing: 0.18em !important;
+          text-shadow: none !important;
+          white-space: nowrap !important;
+          opacity: 0 !important;
+          filter: blur(1px) !important;
+          transform: translate3d(-50%, 16vh, 0) rotate(0deg) scale(0.72) !important;
+          animation: atelierPrivilegeFloat var(--offer-duration) cubic-bezier(.16,.78,.22,1) var(--offer-delay) both !important;
+          backdrop-filter: blur(4px) !important;
+          -webkit-backdrop-filter: blur(4px) !important;
+        }
+
+        .offerCelebrationLayer span.offerTextPiece {
+          width: auto !important;
+          height: auto !important;
+          min-width: 46px !important;
+          min-height: 26px !important;
+          padding: 7px 12px 6px !important;
+          border: 1px solid rgba(196, 156, 84, 0.28) !important;
+          background:
+            linear-gradient(145deg, rgba(255, 252, 245, 0.70), rgba(239, 224, 194, 0.36)),
+            radial-gradient(circle at 28% 18%, rgba(255, 255, 255, 0.82), transparent 38%) !important;
+          box-shadow:
+            0 18px 46px rgba(50, 34, 24, 0.08),
+            inset 0 0 0 1px rgba(255, 249, 236, 0.54) !important;
+          color: rgba(105, 73, 40, var(--offer-opacity)) !important;
+          font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif !important;
+          font-size: var(--offer-size) !important;
+          font-weight: 600 !important;
+          letter-spacing: 0.18em !important;
+          text-transform: uppercase !important;
+          filter: blur(0) !important;
+        }
+
+        .offerCelebrationLayer span.offerTextPiece:nth-child(5n) {
+          min-width: 92px !important;
+          font-family: Georgia, "Times New Roman", serif !important;
+          font-weight: 500 !important;
+          letter-spacing: 0.20em !important;
+          color: rgba(71, 46, 28, calc(var(--offer-opacity) + 0.08)) !important;
+        }
+
+        .offerCelebrationLayer span:nth-child(3n) {
+          animation-name: atelierPrivilegeDrift !important;
+        }
+
+        .offerCelebrationLayer span::before,
+        .offerCelebrationLayer span::after {
+          display: none !important;
+          content: none !important;
+        }
+
+        @keyframes atelierPrivilegeVeil {
+          0% { opacity: 0; transform: translateY(12px); }
+          20% { opacity: 1; transform: translateY(0); }
+          76% { opacity: 0.72; }
+          100% { opacity: 0; }
+        }
+
+        @keyframes atelierPrivilegeHalo {
+          0% { opacity: 0; transform: translate(-50%, -50%) scale(0.82); }
+          24% { opacity: 1; }
+          82% { opacity: 0.54; }
+          100% { opacity: 0; transform: translate(-50%, -50%) scale(1.08); }
+        }
+
+        @keyframes atelierPrivilegeFloat {
+          0% {
+            opacity: 0;
+            transform: translate3d(-50%, 16vh, 0) rotate(0deg) scale(0.72);
+            filter: blur(2px);
+          }
+          18% {
+            opacity: 1;
+            filter: blur(0);
+          }
+          68% {
+            opacity: 0.74;
+            transform: translate3d(calc(-50% + (var(--offer-drift) * 0.38)), -4vh, 0) rotate(calc(var(--offer-rotate) * 0.42)) scale(1);
+          }
+          100% {
+            opacity: 0;
+            transform: translate3d(calc(-50% + var(--offer-drift)), -18vh, 0) rotate(var(--offer-rotate)) scale(0.96);
+            filter: blur(1px);
+          }
+        }
+
+        @keyframes atelierPrivilegeDrift {
+          0% {
+            opacity: 0;
+            transform: translate3d(-50%, 20vh, 0) rotate(0deg) scale(0.68);
+            filter: blur(2px);
+          }
+          20% {
+            opacity: 0.9;
+            filter: blur(0);
+          }
+          72% {
+            opacity: 0.68;
+            transform: translate3d(calc(-50% - (var(--offer-drift) * 0.3)), 0vh, 0) rotate(calc(var(--offer-rotate) * -0.35)) scale(1);
+          }
+          100% {
+            opacity: 0;
+            transform: translate3d(calc(-50% - var(--offer-drift)), -16vh, 0) rotate(calc(var(--offer-rotate) * -1)) scale(0.94);
+            filter: blur(1px);
+          }
+        }
+
+        .offerPanel.offerPanelUnlocked {
+          background:
+            radial-gradient(circle at 50% 0%, rgba(255, 249, 236, 0.78), transparent 36%),
+            linear-gradient(145deg, rgba(255, 249, 240, 0.98), rgba(239, 226, 207, 0.96)) !important;
+          border-color: rgba(176, 140, 78, 0.34) !important;
+          box-shadow:
+            0 34px 90px rgba(38, 25, 18, 0.24),
+            inset 0 0 0 1px rgba(255, 255, 255, 0.42) !important;
+        }
+
+        .offerSuccessSeal {
+          width: 112px !important;
+          height: 112px !important;
+          background:
+            radial-gradient(circle at 32% 22%, #fff5d8 0%, #dbb86d 34%, #9b6b33 63%, #3c2417 100%) !important;
+          box-shadow:
+            0 26px 64px rgba(76, 49, 31, 0.22),
+            0 0 0 14px rgba(213, 177, 111, 0.07),
+            inset 0 0 0 1px rgba(255, 248, 232, 0.72),
+            inset 0 0 0 10px rgba(255, 248, 232, 0.10) !important;
+        }
+
+        .offerSuccessSeal span {
+          font-size: 32px !important;
+          letter-spacing: 0.03em !important;
+        }
+
+        .darkMode .offerPanel.offerPanelUnlocked {
+          background:
+            radial-gradient(circle at 50% 0%, rgba(215, 180, 111, 0.18), transparent 36%),
+            linear-gradient(145deg, rgba(44, 31, 24, 0.98), rgba(31, 21, 16, 0.98)) !important;
+          border-color: rgba(215, 180, 111, 0.36) !important;
+        }
+
       `}
 
 </style>
@@ -13442,6 +13651,7 @@ export default function App() {
           {offerCelebrationPieces.map((piece) => (
             <span
               key={piece.id}
+              className={piece.label ? "offerTextPiece" : "offerLightPiece"}
               style={{
                 "--offer-x": piece.left,
                 "--offer-delay": piece.delay,
