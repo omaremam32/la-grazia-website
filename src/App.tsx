@@ -1315,10 +1315,7 @@ export default function App() {
 
   const [toast, setToast] = useState("");
   const [scrollProgress, setScrollProgress] = useState(0);
-  const [loading, setLoading] = useState(() => {
-    if (typeof window === "undefined") return true;
-    return window.sessionStorage.getItem("lagrazia-entry-seen-v1") !== "true";
-  });
+  const [loading, setLoading] = useState(true);
   const [introExitStarted, setIntroExitStarted] = useState(false);
   const [launchAnnouncementOpen, setLaunchAnnouncementOpen] = useState(false);
   const [launchCountdown, setLaunchCountdown] = useState<LaunchCountdown>(() => getLaunchCountdown());
@@ -1725,10 +1722,6 @@ export default function App() {
     };
   }, [loading]);
 
-  useEffect(() => {
-    if (loading || typeof window === "undefined") return;
-    window.sessionStorage.setItem("lagrazia-entry-seen-v1", "true");
-  }, [loading]);
 
   useEffect(() => {
     if (typeof window === "undefined") return;
