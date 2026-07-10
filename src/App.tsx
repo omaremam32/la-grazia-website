@@ -5736,6 +5736,9 @@ export default function App() {
           text-align: left;
           color: inherit;
           box-shadow: 0 18px 44px rgba(36, 26, 20, 0.10);
+          display: flex;
+          flex-direction: column;
+          min-height: 100%;
         }
 
         .darkMode .searchResultCard {
@@ -5746,12 +5749,18 @@ export default function App() {
         .searchResultCard img {
           width: 100%;
           height: 300px;
-          object-fit: cover;
-          object-position: top center;
+          object-fit: contain;
+          object-position: center center;
           display: block;
+          background:
+            radial-gradient(circle at center, rgba(255, 255, 255, 0.92), rgba(250, 244, 235, 0.74));
+          padding: 18px;
         }
 
-        .searchResultCard div { padding: 20px; }
+        .searchResultCard div {
+          padding: 20px;
+          margin-top: auto;
+        }
 
         .searchResultCard span {
           display: block;
@@ -7524,7 +7533,12 @@ export default function App() {
 
           .searchResultsGrid { grid-template-columns: 1fr; }
 
-          .searchResultCard img { height: 440px; }
+          .searchResultCard img {
+            height: 380px;
+            object-fit: contain;
+            object-position: center center;
+            padding: 18px;
+          }
 
           .menuPanel {
             width: 100%;
@@ -7837,7 +7851,7 @@ export default function App() {
           .heroVisual { min-height: 460px; }
           .moodCard img,
           .storyImage { height: 420px; min-height: 420px; }
-          .searchResultCard img { height: 380px; }
+          .searchResultCard img { height: 340px; }
           .modalImage { min-height: 430px; height: 52vh; }
           .brandMark h1 { font-size: 18px; }
           .navActions { gap: 4px; }
@@ -12183,6 +12197,14 @@ export default function App() {
 
           .searchResultCard img {
             height: 300px !important;
+            object-fit: contain !important;
+            object-position: center center !important;
+            padding: 16px !important;
+            background: radial-gradient(circle at center, rgba(255, 255, 255, 0.92), rgba(250, 244, 235, 0.74)) !important;
+          }
+
+          .searchResultCard div {
+            margin-top: auto !important;
           }
 
           .darkMode .searchOverlay,
