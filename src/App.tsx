@@ -1431,18 +1431,20 @@ export default function App() {
 
   const offerCelebrationPieces = useMemo(
     () => {
-      const labels = ["LG", "", "10%", "", "GRAZIA10", "", "LG", "", "", "10%", "", "LG", "GRAZIA10", "", "", "LG", "", "10%"];
+      // Minimal pearl-light pieces for a chic La Grazia reveal.
+      // Keep the discount feeling private and elegant, not like loud falling coupons.
+      const labels = ["", "", "LG", "", "", "", "", "LG", "", "", "", "", "LG", "", ""];
 
       return labels.map((label, index) => ({
         id: index,
         label,
-        left: `${8 + ((index * 17) % 84)}%`,
-        delay: `${0.08 + (index % 9) * 0.16}s`,
-        duration: `${3.9 + (index % 5) * 0.28}s`,
-        drift: `${index % 2 === 0 ? "" : "-"}${18 + (index % 7) * 8}px`,
-        rotate: `${index % 2 === 0 ? "" : "-"}${4 + (index % 6) * 3}deg`,
-        size: `${10.5 + (index % 4) * 1.15}px`,
-        opacity: `${0.28 + (index % 6) * 0.035}`,
+        left: `${10 + ((index * 19) % 80)}%`,
+        delay: `${0.10 + (index % 8) * 0.18}s`,
+        duration: `${4.8 + (index % 5) * 0.34}s`,
+        drift: `${index % 2 === 0 ? "" : "-"}${12 + (index % 6) * 6}px`,
+        rotate: `${index % 2 === 0 ? "" : "-"}${2 + (index % 5) * 2}deg`,
+        size: `${8.5 + (index % 4) * 0.95}px`,
+        opacity: `${0.22 + (index % 5) * 0.032}`,
       }));
     },
     []
@@ -13603,6 +13605,320 @@ export default function App() {
           border-color: rgba(215, 180, 111, 0.36) !important;
         }
 
+
+
+        /* CHIC FINAL PRIVATE OFFER OVERRIDE — polished, quiet, and more La Grazia */
+        .offerBackdrop {
+          background:
+            radial-gradient(circle at 50% 18%, rgba(255, 249, 236, 0.22), transparent 28%),
+            linear-gradient(135deg, rgba(37, 25, 18, 0.58), rgba(37, 25, 18, 0.72)) !important;
+          backdrop-filter: blur(18px) saturate(1.03) !important;
+          -webkit-backdrop-filter: blur(18px) saturate(1.03) !important;
+        }
+
+        .offerPanel {
+          width: min(490px, calc(100vw - 34px)) !important;
+          border-radius: 34px !important;
+          padding: clamp(30px, 4vw, 44px) !important;
+          background:
+            linear-gradient(180deg, rgba(255, 252, 247, 0.98), rgba(246, 237, 223, 0.98)) !important;
+          border: 1px solid rgba(183, 145, 78, 0.32) !important;
+          box-shadow:
+            0 38px 100px rgba(39, 24, 16, 0.30),
+            inset 0 1px 0 rgba(255, 255, 255, 0.76) !important;
+          overflow: hidden !important;
+        }
+
+        .offerPanel::before {
+          content: "" !important;
+          position: absolute !important;
+          left: 50% !important;
+          top: 16px !important;
+          width: min(330px, 68vw) !important;
+          height: 1px !important;
+          background: linear-gradient(90deg, transparent, rgba(176, 140, 78, 0.58), transparent) !important;
+          transform: translateX(-50%) !important;
+          opacity: 0.88 !important;
+        }
+
+        .offerPanel::after {
+          content: "LG" !important;
+          position: absolute !important;
+          right: -22px !important;
+          bottom: -42px !important;
+          font-family: Georgia, "Times New Roman", serif !important;
+          font-size: 155px !important;
+          font-weight: 400 !important;
+          letter-spacing: -0.05em !important;
+          color: rgba(176, 140, 78, 0.055) !important;
+          pointer-events: none !important;
+        }
+
+        .offerLogo {
+          margin: 0 auto 24px !important;
+          width: 118px !important;
+          height: 118px !important;
+          border-radius: 50% !important;
+          display: grid !important;
+          place-items: center !important;
+          background:
+            radial-gradient(circle at 36% 24%, rgba(255, 249, 236, 0.96), rgba(234, 214, 176, 0.72) 34%, rgba(176, 140, 78, 0.20) 72%, transparent 73%) !important;
+          border: 1px solid rgba(176, 140, 78, 0.30) !important;
+          box-shadow: 0 22px 54px rgba(71, 46, 28, 0.12), inset 0 0 0 10px rgba(255, 252, 245, 0.36) !important;
+        }
+
+        .offerLogo span {
+          font-family: Georgia, "Times New Roman", serif !important;
+          color: #3f2c22 !important;
+          font-size: 15px !important;
+          letter-spacing: 0.24em !important;
+          line-height: 1 !important;
+        }
+
+        .offerLogo small {
+          display: none !important;
+        }
+
+        .offerEyebrow {
+          color: #9c7336 !important;
+          letter-spacing: 0.34em !important;
+          font-size: 10px !important;
+          margin-bottom: 13px !important;
+        }
+
+        .offerPanel h3 {
+          max-width: 390px !important;
+          margin-left: auto !important;
+          margin-right: auto !important;
+          color: #2c1f18 !important;
+          font-family: Georgia, "Times New Roman", serif !important;
+          font-size: clamp(34px, 4.8vw, 48px) !important;
+          font-weight: 500 !important;
+          letter-spacing: -0.015em !important;
+          line-height: 1.02 !important;
+          text-align: center !important;
+        }
+
+        .offerPanel p:not(.offerEyebrow) {
+          max-width: 390px !important;
+          margin-left: auto !important;
+          margin-right: auto !important;
+          color: #6f5a48 !important;
+          font-size: 14px !important;
+          line-height: 1.9 !important;
+          letter-spacing: 0.015em !important;
+          text-align: center !important;
+        }
+
+        .offerForm {
+          margin-top: 24px !important;
+          background: rgba(255, 249, 240, 0.60) !important;
+          border: 1px solid rgba(176, 140, 78, 0.18) !important;
+          border-radius: 24px !important;
+          padding: 8px !important;
+          box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.50) !important;
+        }
+
+        .offerForm input {
+          border: 0 !important;
+          background: transparent !important;
+          min-height: 54px !important;
+          padding: 0 16px !important;
+          color: #2c1f18 !important;
+        }
+
+        .offerForm button {
+          min-height: 54px !important;
+          border-radius: 18px !important;
+          background: linear-gradient(135deg, #2c1f18, #5f432c) !important;
+          color: #fff9f0 !important;
+          box-shadow: 0 15px 34px rgba(44, 31, 24, 0.18) !important;
+        }
+
+        .offerCodeBox {
+          max-width: 300px !important;
+          margin: 22px auto 0 !important;
+          background: rgba(255, 252, 245, 0.76) !important;
+          border: 1px solid rgba(176, 140, 78, 0.28) !important;
+          border-radius: 22px !important;
+          box-shadow: 0 18px 46px rgba(71, 46, 28, 0.08), inset 0 1px 0 rgba(255, 255, 255, 0.55) !important;
+        }
+
+        .offerCodeBox span {
+          color: #9c7336 !important;
+          letter-spacing: 0.26em !important;
+          font-size: 9px !important;
+        }
+
+        .offerCodeBox strong {
+          color: #2c1f18 !important;
+          font-family: Georgia, "Times New Roman", serif !important;
+          font-weight: 500 !important;
+          letter-spacing: 0.22em !important;
+        }
+
+        .offerCelebrationLayer {
+          background: rgba(248, 240, 227, 0.10) !important;
+          backdrop-filter: blur(2px) !important;
+          -webkit-backdrop-filter: blur(2px) !important;
+        }
+
+        .offerCelebrationLayer::before {
+          background:
+            linear-gradient(90deg, transparent 0%, rgba(255, 249, 236, 0.28) 45%, rgba(215, 180, 111, 0.20) 50%, rgba(255, 249, 236, 0.26) 55%, transparent 100%),
+            radial-gradient(circle at 50% 44%, rgba(255, 249, 236, 0.32), transparent 31%) !important;
+          animation: chicOfferSilkSweep 4.9s cubic-bezier(.16,.84,.24,1) both !important;
+        }
+
+        .offerCelebrationLayer::after {
+          width: min(460px, 68vw) !important;
+          height: min(460px, 68vw) !important;
+          border-color: rgba(176, 140, 78, 0.10) !important;
+          box-shadow: 0 0 85px rgba(176, 140, 78, 0.10), inset 0 0 0 1px rgba(255, 249, 236, 0.18) !important;
+          animation: chicOfferHalo 4.9s cubic-bezier(.16,.84,.24,1) both !important;
+        }
+
+        .offerCelebrationLayer span {
+          width: 5px !important;
+          height: 5px !important;
+          min-width: 5px !important;
+          min-height: 5px !important;
+          background: radial-gradient(circle, rgba(255, 250, 238, 1), rgba(213, 177, 111, 0.62) 55%, rgba(213, 177, 111, 0) 73%) !important;
+          box-shadow: 0 0 18px rgba(213, 177, 111, 0.22) !important;
+          filter: blur(0.3px) !important;
+          animation: chicOfferPearlFloat var(--offer-duration) cubic-bezier(.16,.84,.24,1) var(--offer-delay) both !important;
+        }
+
+        .offerCelebrationLayer span.offerTextPiece {
+          min-width: auto !important;
+          min-height: auto !important;
+          width: auto !important;
+          height: auto !important;
+          padding: 0 !important;
+          border: 0 !important;
+          background: transparent !important;
+          box-shadow: none !important;
+          color: rgba(122, 82, 38, 0.22) !important;
+          font-family: Georgia, "Times New Roman", serif !important;
+          font-size: 17px !important;
+          font-weight: 500 !important;
+          letter-spacing: 0.24em !important;
+        }
+
+        .offerPanel.offerPanelUnlocked {
+          background:
+            radial-gradient(circle at 50% 4%, rgba(255, 249, 236, 0.82), transparent 40%),
+            linear-gradient(180deg, rgba(255, 252, 247, 0.99), rgba(246, 237, 223, 0.98)) !important;
+          border-color: rgba(176, 140, 78, 0.34) !important;
+        }
+
+        .offerSuccessSeal {
+          width: 104px !important;
+          height: 104px !important;
+          margin: 0 auto 22px !important;
+          background:
+            radial-gradient(circle at 35% 22%, #fff6dc 0%, #d8b46c 36%, #8c632e 70%, #332015 100%) !important;
+          box-shadow:
+            0 28px 66px rgba(71, 46, 28, 0.20),
+            0 0 0 12px rgba(215, 180, 111, 0.07),
+            inset 0 0 0 1px rgba(255, 249, 236, 0.72),
+            inset 0 0 0 11px rgba(255, 249, 236, 0.10) !important;
+          animation: chicOfferSealIn 1.05s cubic-bezier(.16,.84,.24,1) both !important;
+        }
+
+        .offerSuccessSeal span {
+          font-family: Georgia, "Times New Roman", serif !important;
+          font-size: 30px !important;
+          font-weight: 500 !important;
+          letter-spacing: 0.16em !important;
+          color: #fff8e8 !important;
+          text-shadow: 0 2px 10px rgba(44, 31, 24, 0.25) !important;
+        }
+
+        .offerSuccessLine {
+          max-width: 260px !important;
+          margin: 24px auto 0 !important;
+          height: 1px !important;
+          background: linear-gradient(90deg, transparent, rgba(176, 140, 78, 0.58), transparent) !important;
+        }
+
+        @keyframes chicOfferSilkSweep {
+          0% { opacity: 0; transform: translateX(-24%) skewX(-7deg); }
+          18% { opacity: 0.92; }
+          74% { opacity: 0.68; }
+          100% { opacity: 0; transform: translateX(24%) skewX(-7deg); }
+        }
+
+        @keyframes chicOfferHalo {
+          0% { opacity: 0; transform: translate(-50%, -50%) scale(0.90); }
+          24% { opacity: 0.76; }
+          100% { opacity: 0; transform: translate(-50%, -50%) scale(1.08); }
+        }
+
+        @keyframes chicOfferPearlFloat {
+          0% { opacity: 0; transform: translate3d(-50%, 11vh, 0) scale(0.70); }
+          22% { opacity: var(--offer-opacity); }
+          72% { opacity: calc(var(--offer-opacity) * 0.78); transform: translate3d(calc(-50% + (var(--offer-drift) * .32)), -2vh, 0) scale(1); }
+          100% { opacity: 0; transform: translate3d(calc(-50% + var(--offer-drift)), -12vh, 0) scale(0.94); }
+        }
+
+        @keyframes chicOfferSealIn {
+          0% { opacity: 0; transform: translateY(12px) scale(0.86); }
+          62% { opacity: 1; transform: translateY(0) scale(1.03); }
+          100% { opacity: 1; transform: translateY(0) scale(1); }
+        }
+
+        .darkMode .offerBackdrop {
+          background: linear-gradient(135deg, rgba(20, 12, 8, 0.70), rgba(20, 12, 8, 0.82)) !important;
+        }
+
+        .darkMode .offerPanel,
+        .darkMode .offerPanel.offerPanelUnlocked {
+          background:
+            radial-gradient(circle at 50% 0%, rgba(215, 180, 111, 0.15), transparent 36%),
+            linear-gradient(180deg, rgba(44, 31, 24, 0.99), rgba(31, 21, 16, 0.98)) !important;
+          border-color: rgba(215, 180, 111, 0.34) !important;
+        }
+
+        .darkMode .offerPanel h3,
+        .darkMode .offerCodeBox strong {
+          color: #fff9f0 !important;
+        }
+
+        .darkMode .offerPanel p:not(.offerEyebrow) {
+          color: #eadcc8 !important;
+        }
+
+        .darkMode .offerCodeBox,
+        .darkMode .offerForm {
+          background: rgba(255, 249, 240, 0.07) !important;
+          border-color: rgba(215, 180, 111, 0.25) !important;
+        }
+
+        .darkMode .offerForm input {
+          color: #fff9f0 !important;
+        }
+
+        @media (max-width: 640px) {
+          .offerPanel {
+            border-radius: 28px !important;
+            padding: 28px 20px !important;
+          }
+
+          .offerLogo,
+          .offerSuccessSeal {
+            width: 92px !important;
+            height: 92px !important;
+          }
+
+          .offerPanel h3 {
+            font-size: 32px !important;
+          }
+
+          .offerForm {
+            grid-template-columns: 1fr !important;
+          }
+        }
       `}
 
 </style>
@@ -13680,12 +13996,12 @@ export default function App() {
             {offerJustUnlocked ? (
               <div className="offerSuccessMoment">
                 <div className="offerSuccessSeal">
-                  <span>10%</span>
+                  <span>LG</span>
                 </div>
 
-                <p className="offerEyebrow">{isArabic ? "تم تأمين الامتياز" : "Atelier privilege secured"}</p>
-                <h3>{isArabic ? "تم فتح الوصول الخاص" : "Private access unlocked"}</h3>
-                <p>{isArabic ? "تم حجز كود GRAZIA10 لأول حجز مسبق فقط. انتظري لحظة قصيرة وسنعيدك للتصفح." : "GRAZIA10 is now reserved for your first pre-order only. Stay for a brief moment while your private access is confirmed."}</p>
+                <p className="offerEyebrow">{isArabic ? "تم تأكيد الامتياز الخاص" : "Private atelier privilege"}</p>
+                <h3>{isArabic ? "تم حجز وصولك الخاص" : "Your access is reserved"}</h3>
+                <p>{isArabic ? "تم حفظ كود GRAZIA10 لأول حجز مسبق فقط. سنعيدك للتصفح خلال لحظة." : "GRAZIA10 has been reserved for your first pre-order only. Your private access will continue in a moment."}</p>
 
                 <div className="offerCodeBox" aria-label="Private offer code">
                   <span>{isArabic ? "كود الامتياز" : "Atelier code"}</span>
@@ -13702,8 +14018,8 @@ export default function App() {
                 </div>
 
                 <p className="offerEyebrow">{isArabic ? "وصول خاص قبل الإطلاق" : "Private Atelier Access"}</p>
-                <h3>{isArabic ? "امتياز خاص لأول حجز مسبق" : "A private first pre-order privilege"}</h3>
-                <p>{isArabic ? "انضمي إلى قائمة لا غراتسيا الخاصة واحصلي على وصول مبكر قبل الإطلاق، مع امتياز 10% صالح مرة واحدة فقط لأول حجز مسبق باستخدام كود GRAZIA10." : "Join the La Grazia private list for early access before the official launch, with a discreet 10% privilege valid once for your first pre-order using code GRAZIA10."}</p>
+                <h3>{isArabic ? "دعوة خاصة إلى لا غراتسيا" : "An invitation to La Grazia"}</h3>
+                <p>{isArabic ? "انضمي إلى القائمة الخاصة واحصلي على وصول مبكر قبل الإطلاق، مع امتياز GRAZIA10 صالح مرة واحدة فقط لأول حجز مسبق." : "Join the private list for early access before launch, with a discreet GRAZIA10 privilege reserved once for your first pre-order."}</p>
 
                 <form className="offerForm" onSubmit={handleOfferSubmit}>
                   <input
