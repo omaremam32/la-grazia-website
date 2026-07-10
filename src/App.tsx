@@ -13323,6 +13323,84 @@ export default function App() {
           }
         }
 
+
+        /* =========================================================
+           LATEST FIX — LA GRAZIA LUXURY GLOBAL SCROLLBAR
+           - Changes the main right browser scrollbar from grey to
+             a thin champagne/gold scrollbar that matches the site.
+           - Also styles inner scrollbars such as search, menu, cart,
+             modals, and drawers without breaking layout.
+           ========================================================= */
+        html,
+        body {
+          scrollbar-width: thin !important;
+          scrollbar-color: #b08a45 #f7f1e8 !important;
+        }
+
+        html::-webkit-scrollbar,
+        body::-webkit-scrollbar,
+        *::-webkit-scrollbar {
+          width: 10px !important;
+          height: 10px !important;
+        }
+
+        html::-webkit-scrollbar-track,
+        body::-webkit-scrollbar-track,
+        *::-webkit-scrollbar-track {
+          background: #f7f1e8 !important;
+          border-left: 1px solid rgba(176, 138, 69, 0.16) !important;
+        }
+
+        html::-webkit-scrollbar-thumb,
+        body::-webkit-scrollbar-thumb,
+        *::-webkit-scrollbar-thumb {
+          background: linear-gradient(180deg, #ead19a 0%, #b08a45 48%, #6f4d25 100%) !important;
+          border-radius: 999px !important;
+          border: 2px solid #f7f1e8 !important;
+          box-shadow:
+            inset 0 0 0 1px rgba(255, 249, 240, 0.40),
+            0 6px 14px rgba(44, 31, 24, 0.14) !important;
+        }
+
+        html::-webkit-scrollbar-thumb:hover,
+        body::-webkit-scrollbar-thumb:hover,
+        *::-webkit-scrollbar-thumb:hover {
+          background: linear-gradient(180deg, #f0dcae 0%, #b08a45 45%, #4a2f18 100%) !important;
+        }
+
+        html::-webkit-scrollbar-corner,
+        body::-webkit-scrollbar-corner,
+        *::-webkit-scrollbar-corner {
+          background: #f7f1e8 !important;
+        }
+
+        .darkMode,
+        .darkMode * {
+          scrollbar-width: thin !important;
+          scrollbar-color: #d7b46f #1f1510 !important;
+        }
+
+        .darkMode::-webkit-scrollbar-track,
+        .darkMode *::-webkit-scrollbar-track {
+          background: #1f1510 !important;
+          border-left: 1px solid rgba(215, 180, 111, 0.20) !important;
+        }
+
+        .darkMode::-webkit-scrollbar-thumb,
+        .darkMode *::-webkit-scrollbar-thumb {
+          background: linear-gradient(180deg, #d7b46f 0%, #9c7336 52%, #3a2416 100%) !important;
+          border: 2px solid #1f1510 !important;
+        }
+
+        @media (max-width: 700px) {
+          html::-webkit-scrollbar,
+          body::-webkit-scrollbar,
+          *::-webkit-scrollbar {
+            width: 8px !important;
+            height: 8px !important;
+          }
+        }
+
       `}
 
 </style>
