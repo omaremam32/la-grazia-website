@@ -13089,6 +13089,42 @@ export default function App() {
             width: 100%;
           }
         }
+
+
+        /* =========================================================
+           FINAL FIX — FOOTER WHATSAPP OVERLAP
+           Keeps the floating WhatsApp/back-to-top buttons away from
+           the footer WhatsApp text link on desktop.
+           ========================================================= */
+        @media (min-width: 901px) {
+          .footerInner {
+            display: grid !important;
+            grid-template-columns: minmax(260px, auto) minmax(0, 1fr) !important;
+            align-items: center !important;
+            gap: 34px !important;
+          }
+
+          .footerLinks {
+            justify-content: flex-end !important;
+            padding-right: 150px !important;
+            row-gap: 14px !important;
+          }
+        }
+
+        @media (max-width: 900px) {
+          .footerInner {
+            flex-direction: column !important;
+            align-items: center !important;
+            text-align: center !important;
+          }
+
+          .footerLinks {
+            justify-content: center !important;
+            padding-right: 0 !important;
+            max-width: 100% !important;
+          }
+        }
+
       `}
 
 </style>
